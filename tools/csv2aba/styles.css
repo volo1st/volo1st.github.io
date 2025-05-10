@@ -1,0 +1,29 @@
+body {
+    padding: 0 30px;
+}
+
+textarea {
+    font-family: var(--fontStack-monospace, ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace) !important;
+    font-size: 16px;
+}
+
+.table-centered {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+th, td {
+    padding: 3px 9px;
+}
+
+#convert {
+    font-size: 24px;
+}
+
+#statusMessage {
+    color: green;
+}
+
+#errorMessage {
+    color: red;
+}
