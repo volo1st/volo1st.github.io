@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chinese-English String Sorter</title>
+  <script src="https://cdn.jsdelivr.net/npm/tiny-pinyin@1.3.1/dist/tiny-pinyin.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 180px;
+      font-size: 16px;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    pre {
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin-top: 20px;
+      white-space: pre-wrap;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Chinese-English String Sorter</h1>
+  <p>Enter one string per line:</p>
+  <textarea id="input" placeholder="e.g. 中国&#10;apple&#10;你好&#10;banana&#10;中国China"></textarea>
+  <br />
+  <button onclick="process()">Sort Strings</button>
+
+  <pre id="output"></pre>
+
+  <script>
+    function isChineseChar(char) {
+      return /[\u4e00-\u9fff]/.test(char);
+    }
+
+    function isEnglishChar(char) {
+      return /^[a-zA-Z]$/.test(char);
+    }
+
+    function getLeadingCharType(str) {
+      for (const char of str.trim()) {
+        if (isChineseChar(char)) return 'chinese';
+        if (isEnglishChar(char)) return 'english';
+      }
+      return 'other';
+    }
+
+    function countChineseChars(str) {
+      return (str.match(/[\u4e00-\u9fff]/g) || []).length;
+    }
+
+    function toPinyinLower(str) {
+      if (window.Pinyin && Pinyin.isSupported()) {
+        return Pinyin.convertToPinyin(str, '', true).toLowerCase();
+      }
+      return str.toLowerCase();
+    }
+
+    function process() {
+      const input = document.getElementById('input').value.trim();
+      const lines = input.split('\n').map(line => line.trim()).filter(Boolean);
+
+      const chineseGroups = {};
+      const englishGroup = [];
+
+      for (const line of lines) {
+        const type = getLeadingCharType(line);
+        if (type === 'english') {
+          englishGroup.push(line);
+        } else if (type === 'chinese') {
+          const count = countChineseChars(line);
+          if (!chineseGroups[count]) chineseGroups[count] = [];
+          chineseGroups[count].push(line);
+        }
+      }
+
+      const sorted = [];
+
+      // Chinese: group by character count, sort by lowercase pinyin
+      const chineseCounts = Object.keys(chineseGroups).map(Number).sort((a, b) => a - b);
+      for (const count of chineseCounts) {
+        const group = chineseGroups[count];
+        group.sort((a, b) => toPinyinLower(a).localeCompare(toPinyinLower(b), 'zh'));
+        sorted.push(...group);
+      }
+
+      // English: sort alphabetically, then by length
+      englishGroup.sort((a, b) => {
+        const alpha = a.localeCompare(b);
+        return alpha !== 0 ? alpha : a.length - b.length;
+      });
+
+      sorted.push(...englishGroup);
+
+      const output = sorted.map((item, idx) => `${idx + 1}. ${item}`).join('\n');
+      document.getElementById('output').textContent = output;
+    }
+  </script>
+</body>
+</html>
+
