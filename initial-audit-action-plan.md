@@ -1,0 +1,227 @@
+# Initial Audit Action Plan
+
+## 1. Document data
+
+| Item | Value |
+| --- | --- |
+| Created | 12 September 2026 |
+| Source report | [`initial-audit-report.md`](initial-audit-report.md) |
+| Purpose | Track all work from the initial audit |
+
+## 2. Use of this plan
+
+This file is the single source of truth for audit work.
+
+- Keep an item clear until its completion test passes.
+- Add the commit, test, or decision below the item.
+- If you do not do an item, keep it clear. Record the owner, date, and reason in the decision log.
+- Complete Phases 0 to 3 before you approve the ABA converter for real payments.
+
+## Phase 0: Control the immediate risk
+
+### User safety
+
+- [ ] Add a clear prototype warning to the ABA converter.
+  - Completion test: The warning tells users not to make real payments. The warning is visible before conversion.
+- [ ] State which bank and payment process the converter supports. If support is not confirmed, state that no process is supported.
+  - Completion test: The converter page and README give the same information.
+
+### Bank rules
+
+- [ ] Get the current ABA rules from the source bank.
+  - Include source identity, trace data, transaction codes, balancing records, totals, character encoding, line ends, file names, and limits.
+- [ ] Record each confirmed rule in the repository.
+  - Completion test: Each output field has a bank rule or an approved product decision.
+- [ ] Ask the person who submits ABA files to approve the recorded rules.
+
+### Phase gate
+
+- [ ] Keep the prototype warning until Phases 1 to 3 are complete and the bank accepts a test file.
+
+## Phase 1: Make the ABA converter correct
+
+### Source data
+
+- [ ] Remove the fixed `CBA`, `Meya`, and `000000` values.
+- [ ] Add settings for institution, user name, user ID, entry description, trace BSB, trace account, and remitter name.
+- [ ] Check all settings before conversion.
+- [ ] Use the confirmed source account for trace data. Do not use recipient data for trace data.
+  - Completion test: A test shows different recipient and trace values in the correct fields.
+
+### Amounts
+
+- [ ] Convert decimal text directly to integer cents. Do not use binary floating-point calculations.
+- [ ] Define the permitted currency symbol, separators, decimal places, and rounding rule.
+- [ ] Reject an empty, non-numeric, zero, negative, fractional-cent, or excessive amount.
+- [ ] Check each amount, total amount, and record count for overflow.
+  - Completion test: Tests cover `abc`, `-1.00`, `0`, `1.005`, separators, and all limit values.
+
+### CSV data
+
+- [ ] Use a tested CSV reader.
+- [ ] Support quoted commas, escaped quotation marks, LF and CRLF line ends, byte order mark (BOM) input, and blank lines.
+- [ ] Check for missing, duplicate, empty, and unexpected headers.
+- [ ] Keep the source row number for each record.
+  - Completion test: `"Smith, Jane"` stays in one Name field. It does not move other values.
+
+### ABA fields
+
+- [ ] Check the BSB, account, name, reference, remitter, and all source settings.
+- [ ] Check required values, permitted characters, field lengths, amount limits, total limits, and record limits.
+- [ ] Reject an incomplete row. Ignore only a fully blank row when this is the approved rule.
+- [ ] Reject a long field or show an approved truncation rule. Do not silently cut data.
+- [ ] Show the row and field for each error.
+  - Completion test: Invalid data cannot enter an ABA record.
+
+### File construction
+
+- [ ] Construct records only from checked and typed data.
+- [ ] Keep the 120-character check for every record.
+- [ ] Use the confirmed encoding, line ends, balancing rule, transaction code, and total rules.
+- [ ] Prevent an unsupported character from changing the byte length.
+  - Completion test: Approved test data produces an exact match with reviewed ABA sample files.
+
+## Phase 2: Make the converter safe to use
+
+### Error control
+
+- [ ] Remove the undeclared `abaContent` variable.
+- [ ] Keep document object model (DOM) variables in a valid scope.
+- [ ] Catch file-read and conversion errors.
+- [ ] Clear old output after an input change or an error.
+- [ ] Keep Download disabled until a new conversion is successful.
+- [ ] Prevent download of empty, old, `undefined`, or invalid data.
+- [ ] Make ABA output read-only.
+  - Completion test: Each error leaves no downloadable file and gives one clear message.
+
+### User information
+
+- [ ] Show clear information, warning, error, and success messages.
+- [ ] Show all applicable row and field errors.
+- [ ] Show the payment count and total before download.
+- [ ] Tell users that conversion occurs in their browser.
+- [ ] Add a safe example CSV file. Use invented data only.
+
+## Phase 3: Prove ABA converter quality
+
+### Automated tests
+
+- [ ] Add a small JavaScript test system.
+- [ ] Test CSV input, amount conversion, field checks, record construction, totals, file names, and interface states.
+- [ ] Test each critical and high risk in the audit report.
+- [ ] Test minimum and maximum values, unsupported characters, byte lengths, and overflow.
+- [ ] Add reviewed ABA sample files. Use invented data only.
+
+### Browser and accessibility tests
+
+- [ ] Test upload, paste, conversion, error recovery, second conversion, and download.
+- [ ] Test current main desktop and mobile browsers.
+- [ ] Test keyboard use, screen-reader use, HTML, and accessibility rules.
+
+### Continuous integration
+
+- [ ] Add format, lint, syntax, test, HTML, accessibility, and internal-link checks to continuous integration (CI).
+- [ ] Document the checks that must pass before deployment.
+
+### Release gate
+
+- [ ] Send representative invented files to the bank test or validation process.
+- [ ] Record the bank, date, result, and limits. Do not store confidential payment data.
+- [ ] Get an independent review of amount calculations and fixed-width records.
+- [ ] Approve real-payment use only after all Phase 0 to 3 items pass.
+
+## Phase 4: Improve accessibility and screen-size support
+
+### All pages
+
+- [ ] Add viewport metadata.
+- [ ] Add consistent text, space, focus styles, navigation, and responsive page widths.
+- [ ] Check headings, page language, color contrast, zoom, and keyboard focus.
+
+### ABA converter
+
+- [ ] Replace the layout table with a responsive layout.
+- [ ] Add a label and help text to each input, output, and button.
+- [ ] Add live status semantics for assistive software.
+- [ ] Use text or symbols with color for each status.
+- [ ] Remove the comma between textarea attributes.
+- [ ] Make the page usable on a narrow screen and at 200 percent zoom.
+- [ ] Add a caption and correct headers to the example table.
+
+### Text sorter
+
+- [ ] Add a clear label for the input and output.
+- [ ] Make output changes available to assistive software.
+- [ ] Test the mobile layout, keyboard order, and focus.
+
+## Phase 5: Correct the text sorter
+
+### Sort rules
+
+- [ ] Define the order for Chinese, English, numbers, punctuation, blank lines, and other scripts.
+- [ ] Keep each nonblank input line. If the tool excludes a line, show the reason.
+- [ ] Define how the tool handles duplicates, spaces, letter case, tone, mixed text, and Chinese characters with more than one pronunciation.
+- [ ] Add tests for all defined rules.
+
+### Source and dependency
+
+- [ ] Calculate one pinyin sort key for each line before the sort.
+- [ ] Replace the inline `onclick` code with a JavaScript event listener.
+- [ ] Show clear messages for empty input and pinyin dependency failure.
+- [ ] Store `tiny-pinyin` in the repository, or add Subresource Integrity (SRI) to the external file.
+- [ ] Record third-party requests and their privacy effect.
+- [ ] Add a local backup or tell the user when pinyin conversion is not available.
+- [ ] Add a Content Security Policy that permits only required sources.
+
+## Phase 6: Complete documents and deployment checks
+
+### Documents
+
+- [ ] Complete `README.md`.
+  - Include purpose, tool links, support status, limits, privacy, CSV format, local use, tests, and deployment.
+- [ ] Document ABA settings. Do not publish real account data.
+- [ ] Document dependency updates and user-visible changes.
+- [ ] Select a license, or state that the repository has no license.
+
+### Page data
+
+- [ ] Change the home page title so that it identifies all tools.
+- [ ] Add short page descriptions and links to the tools home page.
+- [ ] Use the same tool names and letter case on all pages.
+- [ ] Decide if search engines can index the prototype tools.
+
+### Deployment
+
+- [ ] Document the GitHub Pages and custom-domain process.
+- [ ] Check production DNS, TLS, redirects, and the custom domain.
+- [ ] Check production HTTP security headers. Record GitHub Pages limits.
+- [ ] Define how often maintainers review dependencies and browser support.
+- [ ] Confirm that the site has no unrecorded analytics or network requests.
+- [ ] Add a short test checklist for each release.
+
+## Phase 7: Close the audit
+
+- [ ] Run all invalid-input tests from the audit again.
+- [ ] Run syntax, lint, unit, browser, accessibility, and link checks.
+- [ ] Link each audit finding to a completed item or an accepted-risk decision.
+- [ ] Review the repository and public website again.
+- [ ] Record remaining limits and follow-up work.
+- [ ] Record the reviewer, date, and deployment that closes the audit.
+
+## Decision log
+
+Use this table when the team changes or rejects an action.
+
+| Date | Decision | Owner | Reason and evidence |
+| --- | --- | --- | --- |
+| | | | |
+
+## Completion record
+
+| Item | Value |
+| --- | --- |
+| Completion date | |
+| Final reviewer | |
+| Release or deployment | |
+| Bank validation reference | |
+| Accepted risks | |
