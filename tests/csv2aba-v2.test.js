@@ -174,3 +174,93 @@ test('the CSV reader rejects empty input and header-only input', () => {
     /CSV does not contain a payment row/,
   );
 });
+
+test('amount parsing accepts the supported formats', () => {
+  const cases = [
+    ['$63.00', 6300],
+    ['63', 6300],
+    ['63.5', 6350],
+    ['0.01', 1],
+    ['$01.05', 105],
+    ['$1,234.56', 123456],
+    ['$99,999,999.99', 9999999999],
+  ];
+
+  for (const [input, expected] of cases) {
+    assert.equal(v2.parseAmountToCents(input), expected, input);
+  }
+});
+
+test('amount parsing rejects invalid or ambiguous values', () => {
+  const invalidValues = [
+    '',
+    'abc',
+    '-1.00',
+    '+1.00',
+    '1.005',
+    '1.',
+    '.50',
+    '$ 1.00',
+    '1,23.00',
+    '01,234.00',
+    '1,2345.00',
+    '1 234.00',
+  ];
+
+  for (const input of invalidValues) {
+    assert.throws(
+      () => v2.parseAmountToCents(input, { sourceRow: 7 }),
+      /CSV line 7 field Amount/,
+      input,
+    );
+  }
+});
+
+test('amount parsing rejects zero and an excessive value', () => {
+  assert.throws(() => v2.parseAmountToCents('0'), /must be greater than zero/);
+  assert.throws(
+    () => v2.parseAmountToCents('$100,000,000.00'),
+    /exceeds the ABA limit/,
+  );
+});
+
+test('conversion supports a correctly quoted thousands separator', () => {
+  const csv = [
+    'BSB,Account,Name,Amount,Reference',
+    '062-010,10894862,Example Teacher,"$1,234.56",teacher fee',
+  ].join('\n');
+  const output = v2.convert(csv, { processDate: '120926' });
+  const detailRecord = output.split('\n')[1];
+
+  assert.equal(detailRecord.slice(20, 30), '0000123456');
+});
+
+test('conversion rejects an empty amount with its source line', () => {
+  const csv = [
+    'BSB,Account,Name,Amount,Reference',
+    '062-010,10894862,Example Teacher,,teacher fee',
+  ].join('\n');
+
+  assert.throws(() => v2.convert(csv), /CSV line 2 field Amount/);
+});
+
+test('conversion rejects an aggregate total overflow', () => {
+  const csv = [
+    'BSB,Account,Name,Amount,Reference',
+    '062-010,10894862,First Teacher,"$50,000,000.00",teacher fee',
+    '062-443,13741935,Second Teacher,"$50,000,000.00",teacher fee',
+  ].join('\n');
+
+  assert.throws(() => v2.convert(csv), /CSV line 3 makes the ABA payment total exceed/);
+});
+
+test('file totals reject amount and record-count overflow', () => {
+  assert.throws(
+    () => v2.generateFileTotalRecord({ length: 2 }, 10000000000),
+    /ABA payment total exceeds/,
+  );
+  assert.throws(
+    () => v2.generateFileTotalRecord({ length: 1000001 }, 1),
+    /ABA detail record count exceeds 999999/,
+  );
+});

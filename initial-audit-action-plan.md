@@ -57,10 +57,11 @@ This file is the single source of truth for audit work.
 
 ### Amounts
 
-- [ ] Convert decimal text directly to integer cents. Do not use binary floating-point calculations.
-- [ ] Define the permitted currency symbol, separators, decimal places, and rounding rule.
-- [ ] Reject an empty, non-numeric, zero, negative, fractional-cent, or excessive amount.
-- [ ] Check each amount, total amount, and record count for overflow.
+- [x] Convert decimal text directly to integer cents. Do not use binary floating-point calculations.
+- [x] Define the permitted currency symbol, separators, decimal places, and rounding rule.
+  - Evidence: `tools/csv2aba-v2/README.md` records the accepted syntax. Version 2 rejects fractional cents instead of rounding them.
+- [x] Reject an empty, non-numeric, zero, negative, fractional-cent, or excessive amount.
+- [x] Check each amount, total amount, and record count for overflow.
   - Completion test: Tests cover `abc`, `-1.00`, `0`, `1.005`, separators, and all limit values.
 
 ### CSV data

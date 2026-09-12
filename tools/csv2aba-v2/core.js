@@ -12,6 +12,8 @@
   const SPACE = ' ';
   const ZERO = '0';
   const LINE_LENGTH = 120;
+  const MAX_AMOUNT_CENTS = 9999999999;
+  const MAX_DETAIL_RECORDS = 999999;
   const REQUIRED_COLUMNS = ['BSB', 'Reference', 'Name', 'Account', 'Amount'];
 
   const DEFAULT_SETTINGS = Object.freeze({
@@ -37,6 +39,35 @@
     }
   }
 
+  function getRowName(row) {
+    return row.sourceRow ? `CSV line ${row.sourceRow}` : 'CSV row';
+  }
+
+  function parseAmountToCents(value, row = {}) {
+    const amount = String(value).trim();
+    const match = /^\$?((?:\d+)|(?:[1-9]\d{0,2}(?:,\d{3})+))(?:\.(\d{1,2}))?$/.exec(amount);
+    const rowName = getRowName(row);
+
+    if (!match) {
+      throw new Error(
+        `${rowName} field Amount must be a positive amount with no more than two decimal places.`,
+      );
+    }
+
+    const dollars = match[1].replaceAll(',', '');
+    const cents = (match[2] || '').padEnd(2, ZERO);
+    const amountInCents = BigInt(dollars) * 100n + BigInt(cents || ZERO);
+
+    if (amountInCents === 0n) {
+      throw new Error(`${rowName} field Amount must be greater than zero.`);
+    }
+    if (amountInCents > BigInt(MAX_AMOUNT_CENTS)) {
+      throw new Error(`${rowName} field Amount exceeds the ABA limit of $99,999,999.99.`);
+    }
+
+    return Number(amountInCents);
+  }
+
   function generateDescriptiveRecord(options = {}) {
     const settings = { ...DEFAULT_SETTINGS, ...options.settings };
     const processDate = options.processDate || formatProcessDate(new Date());
@@ -60,6 +91,7 @@
 
   function generateDetailRecord(row, options = {}) {
     const settings = { ...DEFAULT_SETTINGS, ...options.settings };
+    const amountInCents = parseAmountToCents(row.Amount, row);
 
     for (const column of REQUIRED_COLUMNS) {
       if (row[column] === undefined || row[column] === null || row[column].trim() === '') {
@@ -71,8 +103,6 @@
       }
     }
 
-    const amountText = row.Amount.replace('$', '').replace(',', '').trim();
-    const amountInCents = Math.round(parseFloat(amountText) * 100);
     const bsb = row.BSB.trim();
     const account = row.Account.trim();
     const name = row.Name.trim();
@@ -99,6 +129,12 @@
 
   function generateFileTotalRecord(records, totalAmount) {
     const detailRecordCount = records.length - 1;
+    if (detailRecordCount > MAX_DETAIL_RECORDS) {
+      throw new Error(`ABA detail record count exceeds ${MAX_DETAIL_RECORDS}.`);
+    }
+    if (!Number.isSafeInteger(totalAmount) || totalAmount < 0 || totalAmount > MAX_AMOUNT_CENTS) {
+      throw new Error('ABA payment total exceeds the limit of $99,999,999.99.');
+    }
     const record = [
       '7',
       '999-999',
@@ -283,6 +319,11 @@
     for (const row of rows) {
       const [record, amountInCents] = generateDetailRecord(row, options);
       if (record !== null && amountInCents !== null) {
+        if (totalAmount > MAX_AMOUNT_CENTS - amountInCents) {
+          throw new Error(
+            `${getRowName(row)} makes the ABA payment total exceed $99,999,999.99.`,
+          );
+        }
         records.push(record);
         totalAmount += amountInCents;
       }
@@ -300,6 +341,8 @@
   return Object.freeze({
     DEFAULT_SETTINGS,
     LINE_LENGTH,
+    MAX_AMOUNT_CENTS,
+    MAX_DETAIL_RECORDS,
     REQUIRED_COLUMNS,
     convert,
     findMissingColumns,
@@ -308,6 +351,7 @@
     generateDetailRecord,
     generateFileTotalRecord,
     parseCsv,
+    parseAmountToCents,
     processCsvToAba,
     readCsvRecords,
   });

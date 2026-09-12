@@ -43,6 +43,19 @@ The header order can change. Do not add other headers.
 
 The reader supports quoted commas, escaped quotation marks, quoted new lines, BOM input, blank lines, and LF and CRLF line ends. It rejects malformed quotation marks and rows with the wrong field count. It also rejects text or spaces after a quoted field. Error messages identify the applicable source line.
 
+## Amount rules
+
+An amount must be positive. It can have zero, one, or two decimal places. It can include an adjacent dollar sign. It can include correctly grouped thousands separators.
+
+These values are valid:
+
+- `$63.00`;
+- `63`;
+- `63.5`; and
+- `$1,234.56` when the CSV field has quotation marks.
+
+The converter does not round fractional cents. It rejects signs, zero, fractional cents, bad separators, non-numeric text, and values above `$99,999,999.99`. The total of all payments has the same limit.
+
 ## Tests
 
 Run this command from the repository root:
