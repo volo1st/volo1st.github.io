@@ -68,6 +68,58 @@
     return Number(amountInCents);
   }
 
+  function validateRequiredField(row, fieldName) {
+    const rowName = getRowName(row);
+    if (row[fieldName] === undefined || row[fieldName] === null) {
+      throw new Error(`${rowName} field ${fieldName} is required.`);
+    }
+
+    const rawValue = String(row[fieldName]);
+    if (rawValue.trim() === '') {
+      throw new Error(`${rowName} field ${fieldName} is required.`);
+    }
+    if (/[\r\n]/.test(rawValue)) {
+      throw new Error(`${rowName} field ${fieldName} contains a line break.`);
+    }
+    if (/[\u0000-\u001F\u007F]/.test(rawValue)) {
+      throw new Error(`${rowName} field ${fieldName} contains a control character.`);
+    }
+
+    return rawValue.trim();
+  }
+
+  function validateDetailRow(row) {
+    const values = {};
+    for (const fieldName of REQUIRED_COLUMNS) {
+      values[fieldName] = validateRequiredField(row, fieldName);
+    }
+
+    const rowName = getRowName(row);
+    if (!/^\d{3}-\d{3}$/.test(values.BSB)) {
+      throw new Error(`${rowName} field BSB must have the format NNN-NNN.`);
+    }
+    if (values.Account.length > 9) {
+      throw new Error(`${rowName} field Account must not exceed 9 characters.`);
+    }
+    if (!/^[0-9 -]+$/.test(values.Account)) {
+      throw new Error(`${rowName} field Account can contain only digits, spaces, and hyphens.`);
+    }
+    if (!/[1-9]/.test(values.Account)) {
+      throw new Error(`${rowName} field Account must contain a non-zero digit.`);
+    }
+    if (values.Name.length > 32) {
+      throw new Error(`${rowName} field Name must not exceed 32 characters.`);
+    }
+    if (values.Reference.length > 18) {
+      throw new Error(`${rowName} field Reference must not exceed 18 characters.`);
+    }
+
+    return {
+      ...values,
+      amountInCents: parseAmountToCents(values.Amount, row),
+    };
+  }
+
   function generateDescriptiveRecord(options = {}) {
     const settings = { ...DEFAULT_SETTINGS, ...options.settings };
     const processDate = options.processDate || formatProcessDate(new Date());
@@ -91,40 +143,25 @@
 
   function generateDetailRecord(row, options = {}) {
     const settings = { ...DEFAULT_SETTINGS, ...options.settings };
-    const amountInCents = parseAmountToCents(row.Amount, row);
-
-    for (const column of REQUIRED_COLUMNS) {
-      if (row[column] === undefined || row[column] === null || row[column].trim() === '') {
-        return [null, null];
-      }
-      if (/[\r\n]/.test(row[column])) {
-        const source = row.sourceRow ? `CSV line ${row.sourceRow}` : 'CSV row';
-        throw new Error(`${source} field ${column} contains a line break.`);
-      }
-    }
-
-    const bsb = row.BSB.trim();
-    const account = row.Account.trim();
-    const name = row.Name.trim();
-    const reference = row.Reference.trim();
+    const values = validateDetailRow(row);
 
     const record = [
       '1',
-      bsb,
-      account.padStart(9, SPACE),
+      values.BSB,
+      values.Account.padStart(9, SPACE),
       SPACE,
       '53',
-      String(amountInCents).padStart(10, ZERO),
-      name.padEnd(32, SPACE),
-      reference.padEnd(18, SPACE),
-      bsb,
-      account.padStart(9, SPACE),
+      String(values.amountInCents).padStart(10, ZERO),
+      values.Name.padEnd(32, SPACE),
+      values.Reference.padEnd(18, SPACE),
+      values.BSB,
+      values.Account.padStart(9, SPACE),
       settings.remitterName.padEnd(16, SPACE),
       ZERO.repeat(8),
     ].join('');
 
     assertRecordLength(record, 'Detail record');
-    return [record, amountInCents];
+    return [record, values.amountInCents];
   }
 
   function generateFileTotalRecord(records, totalAmount) {
@@ -318,15 +355,13 @@
 
     for (const row of rows) {
       const [record, amountInCents] = generateDetailRecord(row, options);
-      if (record !== null && amountInCents !== null) {
-        if (totalAmount > MAX_AMOUNT_CENTS - amountInCents) {
-          throw new Error(
-            `${getRowName(row)} makes the ABA payment total exceed $99,999,999.99.`,
-          );
-        }
-        records.push(record);
-        totalAmount += amountInCents;
+      if (totalAmount > MAX_AMOUNT_CENTS - amountInCents) {
+        throw new Error(
+          `${getRowName(row)} makes the ABA payment total exceed $99,999,999.99.`,
+        );
       }
+      records.push(record);
+      totalAmount += amountInCents;
     }
 
     records.push(generateFileTotalRecord(records, totalAmount));
@@ -354,5 +389,6 @@
     parseAmountToCents,
     processCsvToAba,
     readCsvRecords,
+    validateDetailRow,
   });
 }));

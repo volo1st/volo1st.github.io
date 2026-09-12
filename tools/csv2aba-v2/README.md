@@ -56,6 +56,20 @@ These values are valid:
 
 The converter does not round fractional cents. It rejects signs, zero, fractional cents, bad separators, non-numeric text, and values above `$99,999,999.99`. The total of all payments has the same limit.
 
+## Payment field rules
+
+Each payment row must contain all five values. A fully blank CSV line is not a payment row. The converter rejects an incomplete payment row.
+
+- BSB must have the format `NNN-NNN`.
+- Account can contain digits, spaces, and hyphens.
+- Account must not exceed nine characters.
+- Account must contain a non-zero digit.
+- Name must not exceed 32 characters.
+- Reference must not exceed 18 characters.
+- A payment field must not contain a line break or control character.
+
+The converter rejects an overlong field. It does not truncate payment data. CBA institution-number rules and the complete ABA character set are not yet confirmed. Version 2 does not enforce those rules at this time.
+
 ## Tests
 
 Run this command from the repository root:

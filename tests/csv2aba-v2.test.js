@@ -264,3 +264,102 @@ test('file totals reject amount and record-count overflow', () => {
     /ABA detail record count exceeds 999999/,
   );
 });
+
+function makePaymentRow(overrides = {}) {
+  const row = {
+    BSB: '062-010',
+    Account: '10894862',
+    Name: 'Example Teacher',
+    Amount: '$63.00',
+    Reference: 'teacher fee',
+    ...overrides,
+  };
+  Object.defineProperty(row, 'sourceRow', { value: 4 });
+  return row;
+}
+
+test('payment validation accepts each field at its width limit', () => {
+  const row = makePaymentRow({
+    Account: '12-345678',
+    Name: 'N'.repeat(32),
+    Reference: 'R'.repeat(18),
+  });
+  const [record] = v2.generateDetailRecord(row);
+
+  assert.equal(record.length, 120);
+  assert.equal(record.slice(8, 17), '12-345678');
+  assert.equal(record.slice(30, 62), 'N'.repeat(32));
+  assert.equal(record.slice(62, 80), 'R'.repeat(18));
+});
+
+test('payment validation requires each field', () => {
+  for (const fieldName of v2.REQUIRED_COLUMNS) {
+    assert.throws(
+      () => v2.validateDetailRow(makePaymentRow({ [fieldName]: '   ' })),
+      new RegExp(`CSV line 4 field ${fieldName} is required`),
+      fieldName,
+    );
+  }
+});
+
+test('payment validation checks BSB structure', () => {
+  const invalidValues = ['062010', '62-010', '062-01', 'ABC-DEF', '062 010'];
+
+  for (const BSB of invalidValues) {
+    assert.throws(
+      () => v2.validateDetailRow(makePaymentRow({ BSB })),
+      /CSV line 4 field BSB must have the format NNN-NNN/,
+      BSB,
+    );
+  }
+});
+
+test('payment validation checks account content and width', () => {
+  assert.throws(
+    () => v2.validateDetailRow(makePaymentRow({ Account: '1234567890' })),
+    /field Account must not exceed 9 characters/,
+  );
+  assert.throws(
+    () => v2.validateDetailRow(makePaymentRow({ Account: '123A456' })),
+    /field Account can contain only digits, spaces, and hyphens/,
+  );
+  assert.throws(
+    () => v2.validateDetailRow(makePaymentRow({ Account: '000-000' })),
+    /field Account must contain a non-zero digit/,
+  );
+});
+
+test('payment validation rejects an overlong name or reference', () => {
+  assert.throws(
+    () => v2.validateDetailRow(makePaymentRow({ Name: 'N'.repeat(33) })),
+    /CSV line 4 field Name must not exceed 32 characters/,
+  );
+  assert.throws(
+    () => v2.validateDetailRow(makePaymentRow({ Reference: 'R'.repeat(19) })),
+    /CSV line 4 field Reference must not exceed 18 characters/,
+  );
+});
+
+test('payment validation rejects control characters', () => {
+  assert.throws(
+    () => v2.validateDetailRow(makePaymentRow({ Name: 'Example\tTeacher' })),
+    /CSV line 4 field Name contains a control character/,
+  );
+  assert.throws(
+    () => v2.validateDetailRow(makePaymentRow({ Reference: 'teacher\nfee' })),
+    /CSV line 4 field Reference contains a line break/,
+  );
+  assert.throws(
+    () => v2.validateDetailRow(makePaymentRow({ Name: 'Example Teacher\n' })),
+    /CSV line 4 field Name contains a line break/,
+  );
+});
+
+test('conversion rejects an incomplete row instead of omitting it', () => {
+  const csv = [
+    'BSB,Account,Name,Amount,Reference',
+    '062-010,10894862,Example Teacher,$63.00,',
+  ].join('\n');
+
+  assert.throws(() => v2.convert(csv), /CSV line 2 field Reference is required/);
+});

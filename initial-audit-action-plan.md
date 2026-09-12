@@ -75,12 +75,15 @@ This file is the single source of truth for audit work.
 
 ### ABA fields
 
-- [ ] Check the BSB, account, name, reference, remitter, and all source settings.
-- [ ] Check required values, permitted characters, field lengths, amount limits, total limits, and record limits.
-- [ ] Reject an incomplete row. Ignore only a fully blank row when this is the approved rule.
-- [ ] Reject a long field or show an approved truncation rule. Do not silently cut data.
-- [ ] Show the row and field for each error.
-  - Completion test: Invalid data cannot enter an ABA record.
+- [x] Check BSB structure, account content, and payment-field widths.
+  - Evidence: Version 2 checks the structural rules in `validateDetailRow()`. Boundary tests cover each field.
+- [ ] Confirm and check CBA institution-number rules and the complete permitted ABA character set.
+- [ ] Check remitter and all source settings.
+- [x] Check required values, control characters, amount limits, total limits, and record limits.
+- [x] Reject an incomplete row. Ignore only a fully blank row.
+- [x] Reject a long field. Do not silently cut data.
+- [x] Show the row and field for each payment-data error.
+  - Completion test: Tested invalid payment data cannot enter an ABA record.
 
 ### File construction
 
