@@ -6,7 +6,7 @@ This directory is the trial location for version 2.
 
 Version 1 stays at `/tools/csv2aba/`. Do not change version 1 during version 2 development unless a critical fix is necessary.
 
-The first scaffold loads the version 1 JavaScript file. Thus, valid input has the same conversion behavior. Replace this shared script with tested version 2 code before the first user trial.
+Version 2 has independent conversion and interface files. Characterization tests compare its valid output with version 1.
 
 ## Compatibility rule
 
@@ -26,3 +26,11 @@ Before a CBA upload, compare these items with version 1:
 - file total record.
 
 Keep version 1 available as the fallback.
+
+## Tests
+
+Run this command from the repository root:
+
+```sh
+node --test tests/csv2aba-v2.test.js
+```

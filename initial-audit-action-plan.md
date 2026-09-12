@@ -25,7 +25,7 @@ This file is the single source of truth for audit work.
   - Completion test: The README states the supported process and its limits.
 - [x] Keep version 1 at `/tools/csv2aba/` as the fallback.
 - [x] Build version 2 at `/tools/csv2aba-v2/`.
-  - Evidence: The first scaffold uses version 1 logic. Version 2 source and tests will replace this shared logic before trial.
+  - Evidence: Version 2 has independent conversion and interface files. Characterization tests compare valid version 2 output with version 1.
 - [x] Keep version 2 out of the main tools list during the first trial.
 
 ### Bank rules
@@ -92,13 +92,13 @@ This file is the single source of truth for audit work.
 
 ### Error control
 
-- [ ] Remove the undeclared `abaContent` variable.
-- [ ] Keep document object model (DOM) variables in a valid scope.
-- [ ] Catch file-read and conversion errors.
-- [ ] Clear old output after an input change or an error.
-- [ ] Keep Download disabled until a new conversion is successful.
-- [ ] Prevent download of empty, old, `undefined`, or invalid data.
-- [ ] Make ABA output read-only.
+- [x] Remove the undeclared `abaContent` variable.
+- [x] Keep document object model (DOM) variables in a valid scope.
+- [x] Catch file-read and conversion errors.
+- [x] Clear old output after an input change or an error.
+- [x] Keep Download disabled until a new conversion is successful.
+- [x] Prevent download of empty, old, `undefined`, or invalid data.
+- [x] Make ABA output read-only.
   - Completion test: Each error leaves no downloadable file and gives one clear message.
 
 ### User information
@@ -113,7 +113,7 @@ This file is the single source of truth for audit work.
 
 ### Automated tests
 
-- [ ] Add a small JavaScript test system.
+- [x] Add a small JavaScript test system.
 - [ ] Test CSV input, amount conversion, field checks, record construction, totals, file names, and interface states.
 - [ ] Test each critical and high risk in the audit report.
 - [ ] Test minimum and maximum values, unsupported characters, byte lengths, and overflow.
