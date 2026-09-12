@@ -67,3 +67,110 @@ test('v2 reports missing columns instead of returning undefined', () => {
     /Missing required CSV columns/,
   );
 });
+
+test('the CSV reader supports a quoted comma', () => {
+  const csv = [
+    'BSB,Account,Name,Amount,Reference',
+    '062-010,10894862,"Smith, Jane",$63.00,teacher fee',
+  ].join('\n');
+  const rows = v2.parseCsv(csv);
+
+  assert.equal(rows[0].Name, 'Smith, Jane');
+  assert.equal(rows[0].Amount, '$63.00');
+});
+
+test('the CSV reader supports escaped quotation marks', () => {
+  const csv = [
+    'BSB,Account,Name,Amount,Reference',
+    '062-010,10894862,"Teacher ""A""",$63.00,teacher fee',
+  ].join('\n');
+
+  assert.equal(v2.parseCsv(csv)[0].Name, 'Teacher "A"');
+});
+
+test('the CSV reader supports quoted new lines', () => {
+  const csv = [
+    'BSB,Account,Name,Amount,Reference',
+    '062-010,10894862,"Example',
+    'Teacher",$63.00,teacher fee',
+  ].join('\r\n');
+  const row = v2.parseCsv(csv)[0];
+
+  assert.equal(row.Name, 'Example\nTeacher');
+  assert.equal(row.sourceRow, 2);
+});
+
+test('conversion rejects a quoted new line in an ABA field', () => {
+  const csv = [
+    'BSB,Account,Name,Amount,Reference',
+    '062-010,10894862,"Example',
+    'Teacher",$63.00,teacher fee',
+  ].join('\n');
+
+  assert.throws(() => v2.convert(csv), /CSV line 2 field Name contains a line break/);
+});
+
+test('the CSV reader supports a BOM and CRLF line ends', () => {
+  const csv = [
+    '\uFEFFBSB,Account,Name,Amount,Reference',
+    '062-010,10894862,Example Teacher,$63.00,teacher fee',
+  ].join('\r\n');
+  const row = v2.parseCsv(csv)[0];
+
+  assert.equal(row.BSB, '062-010');
+  assert.equal(row.sourceRow, 2);
+});
+
+test('the CSV reader ignores fully blank lines and keeps source rows', () => {
+  const csv = [
+    'BSB,Account,Name,Amount,Reference',
+    '',
+    '062-010,10894862,Example Teacher,$63.00,teacher fee',
+    '   ',
+  ].join('\n');
+  const rows = v2.parseCsv(csv);
+
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].sourceRow, 3);
+});
+
+test('the CSV reader rejects malformed quoted fields', () => {
+  assert.throws(
+    () => v2.parseCsv('BSB,Account,Name,Amount,Reference\n062-010,10894862,"Example,$63.00,fee'),
+    /open quotation mark/,
+  );
+  assert.throws(
+    () => v2.parseCsv('BSB,Account,Name,Amount,Reference\n062-010,10894862,"Example"x,$63.00,fee'),
+    /text after a closing quotation mark/,
+  );
+});
+
+test('the CSV reader rejects an incorrect field count', () => {
+  assert.throws(
+    () => v2.parseCsv('BSB,Account,Name,Amount,Reference\n062-010,10894862,Example,$63.00'),
+    /CSV line 2 has 4 fields; expected 5/,
+  );
+});
+
+test('the CSV reader rejects invalid headers', () => {
+  assert.throws(
+    () => v2.parseCsv('BSB,Account,Name,Amount,Name\n062-010,10894862,Example,$63.00,fee'),
+    /duplicate headers: Name/,
+  );
+  assert.throws(
+    () => v2.parseCsv('BSB,Account,Name,Amount,Reference,Note\n062-010,10894862,Example,$63.00,fee,x'),
+    /unexpected columns: Note/,
+  );
+  assert.throws(
+    () => v2.parseCsv('BSB,Account,Name,Amount,\n062-010,10894862,Example,$63.00,fee'),
+    /header 5 is empty/,
+  );
+});
+
+test('the CSV reader rejects empty input and header-only input', () => {
+  assert.throws(() => v2.parseCsv('  \r\n'), /CSV input is empty/);
+  assert.throws(
+    () => v2.convert('BSB,Account,Name,Amount,Reference'),
+    /CSV does not contain a payment row/,
+  );
+});

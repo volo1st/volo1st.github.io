@@ -65,6 +65,10 @@
       if (row[column] === undefined || row[column] === null || row[column].trim() === '') {
         return [null, null];
       }
+      if (/[\r\n]/.test(row[column])) {
+        const source = row.sourceRow ? `CSV line ${row.sourceRow}` : 'CSV row';
+        throw new Error(`${source} field ${column} contains a line break.`);
+      }
     }
 
     const amountText = row.Amount.replace('$', '').replace(',', '').trim();
@@ -111,38 +115,168 @@
     return record;
   }
 
-  function parseCsv(csvText) {
-    const lines = csvText.trim().split('\n');
-    if (lines.length === 0) {
-      return [];
+  function readCsvRecords(csvText) {
+    const text = String(csvText).replace(/^\uFEFF/, '');
+    const records = [];
+    let fields = [];
+    let field = '';
+    let inQuotes = false;
+    let afterQuote = false;
+    let lineNumber = 1;
+    let recordLineNumber = 1;
+
+    function finishField() {
+      fields.push(field);
+      field = '';
+      afterQuote = false;
     }
 
-    const header = lines[0].split(',').map((value) => value.trim());
-    const data = [];
+    function finishRecord() {
+      finishField();
+      const isBlank = fields.length === 1 && fields[0].trim() === '';
+      if (!isBlank) {
+        records.push({ fields, lineNumber: recordLineNumber });
+      }
+      fields = [];
+      recordLineNumber = lineNumber + 1;
+    }
 
-    for (let index = 1; index < lines.length; index += 1) {
-      const values = lines[index].split(',');
-      if (values.length === 1 && values[0].trim() === '') {
+    for (let index = 0; index < text.length; index += 1) {
+      const character = text[index];
+
+      if (inQuotes) {
+        if (character === '"') {
+          if (text[index + 1] === '"') {
+            field += '"';
+            index += 1;
+          } else {
+            inQuotes = false;
+            afterQuote = true;
+          }
+        } else if (character === '\r' || character === '\n') {
+          if (character === '\r' && text[index + 1] === '\n') {
+            index += 1;
+          }
+          field += '\n';
+          lineNumber += 1;
+        } else {
+          field += character;
+        }
         continue;
       }
 
-      const row = {};
-      for (let columnIndex = 0; columnIndex < header.length; columnIndex += 1) {
-        const value = values[columnIndex];
-        row[header[columnIndex]] = value ? value.trim() : '';
+      if (afterQuote) {
+        if (character === ',') {
+          finishField();
+          continue;
+        }
+        if (character === '\r' || character === '\n') {
+          if (character === '\r' && text[index + 1] === '\n') {
+            index += 1;
+          }
+          finishRecord();
+          lineNumber += 1;
+          recordLineNumber = lineNumber;
+          continue;
+        }
+        throw new Error(`CSV line ${lineNumber} has text after a closing quotation mark.`);
       }
+
+      if (character === '"') {
+        if (field !== '') {
+          throw new Error(`CSV line ${lineNumber} has a quotation mark inside an unquoted field.`);
+        }
+        inQuotes = true;
+      } else if (character === ',') {
+        finishField();
+      } else if (character === '\r' || character === '\n') {
+        if (character === '\r' && text[index + 1] === '\n') {
+          index += 1;
+        }
+        finishRecord();
+        lineNumber += 1;
+        recordLineNumber = lineNumber;
+      } else {
+        field += character;
+      }
+    }
+
+    if (inQuotes) {
+      throw new Error(`CSV line ${recordLineNumber} has an open quotation mark.`);
+    }
+
+    if (field !== '' || fields.length > 0 || afterQuote) {
+      finishRecord();
+    }
+
+    return records;
+  }
+
+  function parseCsv(csvText) {
+    const records = readCsvRecords(csvText);
+    if (records.length === 0) {
+      throw new Error('CSV input is empty.');
+    }
+
+    const headers = records[0].fields.map((value) => value.trim());
+    const emptyHeaderIndex = headers.indexOf('');
+    if (emptyHeaderIndex !== -1) {
+      throw new Error(`CSV header ${emptyHeaderIndex + 1} is empty.`);
+    }
+
+    const duplicateHeaders = headers.filter(
+      (header, index) => headers.indexOf(header) !== index,
+    );
+    if (duplicateHeaders.length > 0) {
+      throw new Error(`CSV has duplicate headers: ${[...new Set(duplicateHeaders)].join(', ')}`);
+    }
+
+    const missingColumns = REQUIRED_COLUMNS.filter((column) => !headers.includes(column));
+    if (missingColumns.length > 0) {
+      throw new Error(`Missing required CSV columns: ${missingColumns.join(', ')}`);
+    }
+
+    const unexpectedColumns = headers.filter((header) => !REQUIRED_COLUMNS.includes(header));
+    if (unexpectedColumns.length > 0) {
+      throw new Error(`CSV has unexpected columns: ${unexpectedColumns.join(', ')}`);
+    }
+
+    const data = [];
+    for (const record of records.slice(1)) {
+      if (record.fields.length !== headers.length) {
+        throw new Error(
+          `CSV line ${record.lineNumber} has ${record.fields.length} fields; expected ${headers.length}.`,
+        );
+      }
+
+      const row = {};
+      for (let index = 0; index < headers.length; index += 1) {
+        row[headers[index]] = record.fields[index];
+      }
+      Object.defineProperty(row, 'sourceRow', {
+        value: record.lineNumber,
+        enumerable: false,
+      });
       data.push(row);
     }
 
+    Object.defineProperty(data, 'headers', {
+      value: headers,
+      enumerable: false,
+    });
     return data;
   }
 
   function findMissingColumns(rows) {
-    const header = rows.length > 0 ? Object.keys(rows[0]) : [];
-    return REQUIRED_COLUMNS.filter((column) => !header.includes(column));
+    const headers = rows.headers || (rows.length > 0 ? Object.keys(rows[0]) : []);
+    return REQUIRED_COLUMNS.filter((column) => !headers.includes(column));
   }
 
   function processCsvToAba(rows, options = {}) {
+    if (rows.length === 0) {
+      throw new Error('CSV does not contain a payment row.');
+    }
+
     const records = [generateDescriptiveRecord(options)];
     let totalAmount = 0;
 
@@ -160,12 +294,6 @@
 
   function convert(csvText, options = {}) {
     const rows = parseCsv(csvText);
-    const missingColumns = findMissingColumns(rows);
-
-    if (missingColumns.length > 0) {
-      throw new Error(`Missing required CSV columns: ${missingColumns.join(', ')}`);
-    }
-
     return processCsvToAba(rows, options);
   }
 
@@ -181,5 +309,6 @@
     generateFileTotalRecord,
     parseCsv,
     processCsvToAba,
+    readCsvRecords,
   });
 }));

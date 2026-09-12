@@ -27,6 +27,22 @@ Before a CBA upload, compare these items with version 1:
 
 Keep version 1 available as the fallback.
 
+## CSV rules
+
+Version 2 uses a strict local CSV reader. Its record and quotation rules follow [RFC 4180](https://www.rfc-editor.org/rfc/rfc4180). The reader also supports a byte order mark (BOM) because spreadsheet exports can include one.
+
+Header names are case-sensitive. The file must contain these five headers:
+
+- `BSB`;
+- `Account`;
+- `Name`;
+- `Amount`; and
+- `Reference`.
+
+The header order can change. Do not add other headers.
+
+The reader supports quoted commas, escaped quotation marks, quoted new lines, BOM input, blank lines, and LF and CRLF line ends. It rejects malformed quotation marks and rows with the wrong field count. It also rejects text or spaces after a quoted field. Error messages identify the applicable source line.
+
 ## Tests
 
 Run this command from the repository root:

@@ -65,10 +65,11 @@ This file is the single source of truth for audit work.
 
 ### CSV data
 
-- [ ] Use a tested CSV reader.
-- [ ] Support quoted commas, escaped quotation marks, LF and CRLF line ends, byte order mark (BOM) input, and blank lines.
-- [ ] Check for missing, duplicate, empty, and unexpected headers.
-- [ ] Keep the source row number for each record.
+- [x] Use a tested CSV reader.
+  - Evidence: Version 2 uses a strict local state-machine reader. Automated tests cover its accepted syntax and failure behavior.
+- [x] Support quoted commas, escaped quotation marks, LF and CRLF line ends, byte order mark (BOM) input, and blank lines.
+- [x] Check for missing, duplicate, empty, and unexpected headers.
+- [x] Keep the source row number for each record.
   - Completion test: `"Smith, Jane"` stays in one Name field. It does not move other values.
 
 ### ABA fields
