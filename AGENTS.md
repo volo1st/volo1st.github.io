@@ -42,9 +42,14 @@ Treat the CSV-to-ABA converter as financial-file software.
 - Use integer arithmetic for money. Do not use binary floating-point arithmetic.
 - Do not enable download until validation and conversion are successful.
 - Keep old output unavailable after an input change or an error.
-- Keep the prototype warning until the release gate in `initial-audit-action-plan.md` is complete.
+- Keep version 1 at `tools/csv2aba/` unchanged unless a critical fix is necessary.
+- Develop the safer converter at `tools/csv2aba-v2/`.
+- For known valid input, version 2 must make the same payment data as version 1.
+- Version 2 must reject invalid or ambiguous input with a clear error.
 - Confirm bank-specific behavior with an authoritative source before implementation.
 - Do not state that a generated file is bank-approved without recorded validation evidence.
+
+Version 1 has operational evidence. CBA has accepted files from the current monthly payment process for nearly one year. This evidence applies only to that process. It does not prove that all input or settings are valid.
 
 Preserve the required ABA record width. Test byte length as well as character length when the permitted character set can affect encoding.
 

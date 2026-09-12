@@ -15,7 +15,7 @@ This report records the condition of the repository on the audit date.
 
 The audit examined the source structure, function, data accuracy, security, privacy, accessibility, screen-size support, tests, deployment, and project documents.
 
-The audit did not send a file to a bank. It did not test the public website.
+The audit did not send a new file to a bank. The current converter has supported monthly teacher payments for a Sydney music school. CBA has accepted its files for nearly one year. The audit did not test the public website.
 
 ## 3. Summary
 
@@ -23,7 +23,7 @@ The repository is small and easy to understand. It contains two browser tools. O
 
 The text sorter is a useful small tool. It has some data-loss and dependency risks.
 
-Do not use the ABA converter for real payments at this time. It can make an invalid payment file. It uses fixed bank data. It does not correctly check CSV data, amounts, or ABA fields. Correct these problems and test the result with the applicable bank.
+The ABA converter has worked with CBA for nearly one year in one monthly payment process. This history is good operational evidence. The converter still uses fixed bank data. It does not correctly check all CSV data, amounts, or ABA fields. Keep version 1 as a fallback. Develop and test these corrections in version 2.
 
 ## 4. Risk levels
 
@@ -36,15 +36,15 @@ Do not use the ABA converter for real payments at this time. It can make an inva
 
 ## 5. Findings
 
-### 5.1 Critical: The converter uses fixed bank data
+### 5.1 High: The converter uses fixed bank data
 
 The converter always uses `CBA`, `Meya`, and user ID `000000`. It also uses the recipient BSB and account as the trace BSB and account. Trace data usually identifies the source account. The source bank must confirm this rule.
 
 See `generate_descriptive_record()` and `generate_detail_record()` in [`tools/csv2aba/scripts.js`](tools/csv2aba/scripts.js).
 
-**Effect:** A bank can reject the file. The file can contain incorrect source data.
+**Effect:** The fixed data limits the converter to its current process. A change to the source account or bank can make the file incorrect.
 
-**Required action:** Get the current rules from the source bank. Let the user supply valid source data. Check the data before conversion.
+**Required action:** Record which fixed values are correct for the current process. Get the current rules from the source bank before you make these values configurable.
 
 ### 5.2 Critical: The converter accepts invalid amounts
 
@@ -94,13 +94,13 @@ See `csv2aba()` and the event handlers in [`tools/csv2aba/scripts.js`](tools/csv
 
 **Required action:** Keep Download disabled until conversion is successful. Clear old output after a change or an error. Show one clear error report.
 
-### 5.6 Medium: Bank-specific rules are not confirmed
+### 5.6 Medium: Bank-specific rules are not recorded
 
-The source refers to a third-party ABA description. The repository does not record the rules of the applicable bank. These rules can include trace data, transaction codes, balancing records, character encoding, line ends, and file names.
+The current files have an operational acceptance history with CBA. The repository does not record the applicable CBA rules. These rules can include trace data, transaction codes, balancing records, character encoding, line ends, and file names.
 
 **Effect:** A file can have the correct length and still fail bank checks.
 
-**Required action:** Record the current bank rules. Test a sample file with the bank.
+**Required action:** Record the current process and available CBA rules. Use an anonymized, accepted file as a test sample when it is available.
 
 ### 5.7 Medium: The repository has no automated tests
 
@@ -180,7 +180,7 @@ Normal test records had 120 characters. This result does not prove that their co
 
 ## 8. Audit limits
 
-- The audit did not send an ABA file to a bank.
+- The audit did not send a new ABA file to a bank. Historical files have CBA acceptance evidence.
 - The audit did not confirm the current rules of a target bank.
 - The audit did not test the public website, DNS, TLS, or HTTP headers.
 - The audit did not test assistive software or multiple browsers.
@@ -188,4 +188,4 @@ Normal test records had 120 characters. This result does not prove that their co
 
 ## 9. Conclusion
 
-The repository is a good base for small browser tools. Correct the text sorter faults before wide use. Do not use the ABA converter for real payments until all critical and high risks are closed, automated tests pass, and the applicable bank accepts a test file.
+The repository is a good base for small browser tools. Keep the current ABA converter as version 1. Build version 2 at a separate URL. For known valid input, version 2 must make the same payment data as version 1. Version 2 must reject invalid or ambiguous input. Trial version 2 with the current payment process before it replaces version 1.

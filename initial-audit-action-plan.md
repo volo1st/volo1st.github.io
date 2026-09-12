@@ -15,28 +15,33 @@ This file is the single source of truth for audit work.
 - Keep an item clear until its completion test passes.
 - Add the commit, test, or decision below the item.
 - If you do not do an item, keep it clear. Record the owner, date, and reason in the decision log.
-- Complete Phases 0 to 3 before you approve the ABA converter for real payments.
+- Keep version 1 available while you develop and trial version 2.
 
-## Phase 0: Control the immediate risk
+## Phase 0: Record the baseline and control the rollout
 
-### User safety
+### Current support
 
-- [ ] Add a clear prototype warning to the ABA converter.
-  - Completion test: The warning tells users not to make real payments. The warning is visible before conversion.
-- [ ] State which bank and payment process the converter supports. If support is not confirmed, state that no process is supported.
-  - Completion test: The converter page and README give the same information.
+- [ ] Record the current use of version 1 for monthly teacher payments through CBA.
+  - Completion test: The README states the supported process and its limits.
+- [ ] Keep version 1 at `/tools/csv2aba/` as the fallback.
+- [ ] Build version 2 at `/tools/csv2aba-v2/`.
+- [ ] Keep version 2 out of the main tools list during the first trial.
 
 ### Bank rules
 
-- [ ] Get the current ABA rules from the source bank.
+- [ ] Get the current ABA rules from CBA when they are available.
   - Include source identity, trace data, transaction codes, balancing records, totals, character encoding, line ends, file names, and limits.
 - [ ] Record each confirmed rule in the repository.
   - Completion test: Each output field has a bank rule or an approved product decision.
-- [ ] Ask the person who submits ABA files to approve the recorded rules.
+- [ ] Ask the person who submits the files to confirm the recorded process.
+- [ ] Add one anonymized CBA-accepted CSV and ABA pair when it is available.
+  - Completion test: The fixture contains invented or anonymized data and has no confidential values.
 
 ### Phase gate
 
-- [ ] Keep the prototype warning until Phases 1 to 3 are complete and the bank accepts a test file.
+- [ ] Record the current source revision as the version 1 baseline.
+- [ ] For known valid input, require version 2 to make the same payment data as version 1.
+- [ ] Permit version 2 to change only invalid or ambiguous behavior. It must show an error for that input.
 
 ## Phase 1: Make the ABA converter correct
 
@@ -123,12 +128,14 @@ This file is the single source of truth for audit work.
 - [ ] Add format, lint, syntax, test, HTML, accessibility, and internal-link checks to continuous integration (CI).
 - [ ] Document the checks that must pass before deployment.
 
-### Release gate
+### Trial and release gate
 
-- [ ] Send representative invented files to the bank test or validation process.
-- [ ] Record the bank, date, result, and limits. Do not store confidential payment data.
+- [ ] Ask the current operator to compare version 1 and version 2 payment counts, totals, records, and CBA upload results.
+- [ ] Run the comparison for multiple monthly payment cycles.
+- [ ] Record the date, result, and limits. Do not store confidential payment data.
 - [ ] Get an independent review of amount calculations and fixed-width records.
-- [ ] Approve real-payment use only after all Phase 0 to 3 items pass.
+- [ ] Make version 2 the default only after the trial is successful.
+- [ ] Keep version 1 for an agreed fallback period after version 2 becomes the default.
 
 ## Phase 4: Improve accessibility and screen-size support
 
