@@ -112,3 +112,31 @@ Add permanent automated tests when a change introduces behavior that can regress
 - Do not add a build system, framework, analytics service, or network request without a clear need.
 - Explain a change in user-visible behavior.
 - State the checks that you ran and the checks that you could not run.
+
+## Work packages
+
+Complete one work package at a time. Do not start another package until the current package is complete or blocked.
+
+For each package, use this sequence:
+
+1. Inspect the applicable source and current state.
+2. State the purpose, requirements, and failure behavior.
+3. Check the design against current engineering practice for this purpose.
+4. Prefer authoritative primary sources when external facts are necessary.
+5. Record important decisions, tradeoffs, and accepted risks before implementation.
+6. Make the repository changes.
+7. Run applicable static checks and safe tests.
+8. Review the complete diff.
+9. Get approval before a destructive or system-level change.
+10. Apply an approved system change from the correct environment.
+11. Verify the result and representative clients.
+12. Record completion evidence in the project source of truth.
+13. Commit the complete package.
+
+Prefer a clear and safe failure state to an incomplete function that appears to work.
+
+Do not apply a general practice until you check the actual use and failure behavior.
+
+Stop the package when a required approval, fact, or test is not available. Record the blocker. Do not bypass the blocker by starting an unrelated package.
+
+Do not stop for optional evidence when the package does not depend on it. Record the missing evidence and its future use.
