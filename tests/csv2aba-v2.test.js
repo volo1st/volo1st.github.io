@@ -363,3 +363,117 @@ test('conversion rejects an incomplete row instead of omitting it', () => {
 
   assert.throws(() => v2.convert(csv), /CSV line 2 field Reference is required/);
 });
+
+test('conversion returns an accurate payment summary', () => {
+  const result = v2.convertWithSummary(VALID_CSV, { processDate: '120926' });
+
+  assert.equal(result.paymentCount, 2);
+  assert.equal(result.totalAmountCents, 8800);
+  assert.equal(result.abaContent, v2.convert(VALID_CSV, { processDate: '120926' }));
+});
+
+test('amount display uses dollars, cents, and thousands separators', () => {
+  assert.equal(v2.formatAmount(0), '$0.00');
+  assert.equal(v2.formatAmount(1), '$0.01');
+  assert.equal(v2.formatAmount(8800), '$88.00');
+  assert.equal(v2.formatAmount(123456), '$1,234.56');
+});
+
+test('amount display rejects an invalid value', () => {
+  for (const value of [-1, 1.5, Number.NaN, Number.MAX_SAFE_INTEGER + 1]) {
+    assert.throws(
+      () => v2.formatAmount(value),
+      /Amount display value must be a non-negative integer/,
+    );
+  }
+});
+
+function loadAppForTest() {
+  function makeElement(properties = {}) {
+    return {
+      disabled: false,
+      files: [],
+      hidden: false,
+      listeners: {},
+      textContent: '',
+      value: '',
+      addEventListener(type, listener) {
+        this.listeners[type] = listener;
+      },
+      ...properties,
+    };
+  }
+
+  const elements = {
+    aba: makeElement(),
+    convert: makeElement(),
+    csv: makeElement(),
+    csvFileInput: makeElement(),
+    downloadAba: makeElement({ disabled: true }),
+    errorMessage: makeElement(),
+    paymentCount: makeElement(),
+    paymentSummary: makeElement({ hidden: true }),
+    paymentTotal: makeElement(),
+    statusMessage: makeElement(),
+  };
+  let readyListener;
+  const document = {
+    body: {
+      appendChild() {},
+      removeChild() {},
+    },
+    addEventListener(type, listener) {
+      if (type === 'DOMContentLoaded') readyListener = listener;
+    },
+    createElement: () => makeElement({ click() {} }),
+    getElementById: (id) => elements[id],
+  };
+  const source = fs.readFileSync(
+    path.join(__dirname, '../tools/csv2aba-v2/app.js'),
+    'utf8',
+  );
+
+  vm.runInNewContext(source, {
+    Blob,
+    CsvToAbaV2: v2,
+    Date,
+    URL: {
+      createObjectURL: () => 'blob:test',
+      revokeObjectURL() {},
+    },
+    document,
+  });
+  readyListener();
+  return elements;
+}
+
+test('the interface shows a summary only after successful conversion', () => {
+  const elements = loadAppForTest();
+  elements.csv.value = VALID_CSV;
+
+  elements.convert.listeners.click();
+
+  assert.equal(elements.paymentSummary.hidden, false);
+  assert.equal(elements.paymentCount.textContent, '2');
+  assert.equal(elements.paymentTotal.textContent, '$88.00');
+  assert.equal(elements.downloadAba.disabled, false);
+  assert.match(elements.statusMessage.textContent, /Review the summary/);
+  assert.equal(elements.errorMessage.textContent, '');
+});
+
+test('the interface clears the summary and download after a change or error', () => {
+  const elements = loadAppForTest();
+  elements.csv.value = VALID_CSV;
+  elements.convert.listeners.click();
+
+  elements.csv.listeners.input();
+  assert.equal(elements.paymentSummary.hidden, true);
+  assert.equal(elements.downloadAba.disabled, true);
+  assert.equal(elements.aba.value, '');
+
+  elements.csv.value = 'invalid';
+  elements.convert.listeners.click();
+  assert.equal(elements.paymentSummary.hidden, true);
+  assert.equal(elements.downloadAba.disabled, true);
+  assert.match(elements.errorMessage.textContent, /^Conversion error:/);
+});

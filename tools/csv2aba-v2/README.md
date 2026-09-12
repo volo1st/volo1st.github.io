@@ -27,6 +27,10 @@ Before a CBA upload, compare these items with version 1:
 
 Keep version 1 available as the fallback.
 
+After a successful conversion, version 2 shows the payment count and total amount. Review this summary before download. The summary and download become unavailable after an input change or an error.
+
+CSV and payment data stay in the browser. The converter source does not send this data to a server.
+
 ## CSV rules
 
 Version 2 uses a strict local CSV reader. Its record and quotation rules follow [RFC 4180](https://www.rfc-editor.org/rfc/rfc4180). The reader also supports a byte order mark (BOM) because spreadsheet exports can include one.

@@ -345,7 +345,7 @@
     return REQUIRED_COLUMNS.filter((column) => !headers.includes(column));
   }
 
-  function processCsvToAba(rows, options = {}) {
+  function processCsvToAbaResult(rows, options = {}) {
     if (rows.length === 0) {
       throw new Error('CSV does not contain a payment row.');
     }
@@ -365,12 +365,37 @@
     }
 
     records.push(generateFileTotalRecord(records, totalAmount));
-    return `${records.join('\n')}\n`;
+    return Object.freeze({
+      abaContent: `${records.join('\n')}\n`,
+      paymentCount: records.length - 2,
+      totalAmountCents: totalAmount,
+    });
+  }
+
+  function processCsvToAba(rows, options = {}) {
+    return processCsvToAbaResult(rows, options).abaContent;
+  }
+
+  function convertWithSummary(csvText, options = {}) {
+    const rows = parseCsv(csvText);
+    return processCsvToAbaResult(rows, options);
   }
 
   function convert(csvText, options = {}) {
-    const rows = parseCsv(csvText);
-    return processCsvToAba(rows, options);
+    return convertWithSummary(csvText, options).abaContent;
+  }
+
+  function formatAmount(amountInCents) {
+    if (!Number.isSafeInteger(amountInCents) || amountInCents < 0) {
+      throw new Error('Amount display value must be a non-negative integer.');
+    }
+
+    const dollars = String(Math.floor(amountInCents / 100)).replace(
+      /\B(?=(\d{3})+(?!\d))/g,
+      ',',
+    );
+    const cents = String(amountInCents % 100).padStart(2, ZERO);
+    return `$${dollars}.${cents}`;
   }
 
   return Object.freeze({
@@ -380,14 +405,17 @@
     MAX_DETAIL_RECORDS,
     REQUIRED_COLUMNS,
     convert,
+    convertWithSummary,
     findMissingColumns,
     formatProcessDate,
+    formatAmount,
     generateDescriptiveRecord,
     generateDetailRecord,
     generateFileTotalRecord,
     parseCsv,
     parseAmountToCents,
     processCsvToAba,
+    processCsvToAbaResult,
     readCsvRecords,
     validateDetailRow,
   });

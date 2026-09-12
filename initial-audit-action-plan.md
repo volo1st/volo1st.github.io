@@ -108,11 +108,12 @@ This file is the single source of truth for audit work.
 
 ### User information
 
-- [ ] Show clear information, warning, error, and success messages.
+- [x] Show clear information, warning, error, and success messages.
 - [ ] Show all applicable row and field errors.
-- [ ] Show the payment count and total before download.
-- [ ] Tell users that conversion occurs in their browser.
-- [ ] Add a safe example CSV file. Use invented data only.
+- [x] Show the payment count and total before download.
+  - Evidence: Version 2 uses the checked conversion result to show both values. The summary contains the Download button.
+- [x] Tell users that conversion occurs in their browser.
+- [x] Add a safe example CSV file. Use invented data only.
 
 ## Phase 3: Prove ABA converter quality
 
@@ -120,6 +121,7 @@ This file is the single source of truth for audit work.
 
 - [x] Add a small JavaScript test system.
 - [ ] Test CSV input, amount conversion, field checks, record construction, totals, file names, and interface states.
+  - Evidence: Automated tests cover all listed areas except file names. Interface-state tests use a simulated document environment.
 - [ ] Test each critical and high risk in the audit report.
 - [ ] Test minimum and maximum values, unsupported characters, byte lengths, and overflow.
 - [ ] Add reviewed ABA sample files. Use invented data only.

@@ -5,13 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CSV to ABA Converter v2 Trial</title>
   <link rel="stylesheet" href="../csv2aba/styles.css">
-  <style>
-    .trial-notice {
-      border: 2px solid #8a6500;
-      background: #fff8df;
-      padding: 12px;
-    }
-  </style>
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <h1>CSV to ABA Converter v2</h1>
@@ -50,6 +44,24 @@
 
   <h2>Convert</h2>
 
+  <p>Your CSV and payment data stay in this browser. This tool does not send the data to a server.</p>
+
+  <section id="paymentSummary" class="payment-summary" aria-labelledby="summaryHeading" hidden>
+    <h3 id="summaryHeading">Payment summary</h3>
+    <dl>
+      <div>
+        <dt>Payment count</dt>
+        <dd><output id="paymentCount"></output></dd>
+      </div>
+      <div>
+        <dt>Total amount</dt>
+        <dd><output id="paymentTotal"></output></dd>
+      </div>
+    </dl>
+    <p>Compare this summary with your source data before you download the ABA file.</p>
+    <button id="downloadAba" disabled>Download ABA file</button>
+  </section>
+
   <table>
     <thead>
       <tr>
@@ -62,24 +74,29 @@
       <tr>
         <td>
           <p>
-            Paste content below or upload a file.
-            <input type="file" id="csvFileInput" accept=".csv">
+            <label for="csvFileInput">Upload a CSV file</label>
+            <input type="file" id="csvFileInput" accept=".csv,text/csv">
           </p>
-          <p id="statusMessage"></p>
-          <p id="errorMessage"></p>
+          <p id="statusMessage" role="status" aria-live="polite"></p>
+          <p id="errorMessage" role="alert"></p>
         </td>
         <td></td>
         <td>
           <p>
             Generated ABA content appears below.
-            <button id="downloadAba" disabled>Download</button>
           </p>
         </td>
       </tr>
       <tr>
-        <td><textarea id="csv" rows="36" cols="60"></textarea></td>
+        <td>
+          <label for="csv">CSV payment data</label>
+          <textarea id="csv" rows="36" cols="60"></textarea>
+        </td>
         <td><button id="convert">Convert</button></td>
-        <td><textarea id="aba" rows="36" cols="120" readonly></textarea></td>
+        <td>
+          <label for="aba">Generated ABA data</label>
+          <textarea id="aba" rows="36" cols="120" readonly></textarea>
+        </td>
       </tr>
     </tbody>
   </table>

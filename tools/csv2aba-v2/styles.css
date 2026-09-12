@@ -1,0 +1,49 @@
+.trial-notice {
+  border: 2px solid #8a6500;
+  background: #fff8df;
+  padding: 12px;
+}
+
+label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.payment-summary {
+  border: 2px solid #18713b;
+  background: #effaf3;
+  margin-top: 24px;
+  max-width: 520px;
+  padding: 16px;
+}
+
+.payment-summary h3 {
+  margin-top: 0;
+}
+
+.payment-summary dl {
+  display: flex;
+  gap: 32px;
+}
+
+.payment-summary dt {
+  font-weight: 700;
+}
+
+.payment-summary dd {
+  font-size: 1.4rem;
+  margin: 4px 0 0;
+}
+
+#errorMessage:not(:empty) {
+  border-left: 4px solid #b42318;
+  color: #b42318;
+  padding-left: 8px;
+}
+
+#statusMessage:not(:empty) {
+  border-left: 4px solid #18713b;
+  color: #12572e;
+  padding-left: 8px;
+}

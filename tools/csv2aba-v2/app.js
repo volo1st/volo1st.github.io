@@ -29,12 +29,18 @@
     const downloadButton = document.getElementById('downloadAba');
     const statusMessage = document.getElementById('statusMessage');
     const errorMessage = document.getElementById('errorMessage');
+    const paymentSummary = document.getElementById('paymentSummary');
+    const paymentCount = document.getElementById('paymentCount');
+    const paymentTotal = document.getElementById('paymentTotal');
 
     function clearResult() {
       abaOutput.value = '';
       downloadButton.disabled = true;
       statusMessage.textContent = '';
       errorMessage.textContent = '';
+      paymentCount.textContent = '';
+      paymentTotal.textContent = '';
+      paymentSummary.hidden = true;
     }
 
     fileInput.addEventListener('change', (event) => {
@@ -68,9 +74,13 @@
       clearResult();
 
       try {
-        abaOutput.value = CsvToAbaV2.convert(csvInput.value);
+        const result = CsvToAbaV2.convertWithSummary(csvInput.value);
+        abaOutput.value = result.abaContent;
+        paymentCount.textContent = String(result.paymentCount);
+        paymentTotal.textContent = CsvToAbaV2.formatAmount(result.totalAmountCents);
+        paymentSummary.hidden = false;
         downloadButton.disabled = false;
-        statusMessage.textContent = 'Conversion is complete.';
+        statusMessage.textContent = 'Conversion is complete. Review the summary before download.';
       } catch (error) {
         errorMessage.textContent = `Conversion error: ${error.message}`;
       }
