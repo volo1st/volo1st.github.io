@@ -23,9 +23,10 @@ This file is the single source of truth for audit work.
 
 - [ ] Record the current use of version 1 for monthly teacher payments through CBA.
   - Completion test: The README states the supported process and its limits.
-- [ ] Keep version 1 at `/tools/csv2aba/` as the fallback.
-- [ ] Build version 2 at `/tools/csv2aba-v2/`.
-- [ ] Keep version 2 out of the main tools list during the first trial.
+- [x] Keep version 1 at `/tools/csv2aba/` as the fallback.
+- [x] Build version 2 at `/tools/csv2aba-v2/`.
+  - Evidence: The first scaffold uses version 1 logic. Version 2 source and tests will replace this shared logic before trial.
+- [x] Keep version 2 out of the main tools list during the first trial.
 
 ### Bank rules
 
@@ -39,7 +40,8 @@ This file is the single source of truth for audit work.
 
 ### Phase gate
 
-- [ ] Record the current source revision as the version 1 baseline.
+- [x] Record the current source revision as the version 1 baseline.
+  - Evidence: Commit `7446b26` records the source and the agreed rollout plan.
 - [ ] For known valid input, require version 2 to make the same payment data as version 1.
 - [ ] Permit version 2 to change only invalid or ambiguous behavior. It must show an error for that input.
 
