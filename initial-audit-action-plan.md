@@ -139,10 +139,13 @@ This file is the single source of truth for audit work.
   - Evidence: On 14 September 2026, the user confirmed that the v2 layout looked correct in Chrome on a MacBook Air with M4 and in Safari on an iPhone 16 Pro.
 - [ ] Test keyboard use, screen-reader use, HTML, and accessibility rules.
 
-### Continuous integration
+### Automated checks
 
-- [ ] Add format, lint, syntax, test, HTML, accessibility, and internal-link checks to continuous integration (CI).
-- [ ] Document the checks that must pass before deployment.
+- [x] Add one local command for syntax, tests, internal references, and whitespace.
+  - Evidence: `scripts/check.sh` runs the repository checks without external dependencies or services.
+- [x] Document the checks that must pass before deployment.
+  - Evidence: `README.md` documents the local command, required software, and check scope.
+- [ ] Add format, lint, full HTML, and automated accessibility checks when the project needs them.
 
 ### Trial and release gate
 
@@ -244,6 +247,7 @@ Use this table when the team changes or rejects an action.
 | Date | Decision | Owner | Reason and evidence |
 | --- | --- | --- | --- |
 | 14 September 2026 | Add a labelled version 2 trial link to the home page. | Repository owner | Version 2 completed its automated trial-readiness package. Version 1 remains the current fallback. |
+| 14 September 2026 | Use a local check script. Do not add Git hooks or GitHub Actions at this time. | Repository owner | A one-person static website does not need the additional setup and maintenance at this time. |
 
 ## Completion record
 

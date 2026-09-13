@@ -70,12 +70,13 @@ Preserve the required ABA record width. Test byte length as well as character le
 
 Run checks that are relevant to each change.
 
-The repository does not yet have a complete test system. At minimum, use these checks:
+Run the general repository check before each commit:
 
 ```sh
-node --check tools/csv2aba/scripts.js
-git diff --check
+./scripts/check.sh
 ```
+
+The script uses Bash, Git, Node.js, and standard shell tools. It does not install dependencies.
 
 For ABA changes, also test:
 
