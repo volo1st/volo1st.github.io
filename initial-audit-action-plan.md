@@ -224,6 +224,8 @@ This file is the single source of truth for audit work.
 ### Deployment
 
 - [ ] Document the GitHub Pages and custom-domain process.
+- [x] Verify the deployed home page, version 1, and version 2 routes.
+  - Evidence: On 14 September 2026, the user confirmed that GitHub Pages deployed the changes and that all three production routes and their links worked.
 - [ ] Check production DNS, TLS, redirects, and the custom domain.
 - [ ] Check production HTTP security headers. Record GitHub Pages limits.
 - [ ] Define how often maintainers review dependencies and browser support.
