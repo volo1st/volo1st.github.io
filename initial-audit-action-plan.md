@@ -26,7 +26,8 @@ This file is the single source of truth for audit work.
 - [x] Keep version 1 at `/tools/csv2aba/` as the fallback.
 - [x] Build version 2 at `/tools/csv2aba-v2/`.
   - Evidence: Version 2 has independent conversion and interface files. Characterization tests compare valid version 2 output with version 1.
-- [x] Keep version 2 out of the main tools list during the first trial.
+- [x] Keep version 2 out of the main tools list until trial readiness is complete. Then add a clearly labelled trial link.
+  - Evidence: Version 2 stayed unlisted during development. The home page now identifies v1 as current and v2 as a trial.
 
 ### Bank rules
 
@@ -157,7 +158,8 @@ This file is the single source of truth for audit work.
 ### All pages
 
 - [ ] Add viewport metadata.
-- [ ] Add consistent text, space, focus styles, navigation, and responsive page widths.
+- [x] Add shared text, space, focus styles, navigation, and responsive page widths to the home page and version 2.
+  - Evidence: Both pages load `assets/site.css`. Version 1 stays unchanged during the trial. The sorter will adopt shared styles in its own package.
 - [ ] Check headings, page language, color contrast, zoom, and keyboard focus.
 
 ### ABA converter
@@ -209,7 +211,7 @@ This file is the single source of truth for audit work.
 
 ### Page data
 
-- [ ] Change the home page title so that it identifies all tools.
+- [x] Change the home page title so that it identifies all tools.
 - [ ] Add short page descriptions and links to the tools home page.
 - [ ] Use the same tool names and letter case on all pages.
 - [ ] Decide if search engines can index the prototype tools.
@@ -239,7 +241,7 @@ Use this table when the team changes or rejects an action.
 
 | Date | Decision | Owner | Reason and evidence |
 | --- | --- | --- | --- |
-| | | | |
+| 14 September 2026 | Add a labelled version 2 trial link to the home page. | Repository owner | Version 2 completed its automated trial-readiness package. Version 1 remains the current fallback. |
 
 ## Completion record
 

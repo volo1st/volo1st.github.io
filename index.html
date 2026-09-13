@@ -2,14 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>CSV 2 ABA</title>
-  <link rel="stylesheet" href="./styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta
+    name="description"
+    content="Small browser tools for payment-file conversion and text sorting."
+  >
+  <title>Useful Browser Tools</title>
+  <link rel="stylesheet" href="./assets/site.css">
 </head>
 <body>
-	<h2>Useful Tools</h2>
-        <ul>
-            <li><a href="./tools/csv2aba/index.html">csv 2 aba</a></li>
-            <li><a href="./tools/song_order/index.html">song order</a></li>
-        </ul>
+  <header class="site-header">
+    <h1>Useful Browser Tools</h1>
+    <p class="version-label">Simple tools that run in your browser</p>
+  </header>
+
+  <main class="site-main">
+    <section class="tool-grid" aria-label="Available tools">
+      <article class="panel tool-card">
+        <h2>CSV to ABA Converter</h2>
+        <p>Convert the music school's teacher payment CSV file to an ABA file for CBA.</p>
+        <div class="tool-actions">
+          <a class="button-link" href="./tools/csv2aba/">Open current version</a>
+          <a class="trial-link" href="./tools/csv2aba-v2/">
+            Try version 2 <span class="badge">Trial</span>
+          </a>
+        </div>
+      </article>
+
+      <article class="panel tool-card">
+        <h2>Chinese-English String Sorter</h2>
+        <p>Sort Chinese and English text into a numbered list.</p>
+        <div class="tool-actions">
+          <a class="button-link" href="./tools/song_order/">Open sorter</a>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>These tools run in your browser.</p>
+  </footer>
 </body>
 </html>

@@ -8,6 +8,7 @@
     content="Convert the music school's teacher payment CSV file to the CBA ABA format."
   >
   <title>CSV to ABA Converter v2 Trial</title>
+  <link rel="stylesheet" href="../../assets/site.css">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
@@ -17,8 +18,8 @@
     <p class="version-label">Version 2 trial</p>
   </header>
 
-  <main>
-    <aside class="trial-notice" aria-labelledby="trialHeading">
+  <main class="site-main">
+    <aside class="panel trial-notice" aria-labelledby="trialHeading">
       <h2 id="trialHeading">Use this version for a trial</h2>
       <p>
         Compare the payment count, total, and ABA output with
@@ -26,7 +27,7 @@
       </p>
     </aside>
 
-    <section class="intro" aria-labelledby="introHeading">
+    <section class="panel intro" aria-labelledby="introHeading">
       <h2 id="introHeading">Create an ABA payment file</h2>
       <p>Upload a CSV file or paste its content. The converter checks all payment rows before it creates the ABA file.</p>
       <p class="privacy-note">
@@ -62,7 +63,7 @@
       </details>
     </section>
 
-    <section class="step-card" aria-labelledby="inputHeading">
+    <section class="panel step-card" aria-labelledby="inputHeading">
       <div class="step-heading">
         <span class="step-number" aria-hidden="true">1</span>
         <div>
@@ -113,7 +114,7 @@
 
     <section
       id="paymentSummary"
-      class="step-card result-card"
+      class="panel step-card result-card"
       aria-labelledby="summaryHeading"
       tabindex="-1"
       hidden
@@ -161,7 +162,7 @@
     </section>
   </main>
 
-  <footer>
+  <footer class="site-footer">
     <p>Keep <a href="../csv2aba/">version 1</a> available during the version 2 trial.</p>
   </footer>
 
