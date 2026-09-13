@@ -455,6 +455,16 @@
     return `$${dollars}.${cents}`;
   }
 
+  function getDownloadFilename(sourceFilename, timestamp = Date.now()) {
+    if (sourceFilename) {
+      const filename = String(sourceFilename);
+      return /\.csv$/i.test(filename)
+        ? filename.replace(/\.csv$/i, '.aba')
+        : `${filename}.aba`;
+    }
+    return `${timestamp}.aba`;
+  }
+
   return Object.freeze({
     DEFAULT_SETTINGS,
     LINE_LENGTH,
@@ -469,6 +479,7 @@
     generateDescriptiveRecord,
     generateDetailRecord,
     generateFileTotalRecord,
+    getDownloadFilename,
     parseCsv,
     parseAmountToCents,
     processCsvToAba,

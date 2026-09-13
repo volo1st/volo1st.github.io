@@ -14,13 +14,6 @@
     URL.revokeObjectURL(url);
   }
 
-  function getDownloadName(fileInput) {
-    if (fileInput.files.length > 0) {
-      return fileInput.files[0].name.replace(/\.csv$/i, '.aba');
-    }
-    return `${Date.now()}.aba`;
-  }
-
   document.addEventListener('DOMContentLoaded', () => {
     const fileInput = document.getElementById('csvFileInput');
     const csvInput = document.getElementById('csv');
@@ -112,7 +105,8 @@
         return;
       }
 
-      const filename = getDownloadName(fileInput);
+      const sourceFilename = fileInput.files.length > 0 ? fileInput.files[0].name : '';
+      const filename = CsvToAbaV2.getDownloadFilename(sourceFilename);
       downloadAbaFile(abaOutput.value, filename);
       statusMessage.textContent = `Downloaded "${filename}".`;
     });

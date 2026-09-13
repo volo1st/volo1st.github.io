@@ -410,6 +410,34 @@ test('amount display rejects an invalid value', () => {
   }
 });
 
+test('the golden fixture preserves exact ABA bytes with invented data', () => {
+  const fixtureDirectory = path.join(__dirname, 'fixtures/csv2aba-v2');
+  const csv = fs.readFileSync(path.join(fixtureDirectory, 'basic.csv'), 'utf8');
+  const encodedAba = fs.readFileSync(
+    path.join(fixtureDirectory, 'basic.aba.base64'),
+    'utf8',
+  ).trim();
+  const expectedAba = Buffer.from(encodedAba, 'base64').toString('utf8');
+  const settings = {
+    institution: 'AAA',
+    userName: 'Example School',
+    userId: '123456',
+    entryDescription: 'PAYMENTS',
+    remitterName: 'Example School',
+  };
+  const actualAba = v2.convert(csv, { processDate: '120926', settings });
+
+  assert.equal(actualAba, expectedAba);
+  assert.equal(Buffer.byteLength(actualAba, 'utf8'), 484);
+});
+
+test('download filenames use the ABA extension', () => {
+  assert.equal(v2.getDownloadFilename('teacher-payments.csv'), 'teacher-payments.aba');
+  assert.equal(v2.getDownloadFilename('teacher-payments.CSV'), 'teacher-payments.aba');
+  assert.equal(v2.getDownloadFilename('teacher-payments'), 'teacher-payments.aba');
+  assert.equal(v2.getDownloadFilename('', 1234567890), '1234567890.aba');
+});
+
 function loadAppForTest() {
   function makeElement(properties = {}) {
     return {
@@ -451,7 +479,32 @@ function loadAppForTest() {
     paymentTotal: makeElement(),
     statusMessage: makeElement(),
   };
+  const testState = {
+    links: [],
+    revokedUrls: [],
+  };
   let readyListener;
+
+  class FakeFileReader {
+    constructor() {
+      this.error = null;
+      this.listeners = {};
+    }
+
+    addEventListener(type, listener) {
+      this.listeners[type] = listener;
+    }
+
+    readAsText(file) {
+      if (file.error) {
+        this.error = file.error;
+        this.listeners.error();
+        return;
+      }
+      this.listeners.load({ target: { result: file.content } });
+    }
+  }
+
   const document = {
     body: {
       appendChild() {},
@@ -460,7 +513,15 @@ function loadAppForTest() {
     addEventListener(type, listener) {
       if (type === 'DOMContentLoaded') readyListener = listener;
     },
-    createElement: () => makeElement({ click() {} }),
+    createElement(tagName) {
+      const element = makeElement({
+        click() {
+          this.clicked = true;
+        },
+      });
+      if (tagName === 'a') testState.links.push(element);
+      return element;
+    },
     getElementById: (id) => elements[id],
   };
   const source = fs.readFileSync(
@@ -472,13 +533,17 @@ function loadAppForTest() {
     Blob,
     CsvToAbaV2: v2,
     Date,
+    FileReader: FakeFileReader,
     URL: {
       createObjectURL: () => 'blob:test',
-      revokeObjectURL() {},
+      revokeObjectURL(url) {
+        testState.revokedUrls.push(url);
+      },
     },
     document,
   });
   readyListener();
+  elements.testState = testState;
   return elements;
 }
 
@@ -515,6 +580,13 @@ test('the interface clears the summary and download after a change or error', ()
   assert.match(elements.errorMessage.textContent, /^Conversion error:/);
   assert.equal(elements.errorPanel.hidden, false);
   assert.equal(elements.errorPanel.focused, true);
+
+  elements.csv.value = VALID_CSV;
+  elements.csv.listeners.input();
+  elements.convert.listeners.click();
+  assert.equal(elements.paymentSummary.hidden, false);
+  assert.equal(elements.downloadAba.disabled, false);
+  assert.equal(elements.errorPanel.hidden, true);
 });
 
 test('the interface shows all payment errors in a list', () => {
@@ -531,4 +603,44 @@ test('the interface shows all payment errors in a list', () => {
   assert.match(elements.errorList.children[0].textContent, /^CSV line 2/);
   assert.match(elements.errorList.children[7].textContent, /^CSV line 3/);
   assert.equal(elements.errorPanel.focused, true);
+});
+
+test('the interface supports file upload, conversion, and download', () => {
+  const elements = loadAppForTest();
+  const file = {
+    content: VALID_CSV,
+    name: 'teacher-payments.csv',
+  };
+  elements.csvFileInput.files = [file];
+
+  elements.csvFileInput.listeners.change({ target: elements.csvFileInput });
+  assert.equal(elements.csv.value, VALID_CSV);
+  assert.equal(elements.statusMessage.textContent, 'Loaded "teacher-payments.csv".');
+
+  elements.convert.listeners.click();
+  elements.downloadAba.listeners.click();
+
+  assert.equal(elements.testState.links.length, 1);
+  assert.equal(elements.testState.links[0].download, 'teacher-payments.aba');
+  assert.equal(elements.testState.links[0].clicked, true);
+  assert.deepEqual(elements.testState.revokedUrls, ['blob:test']);
+  assert.equal(
+    elements.statusMessage.textContent,
+    'Downloaded "teacher-payments.aba".',
+  );
+});
+
+test('the interface reports a file-read failure', () => {
+  const elements = loadAppForTest();
+  elements.csvFileInput.files = [{
+    error: new Error('Test read failure.'),
+    name: 'teacher-payments.csv',
+  }];
+
+  elements.csvFileInput.listeners.change({ target: elements.csvFileInput });
+
+  assert.equal(elements.downloadAba.disabled, true);
+  assert.equal(elements.errorPanel.hidden, false);
+  assert.equal(elements.errorPanel.focused, true);
+  assert.equal(elements.errorMessage.textContent, 'File read error: Test read failure.');
 });

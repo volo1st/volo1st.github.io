@@ -21,8 +21,8 @@ This file is the single source of truth for audit work.
 
 ### Current support
 
-- [ ] Record the current use of version 1 for monthly teacher payments through CBA.
-  - Completion test: The README states the supported process and its limits.
+- [x] Record the current use of version 1 for monthly teacher payments through CBA.
+  - Evidence: The version 2 README states the supported process, its history, and its limits.
 - [x] Keep version 1 at `/tools/csv2aba/` as the fallback.
 - [x] Build version 2 at `/tools/csv2aba-v2/`.
   - Evidence: Version 2 has independent conversion and interface files. Characterization tests compare valid version 2 output with version 1.
@@ -42,8 +42,10 @@ This file is the single source of truth for audit work.
 
 - [x] Record the current source revision as the version 1 baseline.
   - Evidence: Commit `7446b26` records the source and the agreed rollout plan.
-- [ ] For known valid input, require version 2 to make the same payment data as version 1.
-- [ ] Permit version 2 to change only invalid or ambiguous behavior. It must show an error for that input.
+- [x] For known valid input, require version 2 to make the same payment data as version 1.
+  - Evidence: Characterization and golden-fixture tests require exact v1-compatible output.
+- [x] Permit version 2 to change only invalid or ambiguous behavior. It must show an error for that input.
+  - Evidence: The version 2 README records this rule. Parser, amount, payment-field, and interface tests enforce it.
 
 ## Phase 1: Make the ABA converter correct
 
@@ -121,15 +123,17 @@ This file is the single source of truth for audit work.
 ### Automated tests
 
 - [x] Add a small JavaScript test system.
-- [ ] Test CSV input, amount conversion, field checks, record construction, totals, file names, and interface states.
-  - Evidence: Automated tests cover all listed areas except file names. Interface-state tests use a simulated document environment.
+- [x] Test CSV input, amount conversion, field checks, record construction, totals, file names, and interface states.
+  - Evidence: Automated tests cover all listed areas. Interface-state tests use a simulated document environment.
 - [ ] Test each critical and high risk in the audit report.
 - [ ] Test minimum and maximum values, unsupported characters, byte lengths, and overflow.
-- [ ] Add reviewed ABA sample files. Use invented data only.
+- [x] Add reviewed ABA sample files. Use invented data only.
+  - Evidence: The golden fixture uses invented source and payment data. It stores exact ABA bytes as Base64. A separate test checks version 1 compatibility. The fixture is not bank-approval evidence.
 
 ### Browser and accessibility tests
 
-- [ ] Test upload, paste, conversion, error recovery, second conversion, and download.
+- [x] Test upload, paste, conversion, error recovery, second conversion, and download with simulated browser controls.
+- [ ] Test the complete workflow in a browser during the operator trial.
 - [x] Test current main desktop and mobile browsers.
   - Evidence: On 14 September 2026, the user confirmed that the v2 layout looked correct in Chrome on a MacBook Air with M4 and in Safari on an iPhone 16 Pro.
 - [ ] Test keyboard use, screen-reader use, HTML, and accessibility rules.
@@ -217,7 +221,8 @@ This file is the single source of truth for audit work.
 - [ ] Check production HTTP security headers. Record GitHub Pages limits.
 - [ ] Define how often maintainers review dependencies and browser support.
 - [ ] Confirm that the site has no unrecorded analytics or network requests.
-- [ ] Add a short test checklist for each release.
+- [x] Add a short test checklist for each release.
+  - Evidence: `tools/csv2aba-v2/TRIAL-CHECKLIST.md` defines the operator and CBA trial steps.
 
 ## Phase 7: Close the audit
 

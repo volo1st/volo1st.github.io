@@ -27,6 +27,10 @@ Before a CBA upload, compare these items with version 1:
 
 Keep version 1 available as the fallback.
 
+The current workflow creates monthly teacher payments for a Sydney music school. CBA has accepted version 1 files from this workflow for nearly one year. This history applies only to this workflow.
+
+Use [`TRIAL-CHECKLIST.md`](TRIAL-CHECKLIST.md) for each version 2 trial.
+
 After a successful conversion, version 2 shows the payment count and total amount. Review this summary before download. The summary and download become unavailable after an input change or an error.
 
 CSV and payment data stay in the browser. The converter source does not send this data to a server.
@@ -85,3 +89,5 @@ Run this command from the repository root:
 ```sh
 node --test tests/csv2aba-v2.test.js
 ```
+
+The test suite includes an exact golden ABA fixture. The fixture uses invented source and payment data. It also uses a fixed processing date. The ABA content is stored as Base64 to preserve fixed-width spaces and line ends. A separate characterization test checks version 1 compatibility. The fixture is not evidence of CBA approval.
