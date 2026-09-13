@@ -157,13 +157,15 @@ This file is the single source of truth for audit work.
 
 ### ABA converter
 
-- [ ] Replace the layout table with a responsive layout.
-- [ ] Add a label and help text to each input, output, and button.
-- [ ] Add live status semantics for assistive software.
-- [ ] Use text or symbols with color for each status.
-- [ ] Remove the comma between textarea attributes.
-- [ ] Make the page usable on a narrow screen and at 200 percent zoom.
-- [ ] Add a caption and correct headers to the example table.
+- [x] Replace the layout table with a responsive layout.
+  - Evidence: Version 2 uses a mobile-first vertical workflow. It does not use a table for page layout.
+- [x] Add a label and help text to each input and output. Give each button a clear name.
+- [x] Add live status semantics for assistive software.
+- [x] Use text and structure with color for each status.
+- [x] Remove the comma between textarea attributes.
+- [ ] Confirm the page in browsers on a narrow screen and at 200 percent zoom.
+  - Evidence: Responsive source rules are complete. This environment does not have a browser runner.
+- [x] Add a caption and correct headers to the example table.
 
 ### Text sorter
 

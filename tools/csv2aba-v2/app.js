@@ -69,6 +69,7 @@
         const detail = reader.error ? reader.error.message : 'The browser did not give a reason.';
         errorMessage.textContent = `File read error: ${detail}`;
         errorPanel.hidden = false;
+        errorPanel.focus();
       });
 
       reader.readAsText(file);
@@ -87,6 +88,7 @@
         paymentSummary.hidden = false;
         downloadButton.disabled = false;
         statusMessage.textContent = 'Conversion is complete. Review the summary before download.';
+        paymentSummary.focus();
       } catch (error) {
         if (Array.isArray(error.errors)) {
           errorMessage.textContent = error.errors.length === 1
@@ -101,6 +103,7 @@
           errorMessage.textContent = `Conversion error: ${error.message}`;
         }
         errorPanel.hidden = false;
+        errorPanel.focus();
       }
     });
 

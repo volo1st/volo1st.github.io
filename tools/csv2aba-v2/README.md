@@ -31,6 +31,8 @@ After a successful conversion, version 2 shows the payment count and total amoun
 
 CSV and payment data stay in the browser. The converter source does not send this data to a server.
 
+The page uses one vertical workflow on large and small screens. Add payment data first. Then check and convert it. Review the payment summary and ABA data before download. After conversion, keyboard focus moves to the result or the error report.
+
 ## CSV rules
 
 Version 2 uses a strict local CSV reader. Its record and quotation rules follow [RFC 4180](https://www.rfc-editor.org/rfc/rfc4180). The reader also supports a byte order mark (BOM) because spreadsheet exports can include one.

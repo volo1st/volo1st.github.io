@@ -418,6 +418,7 @@ function loadAppForTest() {
       files: [],
       hidden: false,
       listeners: {},
+      focused: false,
       textContent: '',
       value: '',
       addEventListener(type, listener) {
@@ -425,6 +426,9 @@ function loadAppForTest() {
       },
       appendChild(child) {
         this.children.push(child);
+      },
+      focus() {
+        this.focused = true;
       },
       replaceChildren(...children) {
         this.children = children;
@@ -491,6 +495,7 @@ test('the interface shows a summary only after successful conversion', () => {
   assert.match(elements.statusMessage.textContent, /Review the summary/);
   assert.equal(elements.errorMessage.textContent, '');
   assert.equal(elements.errorPanel.hidden, true);
+  assert.equal(elements.paymentSummary.focused, true);
 });
 
 test('the interface clears the summary and download after a change or error', () => {
@@ -509,6 +514,7 @@ test('the interface clears the summary and download after a change or error', ()
   assert.equal(elements.downloadAba.disabled, true);
   assert.match(elements.errorMessage.textContent, /^Conversion error:/);
   assert.equal(elements.errorPanel.hidden, false);
+  assert.equal(elements.errorPanel.focused, true);
 });
 
 test('the interface shows all payment errors in a list', () => {
@@ -524,4 +530,5 @@ test('the interface shows all payment errors in a list', () => {
   assert.equal(elements.errorList.children.length, 8);
   assert.match(elements.errorList.children[0].textContent, /^CSV line 2/);
   assert.match(elements.errorList.children[7].textContent, /^CSV line 3/);
+  assert.equal(elements.errorPanel.focused, true);
 });

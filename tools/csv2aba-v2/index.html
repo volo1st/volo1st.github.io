@@ -3,106 +3,167 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta
+    name="description"
+    content="Convert the music school's teacher payment CSV file to the CBA ABA format."
+  >
   <title>CSV to ABA Converter v2 Trial</title>
-  <link rel="stylesheet" href="../csv2aba/styles.css">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <h1>CSV to ABA Converter v2</h1>
+  <header class="site-header">
+    <a class="back-link" href="../../">← All tools</a>
+    <h1>CSV to ABA Converter</h1>
+    <p class="version-label">Version 2 trial</p>
+  </header>
 
-  <div class="trial-notice" role="note">
-    <strong>Trial version.</strong>
-    Compare its payment count, total, and ABA output with
-    <a href="../csv2aba/">version 1</a> before you upload the file to CBA.
-  </div>
+  <main>
+    <aside class="trial-notice" aria-labelledby="trialHeading">
+      <h2 id="trialHeading">Use this version for a trial</h2>
+      <p>
+        Compare the payment count, total, and ABA output with
+        <a href="../csv2aba/">version 1</a> before you upload the file to CBA.
+      </p>
+    </aside>
 
-  <hr>
+    <section class="intro" aria-labelledby="introHeading">
+      <h2 id="introHeading">Create an ABA payment file</h2>
+      <p>Upload a CSV file or paste its content. The converter checks all payment rows before it creates the ABA file.</p>
+      <p class="privacy-note">
+        <strong>Your data stays in this browser.</strong>
+        This tool does not send CSV or payment data to a server.
+      </p>
 
-  <h2>Example CSV format</h2>
-  <table class="table-centered">
-    <thead>
-      <tr>
-        <th scope="col">BSB</th>
-        <th scope="col">Account</th>
-        <th scope="col">Name</th>
-        <th scope="col">Amount</th>
-        <th scope="col">Reference</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>062-010</td>
-        <td>10894862</td>
-        <td>Example Teacher</td>
-        <td>$63.00</td>
-        <td>teacher fee</td>
-      </tr>
-    </tbody>
-  </table>
+      <details>
+        <summary>Show the required CSV format</summary>
+        <div class="table-scroll" tabindex="0">
+          <table>
+            <caption>Example payment row with invented data</caption>
+            <thead>
+              <tr>
+                <th scope="col">BSB</th>
+                <th scope="col">Account</th>
+                <th scope="col">Name</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Reference</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>062-010</td>
+                <td>10894862</td>
+                <td>Example Teacher</td>
+                <td>$63.00</td>
+                <td>teacher fee</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </section>
 
-  <hr>
-
-  <h2>Convert</h2>
-
-  <p>Your CSV and payment data stay in this browser. This tool does not send the data to a server.</p>
-
-  <section id="paymentSummary" class="payment-summary" aria-labelledby="summaryHeading" hidden>
-    <h3 id="summaryHeading">Payment summary</h3>
-    <dl>
-      <div>
-        <dt>Payment count</dt>
-        <dd><output id="paymentCount"></output></dd>
+    <section class="step-card" aria-labelledby="inputHeading">
+      <div class="step-heading">
+        <span class="step-number" aria-hidden="true">1</span>
+        <div>
+          <h2 id="inputHeading">Add payment data</h2>
+          <p>Choose a CSV file or paste the CSV content.</p>
+        </div>
       </div>
-      <div>
-        <dt>Total amount</dt>
-        <dd><output id="paymentTotal"></output></dd>
-      </div>
-    </dl>
-    <p>Compare this summary with your source data before you download the ABA file.</p>
-    <button id="downloadAba" disabled>Download ABA file</button>
-  </section>
 
-  <table>
-    <thead>
-      <tr>
-        <th scope="col">CSV</th>
-        <th scope="col"></th>
-        <th scope="col">ABA</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <p>
-            <label for="csvFileInput">Upload a CSV file</label>
-            <input type="file" id="csvFileInput" accept=".csv,text/csv">
-          </p>
-          <p id="statusMessage" role="status" aria-live="polite"></p>
-          <div id="errorPanel" class="error-panel" role="alert" hidden>
-            <p id="errorMessage"></p>
-            <ul id="errorList"></ul>
-          </div>
-        </td>
-        <td></td>
-        <td>
-          <p>
-            Generated ABA content appears below.
-          </p>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <label for="csv">CSV payment data</label>
-          <textarea id="csv" rows="36" cols="60"></textarea>
-        </td>
-        <td><button id="convert">Convert</button></td>
-        <td>
-          <label for="aba">Generated ABA data</label>
-          <textarea id="aba" rows="36" cols="120" readonly></textarea>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+      <div class="file-field">
+        <label for="csvFileInput">Choose a CSV file</label>
+        <input
+          type="file"
+          id="csvFileInput"
+          accept=".csv,text/csv"
+          aria-describedby="fileHelp"
+        >
+        <p id="fileHelp" class="field-help">The selected file fills the CSV text field.</p>
+      </div>
+
+      <div class="choice-divider" aria-hidden="true"><span>or</span></div>
+
+      <div class="text-field">
+        <label for="csv">Paste CSV content</label>
+        <textarea
+          id="csv"
+          rows="14"
+          spellcheck="false"
+          aria-describedby="csvHelp"
+          placeholder="BSB,Account,Name,Amount,Reference"
+        ></textarea>
+        <p id="csvHelp" class="field-help">Include one header row and one or more payment rows.</p>
+      </div>
+
+      <button id="convert" class="primary-action" type="button">Check and convert</button>
+
+      <p id="statusMessage" class="status-message" role="status" aria-live="polite"></p>
+      <div
+        id="errorPanel"
+        class="error-panel"
+        role="alert"
+        tabindex="-1"
+        hidden
+      >
+        <p id="errorMessage"></p>
+        <ul id="errorList"></ul>
+      </div>
+    </section>
+
+    <section
+      id="paymentSummary"
+      class="step-card result-card"
+      aria-labelledby="summaryHeading"
+      tabindex="-1"
+      hidden
+    >
+      <div class="step-heading">
+        <span class="step-number success-number" aria-hidden="true">2</span>
+        <div>
+          <h2 id="summaryHeading">Review the result</h2>
+          <p>Compare these values with the source payment report.</p>
+        </div>
+      </div>
+
+      <dl class="payment-totals">
+        <div>
+          <dt>Payment count</dt>
+          <dd><output id="paymentCount"></output></dd>
+        </div>
+        <div>
+          <dt>Total amount</dt>
+          <dd><output id="paymentTotal"></output></dd>
+        </div>
+      </dl>
+
+      <div class="text-field">
+        <label for="aba">Generated ABA data</label>
+        <textarea
+          id="aba"
+          rows="10"
+          wrap="off"
+          readonly
+          aria-describedby="abaHelp"
+        ></textarea>
+        <p id="abaHelp" class="field-help">This field is read-only. Each ABA record has 120 characters.</p>
+      </div>
+
+      <div class="download-step">
+        <span class="step-number success-number" aria-hidden="true">3</span>
+        <div>
+          <h3>Download the checked file</h3>
+          <button id="downloadAba" class="primary-action" type="button" disabled>
+            Download ABA file
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Keep <a href="../csv2aba/">version 1</a> available during the version 2 trial.</p>
+  </footer>
 
   <script src="./core.js"></script>
   <script src="./app.js"></script>
