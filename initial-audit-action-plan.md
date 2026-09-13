@@ -164,8 +164,8 @@ This file is the single source of truth for audit work.
 - [x] Add live status semantics for assistive software.
 - [x] Use text and structure with color for each status.
 - [x] Remove the comma between textarea attributes.
-- [ ] Confirm the page in browsers on a narrow screen and at 200 percent zoom.
-  - Evidence: Responsive source rules are complete. On 14 September 2026, the user confirmed the layout in Safari on an iPhone 16 Pro. The 200 percent zoom check remains open.
+- [x] Confirm the page in browsers on a narrow screen and at 200 percent zoom.
+  - Evidence: On 14 September 2026, the user confirmed the layout in Safari on an iPhone 16 Pro and confirmed that the page works at 200 percent zoom.
 - [x] Add a caption and correct headers to the example table.
 
 ### Text sorter
