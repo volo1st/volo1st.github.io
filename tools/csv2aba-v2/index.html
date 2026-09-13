@@ -78,7 +78,10 @@
             <input type="file" id="csvFileInput" accept=".csv,text/csv">
           </p>
           <p id="statusMessage" role="status" aria-live="polite"></p>
-          <p id="errorMessage" role="alert"></p>
+          <div id="errorPanel" class="error-panel" role="alert" hidden>
+            <p id="errorMessage"></p>
+            <ul id="errorList"></ul>
+          </div>
         </td>
         <td></td>
         <td>

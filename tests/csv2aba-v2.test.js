@@ -364,6 +364,28 @@ test('conversion rejects an incomplete row instead of omitting it', () => {
   assert.throws(() => v2.convert(csv), /CSV line 2 field Reference is required/);
 });
 
+const MULTIPLE_ERROR_CSV = [
+  'BSB,Account,Name,Amount,Reference',
+  `062010,ABC123,${'N'.repeat(33)},abc,${'R'.repeat(19)}`,
+  '062-443,000-000,,0,teacher fee',
+].join('\n');
+
+test('conversion collects errors from all payment rows and fields', () => {
+  assert.throws(
+    () => v2.convert(MULTIPLE_ERROR_CSV),
+    (error) => {
+      assert.equal(error.name, 'PaymentValidationError');
+      assert.equal(error.message, 'Payment data has 8 errors.');
+      assert.equal(error.errors.length, 8);
+      assert.ok(error.errors.some((message) => /CSV line 2 field BSB/.test(message)));
+      assert.ok(error.errors.some((message) => /CSV line 2 field Name/.test(message)));
+      assert.ok(error.errors.some((message) => /CSV line 3 field Account/.test(message)));
+      assert.ok(error.errors.some((message) => /CSV line 3 field Name/.test(message)));
+      return true;
+    },
+  );
+});
+
 test('conversion returns an accurate payment summary', () => {
   const result = v2.convertWithSummary(VALID_CSV, { processDate: '120926' });
 
@@ -391,6 +413,7 @@ test('amount display rejects an invalid value', () => {
 function loadAppForTest() {
   function makeElement(properties = {}) {
     return {
+      children: [],
       disabled: false,
       files: [],
       hidden: false,
@@ -399,6 +422,12 @@ function loadAppForTest() {
       value: '',
       addEventListener(type, listener) {
         this.listeners[type] = listener;
+      },
+      appendChild(child) {
+        this.children.push(child);
+      },
+      replaceChildren(...children) {
+        this.children = children;
       },
       ...properties,
     };
@@ -410,7 +439,9 @@ function loadAppForTest() {
     csv: makeElement(),
     csvFileInput: makeElement(),
     downloadAba: makeElement({ disabled: true }),
+    errorList: makeElement(),
     errorMessage: makeElement(),
+    errorPanel: makeElement({ hidden: true }),
     paymentCount: makeElement(),
     paymentSummary: makeElement({ hidden: true }),
     paymentTotal: makeElement(),
@@ -459,6 +490,7 @@ test('the interface shows a summary only after successful conversion', () => {
   assert.equal(elements.downloadAba.disabled, false);
   assert.match(elements.statusMessage.textContent, /Review the summary/);
   assert.equal(elements.errorMessage.textContent, '');
+  assert.equal(elements.errorPanel.hidden, true);
 });
 
 test('the interface clears the summary and download after a change or error', () => {
@@ -476,4 +508,20 @@ test('the interface clears the summary and download after a change or error', ()
   assert.equal(elements.paymentSummary.hidden, true);
   assert.equal(elements.downloadAba.disabled, true);
   assert.match(elements.errorMessage.textContent, /^Conversion error:/);
+  assert.equal(elements.errorPanel.hidden, false);
+});
+
+test('the interface shows all payment errors in a list', () => {
+  const elements = loadAppForTest();
+  elements.csv.value = MULTIPLE_ERROR_CSV;
+
+  elements.convert.listeners.click();
+
+  assert.equal(elements.paymentSummary.hidden, true);
+  assert.equal(elements.downloadAba.disabled, true);
+  assert.equal(elements.errorPanel.hidden, false);
+  assert.equal(elements.errorMessage.textContent, 'Conversion stopped. Fix these 8 errors:');
+  assert.equal(elements.errorList.children.length, 8);
+  assert.match(elements.errorList.children[0].textContent, /^CSV line 2/);
+  assert.match(elements.errorList.children[7].textContent, /^CSV line 3/);
 });

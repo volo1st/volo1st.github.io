@@ -36,10 +36,18 @@ label {
   margin: 4px 0 0;
 }
 
-#errorMessage:not(:empty) {
+.error-panel {
   border-left: 4px solid #b42318;
   color: #b42318;
   padding-left: 8px;
+}
+
+.error-panel p {
+  font-weight: 700;
+}
+
+.error-panel li + li {
+  margin-top: 6px;
 }
 
 #statusMessage:not(:empty) {

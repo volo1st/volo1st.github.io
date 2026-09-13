@@ -28,7 +28,9 @@
     const convertButton = document.getElementById('convert');
     const downloadButton = document.getElementById('downloadAba');
     const statusMessage = document.getElementById('statusMessage');
+    const errorPanel = document.getElementById('errorPanel');
     const errorMessage = document.getElementById('errorMessage');
+    const errorList = document.getElementById('errorList');
     const paymentSummary = document.getElementById('paymentSummary');
     const paymentCount = document.getElementById('paymentCount');
     const paymentTotal = document.getElementById('paymentTotal');
@@ -38,6 +40,8 @@
       downloadButton.disabled = true;
       statusMessage.textContent = '';
       errorMessage.textContent = '';
+      errorList.replaceChildren();
+      errorPanel.hidden = true;
       paymentCount.textContent = '';
       paymentTotal.textContent = '';
       paymentSummary.hidden = true;
@@ -62,7 +66,9 @@
 
       reader.addEventListener('error', () => {
         clearResult();
-        errorMessage.textContent = `File read error: ${reader.error.message}`;
+        const detail = reader.error ? reader.error.message : 'The browser did not give a reason.';
+        errorMessage.textContent = `File read error: ${detail}`;
+        errorPanel.hidden = false;
       });
 
       reader.readAsText(file);
@@ -82,7 +88,19 @@
         downloadButton.disabled = false;
         statusMessage.textContent = 'Conversion is complete. Review the summary before download.';
       } catch (error) {
-        errorMessage.textContent = `Conversion error: ${error.message}`;
+        if (Array.isArray(error.errors)) {
+          errorMessage.textContent = error.errors.length === 1
+            ? 'Conversion stopped. Fix this error:'
+            : `Conversion stopped. Fix these ${error.errors.length} errors:`;
+          for (const message of error.errors) {
+            const item = document.createElement('li');
+            item.textContent = message;
+            errorList.appendChild(item);
+          }
+        } else {
+          errorMessage.textContent = `Conversion error: ${error.message}`;
+        }
+        errorPanel.hidden = false;
       }
     });
 

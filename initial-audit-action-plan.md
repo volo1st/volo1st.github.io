@@ -109,7 +109,8 @@ This file is the single source of truth for audit work.
 ### User information
 
 - [x] Show clear information, warning, error, and success messages.
-- [ ] Show all applicable row and field errors.
+- [x] Show all applicable row and field errors.
+  - Evidence: Version 2 validates all parsed payment rows before construction. The interface shows the errors in one accessible list.
 - [x] Show the payment count and total before download.
   - Evidence: Version 2 uses the checked conversion result to show both values. The summary contains the Download button.
 - [x] Tell users that conversion occurs in their browser.

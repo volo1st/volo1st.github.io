@@ -88,35 +88,106 @@
     return rawValue.trim();
   }
 
-  function validateDetailRow(row) {
+  function inspectDetailRow(row) {
     const values = {};
+    const errors = [];
     for (const fieldName of REQUIRED_COLUMNS) {
-      values[fieldName] = validateRequiredField(row, fieldName);
+      try {
+        values[fieldName] = validateRequiredField(row, fieldName);
+      } catch (error) {
+        errors.push(error.message);
+      }
     }
 
     const rowName = getRowName(row);
-    if (!/^\d{3}-\d{3}$/.test(values.BSB)) {
-      throw new Error(`${rowName} field BSB must have the format NNN-NNN.`);
+    if (values.BSB && !/^\d{3}-\d{3}$/.test(values.BSB)) {
+      errors.push(`${rowName} field BSB must have the format NNN-NNN.`);
     }
-    if (values.Account.length > 9) {
-      throw new Error(`${rowName} field Account must not exceed 9 characters.`);
+    if (values.Account && values.Account.length > 9) {
+      errors.push(`${rowName} field Account must not exceed 9 characters.`);
     }
-    if (!/^[0-9 -]+$/.test(values.Account)) {
-      throw new Error(`${rowName} field Account can contain only digits, spaces, and hyphens.`);
+    if (values.Account && !/^[0-9 -]+$/.test(values.Account)) {
+      errors.push(`${rowName} field Account can contain only digits, spaces, and hyphens.`);
+    } else if (values.Account && !/[1-9]/.test(values.Account)) {
+      errors.push(`${rowName} field Account must contain a non-zero digit.`);
     }
-    if (!/[1-9]/.test(values.Account)) {
-      throw new Error(`${rowName} field Account must contain a non-zero digit.`);
+    if (values.Name && values.Name.length > 32) {
+      errors.push(`${rowName} field Name must not exceed 32 characters.`);
     }
-    if (values.Name.length > 32) {
-      throw new Error(`${rowName} field Name must not exceed 32 characters.`);
+    if (values.Reference && values.Reference.length > 18) {
+      errors.push(`${rowName} field Reference must not exceed 18 characters.`);
     }
-    if (values.Reference.length > 18) {
-      throw new Error(`${rowName} field Reference must not exceed 18 characters.`);
+
+    let amountInCents;
+    if (values.Amount) {
+      try {
+        amountInCents = parseAmountToCents(values.Amount, row);
+      } catch (error) {
+        errors.push(error.message);
+      }
     }
 
     return {
-      ...values,
-      amountInCents: parseAmountToCents(values.Amount, row),
+      errors,
+      values: {
+        ...values,
+        amountInCents,
+        sourceRow: row.sourceRow,
+      },
+    };
+  }
+
+  function validateDetailRow(row) {
+    const result = inspectDetailRow(row);
+    if (result.errors.length > 0) {
+      throw new Error(result.errors[0]);
+    }
+    return result.values;
+  }
+
+  function validateDetailRows(rows) {
+    const errors = [];
+    const values = [];
+
+    for (const row of rows) {
+      const result = inspectDetailRow(row);
+      errors.push(...result.errors);
+      values.push(result.values);
+    }
+
+    if (errors.length > 0) {
+      const message = errors.length === 1
+        ? errors[0]
+        : `Payment data has ${errors.length} errors.`;
+      const error = new Error(message);
+      error.name = 'PaymentValidationError';
+      error.errors = Object.freeze(errors);
+      throw error;
+    }
+
+    return values;
+  }
+
+  function buildDetailRecord(values, settings) {
+    const record = [
+      '1',
+      values.BSB,
+      values.Account.padStart(9, SPACE),
+      SPACE,
+      '53',
+      String(values.amountInCents).padStart(10, ZERO),
+      values.Name.padEnd(32, SPACE),
+      values.Reference.padEnd(18, SPACE),
+      values.BSB,
+      values.Account.padStart(9, SPACE),
+      settings.remitterName.padEnd(16, SPACE),
+      ZERO.repeat(8),
+    ].join('');
+
+    assertRecordLength(record, 'Detail record');
+    return {
+      amountInCents: values.amountInCents,
+      record,
     };
   }
 
@@ -144,24 +215,8 @@
   function generateDetailRecord(row, options = {}) {
     const settings = { ...DEFAULT_SETTINGS, ...options.settings };
     const values = validateDetailRow(row);
-
-    const record = [
-      '1',
-      values.BSB,
-      values.Account.padStart(9, SPACE),
-      SPACE,
-      '53',
-      String(values.amountInCents).padStart(10, ZERO),
-      values.Name.padEnd(32, SPACE),
-      values.Reference.padEnd(18, SPACE),
-      values.BSB,
-      values.Account.padStart(9, SPACE),
-      settings.remitterName.padEnd(16, SPACE),
-      ZERO.repeat(8),
-    ].join('');
-
-    assertRecordLength(record, 'Detail record');
-    return [record, values.amountInCents];
+    const result = buildDetailRecord(values, settings);
+    return [result.record, result.amountInCents];
   }
 
   function generateFileTotalRecord(records, totalAmount) {
@@ -350,18 +405,20 @@
       throw new Error('CSV does not contain a payment row.');
     }
 
+    const validatedRows = validateDetailRows(rows);
+    const settings = { ...DEFAULT_SETTINGS, ...options.settings };
     const records = [generateDescriptiveRecord(options)];
     let totalAmount = 0;
 
-    for (const row of rows) {
-      const [record, amountInCents] = generateDetailRecord(row, options);
-      if (totalAmount > MAX_AMOUNT_CENTS - amountInCents) {
+    for (const values of validatedRows) {
+      const result = buildDetailRecord(values, settings);
+      if (totalAmount > MAX_AMOUNT_CENTS - result.amountInCents) {
         throw new Error(
-          `${getRowName(row)} makes the ABA payment total exceed $99,999,999.99.`,
+          `${getRowName(values)} makes the ABA payment total exceed $99,999,999.99.`,
         );
       }
-      records.push(record);
-      totalAmount += amountInCents;
+      records.push(result.record);
+      totalAmount += result.amountInCents;
     }
 
     records.push(generateFileTotalRecord(records, totalAmount));
@@ -418,5 +475,6 @@
     processCsvToAbaResult,
     readCsvRecords,
     validateDetailRow,
+    validateDetailRows,
   });
 }));
