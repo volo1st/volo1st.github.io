@@ -212,6 +212,8 @@ This file is the single source of truth for audit work.
 ### Page data
 
 - [x] Change the home page title so that it identifies all tools.
+- [x] Confirm the redesigned home page and its tool links in a browser.
+  - Evidence: On 14 September 2026, the user confirmed that the home page looked correct and that all links worked.
 - [ ] Add short page descriptions and links to the tools home page.
 - [ ] Use the same tool names and letter case on all pages.
 - [ ] Decide if search engines can index the prototype tools.
