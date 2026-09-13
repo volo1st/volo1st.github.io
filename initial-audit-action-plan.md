@@ -130,7 +130,8 @@ This file is the single source of truth for audit work.
 ### Browser and accessibility tests
 
 - [ ] Test upload, paste, conversion, error recovery, second conversion, and download.
-- [ ] Test current main desktop and mobile browsers.
+- [x] Test current main desktop and mobile browsers.
+  - Evidence: On 14 September 2026, the user confirmed that the v2 layout looked correct in Chrome on a MacBook Air with M4 and in Safari on an iPhone 16 Pro.
 - [ ] Test keyboard use, screen-reader use, HTML, and accessibility rules.
 
 ### Continuous integration
@@ -164,7 +165,7 @@ This file is the single source of truth for audit work.
 - [x] Use text and structure with color for each status.
 - [x] Remove the comma between textarea attributes.
 - [ ] Confirm the page in browsers on a narrow screen and at 200 percent zoom.
-  - Evidence: Responsive source rules are complete. This environment does not have a browser runner.
+  - Evidence: Responsive source rules are complete. On 14 September 2026, the user confirmed the layout in Safari on an iPhone 16 Pro. The 200 percent zoom check remains open.
 - [x] Add a caption and correct headers to the example table.
 
 ### Text sorter
