@@ -169,6 +169,7 @@ This file is the single source of truth for audit work.
 
 - [x] Add English and Simplified Chinese to the home page and version 2 trial.
   - Evidence: The local translation catalog covers static interface text, workflow status, and validation errors. The language control stores only the language code. Automated tests confirm catalog parity and confirm that a language change preserves a completed result and an active error report.
+  - Production evidence: On 14 September 2026, the user confirmed that the deployed language controls, language persistence, conversion-state preservation, and translated validation messages worked. The user also confirmed that version 1 stayed unchanged.
 - [x] Replace the layout table with a responsive layout.
   - Evidence: Version 2 uses a mobile-first vertical workflow. It does not use a table for page layout.
 - [x] Add a label and help text to each input and output. Give each button a clear name.
