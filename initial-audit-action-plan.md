@@ -167,6 +167,8 @@ This file is the single source of truth for audit work.
 
 ### ABA converter
 
+- [x] Add English and Simplified Chinese to the home page and version 2 trial.
+  - Evidence: The local translation catalog covers static interface text, workflow status, and validation errors. The language control stores only the language code. Automated tests confirm catalog parity and confirm that a language change preserves a completed result and an active error report.
 - [x] Replace the layout table with a responsive layout.
   - Evidence: Version 2 uses a mobile-first vertical workflow. It does not use a table for page layout.
 - [x] Add a label and help text to each input and output. Give each button a clear name.
@@ -250,6 +252,7 @@ Use this table when the team changes or rejects an action.
 | --- | --- | --- | --- |
 | 14 September 2026 | Add a labelled version 2 trial link to the home page. | Repository owner | Version 2 completed its automated trial-readiness package. Version 1 remains the current fallback. |
 | 14 September 2026 | Use a local check script. Do not add Git hooks or GitHub Actions at this time. | Repository owner | A one-person static website does not need the additional setup and maintenance at this time. |
+| 14 September 2026 | Add English and Simplified Chinese to the home page and version 2 trial. Keep version 1 unchanged. | Repository owner | The current operator is more comfortable with Chinese. English-only workflow text has caused operating problems. The GUI is part of the version 2 trial. |
 
 ## Completion record
 

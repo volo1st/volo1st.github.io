@@ -33,10 +33,21 @@
 
   function assertRecordLength(record, name) {
     if (record.length !== LINE_LENGTH) {
-      throw new Error(
+      throw createError('record_length', {
+        actual: record.length,
+        expected: LINE_LENGTH,
+        record: name,
+      },
         `Assertion failed: ${name} length is ${record.length}, expected ${LINE_LENGTH}`,
       );
     }
+  }
+
+  function createError(code, parameters, message) {
+    const error = new Error(message);
+    error.code = code;
+    error.parameters = Object.freeze({ ...parameters });
+    return error;
   }
 
   function getRowName(row) {
@@ -49,7 +60,7 @@
     const rowName = getRowName(row);
 
     if (!match) {
-      throw new Error(
+      throw createError('amount_format', { row: row.sourceRow },
         `${rowName} field Amount must be a positive amount with no more than two decimal places.`,
       );
     }
@@ -59,10 +70,18 @@
     const amountInCents = BigInt(dollars) * 100n + BigInt(cents || ZERO);
 
     if (amountInCents === 0n) {
-      throw new Error(`${rowName} field Amount must be greater than zero.`);
+      throw createError(
+        'amount_zero',
+        { row: row.sourceRow },
+        `${rowName} field Amount must be greater than zero.`,
+      );
     }
     if (amountInCents > BigInt(MAX_AMOUNT_CENTS)) {
-      throw new Error(`${rowName} field Amount exceeds the ABA limit of $99,999,999.99.`);
+      throw createError(
+        'amount_limit',
+        { row: row.sourceRow },
+        `${rowName} field Amount exceeds the ABA limit of $99,999,999.99.`,
+      );
     }
 
     return Number(amountInCents);
@@ -71,18 +90,34 @@
   function validateRequiredField(row, fieldName) {
     const rowName = getRowName(row);
     if (row[fieldName] === undefined || row[fieldName] === null) {
-      throw new Error(`${rowName} field ${fieldName} is required.`);
+      throw createError(
+        'field_required',
+        { field: fieldName, row: row.sourceRow },
+        `${rowName} field ${fieldName} is required.`,
+      );
     }
 
     const rawValue = String(row[fieldName]);
     if (rawValue.trim() === '') {
-      throw new Error(`${rowName} field ${fieldName} is required.`);
+      throw createError(
+        'field_required',
+        { field: fieldName, row: row.sourceRow },
+        `${rowName} field ${fieldName} is required.`,
+      );
     }
     if (/[\r\n]/.test(rawValue)) {
-      throw new Error(`${rowName} field ${fieldName} contains a line break.`);
+      throw createError(
+        'field_line_break',
+        { field: fieldName, row: row.sourceRow },
+        `${rowName} field ${fieldName} contains a line break.`,
+      );
     }
     if (/[\u0000-\u001F\u007F]/.test(rawValue)) {
-      throw new Error(`${rowName} field ${fieldName} contains a control character.`);
+      throw createError(
+        'field_control_character',
+        { field: fieldName, row: row.sourceRow },
+        `${rowName} field ${fieldName} contains a control character.`,
+      );
     }
 
     return rawValue.trim();
@@ -95,27 +130,51 @@
       try {
         values[fieldName] = validateRequiredField(row, fieldName);
       } catch (error) {
-        errors.push(error.message);
+        errors.push(error);
       }
     }
 
     const rowName = getRowName(row);
     if (values.BSB && !/^\d{3}-\d{3}$/.test(values.BSB)) {
-      errors.push(`${rowName} field BSB must have the format NNN-NNN.`);
+      errors.push(createError(
+        'bsb_format',
+        { row: row.sourceRow },
+        `${rowName} field BSB must have the format NNN-NNN.`,
+      ));
     }
     if (values.Account && values.Account.length > 9) {
-      errors.push(`${rowName} field Account must not exceed 9 characters.`);
+      errors.push(createError(
+        'account_length',
+        { row: row.sourceRow },
+        `${rowName} field Account must not exceed 9 characters.`,
+      ));
     }
     if (values.Account && !/^[0-9 -]+$/.test(values.Account)) {
-      errors.push(`${rowName} field Account can contain only digits, spaces, and hyphens.`);
+      errors.push(createError(
+        'account_characters',
+        { row: row.sourceRow },
+        `${rowName} field Account can contain only digits, spaces, and hyphens.`,
+      ));
     } else if (values.Account && !/[1-9]/.test(values.Account)) {
-      errors.push(`${rowName} field Account must contain a non-zero digit.`);
+      errors.push(createError(
+        'account_non_zero',
+        { row: row.sourceRow },
+        `${rowName} field Account must contain a non-zero digit.`,
+      ));
     }
     if (values.Name && values.Name.length > 32) {
-      errors.push(`${rowName} field Name must not exceed 32 characters.`);
+      errors.push(createError(
+        'name_length',
+        { row: row.sourceRow },
+        `${rowName} field Name must not exceed 32 characters.`,
+      ));
     }
     if (values.Reference && values.Reference.length > 18) {
-      errors.push(`${rowName} field Reference must not exceed 18 characters.`);
+      errors.push(createError(
+        'reference_length',
+        { row: row.sourceRow },
+        `${rowName} field Reference must not exceed 18 characters.`,
+      ));
     }
 
     let amountInCents;
@@ -123,7 +182,7 @@
       try {
         amountInCents = parseAmountToCents(values.Amount, row);
       } catch (error) {
-        errors.push(error.message);
+        errors.push(error);
       }
     }
 
@@ -140,7 +199,7 @@
   function validateDetailRow(row) {
     const result = inspectDetailRow(row);
     if (result.errors.length > 0) {
-      throw new Error(result.errors[0]);
+      throw result.errors[0];
     }
     return result.values;
   }
@@ -157,9 +216,9 @@
 
     if (errors.length > 0) {
       const message = errors.length === 1
-        ? errors[0]
+        ? errors[0].message
         : `Payment data has ${errors.length} errors.`;
-      const error = new Error(message);
+      const error = createError('payment_errors', { count: errors.length }, message);
       error.name = 'PaymentValidationError';
       error.errors = Object.freeze(errors);
       throw error;
@@ -222,10 +281,18 @@
   function generateFileTotalRecord(records, totalAmount) {
     const detailRecordCount = records.length - 1;
     if (detailRecordCount > MAX_DETAIL_RECORDS) {
-      throw new Error(`ABA detail record count exceeds ${MAX_DETAIL_RECORDS}.`);
+      throw createError(
+        'record_count_limit',
+        { limit: MAX_DETAIL_RECORDS },
+        `ABA detail record count exceeds ${MAX_DETAIL_RECORDS}.`,
+      );
     }
     if (!Number.isSafeInteger(totalAmount) || totalAmount < 0 || totalAmount > MAX_AMOUNT_CENTS) {
-      throw new Error('ABA payment total exceeds the limit of $99,999,999.99.');
+      throw createError(
+        'total_limit',
+        {},
+        'ABA payment total exceeds the limit of $99,999,999.99.',
+      );
     }
     const record = [
       '7',
@@ -307,12 +374,20 @@
           recordLineNumber = lineNumber;
           continue;
         }
-        throw new Error(`CSV line ${lineNumber} has text after a closing quotation mark.`);
+        throw createError(
+          'csv_text_after_quote',
+          { line: lineNumber },
+          `CSV line ${lineNumber} has text after a closing quotation mark.`,
+        );
       }
 
       if (character === '"') {
         if (field !== '') {
-          throw new Error(`CSV line ${lineNumber} has a quotation mark inside an unquoted field.`);
+          throw createError(
+            'csv_quote_in_unquoted_field',
+            { line: lineNumber },
+            `CSV line ${lineNumber} has a quotation mark inside an unquoted field.`,
+          );
         }
         inQuotes = true;
       } else if (character === ',') {
@@ -330,7 +405,11 @@
     }
 
     if (inQuotes) {
-      throw new Error(`CSV line ${recordLineNumber} has an open quotation mark.`);
+      throw createError(
+        'csv_open_quote',
+        { line: recordLineNumber },
+        `CSV line ${recordLineNumber} has an open quotation mark.`,
+      );
     }
 
     if (field !== '' || fields.length > 0 || afterQuote) {
@@ -343,36 +422,59 @@
   function parseCsv(csvText) {
     const records = readCsvRecords(csvText);
     if (records.length === 0) {
-      throw new Error('CSV input is empty.');
+      throw createError('csv_empty', {}, 'CSV input is empty.');
     }
 
     const headers = records[0].fields.map((value) => value.trim());
     const emptyHeaderIndex = headers.indexOf('');
     if (emptyHeaderIndex !== -1) {
-      throw new Error(`CSV header ${emptyHeaderIndex + 1} is empty.`);
+      throw createError(
+        'csv_empty_header',
+        { column: emptyHeaderIndex + 1 },
+        `CSV header ${emptyHeaderIndex + 1} is empty.`,
+      );
     }
 
     const duplicateHeaders = headers.filter(
       (header, index) => headers.indexOf(header) !== index,
     );
     if (duplicateHeaders.length > 0) {
-      throw new Error(`CSV has duplicate headers: ${[...new Set(duplicateHeaders)].join(', ')}`);
+      const headers = [...new Set(duplicateHeaders)].join(', ');
+      throw createError(
+        'csv_duplicate_headers',
+        { headers },
+        `CSV has duplicate headers: ${headers}`,
+      );
     }
 
     const missingColumns = REQUIRED_COLUMNS.filter((column) => !headers.includes(column));
     if (missingColumns.length > 0) {
-      throw new Error(`Missing required CSV columns: ${missingColumns.join(', ')}`);
+      const columns = missingColumns.join(', ');
+      throw createError(
+        'csv_missing_columns',
+        { columns },
+        `Missing required CSV columns: ${columns}`,
+      );
     }
 
     const unexpectedColumns = headers.filter((header) => !REQUIRED_COLUMNS.includes(header));
     if (unexpectedColumns.length > 0) {
-      throw new Error(`CSV has unexpected columns: ${unexpectedColumns.join(', ')}`);
+      const columns = unexpectedColumns.join(', ');
+      throw createError(
+        'csv_unexpected_columns',
+        { columns },
+        `CSV has unexpected columns: ${columns}`,
+      );
     }
 
     const data = [];
     for (const record of records.slice(1)) {
       if (record.fields.length !== headers.length) {
-        throw new Error(
+        throw createError('csv_field_count', {
+          actual: record.fields.length,
+          expected: headers.length,
+          line: record.lineNumber,
+        },
           `CSV line ${record.lineNumber} has ${record.fields.length} fields; expected ${headers.length}.`,
         );
       }
@@ -402,7 +504,7 @@
 
   function processCsvToAbaResult(rows, options = {}) {
     if (rows.length === 0) {
-      throw new Error('CSV does not contain a payment row.');
+      throw createError('csv_no_payment_rows', {}, 'CSV does not contain a payment row.');
     }
 
     const validatedRows = validateDetailRows(rows);
@@ -413,7 +515,7 @@
     for (const values of validatedRows) {
       const result = buildDetailRecord(values, settings);
       if (totalAmount > MAX_AMOUNT_CENTS - result.amountInCents) {
-        throw new Error(
+        throw createError('total_overflow_at_row', { row: values.sourceRow },
           `${getRowName(values)} makes the ABA payment total exceed $99,999,999.99.`,
         );
       }
@@ -444,7 +546,11 @@
 
   function formatAmount(amountInCents) {
     if (!Number.isSafeInteger(amountInCents) || amountInCents < 0) {
-      throw new Error('Amount display value must be a non-negative integer.');
+      throw createError(
+        'amount_display_invalid',
+        {},
+        'Amount display value must be a non-negative integer.',
+      );
     }
 
     const dollars = String(Math.floor(amountInCents / 100)).replace(

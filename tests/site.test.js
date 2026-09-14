@@ -6,6 +6,7 @@ const path = require('node:path');
 const test = require('node:test');
 
 const repositoryRoot = path.join(__dirname, '..');
+const i18n = require('../assets/i18n.js');
 
 function findHtmlFiles(directory) {
   const files = [];
@@ -80,4 +81,68 @@ test('the home page links to the current converter and the v2 trial', () => {
   assert.match(html, /href="\.\/tools\/csv2aba-v2\/"/);
   assert.match(html, />Trial</);
   assert.match(html, /href="\.\/assets\/site\.css"/);
+});
+
+test('English and Simplified Chinese translation keys match', () => {
+  assert.deepEqual(
+    Object.keys(i18n.catalogs['zh-Hans']).sort(),
+    Object.keys(i18n.catalogs['en-AU']).sort(),
+  );
+});
+
+test('all HTML translation keys exist in both catalogs', () => {
+  const attributePattern = /data-i18n(?:-content|-placeholder|-aria-label)?="([^"]+)"/g;
+  for (const htmlFile of findHtmlFiles(repositoryRoot)) {
+    const html = fs.readFileSync(htmlFile, 'utf8');
+    for (const match of html.matchAll(attributePattern)) {
+      for (const language of ['en-AU', 'zh-Hans']) {
+        assert.ok(
+          Object.hasOwn(i18n.catalogs[language], match[1]),
+          `${path.relative(repositoryRoot, htmlFile)} uses missing ${language} key: ${match[1]}`,
+        );
+      }
+    }
+  }
+});
+
+test('all coded converter errors have translations', () => {
+  const core = fs.readFileSync(
+    path.join(repositoryRoot, 'tools/csv2aba-v2/core.js'),
+    'utf8',
+  );
+  const errorCodes = [...core.matchAll(/createError\(\s*'([^']+)'/g)]
+    .map((match) => match[1]);
+
+  assert.ok(errorCodes.length > 0);
+  for (const code of errorCodes) {
+    for (const language of ['en-AU', 'zh-Hans']) {
+      assert.ok(
+        Object.hasOwn(i18n.catalogs[language], `error.${code}`),
+        `Missing ${language} translation for error code: ${code}`,
+      );
+    }
+  }
+});
+
+test('language selection and coded validation error translation work', () => {
+  assert.equal(i18n.normalizeLanguage('zh-CN'), 'zh-Hans');
+  assert.equal(i18n.normalizeLanguage('en-US'), 'en-AU');
+  let error;
+  assert.throws(() => {
+    try {
+      v2ForErrorTest();
+    } catch (caughtError) {
+      error = caughtError;
+      throw caughtError;
+    }
+  });
+
+  function v2ForErrorTest() {
+    const converter = require('../tools/csv2aba-v2/core.js');
+    return converter.parseAmountToCents('bad', { sourceRow: 7 });
+  }
+
+  assert.equal(error.code, 'amount_format');
+  assert.match(i18n.translateError(error, 'en-AU'), /^CSV line 7/);
+  assert.match(i18n.translateError(error, 'zh-Hans'), /^CSV 第 7 行/);
 });

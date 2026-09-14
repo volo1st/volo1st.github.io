@@ -7,6 +7,7 @@ const test = require('node:test');
 const vm = require('node:vm');
 
 const v2 = require('../tools/csv2aba-v2/core.js');
+const i18n = require('../assets/i18n.js');
 
 const FIXED_DATE = new Date(2026, 8, 12);
 const VALID_CSV = [
@@ -439,6 +440,7 @@ test('download filenames use the ABA extension', () => {
 });
 
 function loadAppForTest() {
+  i18n.setLanguage('en-AU');
   function makeElement(properties = {}) {
     return {
       children: [],
@@ -480,6 +482,7 @@ function loadAppForTest() {
     statusMessage: makeElement(),
   };
   const testState = {
+    windowListeners: {},
     links: [],
     revokedUrls: [],
   };
@@ -529,11 +532,18 @@ function loadAppForTest() {
     'utf8',
   );
 
+  const window = {
+    addEventListener(type, listener) {
+      testState.windowListeners[type] = listener;
+    },
+  };
+
   vm.runInNewContext(source, {
     Blob,
     CsvToAbaV2: v2,
     Date,
     FileReader: FakeFileReader,
+    SiteI18n: i18n,
     URL: {
       createObjectURL: () => 'blob:test',
       revokeObjectURL(url) {
@@ -541,6 +551,7 @@ function loadAppForTest() {
       },
     },
     document,
+    window,
   });
   readyListener();
   elements.testState = testState;
@@ -603,6 +614,35 @@ test('the interface shows all payment errors in a list', () => {
   assert.match(elements.errorList.children[0].textContent, /^CSV line 2/);
   assert.match(elements.errorList.children[7].textContent, /^CSV line 3/);
   assert.equal(elements.errorPanel.focused, true);
+});
+
+test('a language change translates messages without clearing the result', () => {
+  const elements = loadAppForTest();
+  elements.csv.value = VALID_CSV;
+  elements.convert.listeners.click();
+  const abaContent = elements.aba.value;
+
+  i18n.setLanguage('zh-Hans');
+  elements.testState.windowListeners['site-language-change']();
+
+  assert.equal(elements.statusMessage.textContent, '转换完成。下载前请检查摘要。');
+  assert.equal(elements.aba.value, abaContent);
+  assert.equal(elements.paymentCount.textContent, '2');
+  assert.equal(elements.paymentSummary.hidden, false);
+  assert.equal(elements.downloadAba.disabled, false);
+});
+
+test('a language change translates current validation errors', () => {
+  const elements = loadAppForTest();
+  elements.csv.value = MULTIPLE_ERROR_CSV;
+  elements.convert.listeners.click();
+
+  i18n.setLanguage('zh-Hans');
+  elements.testState.windowListeners['site-language-change']();
+
+  assert.equal(elements.errorMessage.textContent, '转换已停止。请修正这 8 个错误：');
+  assert.match(elements.errorList.children[0].textContent, /^CSV 第 2 行/);
+  assert.equal(elements.errorList.children.length, 8);
 });
 
 test('the interface supports file upload, conversion, and download', () => {

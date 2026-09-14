@@ -104,6 +104,9 @@ Add permanent automated tests when a change introduces behavior that can regress
 - Add evidence below the applicable checkbox when this is useful.
 - Record a rejected or changed action in the decision log.
 - Update the README when a change affects setup, support, privacy, limits, tests, or deployment.
+- Add English and Simplified Chinese translations for new home-page and version 2 interface text.
+- Keep the English and Simplified Chinese translation key sets identical.
+- Use stable error codes for translated validation messages.
 
 ## Change discipline
 

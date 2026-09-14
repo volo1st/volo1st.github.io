@@ -1,46 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-AU" data-i18n-title="home.title">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta
     name="description"
     content="Small browser tools for payment-file conversion and text sorting."
+    data-i18n-content="home.description"
   >
   <title>Useful Browser Tools</title>
   <link rel="stylesheet" href="./assets/site.css">
 </head>
 <body>
   <header class="site-header">
-    <h1>Useful Browser Tools</h1>
-    <p class="version-label">Simple tools that run in your browser</p>
+    <div class="header-tools">
+      <div class="language-switcher" role="group" data-i18n-aria-label="common.language">
+        <button type="button" data-language="en-AU">English</button>
+        <button type="button" data-language="zh-Hans">简体中文</button>
+      </div>
+    </div>
+    <h1 data-i18n="home.title">Useful Browser Tools</h1>
+    <p class="version-label" data-i18n="home.subtitle">Simple tools that run in your browser</p>
   </header>
 
   <main class="site-main">
-    <section class="tool-grid" aria-label="Available tools">
+    <section class="tool-grid" aria-label="Available tools" data-i18n-aria-label="home.toolsLabel">
       <article class="panel tool-card">
-        <h2>CSV to ABA Converter</h2>
-        <p>Convert the music school's teacher payment CSV file to an ABA file for CBA.</p>
+        <h2 data-i18n="home.converterTitle">CSV to ABA Converter</h2>
+        <p data-i18n="home.converterDescription">Convert the music school's teacher payment CSV file to an ABA file for CBA.</p>
         <div class="tool-actions">
-          <a class="button-link" href="./tools/csv2aba/">Open current version</a>
+          <a class="button-link" href="./tools/csv2aba/" data-i18n="home.openCurrent">Open current version</a>
           <a class="trial-link" href="./tools/csv2aba-v2/">
-            Try version 2 <span class="badge">Trial</span>
+            <span data-i18n="home.tryV2">Try version 2</span> <span class="badge" data-i18n="common.trial">Trial</span>
           </a>
         </div>
       </article>
 
       <article class="panel tool-card">
-        <h2>Chinese-English String Sorter</h2>
-        <p>Sort Chinese and English text into a numbered list.</p>
+        <h2 data-i18n="home.sorterTitle">Chinese-English String Sorter</h2>
+        <p data-i18n="home.sorterDescription">Sort Chinese and English text into a numbered list.</p>
         <div class="tool-actions">
-          <a class="button-link" href="./tools/song_order/">Open sorter</a>
+          <a class="button-link" href="./tools/song_order/" data-i18n="home.openSorter">Open sorter</a>
         </div>
       </article>
     </section>
   </main>
 
   <footer class="site-footer">
-    <p>These tools run in your browser.</p>
+    <p data-i18n="home.footer">These tools run in your browser.</p>
   </footer>
+  <script src="./assets/i18n.js"></script>
 </body>
 </html>

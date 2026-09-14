@@ -35,6 +35,18 @@ After a successful conversion, version 2 shows the payment count and total amoun
 
 CSV and payment data stay in the browser. The converter source does not send this data to a server.
 
+## Languages
+
+The home page and version 2 support English and Simplified Chinese.
+
+The site uses the saved language when one is available. Otherwise, it uses Simplified Chinese for a Chinese browser preference. It uses English for other browser preferences.
+
+Use the language control to change the language. A language change does not clear CSV input, validation errors, the payment summary, or generated ABA data.
+
+The site stores only the selected language code in local browser storage. It does not store CSV or payment data.
+
+Version 1 stays in English during the version 2 trial.
+
 The page uses one vertical workflow on large and small screens. Add payment data first. Then check and convert it. Review the payment summary and ABA data before download. After conversion, keyboard focus moves to the result or the error report.
 
 ## CSV rules

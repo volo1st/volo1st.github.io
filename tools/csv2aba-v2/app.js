@@ -27,13 +27,51 @@
     const paymentSummary = document.getElementById('paymentSummary');
     const paymentCount = document.getElementById('paymentCount');
     const paymentTotal = document.getElementById('paymentTotal');
+    let currentStatus = null;
+    let currentError = null;
+
+    function renderStatus() {
+      statusMessage.textContent = currentStatus
+        ? SiteI18n.translate(currentStatus.key, currentStatus.parameters)
+        : '';
+    }
+
+    function setStatus(key, parameters = {}) {
+      currentStatus = { key, parameters };
+      renderStatus();
+    }
+
+    function renderError() {
+      errorMessage.textContent = '';
+      errorList.replaceChildren();
+      if (!currentError) return;
+
+      if (Array.isArray(currentError.errors)) {
+        errorMessage.textContent = SiteI18n.translate(
+          currentError.errors.length === 1 ? 'error.singleIntro' : 'error.multipleIntro',
+          { count: currentError.errors.length },
+        );
+        for (const error of currentError.errors) {
+          const item = document.createElement('li');
+          item.textContent = SiteI18n.translateError(error);
+          errorList.appendChild(item);
+        }
+      } else if (currentError.key) {
+        errorMessage.textContent = SiteI18n.translate(currentError.key, currentError.parameters);
+      } else {
+        errorMessage.textContent = SiteI18n.translate('error.conversion', {
+          detail: SiteI18n.translateError(currentError),
+        });
+      }
+    }
 
     function clearResult() {
       abaOutput.value = '';
       downloadButton.disabled = true;
-      statusMessage.textContent = '';
-      errorMessage.textContent = '';
-      errorList.replaceChildren();
+      currentStatus = null;
+      currentError = null;
+      renderStatus();
+      renderError();
       errorPanel.hidden = true;
       paymentCount.textContent = '';
       paymentTotal.textContent = '';
@@ -45,22 +83,25 @@
       const [file] = event.target.files;
 
       if (!file) {
-        statusMessage.textContent = 'No file selected.';
+        setStatus('status.noFile');
         return;
       }
 
-      statusMessage.textContent = `Reading "${file.name}".`;
+      setStatus('status.reading', { filename: file.name });
       const reader = new FileReader();
 
       reader.addEventListener('load', (loadEvent) => {
         csvInput.value = loadEvent.target.result;
-        statusMessage.textContent = `Loaded "${file.name}".`;
+        setStatus('status.loaded', { filename: file.name });
       });
 
       reader.addEventListener('error', () => {
         clearResult();
-        const detail = reader.error ? reader.error.message : 'The browser did not give a reason.';
-        errorMessage.textContent = `File read error: ${detail}`;
+        const detail = reader.error
+          ? reader.error.message
+          : SiteI18n.translate('error.noFileReason');
+        currentError = { key: 'error.fileRead', parameters: { detail } };
+        renderError();
         errorPanel.hidden = false;
         errorPanel.focus();
       });
@@ -80,21 +121,11 @@
         paymentTotal.textContent = CsvToAbaV2.formatAmount(result.totalAmountCents);
         paymentSummary.hidden = false;
         downloadButton.disabled = false;
-        statusMessage.textContent = 'Conversion is complete. Review the summary before download.';
+        setStatus('status.complete');
         paymentSummary.focus();
       } catch (error) {
-        if (Array.isArray(error.errors)) {
-          errorMessage.textContent = error.errors.length === 1
-            ? 'Conversion stopped. Fix this error:'
-            : `Conversion stopped. Fix these ${error.errors.length} errors:`;
-          for (const message of error.errors) {
-            const item = document.createElement('li');
-            item.textContent = message;
-            errorList.appendChild(item);
-          }
-        } else {
-          errorMessage.textContent = `Conversion error: ${error.message}`;
-        }
+        currentError = error;
+        renderError();
         errorPanel.hidden = false;
         errorPanel.focus();
       }
@@ -108,7 +139,12 @@
       const sourceFilename = fileInput.files.length > 0 ? fileInput.files[0].name : '';
       const filename = CsvToAbaV2.getDownloadFilename(sourceFilename);
       downloadAbaFile(abaOutput.value, filename);
-      statusMessage.textContent = `Downloaded "${filename}".`;
+      setStatus('status.downloaded', { filename });
+    });
+
+    window.addEventListener('site-language-change', () => {
+      renderStatus();
+      renderError();
     });
   });
 }());

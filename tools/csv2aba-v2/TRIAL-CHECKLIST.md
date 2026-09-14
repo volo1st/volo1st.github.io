@@ -10,17 +10,22 @@ Do not record teacher names, account details, or other payment data in this file
 
 - [ ] Open version 1 at `https://volo1st.com/tools/csv2aba/`.
 - [ ] Open version 2 at `https://volo1st.com/tools/csv2aba-v2/`.
+- [ ] Confirm that version 2 opens in the expected language.
+- [ ] Change between English and Simplified Chinese.
 - [ ] Use the same current CSV file in both versions.
 - [ ] Confirm that the CSV contains the expected teachers and amounts.
 
 ## Compare the results
 
+- [ ] Convert the CSV in the language that the operator normally uses.
 - [ ] Confirm that version 2 shows no validation errors.
 - [ ] Compare the payment count with the source report.
 - [ ] Compare the total amount with the source report.
 - [ ] Compare the version 1 and version 2 ABA files.
 - [ ] Stop if payment data differs for a valid input.
 - [ ] Use version 1 as the fallback if you cannot explain a difference.
+- [ ] Change the language after conversion.
+- [ ] Confirm that the CSV input, payment summary, and ABA output do not change.
 
 ## Test CBA
 
