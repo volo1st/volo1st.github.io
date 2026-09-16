@@ -1,6 +1,10 @@
-# Useful Browser Tools
+# Vincent's Website
 
-This repository contains small tools that run in a browser. GitHub Pages hosts the website.
+This repository contains Vincent's public website and static browser tools. GitHub Pages hosts the website.
+
+The current home page is a tools directory. The long-term plan will make the home page a public personal introduction and portfolio.
+
+See [`website-roadmap.md`](website-roadmap.md) for the product direction and delivery phases.
 
 ## Tools
 

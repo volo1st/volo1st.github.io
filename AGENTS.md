@@ -6,11 +6,12 @@ These instructions apply to all files in this repository.
 
 ## Project purpose
 
-This repository contains static browser tools. GitHub Pages hosts the site.
+This repository contains Vincent's public website and static browser tools. GitHub Pages hosts the site.
 
-- `index.html` is the tools home page.
+- `index.html` is the current tools home page. The roadmap will replace it with a personal home page.
 - `tools/csv2aba/` contains the CSV-to-ABA converter.
 - `tools/song_order/` contains the Chinese-English text sorter.
+- `website-roadmap.md` is the source of truth for long-term website development.
 
 Keep the site usable without a build step unless the task requires a build system.
 
@@ -100,6 +101,7 @@ Add permanent automated tests when a change introduces behavior that can regress
 
 - Use `initial-audit-report.md` as the record of the initial repository condition.
 - Use `initial-audit-action-plan.md` as the single source of truth for audit work.
+- Use `website-roadmap.md` as the single source of truth for long-term website development.
 - Update a checkbox only after its completion test passes.
 - Add evidence below the applicable checkbox when this is useful.
 - Record a rejected or changed action in the decision log.
