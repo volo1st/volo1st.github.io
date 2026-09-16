@@ -254,3 +254,35 @@ The CSV-to-ABA trial can continue in parallel because its external operator step
 Create the public-content inventory and privacy boundary for Phase 1.
 
 The package must produce approved source text and links. It must not publish placeholder claims or confidential information.
+
+## 12. Pause and handoff record
+
+### Status on 17 September 2026
+
+- Long-term website planning is complete.
+- No website implementation package is active.
+- The current tools remain deployed and available.
+- The CSV-to-ABA version 2 trial waits for operator use and CBA evidence.
+- The text sorter redesign is deferred because the tool has low current use.
+- The next website package is Phase 1 content preparation.
+
+This point is a safe pause. Resume with one work package. Do not redesign the homepage before the Phase 1 content gate is complete.
+
+### Task map for an external action-item system
+
+Use these tasks to represent the current roadmap:
+
+1. Create the public-content inventory and privacy boundary.
+2. Approve the homepage content outline.
+3. Define and approve the visual direction and responsive wireframe.
+4. Build the personal homepage and the `/tools/` directory.
+5. Deploy and verify the public foundation.
+6. Add software portfolio items as separate work packages.
+7. Add audio and music portfolio items as separate work packages.
+8. Define the long-term project and tool model.
+9. Document website operations, privacy, backup, and recovery.
+10. Review whether a content system is necessary after real maintenance experience.
+
+Track the CSV-to-ABA operator trial as a separate waiting task. Do not make it a dependency of the public-homepage work.
+
+Keep the text sorter redesign deferred. Create an active task only when regular use resumes or a defect blocks a user.
