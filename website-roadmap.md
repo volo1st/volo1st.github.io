@@ -257,14 +257,19 @@ The package must produce approved source text and links. It must not publish pla
 
 ## 12. Pause and handoff record
 
-### Status on 17 September 2026
+### Status verified on 21 September 2026
 
-- Long-term website planning is complete.
+- The long-term roadmap is documented. Website implementation is paused.
 - No website implementation package is active.
 - The current tools remain deployed and available.
 - The CSV-to-ABA version 2 trial waits for operator use and CBA evidence.
 - The text sorter redesign is deferred because the tool has low current use.
 - The next website package is Phase 1 content preparation.
+- On 21 September 2026, the external task map was synchronized with Todoist.
+  The next package is the only actionable website task. Later phases are
+  undated backlog tasks. The CSV-to-ABA operator trial is a separate blocked
+  task. Three superseded planning tasks were closed after their comments and
+  completion evidence were reviewed.
 
 This point is a safe pause. Resume with one work package. Do not redesign the homepage before the Phase 1 content gate is complete.
 
@@ -286,3 +291,12 @@ Use these tasks to represent the current roadmap:
 Track the CSV-to-ABA operator trial as a separate waiting task. Do not make it a dependency of the public-homepage work.
 
 Keep the text sorter redesign deferred. Create an active task only when regular use resumes or a defect blocks a user.
+
+Keep only the next website package actionable. Keep later phases ordered and
+undated. Do not assign a due date or a higher priority unless an external
+commitment or current capacity requires it.
+
+When synchronizing this roadmap with Todoist, create and clarify tasks as
+needed. Inspect comments and attachments before moving or closing an existing
+task. Get confirmation before closing, deleting, or substantially restructuring
+a task. Do not access the private Todoist project named `.`.

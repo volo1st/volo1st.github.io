@@ -12,6 +12,13 @@
 
 This file is the single source of truth for audit work.
 
+- No audit implementation package is active.
+- The CSV-to-ABA operator trial is the next audit action. It waits for operator
+  use and CBA evidence.
+- An unchecked item records remaining audit scope. It is not automatically an
+  immediate action.
+- Keep the text sorter work deferred until the decision-log review trigger
+  occurs.
 - Keep an item clear until its completion test passes.
 - Add the commit, test, or decision below the item.
 - If you do not do an item, keep it clear. Record the owner, date, and reason in the decision log.
