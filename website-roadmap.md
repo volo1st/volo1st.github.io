@@ -42,6 +42,8 @@ The website is successful for its owner when he can:
 - Use invented data in examples and tests.
 - Use controlled English for instructions and project documents.
 - Add Simplified Chinese where it improves the intended user's workflow.
+- Do not create a general blog or publishing schedule. Publish a standalone
+  article only when it has a specific audience and purpose.
 
 ## 4. Audience
 
@@ -248,6 +250,7 @@ The CSV-to-ABA trial can continue in parallel because its external operator step
 | 17 September 2026 | Keep static delivery as the default. | The planned pages and most tools do not require a server or application framework. |
 | 17 September 2026 | Do not treat an unlisted GitHub Pages address as private. | GitHub Pages content is publicly accessible without real access control. |
 | 17 September 2026 | Defer the text sorter redesign. | The text sorter has low current use. Higher-value website foundation work takes priority. |
+| 21 September 2026 | Do not plan a general technology blog. | A recurring blog does not have enough expected value for the intended audience or the owner's current goals. Publish only specific material with a clear audience and purpose. |
 
 ## 11. Current next package
 
