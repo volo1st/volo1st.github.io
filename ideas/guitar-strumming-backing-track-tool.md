@@ -645,6 +645,85 @@ Do not make the audio engine parse source tokens.
 
 Keep palm mute separate from dead strum and from stopping a ringing chord after its attack.
 
+## 11.4 Shareable Source
+
+Status: Decided, except for the tested link-length limit.
+
+Keep the plain-text source as the shared content and the single source of truth.
+
+Use a versioned `song` query parameter. Do not use a URL fragment.
+
+Use this initial transport format:
+
+```text
+?song=v1.gzip.<base64url-payload>
+```
+
+Encode the source as UTF-8.
+
+Compress the exact source bytes with gzip.
+
+Encode the compressed bytes as URL-safe Base64 without padding.
+
+Use the native Compression Streams API. Do not add a compression dependency.
+
+Do not normalize, reformat, or otherwise change the source before encoding it.
+
+The query parameter is a transport representation. It is not a second source of truth.
+
+Do not include Play or Pause state, playback position, or other transient state.
+
+Add a Copy share link button.
+
+Enable Copy share link only when the full source is valid and the encoded URL is within the tested limit.
+
+When the user activates Copy share link:
+
+1. Encode the current source.
+2. Put the encoded source in the current URL.
+3. Copy the complete URL.
+4. Show a success or failure status.
+
+If the source changes after link creation, remove the `song` parameter from the current URL.
+
+Do not update the share parameter after each edit.
+
+Add a Copy source button beside Copy share link.
+
+Copy source must copy the exact textarea content, including invalid source.
+
+Copy source must remain available when share-link creation is unavailable.
+
+If clipboard access fails, preserve the source and provide a clear manual-copy fallback.
+
+On page load, decode the `song` parameter before normal source validation.
+
+Require exactly one `song` parameter.
+
+Reject an unsupported version, unsupported codec, malformed Base64, invalid gzip data, or an oversized decoded source.
+
+Do not silently load the default example when shared-source decoding fails.
+
+If decoding succeeds but source validation fails, preserve the decoded source and show the normal validation errors.
+
+Insert decoded content only as a text control value. Do not interpret it as HTML.
+
+Set a decoded-source byte limit before decompression is implemented.
+
+Set the encoded URL limit only after delivery tests pass.
+
+Test direct links of multiple sizes through the current WeChat release on the target iPhone.
+
+Test at least one intended URL-shortening service.
+
+Record the WeChat version, shortener, final URL lengths, and results.
+
+Do not claim compatibility with an untested chat application or shortener.
+
+The initial audience is primarily in Sydney. Mainland China network availability is not a release requirement.
+
+The source can be visible to GitHub Pages, the chat service, and a URL-shortening service. This is an accepted privacy condition for this feature.
+
 ---
 
 # 12. MVP Acceptance Criteria
