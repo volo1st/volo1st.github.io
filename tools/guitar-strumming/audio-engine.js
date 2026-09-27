@@ -87,11 +87,11 @@
 
       stringIndexes.forEach((stringIndex, attackIndex) => {
         const midiNote = stringPitches[stringIndex];
-        this.playString(midiNote, when + (attackIndex * stringDelay), velocity);
+        this.playString(midiNote, when + (attackIndex * stringDelay), velocity, when);
       });
     }
 
-    playString(midiNote, when, velocity) {
+    playString(midiNote, when, velocity, scheduledEventTime) {
       const source = this.context.createBufferSource();
       const filter = this.context.createBiquadFilter();
       const gain = this.context.createGain();
@@ -111,7 +111,7 @@
       filter.connect(gain);
       gain.connect(this.masterGain);
 
-      const voice = { source, filter, gain };
+      const voice = { source, filter, gain, scheduledEventTime };
       this.activeVoices.add(voice);
       source.addEventListener('ended', () => {
         source.disconnect();
@@ -164,6 +164,18 @@
           voice.gain.gain.setValueAtTime(0.05, this.context.currentTime);
           voice.gain.gain.exponentialRampToValueAtTime(0.0001, stopTime);
           voice.source.stop(stopTime);
+        } catch (error) {
+          if (error.name !== 'InvalidStateError') throw error;
+        }
+      }
+    }
+
+    cancelScheduledFrom(audioTime) {
+      if (!this.context) return;
+      for (const voice of this.activeVoices) {
+        if (voice.scheduledEventTime < audioTime) continue;
+        try {
+          voice.source.stop(this.context.currentTime);
         } catch (error) {
           if (error.name !== 'InvalidStateError') throw error;
         }

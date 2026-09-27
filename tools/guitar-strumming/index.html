@@ -3,73 +3,83 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Test page for browser guitar synthesis and strum scheduling." />
-  <title>Guitar Strumming Audio Prototype</title>
+  <meta name="description" content="Create looping guitar strumming backing tracks from plain text." />
+  <title>Guitar Strumming Backing Track</title>
   <link rel="stylesheet" href="./styles.css" />
   <script src="./catalog.js" defer></script>
+  <script src="./parser.js" defer></script>
   <script src="./core.js" defer></script>
   <script src="./audio-engine.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
   <main>
-    <p class="prototype-label">Audio prototype</p>
-    <h1>Guitar strumming audio test</h1>
+    <p class="tool-label">Teaching tool</p>
+    <h1>Guitar strumming backing track</h1>
     <p>
-      This page tests synthesized guitar sound and accurate browser scheduling.
-      It is not the complete teaching tool.
+      Enter a chord progression and strumming pattern. The tool plays the song as a loop.
+      Audio and source text stay on this device.
     </p>
 
-    <section aria-labelledby="pattern-heading">
-      <h2 id="pattern-heading">Demonstration pattern</h2>
-      <p>The loop uses 4/4 time, an eight-slot grid, and 100 beats per minute.</p>
-      <pre aria-label="Demonstration pattern">chords:
+    <section aria-labelledby="source-heading">
+      <h2 id="source-heading">Song source</h2>
+      <label for="song-source">Plain-text song</label>
+      <p id="source-help" class="help-text">
+        Use one chord bar and one strum bar for each bar after repeat expansion.
+      </p>
+      <textarea id="song-source" aria-describedby="source-help validation-summary" spellcheck="false">4/4#8
+bpm: 100
+
+chords:
 | C G/B@8 | G/B | Am F@8 | F |
 
 strum:
-| D - D U - U D U | x4</pre>
-      <p>
-        The changes at slot 8 occur before the upstroke at slot 8.
-      </p>
-    </section>
+| D - D U - U D U | x4</textarea>
 
-    <section aria-labelledby="controls-heading">
-      <h2 id="controls-heading">Audio controls</h2>
-      <div class="button-group">
-        <button id="play-loop" type="button">Play loop</button>
-        <button id="stop-loop" type="button" disabled>Stop</button>
-      </div>
-      <div class="button-group">
-        <button id="test-downstroke" type="button">Test C downstroke</button>
-        <button id="test-upstroke" type="button">Test C upstroke</button>
+      <div class="validation-panel">
+        <p id="validation-summary" class="validation-summary" role="status" aria-live="polite">
+          Validating input.
+        </p>
+        <ul id="validation-errors" class="validation-errors" hidden></ul>
       </div>
     </section>
 
-    <section aria-labelledby="diagnostics-heading">
-      <h2 id="diagnostics-heading">Scheduling diagnostic</h2>
-      <p>
-        Start the loop before you simulate a stall. The page will block its user-interface
-        thread for 250 milliseconds. Audio that is already scheduled must continue.
-      </p>
-      <button id="simulate-stall" type="button" disabled>Simulate 250 ms stall</button>
-      <p id="statistics" class="statistics">Audio has not started.</p>
+    <section aria-labelledby="tempo-heading">
+      <h2 id="tempo-heading">Tempo</h2>
+      <div class="tempo-controls">
+        <div>
+          <label for="bpm-number">Beats per minute</label>
+          <input id="bpm-number" type="number" min="30" max="300" step="1" value="100" inputmode="numeric" />
+        </div>
+        <div>
+          <label for="bpm-range">Tempo slider</label>
+          <input id="bpm-range" type="range" min="30" max="300" step="1" value="100" />
+        </div>
+      </div>
+      <p class="help-text">A tempo change during playback starts at the next bar.</p>
     </section>
 
-    <section class="status-panel" aria-labelledby="status-heading">
-      <h2 id="status-heading">Status</h2>
-      <p id="status" role="status" aria-live="polite">Ready. Press an audio control to start.</p>
+    <section aria-labelledby="playback-heading">
+      <h2 id="playback-heading">Playback</h2>
+      <p id="song-summary">No playable song is available.</p>
+      <div class="button-group">
+        <button id="play-pause" type="button" aria-pressed="false" disabled>Play</button>
+        <button id="restart" type="button" disabled>Restart</button>
+      </div>
+      <div class="status-panel">
+        <h3>Status</h3>
+        <p id="playback-status" role="status" aria-live="polite">Preparing the tool.</p>
+      </div>
     </section>
 
-    <section aria-labelledby="test-heading">
-      <h2 id="test-heading">What to check</h2>
-      <ol>
-        <li>Compare the C downstroke and upstroke.</li>
-        <li>Play the loop and listen for a steady rhythm.</li>
-        <li>Listen for the chord changes at the final slot of bars 1 and 3.</li>
-        <li>Simulate a stall and confirm that you do not hear a burst of late strums.</li>
-        <li>Stop playback and confirm that the sound ends.</li>
-      </ol>
-    </section>
+    <details>
+      <summary>Format and supported chords</summary>
+      <p>Use <code>D</code> for a downstroke, <code>U</code> for an upstroke, and <code>-</code> for no strum.</p>
+      <p>Use <code>Chord@N</code> for a chord change at slot N. The change occurs before a strum at the same slot.</p>
+      <p>Use <code>xN</code> after one bar to repeat that bar N times in total.</p>
+      <p>Supported chords:</p>
+      <p class="chord-list"><code>A Am Bb Bm C Cm D Dm Em F F#m G Am7 C7 Cmaj7 D7 G7 Cadd9 Dsus4 G5 Am/G C/E D/F# G/B</code></p>
+    </details>
   </main>
 </body>
 </html>

@@ -131,6 +131,63 @@
     return Object.freeze({ loopIndex: 0, eventIndex: 0 });
   }
 
+  function createScheduleCursorAtPosition(events, sourceSlot) {
+    if (!Array.isArray(events) || events.length === 0) {
+      return createScheduleCursor();
+    }
+    if (!Number.isFinite(sourceSlot) || sourceSlot < 0) {
+      throw new RangeError('Source slot must be a non-negative number.');
+    }
+    const eventIndex = events.findIndex((event) => event.absoluteSlotIndex >= sourceSlot);
+    if (eventIndex === -1) {
+      return Object.freeze({ loopIndex: 1, eventIndex: 0 });
+    }
+    return Object.freeze({ loopIndex: 0, eventIndex });
+  }
+
+  function playheadSlotAtTime(originTime, audioTime, timeline) {
+    const slotDuration = slotDurationSeconds(timeline.bpm, timeline.gridSize);
+    const elapsedSlots = Math.max(0, (audioTime - originTime) / slotDuration);
+    return positiveModulo(elapsedSlots, timeline.durationSlots);
+  }
+
+  function nextBarBoundary(originTime, audioTime, timeline) {
+    const slotDuration = slotDurationSeconds(timeline.bpm, timeline.gridSize);
+    const elapsedSlots = Math.max(0, (audioTime - originTime) / slotDuration);
+    const absoluteSlot = (Math.floor(elapsedSlots / timeline.gridSize) + 1)
+      * timeline.gridSize;
+    return Object.freeze({
+      absoluteSlot,
+      sourceSlot: absoluteSlot % timeline.durationSlots,
+      audioTime: originTime + (absoluteSlot * slotDuration),
+    });
+  }
+
+  function createTempoTransition(currentSegment, nextTimeline, audioTime) {
+    if (
+      currentSegment.timeline.gridSize !== nextTimeline.gridSize
+      || currentSegment.timeline.durationSlots !== nextTimeline.durationSlots
+    ) {
+      throw new RangeError('A BPM transition cannot change the grid or song length.');
+    }
+    const boundary = nextBarBoundary(
+      currentSegment.originTime,
+      audioTime,
+      currentSegment.timeline,
+    );
+    const nextSlotDuration = slotDurationSeconds(nextTimeline.bpm, nextTimeline.gridSize);
+    const events = playableEvents(nextTimeline);
+    return Object.freeze({
+      boundary,
+      segment: Object.freeze({
+        timeline: nextTimeline,
+        events,
+        originTime: boundary.audioTime - (boundary.sourceSlot * nextSlotDuration),
+        cursor: createScheduleCursorAtPosition(events, boundary.sourceSlot),
+      }),
+    });
+  }
+
   function collectScheduleBatch(options) {
     const {
       timeline,
@@ -211,14 +268,22 @@
     ));
   }
 
+  function positiveModulo(value, divisor) {
+    return ((value % divisor) + divisor) % divisor;
+  }
+
   return Object.freeze({
     OPEN_STRING_MIDI,
     VALID_GRID_SIZES,
     collectScheduleBatch,
     createScheduleCursor,
+    createScheduleCursorAtPosition,
+    createTempoTransition,
     cycleDurationSeconds,
     eventTimeSeconds,
+    nextBarBoundary,
     normalizeSong,
+    playheadSlotAtTime,
     playableEvents,
     resolveVoicingPitches,
     slotDurationSeconds,
