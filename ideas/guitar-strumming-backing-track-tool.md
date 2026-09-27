@@ -71,6 +71,16 @@ Playback remains unavailable until the full input is valid.
 
 # 3. Text Format
 
+The plain-text source is the single source of truth for persistent song and practice settings.
+
+A user interface control can provide a simpler way to edit a setting.
+
+Each such control must read its value from the source and write its change back to the applicable source directive.
+
+Do not keep a second persistent value outside the source.
+
+Keep transient playback state outside the source. This state includes Play or Pause state, the current playback position, audio-context state, validation messages, and status messages.
+
 ## 3.1 Header
 
 Syntax:
@@ -513,6 +523,62 @@ Likely additions:
 - shareable URL
 
 Phase 2 features must reuse the same normalized timeline model.
+
+## 11.1 Persistent Configuration
+
+The plain-text source remains the single source of truth for each Phase 2 song or practice setting.
+
+Define the text representation before adding a user interface control for a persistent setting.
+
+A user interface control is a view and editor of its source directive.
+
+## 11.2 Count-In
+
+Status: Decided.
+
+Add the count-in as the first Phase 2 feature.
+
+Use this directive after `bpm:` and before `chords:`:
+
+```text
+count-in: <bars>
+```
+
+`bars` must be `0`, `1`, or `2`.
+
+`0` disables the count-in.
+
+Require the directive exactly once after the feature is implemented.
+
+Reject a missing, duplicate, malformed, or out-of-range directive.
+
+Do not assume, clamp, or silently correct a count-in value.
+
+Add a Count-in dropdown with these options:
+
+- Off
+- 1 bar
+- 2 bars
+
+The dropdown must read its value from the `count-in:` directive.
+
+When the user changes the dropdown, update only the value in the `count-in:` directive.
+
+If the directive cannot be updated safely, keep the source unchanged and show a validation message.
+
+Use four clicks in each count-in bar.
+
+Accent beat 1. Use a lower click for beats 2 through 4.
+
+Use the current BPM for the click timing.
+
+Play the count-in before playback starts at bar 1 after initial load, a musical source change, or Restart.
+
+Do not play the count-in when playback resumes from Pause.
+
+Do not play the count-in at a normal loop boundary.
+
+Keep count-in events outside the repeating song timeline.
 
 ---
 
