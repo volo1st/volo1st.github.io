@@ -580,6 +580,71 @@ Do not play the count-in at a normal loop boundary.
 
 Keep count-in events outside the repeating song timeline.
 
+## 11.3 Strum Range, Articulation, and Accent
+
+Status: Decided.
+
+Use this token grammar:
+
+```text
+<direction>[<string-count>][<articulation>][!]
+```
+
+`direction` must be `D` or `U`.
+
+Treat the complete token as case-insensitive.
+
+An omitted `string-count` means all playable strings in the active chord voicing.
+
+Initially support string counts of `2`, `3`, and `4`.
+
+For a downstroke, select the specified number of lowest-pitched playable strings.
+
+For an upstroke, select the specified number of highest-pitched playable strings.
+
+Apply the string count after the chord voicing excludes each `x` string.
+
+If the voicing contains fewer playable strings than the requested count, use all playable strings.
+
+An omitted `articulation` means a normal ringing strum.
+
+Use `P` for palm mute.
+
+A palm-muted strum remains pitched. It has less brightness and a shorter sustain than a normal strum.
+
+Use `X` for a dead or scratch strum.
+
+A dead strum is primarily percussive and has little clear pitch.
+
+`P` and `X` are mutually exclusive.
+
+Use `!` for an accent.
+
+An accent increases the attack and audible emphasis. It does not change event timing.
+
+Require modifiers in the documented order.
+
+Examples:
+
+```text
+D      full normal downstroke
+U!     full accented upstroke
+D4     normal downstroke on the four lowest playable strings
+U4     normal upstroke on the four highest playable strings
+D3P    palm-muted downstroke on the three lowest playable strings
+D2P!   accented palm-muted downstroke on the two lowest playable strings
+U3X    dead upstroke on the three highest playable strings
+U4X!   accented dead upstroke on the four highest playable strings
+```
+
+Do not add a separate interface control for a per-slot strum token.
+
+Store direction, selected string count, articulation, and accent as separate normalized event properties.
+
+Do not make the audio engine parse source tokens.
+
+Keep palm mute separate from dead strum and from stopping a ringing chord after its attack.
+
 ---
 
 # 12. MVP Acceptance Criteria
