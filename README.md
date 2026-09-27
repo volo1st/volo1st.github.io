@@ -11,6 +11,7 @@ See [`website-roadmap.md`](website-roadmap.md) for the product direction and del
 - [CSV to ABA Converter version 1](tools/csv2aba/) is the current fallback.
 - [CSV to ABA Converter version 2](tools/csv2aba-v2/) is ready for an operator trial.
 - [Chinese-English String Sorter](tools/song_order/) sorts text into a numbered list.
+- [Guitar Strumming Audio Prototype](tools/guitar-strumming/) tests browser guitar synthesis and timing. The home page does not link to this prototype.
 
 ## Local use
 

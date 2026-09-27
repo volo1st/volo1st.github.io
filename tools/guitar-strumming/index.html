@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Test page for browser guitar synthesis and strum scheduling." />
+  <title>Guitar Strumming Audio Prototype</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="./catalog.js" defer></script>
+  <script src="./core.js" defer></script>
+  <script src="./audio-engine.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <main>
+    <p class="prototype-label">Audio prototype</p>
+    <h1>Guitar strumming audio test</h1>
+    <p>
+      This page tests synthesized guitar sound and accurate browser scheduling.
+      It is not the complete teaching tool.
+    </p>
+
+    <section aria-labelledby="pattern-heading">
+      <h2 id="pattern-heading">Demonstration pattern</h2>
+      <p>The loop uses 4/4 time, an eight-slot grid, and 100 beats per minute.</p>
+      <pre aria-label="Demonstration pattern">chords:
+| C G/B@8 | G/B | Am F@8 | F |
+
+strum:
+| D - D U - U D U | x4</pre>
+      <p>
+        The changes at slot 8 occur before the upstroke at slot 8.
+      </p>
+    </section>
+
+    <section aria-labelledby="controls-heading">
+      <h2 id="controls-heading">Audio controls</h2>
+      <div class="button-group">
+        <button id="play-loop" type="button">Play loop</button>
+        <button id="stop-loop" type="button" disabled>Stop</button>
+      </div>
+      <div class="button-group">
+        <button id="test-downstroke" type="button">Test C downstroke</button>
+        <button id="test-upstroke" type="button">Test C upstroke</button>
+      </div>
+    </section>
+
+    <section aria-labelledby="diagnostics-heading">
+      <h2 id="diagnostics-heading">Scheduling diagnostic</h2>
+      <p>
+        Start the loop before you simulate a stall. The page will block its user-interface
+        thread for 250 milliseconds. Audio that is already scheduled must continue.
+      </p>
+      <button id="simulate-stall" type="button" disabled>Simulate 250 ms stall</button>
+      <p id="statistics" class="statistics">Audio has not started.</p>
+    </section>
+
+    <section class="status-panel" aria-labelledby="status-heading">
+      <h2 id="status-heading">Status</h2>
+      <p id="status" role="status" aria-live="polite">Ready. Press an audio control to start.</p>
+    </section>
+
+    <section aria-labelledby="test-heading">
+      <h2 id="test-heading">What to check</h2>
+      <ol>
+        <li>Compare the C downstroke and upstroke.</li>
+        <li>Play the loop and listen for a steady rhythm.</li>
+        <li>Listen for the chord changes at the final slot of bars 1 and 3.</li>
+        <li>Simulate a stall and confirm that you do not hear a burst of late strums.</li>
+        <li>Stop playback and confirm that the sound ends.</li>
+      </ol>
+    </section>
+  </main>
+</body>
+</html>
