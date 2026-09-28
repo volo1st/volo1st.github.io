@@ -653,19 +653,28 @@ Keep the plain-text source as the shared content and the single source of truth.
 
 Use a versioned `song` query parameter. Do not use a URL fragment.
 
-Use this initial transport format:
+Use one of these transport formats:
 
 ```text
+?song=v1.raw.<base64url-payload>
 ?song=v1.gzip.<base64url-payload>
 ```
 
 Encode the source as UTF-8.
 
-Compress the exact source bytes with gzip.
+For `raw`, encode the exact source bytes without compression.
 
-Encode the compressed bytes as URL-safe Base64 without padding.
+For `gzip`, compress the exact source bytes with gzip.
+
+Encode the resulting bytes as URL-safe Base64 without padding.
 
 Use the native Compression Streams API. Do not add a compression dependency.
+
+When gzip is available, create both forms and use the shorter complete URL.
+
+If gzip is unavailable, use `raw` when the complete URL is within the tested limit.
+
+The decoder must support both forms.
 
 Do not normalize, reformat, or otherwise change the source before encoding it.
 
@@ -723,6 +732,78 @@ Do not claim compatibility with an untested chat application or shortener.
 The initial audience is primarily in Sydney. Mainland China network availability is not a release requirement.
 
 The source can be visible to GitHub Pages, the chat service, and a URL-shortening service. This is an accepted privacy condition for this feature.
+
+## 11.5 Curated Presets
+
+Status: Decided.
+
+Store curated presets in a local JavaScript catalog.
+
+Do not use SQLite, WebAssembly, a server database, or a build step for the initial catalog.
+
+Each catalog entry must contain:
+
+- a stable versioned slug;
+- a title;
+- a teaching level;
+- search or grouping tags; and
+- the complete plain-text source.
+
+The source string is the authoritative preset content.
+
+Metadata must not duplicate a persistent song or practice setting.
+
+Use a human-readable preset query parameter:
+
+```text
+?preset=<versioned-slug>
+```
+
+Example:
+
+```text
+?preset=beginner-c-g-am-f-v1
+```
+
+Require URL-safe lowercase slugs.
+
+Require every slug and preset source to be unique.
+
+Do not change the source associated with a published slug.
+
+If preset source changes, add a new versioned slug.
+
+The `preset` parameter and `song` parameter are mutually exclusive.
+
+Reject a URL that contains both parameters, duplicate parameters, or an unknown preset slug.
+
+Do not silently load the default example when preset loading fails.
+
+On page load, copy the exact preset source into the textarea before normal source validation.
+
+Add a Preset dropdown that lists the local catalog.
+
+When preset loading would replace edited source, require explicit confirmation before replacement.
+
+After preset loading, the textarea remains the single source of truth.
+
+The preset selection is a source template and transport reference. It is not a persistent song setting.
+
+If the user edits loaded preset source, remove the `preset` parameter from the current URL.
+
+If the current source exactly matches a catalog preset, Copy share link must use that preset's short URL.
+
+Otherwise, Copy share link must use the shorter valid `raw` or `gzip` source URL.
+
+Test every preset with the normal parser and timeline checks.
+
+Test catalog slugs and sources for uniqueness.
+
+Convert the initial example into the first preset when preset support is implemented.
+
+Complete a rights review before publishing a preset based on an identifiable commercial song.
+
+Start with original exercises, public-domain material, or material that the publisher has permission to distribute.
 
 ---
 
