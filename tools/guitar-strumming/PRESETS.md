@@ -157,3 +157,5 @@ Status: Implementation and representative-client verification are complete.
   Evidence: The user confirmed source loading, playback, labels, notices, and short links for Get Lucky and Viva La Vida on 2026-09-28.
 - [x] Interface checks pass.
   Evidence: The user confirmed keyboard use, visible focus, narrow iPhone Safari layout, and desktop layout at 200 percent zoom on 2026-09-28.
+- [x] The GitHub Pages deployment matches the completed package.
+  Evidence: The deployed page and preset catalog matched commit `db04328` byte for byte on 2026-09-28.
