@@ -21,6 +21,8 @@
     playPause: document.getElementById('play-pause'),
     restart: document.getElementById('restart'),
     status: document.getElementById('playback-status'),
+    soundTest: document.getElementById('strum-sound-test'),
+    soundTestButtons: [...document.querySelectorAll('[data-strum-token]')],
   };
 
   let parsedSong = null;
@@ -57,6 +59,7 @@
     });
     elements.playPause.addEventListener('click', handlePlayPause);
     elements.restart.addEventListener('click', restartPlayback);
+    elements.soundTest.addEventListener('click', handleSoundTestClick);
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
     audioSupported = audioApi.isSupported();
@@ -200,6 +203,45 @@
 
   function synchronizeCountInControl(countInBars) {
     elements.countIn.value = String(countInBars);
+  }
+
+  async function handleSoundTestClick(event) {
+    const button = event.target.closest('[data-strum-token]');
+    if (!button || !elements.soundTest.contains(button) || button.disabled) return;
+
+    const token = button.dataset.strumToken;
+    const parsedToken = parser.parseStrumTokenValue(token);
+    if (!parsedToken.ok) {
+      setPlaybackStatus(`The sound-test token ${token} is invalid.`);
+      return;
+    }
+
+    if (playbackState === 'playing') {
+      pausePlayback('Song playback paused for the sound test.');
+    } else {
+      haltPlayback({ resetPosition: false });
+    }
+    const requestId = requestGeneration;
+    setPlaybackStatus(`Starting the ${token} sound test.`);
+
+    try {
+      const engine = getAudioEngine();
+      const context = await engine.ensureRunning();
+      if (requestId !== requestGeneration) return;
+      engine.stopAll();
+      const voicing = catalog.getDefaultVoicing('G');
+      if (!voicing) throw new Error('The catalog does not contain G.');
+      const stringPitches = core.resolveVoicingPitches(voicing.frets);
+      engine.playStrum(
+        stringPitches,
+        parsedToken.strum,
+        context.currentTime + START_LEAD_SECONDS,
+      );
+      setPlaybackStatus(`Sound test played ${token} on a G chord.`);
+    } catch (error) {
+      haltPlayback({ resetPosition: false });
+      setPlaybackStatus(`The sound test did not start. ${error.message}`);
+    }
   }
 
   async function handlePlayPause() {
@@ -388,7 +430,12 @@
         throw new Error(`The catalog does not contain ${event.activeChord}.`);
       }
       const stringPitches = core.resolveVoicingPitches(voicing.frets);
-      audioEngine.playStrum(stringPitches, event.strumType, event.eventTime);
+      audioEngine.playStrum(stringPitches, {
+        direction: event.direction,
+        stringCount: event.stringCount,
+        articulation: event.articulation,
+        accented: event.accented,
+      }, event.eventTime);
     }
 
     segment.cursor = batch.cursor;
@@ -487,6 +534,9 @@
     elements.restart.disabled = !playbackAvailable || playbackState === 'starting';
     elements.playPause.textContent = playbackState === 'playing' ? 'Pause' : 'Play';
     elements.playPause.setAttribute('aria-pressed', String(playbackState === 'playing'));
+    for (const button of elements.soundTestButtons) {
+      button.disabled = !audioSupported || playbackState === 'starting';
+    }
   }
 
   function showFatalError(message) {
@@ -497,6 +547,7 @@
     elements.bpmNumber.disabled = true;
     elements.bpmRange.disabled = true;
     elements.countIn.disabled = true;
+    for (const button of elements.soundTestButtons) button.disabled = true;
     setPlaybackStatus(message);
   }
 

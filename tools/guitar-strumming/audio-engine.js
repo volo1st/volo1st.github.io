@@ -6,6 +6,8 @@
 
   const BUFFER_VARIATION_COUNT = 3;
   const PLUCK_DURATION_SECONDS = 2.4;
+  const PALM_MUTE_DURATION_SECONDS = 0.38;
+  const DEAD_STRUM_DURATION_SECONDS = 0.11;
   const COUNT_IN_CLICK_DURATION_SECONDS = 0.055;
   const RESUME_TIMEOUT_MILLISECONDS = 2000;
 
@@ -77,18 +79,46 @@
       compressor.connect(this.context.destination);
     }
 
-    playStrum(stringPitches, strumType, when) {
+    playStrum(stringPitches, strum, when) {
       if (!this.context || this.context.state !== 'running') {
         throw new Error('The audio context is not running.');
       }
-      const stringIndexes = core.stringOrder(stringPitches, strumType);
-      const normalizedType = strumType.toUpperCase();
-      const stringDelay = normalizedType === 'D' ? 0.010 : 0.008;
-      const velocity = normalizedType === 'D' ? 0.24 : 0.19;
+      if (!strum || typeof strum !== 'object') {
+        throw new TypeError('Normalized strum data is required.');
+      }
+      if (!['normal', 'palm-mute', 'dead'].includes(strum.articulation)) {
+        throw new RangeError('The strum articulation is invalid.');
+      }
+      const stringIndexes = core.selectStringIndexes(
+        stringPitches,
+        strum.direction,
+        strum.stringCount,
+      );
+      const stringDelay = strum.direction === 'D' ? 0.010 : 0.008;
+      const baseVelocity = strum.direction === 'D' ? 0.24 : 0.19;
+      const articulationLevel = strum.articulation === 'palm-mute'
+        ? 0.86
+        : (strum.articulation === 'dead' ? (strum.accented ? 0.72 : 0.54) : 1);
+      const accentLevel = strum.accented
+        ? (strum.articulation === 'dead' ? 1.35 : 1.65)
+        : 1;
+      const velocity = baseVelocity * articulationLevel * accentLevel;
 
       stringIndexes.forEach((stringIndex, attackIndex) => {
         const midiNote = stringPitches[stringIndex];
-        this.playString(midiNote, when + (attackIndex * stringDelay), velocity, when);
+        const attackTime = when + (attackIndex * stringDelay);
+        if (strum.articulation === 'dead') {
+          this.playDeadString(midiNote, attackTime, velocity, when);
+        } else {
+          this.playString(
+            midiNote,
+            attackTime,
+            velocity,
+            when,
+            strum.articulation === 'palm-mute',
+            strum.accented,
+          );
+        }
       });
     }
 
@@ -124,21 +154,27 @@
       source.stop(when + COUNT_IN_CLICK_DURATION_SECONDS + 0.01);
     }
 
-    playString(midiNote, when, velocity, scheduledEventTime) {
+    playString(midiNote, when, velocity, scheduledEventTime, palmMuted, accented) {
       const source = this.context.createBufferSource();
       const filter = this.context.createBiquadFilter();
       const gain = this.context.createGain();
       const variation = this.variationCounter % BUFFER_VARIATION_COUNT;
+      const duration = palmMuted ? PALM_MUTE_DURATION_SECONDS : PLUCK_DURATION_SECONDS;
       this.variationCounter += 1;
 
       source.buffer = this.getPluckBuffer(midiNote, variation);
       filter.type = 'lowpass';
-      filter.frequency.value = Math.min(7500, Math.max(1400, midiToFrequency(midiNote) * 14));
-      filter.Q.value = 0.35;
+      const baseFilterFrequency = palmMuted
+        ? Math.min(3000, Math.max(750, midiToFrequency(midiNote) * 5))
+        : Math.min(7500, Math.max(1400, midiToFrequency(midiNote) * 14));
+      filter.frequency.value = accented
+        ? Math.min(palmMuted ? 4200 : 9000, baseFilterFrequency * 1.6)
+        : baseFilterFrequency;
+      filter.Q.value = palmMuted ? 0.5 : 0.35;
 
       gain.gain.setValueAtTime(0.0001, when);
-      gain.gain.exponentialRampToValueAtTime(velocity, when + 0.004);
-      gain.gain.exponentialRampToValueAtTime(0.0001, when + PLUCK_DURATION_SECONDS);
+      gain.gain.exponentialRampToValueAtTime(velocity, when + (accented ? 0.002 : 0.004));
+      gain.gain.exponentialRampToValueAtTime(0.0001, when + duration);
 
       source.connect(filter);
       filter.connect(gain);
@@ -154,7 +190,40 @@
       }, { once: true });
 
       source.start(when);
-      source.stop(when + PLUCK_DURATION_SECONDS + 0.01);
+      source.stop(when + duration + 0.01);
+    }
+
+    playDeadString(midiNote, when, velocity, scheduledEventTime) {
+      const source = this.context.createBufferSource();
+      const filter = this.context.createBiquadFilter();
+      const gain = this.context.createGain();
+      const variation = this.variationCounter % BUFFER_VARIATION_COUNT;
+      this.variationCounter += 1;
+
+      source.buffer = this.getDeadStrumBuffer(variation);
+      filter.type = 'bandpass';
+      filter.frequency.value = Math.min(2600, Math.max(1100, midiToFrequency(midiNote) * 6));
+      filter.Q.value = 0.65;
+
+      gain.gain.setValueAtTime(0.0001, when);
+      gain.gain.exponentialRampToValueAtTime(velocity, when + 0.002);
+      gain.gain.exponentialRampToValueAtTime(0.0001, when + DEAD_STRUM_DURATION_SECONDS);
+
+      source.connect(filter);
+      filter.connect(gain);
+      gain.connect(this.masterGain);
+
+      const voice = { source, filter, gain, scheduledEventTime };
+      this.activeVoices.add(voice);
+      source.addEventListener('ended', () => {
+        source.disconnect();
+        filter.disconnect();
+        gain.disconnect();
+        this.activeVoices.delete(voice);
+      }, { once: true });
+
+      source.start(when);
+      source.stop(when + DEAD_STRUM_DURATION_SECONDS + 0.01);
     }
 
     getPluckBuffer(midiNote, variation) {
@@ -182,6 +251,27 @@
           samples[index - period]
           + samples[index - period + 1]
         );
+      }
+
+      this.bufferCache.set(cacheKey, buffer);
+      return buffer;
+    }
+
+    getDeadStrumBuffer(variation) {
+      const cacheKey = `dead:${variation}`;
+      if (this.bufferCache.has(cacheKey)) {
+        return this.bufferCache.get(cacheKey);
+      }
+
+      const sampleRate = this.context.sampleRate;
+      const frameCount = Math.ceil(sampleRate * DEAD_STRUM_DURATION_SECONDS);
+      const buffer = this.context.createBuffer(1, frameCount, sampleRate);
+      const samples = buffer.getChannelData(0);
+      const random = createSeededRandom(0x51F15E + (variation * 7919));
+
+      for (let index = 0; index < frameCount; index += 1) {
+        const envelope = 1 - (index / frameCount);
+        samples[index] = ((random() * 2) - 1) * envelope;
       }
 
       this.bufferCache.set(cacheKey, buffer);

@@ -11,6 +11,7 @@
 
   const VALID_GRID_SIZES = new Set([8, 16, 24]);
   const MAX_EXPANDED_BARS = 1000;
+  const STRUM_TOKEN_PATTERN = /^([DU])([234]?)([PX]?)(!?)$/i;
 
   function parseSongSource(source, options = {}) {
     const catalog = options.catalog || null;
@@ -572,22 +573,13 @@
 
   function parseStrumBar(content, line, bar, gridSize, errors) {
     const rawTokens = splitTokens(content);
-    const tokens = rawTokens.map((token, index) => {
-      const normalized = token.toUpperCase();
-      if (!['D', 'U', '-'].includes(normalized)) {
-        addError(
-          errors,
-          'strum_token_invalid',
-          line,
-          'strum',
-          bar,
-          index + 1,
-          'strum',
-          `Invalid strum token: ${token}.`,
-        );
-      }
-      return normalized;
-    });
+    const tokens = rawTokens.map((token, index) => parseStrumToken(
+      token,
+      line,
+      bar,
+      index + 1,
+      errors,
+    ));
 
     if (gridSize !== null && tokens.length !== gridSize) {
       addError(
@@ -603,6 +595,52 @@
     }
 
     return Object.freeze({ tokens: Object.freeze(tokens), sourceLine: line });
+  }
+
+  function parseStrumToken(token, line, bar, slot, errors) {
+    if (token === '-') {
+      return makeStrum(null, null, 'normal', false);
+    }
+
+    const match = token.match(STRUM_TOKEN_PATTERN);
+    if (!match) {
+      addError(
+        errors,
+        'strum_token_invalid',
+        line,
+        'strum',
+        bar,
+        slot,
+        'strum',
+        `Invalid strum token: ${token}. Use D or U. Add optional modifiers in this order: string count, articulation, accent.`,
+      );
+      return makeStrum(null, null, 'normal', false);
+    }
+
+    const articulationMarker = match[3].toUpperCase();
+    const articulation = articulationMarker === 'P'
+      ? 'palm-mute'
+      : (articulationMarker === 'X' ? 'dead' : 'normal');
+    return makeStrum(
+      match[1].toUpperCase(),
+      match[2] === '' ? null : Number(match[2]),
+      articulation,
+      match[4] === '!',
+    );
+  }
+
+  function makeStrum(direction, stringCount, articulation, accented) {
+    return Object.freeze({ direction, stringCount, articulation, accented });
+  }
+
+  function parseStrumTokenValue(token) {
+    const errors = [];
+    const strum = parseStrumToken(String(token), null, null, null, errors);
+    return Object.freeze({
+      ok: errors.length === 0,
+      strum: errors.length === 0 ? strum : null,
+      errors: Object.freeze(errors),
+    });
   }
 
   function replaceBpmDirective(source, replacementValue) {
@@ -694,6 +732,7 @@
     formatValidationError,
     musicalContentKey,
     parseSongSource,
+    parseStrumTokenValue,
     replaceBpmDirective,
     replaceCountInDirective,
   });

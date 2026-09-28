@@ -35,7 +35,7 @@ chords:
 | C G/B@8 | G/B | Am F@8 | F |
 
 strum:
-| D - D U - U D U | x4</textarea>
+| D - D4 U! - U3P D2X U | x4</textarea>
 
       <div class="validation-panel">
         <p id="validation-summary" class="validation-summary" role="status" aria-live="polite">
@@ -88,10 +88,62 @@ strum:
       <summary>Format and supported chords</summary>
       <p>Use <code>count-in: 0</code>, <code>1</code>, or <code>2</code> after the BPM directive.</p>
       <p>Use <code>D</code> for a downstroke, <code>U</code> for an upstroke, and <code>-</code> for no strum.</p>
+      <p>Add <code>2</code>, <code>3</code>, or <code>4</code> to limit the string count. A downstroke starts with the lowest-pitched playable string. An upstroke starts with the highest-pitched playable string.</p>
+      <p>Add <code>P</code> for palm mute. Add <code>X</code> for a dead strum. Add <code>!</code> last for an accent.</p>
+      <p>Write tokens in this order: direction, string count, articulation, accent. Example: <code>D3P!</code>.</p>
       <p>Use <code>Chord@N</code> for a chord change at slot N. The change occurs before a strum at the same slot.</p>
       <p>Use <code>xN</code> after one bar to repeat that bar N times in total.</p>
       <p>Supported chords:</p>
       <p class="chord-list"><code>A Am Bb Bm C Cm D Dm Em F F#m G Am7 C7 Cmaj7 D7 G7 Cadd9 Dsus4 G5 Am/G C/E D/F# G/B</code></p>
+    </details>
+
+    <details id="strum-sound-test">
+      <summary>Strum sound test</summary>
+      <p>Each button plays one isolated G chord. A sound test pauses song playback. It does not change the source.</p>
+
+      <div class="sound-test-group">
+        <h3>Downstroke range</h3>
+        <div class="sound-test-buttons">
+          <button type="button" data-strum-token="D">D</button>
+          <button type="button" data-strum-token="D4">D4</button>
+          <button type="button" data-strum-token="D3">D3</button>
+          <button type="button" data-strum-token="D2">D2</button>
+        </div>
+      </div>
+
+      <div class="sound-test-group">
+        <h3>Upstroke range</h3>
+        <div class="sound-test-buttons">
+          <button type="button" data-strum-token="U">U</button>
+          <button type="button" data-strum-token="U4">U4</button>
+          <button type="button" data-strum-token="U3">U3</button>
+          <button type="button" data-strum-token="U2">U2</button>
+        </div>
+      </div>
+
+      <div class="sound-test-group">
+        <h3>Downstroke sound</h3>
+        <div class="sound-test-buttons">
+          <button type="button" data-strum-token="D3">D3</button>
+          <button type="button" data-strum-token="D3P">D3P</button>
+          <button type="button" data-strum-token="D3X">D3X</button>
+          <button type="button" data-strum-token="D3!">D3!</button>
+          <button type="button" data-strum-token="D3P!">D3P!</button>
+          <button type="button" data-strum-token="D3X!">D3X!</button>
+        </div>
+      </div>
+
+      <div class="sound-test-group">
+        <h3>Upstroke sound</h3>
+        <div class="sound-test-buttons">
+          <button type="button" data-strum-token="U3">U3</button>
+          <button type="button" data-strum-token="U3P">U3P</button>
+          <button type="button" data-strum-token="U3X">U3X</button>
+          <button type="button" data-strum-token="U3!">U3!</button>
+          <button type="button" data-strum-token="U3P!">U3P!</button>
+          <button type="button" data-strum-token="U3X!">U3X!</button>
+        </div>
+      </div>
     </details>
   </main>
 </body>

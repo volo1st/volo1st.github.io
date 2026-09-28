@@ -8,6 +8,9 @@ const test = require('node:test');
 const catalog = require('../tools/guitar-strumming/catalog.js');
 const core = require('../tools/guitar-strumming/core.js');
 const parser = require('../tools/guitar-strumming/parser.js');
+require('../tools/guitar-strumming/audio-engine.js');
+
+const audioApi = globalThis.GuitarStrummingAudio;
 
 const expectedChordIdentifiers = [
   'A', 'Am', 'Bb', 'Bm', 'C', 'Cm', 'D', 'Dm', 'Em', 'F', 'F#m', 'G',
@@ -15,9 +18,125 @@ const expectedChordIdentifiers = [
   'Am/G', 'C/E', 'D/F#', 'G/B',
 ];
 
+function makeStrum(direction, overrides = {}) {
+  return {
+    direction,
+    stringCount: overrides.stringCount ?? null,
+    articulation: overrides.articulation || 'normal',
+    accented: overrides.accented || false,
+  };
+}
+
+class FakeAudioParam {
+  constructor() {
+    this.value = 0;
+    this.events = [];
+  }
+
+  setValueAtTime(value, time) {
+    this.value = value;
+    this.events.push({ method: 'set', value, time });
+  }
+
+  exponentialRampToValueAtTime(value, time) {
+    this.value = value;
+    this.events.push({ method: 'ramp', value, time });
+  }
+
+  cancelScheduledValues(time) {
+    this.events.push({ method: 'cancel', time });
+  }
+}
+
+class FakeAudioNode {
+  connect() {}
+
+  disconnect() {}
+}
+
+class FakeSourceNode extends FakeAudioNode {
+  addEventListener() {}
+
+  start(time) {
+    this.startTime = time;
+  }
+
+  stop(time) {
+    this.stopTime = time;
+  }
+}
+
+class FakeAudioContext {
+  constructor() {
+    this.state = 'running';
+    this.currentTime = 0;
+    this.sampleRate = 1000;
+    this.destination = new FakeAudioNode();
+    this.sources = [];
+    this.filters = [];
+    this.gains = [];
+  }
+
+  createGain() {
+    const node = new FakeAudioNode();
+    node.gain = new FakeAudioParam();
+    this.gains.push(node);
+    return node;
+  }
+
+  createDynamicsCompressor() {
+    const node = new FakeAudioNode();
+    node.threshold = new FakeAudioParam();
+    node.knee = new FakeAudioParam();
+    node.ratio = new FakeAudioParam();
+    node.attack = new FakeAudioParam();
+    node.release = new FakeAudioParam();
+    return node;
+  }
+
+  createBufferSource() {
+    const node = new FakeSourceNode();
+    this.sources.push(node);
+    return node;
+  }
+
+  createBiquadFilter() {
+    const node = new FakeAudioNode();
+    node.frequency = new FakeAudioParam();
+    node.Q = new FakeAudioParam();
+    this.filters.push(node);
+    return node;
+  }
+
+  createBuffer(channelCount, frameCount) {
+    assert.equal(channelCount, 1);
+    const samples = new Float32Array(frameCount);
+    return {
+      length: frameCount,
+      getChannelData: () => samples,
+    };
+  }
+}
+
+function renderStrum(stringPitches, strum) {
+  const engine = new audioApi.GuitarAudioEngine();
+  engine.ensureContext();
+  engine.playStrum(stringPitches, strum, 1);
+  return engine.context;
+}
+
 function makeDemonstrationSong({ bpm = 100, gridSize = 8 } = {}) {
   const pattern = Array.from({ length: gridSize }, (_, index) => (
-    ['D', '-', 'D', 'U', '-', 'U', 'D', 'U'][index % 8]
+    [
+      makeStrum('D'),
+      makeStrum(null),
+      makeStrum('D'),
+      makeStrum('U'),
+      makeStrum(null),
+      makeStrum('U'),
+      makeStrum('D'),
+      makeStrum('U'),
+    ][index % 8]
   ));
   return {
     bpm,
@@ -58,9 +177,76 @@ test('the initial catalog contains the 24 required chord identifiers', () => {
 });
 
 test('stroke direction skips excluded strings and reverses string order', () => {
-  const dVoicing = catalog.getDefaultVoicing('D').frets;
-  assert.deepEqual(core.stringOrder(dVoicing, 'D'), [2, 3, 4, 5]);
-  assert.deepEqual(core.stringOrder(dVoicing, 'U'), [5, 4, 3, 2]);
+  const dVoicing = core.resolveVoicingPitches(catalog.getDefaultVoicing('D').frets);
+  assert.deepEqual(core.selectStringIndexes(dVoicing, 'D', null), [2, 3, 4, 5]);
+  assert.deepEqual(core.selectStringIndexes(dVoicing, 'U', null), [5, 4, 3, 2]);
+});
+
+test('partial strums select low or high playable pitches', () => {
+  const pitches = [60, 45, 'x', 55, 59, 64];
+  assert.deepEqual(core.selectStringIndexes(pitches, 'D', null), [1, 3, 4, 0, 5]);
+  assert.deepEqual(core.selectStringIndexes(pitches, 'U', null), [5, 0, 4, 3, 1]);
+  assert.deepEqual(core.selectStringIndexes(pitches, 'D', 2), [1, 3]);
+  assert.deepEqual(core.selectStringIndexes(pitches, 'U', 3), [5, 0, 4]);
+  assert.deepEqual(core.selectStringIndexes(['x', 'x', 'x', 55, 59, 64], 'D', 4), [3, 4, 5]);
+});
+
+test('the audio engine gives each articulation a distinct envelope and sound path', (context) => {
+  const originalAudioContext = globalThis.AudioContext;
+  globalThis.AudioContext = FakeAudioContext;
+  context.after(() => {
+    if (originalAudioContext === undefined) {
+      delete globalThis.AudioContext;
+    } else {
+      globalThis.AudioContext = originalAudioContext;
+    }
+  });
+
+  const pitches = core.resolveVoicingPitches(catalog.getDefaultVoicing('C').frets);
+  const normal = renderStrum(pitches, makeStrum('D', { stringCount: 2 }));
+  const accented = renderStrum(
+    pitches,
+    makeStrum('D', { stringCount: 2, accented: true }),
+  );
+  const palmMute = renderStrum(
+    pitches,
+    makeStrum('D', { stringCount: 2, articulation: 'palm-mute' }),
+  );
+  const accentedPalmMute = renderStrum(
+    pitches,
+    makeStrum('D', { stringCount: 2, articulation: 'palm-mute', accented: true }),
+  );
+  const dead = renderStrum(
+    pitches,
+    makeStrum('U', { stringCount: 3, articulation: 'dead' }),
+  );
+  const accentedDead = renderStrum(
+    pitches,
+    makeStrum('U', { stringCount: 3, articulation: 'dead', accented: true }),
+  );
+
+  assert.equal(normal.sources.length, 2);
+  assert.equal(palmMute.sources.length, 2);
+  assert.equal(dead.sources.length, 3);
+  assert.equal(normal.filters[0].type, 'lowpass');
+  assert.equal(palmMute.filters[0].type, 'lowpass');
+  assert.ok(palmMute.filters[0].frequency.value < normal.filters[0].frequency.value);
+  assert.ok(palmMute.sources[0].stopTime < normal.sources[0].stopTime);
+  assert.ok(accented.filters[0].frequency.value > normal.filters[0].frequency.value);
+  assert.ok(accentedPalmMute.filters[0].frequency.value > palmMute.filters[0].frequency.value);
+  assert.equal(dead.filters[0].type, 'bandpass');
+  assert.equal(dead.sources[0].buffer.length, 110);
+
+  const normalPeak = normal.gains[1].gain.events.find((event) => event.method === 'ramp').value;
+  const accentPeak = accented.gains[1].gain.events.find((event) => event.method === 'ramp').value;
+  assert.ok(accentPeak > normalPeak);
+  const normalPeakTime = normal.gains[1].gain.events.find((event) => event.method === 'ramp').time;
+  const accentPeakTime = accented.gains[1].gain.events.find((event) => event.method === 'ramp').time;
+  assert.ok(accentPeakTime < normalPeakTime);
+  const deadPeak = dead.gains[1].gain.events.find((event) => event.method === 'ramp').value;
+  const accentedDeadPeak = accentedDead.gains[1].gain.events
+    .find((event) => event.method === 'ramp').value;
+  assert.ok(accentedDeadPeak > deadPeak);
 });
 
 test('the core resolves a catalog voicing to six string pitches', () => {
@@ -71,7 +257,10 @@ test('the core resolves a catalog voicing to six string pitches', () => {
 test('a chord change is active before a strum at the same slot', () => {
   const timeline = core.normalizeSong(makeDemonstrationSong());
   const event = timeline.events.find((item) => item.barIndex === 1 && item.slotIndex === 8);
-  assert.equal(event.strumType, 'U');
+  assert.equal(event.direction, 'U');
+  assert.equal(event.stringCount, null);
+  assert.equal(event.articulation, 'normal');
+  assert.equal(event.accented, false);
   assert.equal(event.activeChord, 'G/B');
 });
 
@@ -160,7 +349,73 @@ test('the parser accepts whitespace, lowercase strums, and repeats in both secti
   assert.equal(result.song.gridSize, 8);
   assert.equal(result.song.chordBars.length, 2);
   assert.equal(result.song.strumBars.length, 2);
-  assert.deepEqual(result.song.strumBars[0], ['D', '-', 'D', 'U', '-', 'U', 'D', 'U']);
+  assert.deepEqual(result.song.strumBars[0], [
+    makeStrum('D'),
+    makeStrum(null),
+    makeStrum('D'),
+    makeStrum('U'),
+    makeStrum(null),
+    makeStrum('U'),
+    makeStrum('D'),
+    makeStrum('U'),
+  ]);
+});
+
+test('the parser normalizes string range, articulation, and accent modifiers', () => {
+  const source = validSource.replace(
+    'D - D U - U D U',
+    'd u! d4 U4 d3p D2P! u3x U4X!',
+  );
+  const result = parser.parseSongSource(source, { catalog });
+  assert.equal(result.ok, true);
+  assert.deepEqual(result.song.strumBars[0], [
+    makeStrum('D'),
+    makeStrum('U', { accented: true }),
+    makeStrum('D', { stringCount: 4 }),
+    makeStrum('U', { stringCount: 4 }),
+    makeStrum('D', { stringCount: 3, articulation: 'palm-mute' }),
+    makeStrum('D', { stringCount: 2, articulation: 'palm-mute', accented: true }),
+    makeStrum('U', { stringCount: 3, articulation: 'dead' }),
+    makeStrum('U', { stringCount: 4, articulation: 'dead', accented: true }),
+  ]);
+
+  const timeline = core.normalizeSong(result.song);
+  assert.deepEqual(
+    timeline.events.slice(0, 8).map((event) => ({
+      direction: event.direction,
+      stringCount: event.stringCount,
+      articulation: event.articulation,
+      accented: event.accented,
+    })),
+    result.song.strumBars[0],
+  );
+});
+
+test('the parser rejects unsupported modifiers and modifier order', () => {
+  const invalidTokens = ['D5', 'DP3', 'D!3', 'D3PX', 'D3Q', 'D!!', 'X', 'DD', '-!'];
+  for (const token of invalidTokens) {
+    const source = validSource.replace('D - D U - U D U', `${token} - D U - U D U`);
+    const result = parser.parseSongSource(source, { catalog });
+    const error = result.errors.find((item) => item.code === 'strum_token_invalid');
+    assert.ok(error, `${token} was not rejected`);
+    assert.equal(error.line, 9);
+    assert.equal(error.section, 'strum');
+    assert.equal(error.bar, 1);
+    assert.equal(error.slot, 1);
+  }
+});
+
+test('single-token parsing uses the song token grammar', () => {
+  const valid = parser.parseStrumTokenValue('d3p!');
+  assert.equal(valid.ok, true);
+  assert.deepEqual(
+    valid.strum,
+    makeStrum('D', { stringCount: 3, articulation: 'palm-mute', accented: true }),
+  );
+  const invalid = parser.parseStrumTokenValue('DP3');
+  assert.equal(invalid.ok, false);
+  assert.equal(invalid.strum, null);
+  assert.equal(invalid.errors[0].code, 'strum_token_invalid');
 });
 
 test('the parser accepts byte order mark input and CRLF line ends', () => {
@@ -403,4 +658,10 @@ test('the default source in the page is valid', () => {
   assert.ok(match);
   const result = parser.parseSongSource(match[1], { catalog });
   assert.equal(result.ok, true);
+
+  const soundTestTokens = [...html.matchAll(/data-strum-token="([^"]+)"/g)]
+    .map((tokenMatch) => tokenMatch[1]);
+  assert.equal(soundTestTokens.length, 20);
+  assert.ok(soundTestTokens.every((token) => parser.parseStrumTokenValue(token).ok));
+  assert.match(html, /<details id="strum-sound-test">/);
 });

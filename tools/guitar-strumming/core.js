@@ -10,7 +10,8 @@
   'use strict';
 
   const VALID_GRID_SIZES = Object.freeze([8, 16, 24]);
-  const VALID_STRUM_TYPES = new Set(['D', 'U', '-']);
+  const VALID_STRING_COUNTS = new Set([2, 3, 4]);
+  const VALID_ARTICULATIONS = new Set(['normal', 'palm-mute', 'dead']);
   const OPEN_STRING_MIDI = Object.freeze([40, 45, 50, 55, 59, 64]);
 
   function slotDurationSeconds(bpm, gridSize) {
@@ -92,12 +93,16 @@
           activeChord = chordChanges[nextChangeIndex].chord;
           nextChangeIndex += 1;
         }
+        const strum = strums[slotOffset];
         events.push(Object.freeze({
           barIndex: barOffset + 1,
           slotIndex,
           absoluteSlotIndex: (barOffset * song.gridSize) + slotOffset,
           activeChord,
-          strumType: strums[slotOffset],
+          direction: strum.direction,
+          stringCount: strum.stringCount,
+          articulation: strum.articulation,
+          accented: strum.accented,
         }));
       }
     }
@@ -138,16 +143,35 @@
     if (!Array.isArray(strumBar) || strumBar.length !== gridSize) {
       throw new RangeError(`Each strum bar must contain ${gridSize} slots.`);
     }
-    return strumBar.map((token) => {
-      if (typeof token !== 'string' || !VALID_STRUM_TYPES.has(token.toUpperCase())) {
-        throw new RangeError(`Invalid strum token: ${String(token)}`);
+    return strumBar.map((strum) => {
+      if (!strum || typeof strum !== 'object') {
+        throw new TypeError('Each strum slot must contain normalized strum data.');
       }
-      return token.toUpperCase();
+      const { direction, stringCount, articulation, accented } = strum;
+      if (direction !== null && direction !== 'D' && direction !== 'U') {
+        throw new RangeError('Strum direction must be D, U, or null.');
+      }
+      if (stringCount !== null && !VALID_STRING_COUNTS.has(stringCount)) {
+        throw new RangeError('Strum string count must be 2, 3, 4, or null.');
+      }
+      if (!VALID_ARTICULATIONS.has(articulation)) {
+        throw new RangeError('Strum articulation must be normal, palm-mute, or dead.');
+      }
+      if (typeof accented !== 'boolean') {
+        throw new TypeError('Strum accent state must be true or false.');
+      }
+      if (
+        direction === null
+        && (stringCount !== null || articulation !== 'normal' || accented)
+      ) {
+        throw new RangeError('A no-strum slot cannot contain modifiers.');
+      }
+      return Object.freeze({ direction, stringCount, articulation, accented });
     });
   }
 
   function playableEvents(timeline) {
-    return timeline.events.filter((event) => event.strumType !== '-');
+    return timeline.events.filter((event) => event.direction !== null);
   }
 
   function cycleDurationSeconds(timeline) {
@@ -272,18 +296,33 @@
     });
   }
 
-  function stringOrder(frets, strumType) {
-    if (!Array.isArray(frets) || frets.length !== 6) {
-      throw new RangeError('A voicing must contain six string values.');
+  function selectStringIndexes(stringPitches, direction, stringCount) {
+    if (!Array.isArray(stringPitches) || stringPitches.length !== 6) {
+      throw new RangeError('A voicing must contain six string pitches.');
     }
-    const playedStrings = frets
-      .map((fret, stringIndex) => ({ fret, stringIndex }))
-      .filter(({ fret }) => fret !== 'x')
-      .map(({ stringIndex }) => stringIndex);
-    const normalizedType = String(strumType).toUpperCase();
-    if (normalizedType === 'D') return playedStrings;
-    if (normalizedType === 'U') return playedStrings.reverse();
-    throw new RangeError('Strum type must be D or U.');
+    if (direction !== 'D' && direction !== 'U') {
+      throw new RangeError('Strum direction must be D or U.');
+    }
+    if (stringCount !== null && !VALID_STRING_COUNTS.has(stringCount)) {
+      throw new RangeError('Strum string count must be 2, 3, 4, or null.');
+    }
+
+    const playableStrings = stringPitches
+      .map((pitch, stringIndex) => ({ pitch, stringIndex }))
+      .filter(({ pitch }) => pitch !== 'x');
+    if (playableStrings.some(({ pitch }) => !Number.isFinite(pitch))) {
+      throw new TypeError('Each playable string pitch must be a number.');
+    }
+
+    const directionMultiplier = direction === 'D' ? 1 : -1;
+    playableStrings.sort((left, right) => (
+      ((left.pitch - right.pitch) || (left.stringIndex - right.stringIndex))
+      * directionMultiplier
+    ));
+    const selected = stringCount === null
+      ? playableStrings
+      : playableStrings.slice(0, stringCount);
+    return Object.freeze(selected.map(({ stringIndex }) => stringIndex));
   }
 
   function stringMidiNote(stringIndex, fret) {
@@ -325,8 +364,8 @@
     playheadSlotAtTime,
     playableEvents,
     resolveVoicingPitches,
+    selectStringIndexes,
     slotDurationSeconds,
     stringMidiNote,
-    stringOrder,
   });
 }));

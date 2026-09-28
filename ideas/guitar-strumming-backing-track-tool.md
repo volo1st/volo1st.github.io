@@ -161,11 +161,27 @@ strum:
 | <slot> <slot> ... |
 ```
 
-Supported MVP tokens:
+Use this token grammar:
 
-- `D` = downstroke
-- `U` = upstroke
-- `-` = no strum
+```text
+<direction>[<string-count>][<articulation>][!]
+```
+
+Use `D` for a downstroke.
+
+Use `U` for an upstroke.
+
+Use `-` for no strum.
+
+Use an optional string count of `2`, `3`, or `4`.
+
+Use optional `P` for palm mute or `X` for a dead strum.
+
+Use optional `!` for an accent.
+
+Write modifiers in this order: string count, articulation, accent.
+
+Treat a complete strum token as case-insensitive.
 
 Each bar must contain exactly the number of tokens declared by `grid-size`.
 
@@ -208,10 +224,10 @@ chords:
 | C D@8 | D | G Em@8 | Em |
 
 strum:
-| D - D - D - D U |
-| - U - U D - D U |
-| D - D - D - D U |
-| - U - U D - D U |
+| D - D4 - D3P - D2X U! |
+| - U - U4 D - D3P U! |
+| D - D4 - D3P - D2X U! |
+| - U - U4 D - D3P U! |
 ```
 
 Interpretation:
@@ -225,6 +241,7 @@ Interpretation:
 - Bar 3 starts on G and changes to Em at slot 8.
 - Bar 4 starts on Em.
 - The chord change at slot 8 occurs before the strum at slot 8.
+- The strum section uses string range, palm mute, dead strum, and accent modifiers.
 
 ---
 
@@ -589,7 +606,7 @@ Keep count-in events outside the repeating song timeline.
 
 ## 11.3 Strum Range, Articulation, and Accent
 
-Status: Decided.
+Status: Implemented and verified on 2026-09-28.
 
 Use this token grammar:
 
