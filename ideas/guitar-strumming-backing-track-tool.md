@@ -921,11 +921,59 @@ Calculate every tempo segment from an audio-clock boundary. Do not derive a new 
 
 After a user-interface stall, recover at the correct loop, tempo, and musical position without a burst of late strums.
 
-A future interface control must read and edit only the `tempo-ramp:` directive.
+Decision change on 2026-09-28: A tempo-ramp mode control can edit both `bpm:` and `tempo-ramp:`. Enabling the ramp treats the current BPM as the target and calculates a lower starting BPM. Disabling the ramp restores the target as the fixed BPM.
 
 A future interface summary can show the expanded meaning, such as `+5 BPM every 2 loops, target 120 BPM`.
 
 Verification evidence: The automated parser and timing checks passed on 2026-09-28. The user confirmed that the quick ramp test worked in the browser. The test covered a count-in, two loop-boundary increases, a partial final step, Pause and Play, and Restart.
+
+## 11.7 Tempo Ramp Control
+
+Status: Implemented and verified on 2026-09-28.
+
+Add a tempo-ramp mode control to the Practice section.
+
+Use two modes: Off and Increase.
+
+When the ramp is off, `bpm:` remains the fixed playback tempo.
+
+When the user enables the ramp:
+
+1. Treat the current `bpm:` value as the target BPM.
+2. Calculate 50 percent of the target.
+3. Round the result to the nearest 5 BPM.
+4. Use 30 BPM if the rounded result is less than 30 BPM.
+5. Set the step to 5 BPM.
+6. Set the loop interval to 3 completed loops.
+
+For example, enable this ramp for a fixed tempo of 135 BPM:
+
+```text
+bpm: 70
+tempo-ramp: +5/3/135
+```
+
+Do not enable the ramp when the fixed BPM is 30. A valid increasing target is not available.
+
+When the user disables the ramp, copy the target to `bpm:` and write `tempo-ramp: off`.
+
+Show separate controls for the step, loop interval, and target while the ramp is enabled.
+
+The BPM controls edit the fixed tempo while the ramp is off. They edit the starting tempo while the ramp is enabled.
+
+Keep the textarea as the single source of truth.
+
+Read every control value from the parsed source.
+
+Apply an enable or disable operation as one source change.
+
+If a control value or required directive is invalid, keep the source unchanged and restore the controls from the parsed source.
+
+Any ramp-control change stops playback and resets the ramp to bar 1, slot 1.
+
+Support keyboard use, narrow screens, and 200 percent zoom.
+
+Verification evidence: The automated checks passed on 2026-09-28. The user confirmed enable and disable behavior, field editing, invalid-value source preservation, fixed-tempo playback, keyboard use, and the responsive layout.
 
 ---
 

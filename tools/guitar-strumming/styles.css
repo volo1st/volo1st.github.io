@@ -131,6 +131,38 @@ button:focus-visible {
   margin-bottom: 0.35rem;
 }
 
+.tempo-ramp-control {
+  margin-top: 1rem;
+}
+
+.tempo-ramp-control > label {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.tempo-ramp-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(8rem, 1fr));
+  gap: 0.75rem 1rem;
+  margin: 0.75rem 0 0;
+  padding: 0.75rem;
+  border: 1px solid #a9a38f;
+}
+
+.tempo-ramp-fields[hidden] {
+  display: none;
+}
+
+.tempo-ramp-fields legend {
+  padding: 0 0.35rem;
+  font-weight: 700;
+}
+
+.tempo-ramp-fields label {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
 .preset-control {
   margin-bottom: 1rem;
 }
@@ -257,6 +289,13 @@ button:disabled {
 
 .chord-list {
   overflow-wrap: anywhere;
+}
+
+@media (max-width: 38rem) {
+  .tempo-controls,
+  .tempo-ramp-fields {
+    grid-template-columns: 1fr;
+  }
 }
 
 .sound-test-group {

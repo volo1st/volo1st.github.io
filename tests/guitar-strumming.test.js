@@ -648,6 +648,38 @@ test('count-in replacement changes only its value and preserves line ends', () =
   );
 });
 
+test('tempo-ramp replacement supports compact and spaced directive values', () => {
+  const compact = parser.replaceTempoRampDirective(validSource, '+5/3/135');
+  assert.equal(compact, validSource.replace('tempo-ramp: off', 'tempo-ramp: +5/3/135'));
+
+  const spacedSource = validSource.replace('tempo-ramp: off', 'tempo-ramp: +5 / 2 / 120   ');
+  const spaced = parser.replaceTempoRampDirective(spacedSource, 'off');
+  assert.equal(spaced, validSource.replace('tempo-ramp: off', 'tempo-ramp: off   '));
+  assert.equal(parser.replaceTempoRampDirective('tempo-ramp: off\ntempo-ramp: off', 'off'), null);
+});
+
+test('tempo-ramp enable and disable replacements preserve valid source', () => {
+  const fixed135 = validSource.replace('bpm: 100', 'bpm: 135');
+  const startingSource = parser.replaceBpmDirective(fixed135, '70');
+  const enabledSource = parser.replaceTempoRampDirective(startingSource, '+5/3/135');
+  const enabled = parser.parseSongSource(enabledSource, { catalog });
+  assert.equal(enabled.ok, true);
+  assert.equal(enabled.song.bpm, 70);
+  assert.deepEqual(enabled.song.tempoRamp, {
+    enabled: true,
+    stepBpm: 5,
+    loopsPerStep: 3,
+    targetBpm: 135,
+  });
+
+  const targetSource = parser.replaceBpmDirective(enabledSource, '135');
+  const disabledSource = parser.replaceTempoRampDirective(targetSource, 'off');
+  const disabled = parser.parseSongSource(disabledSource, { catalog });
+  assert.equal(disabled.ok, true);
+  assert.equal(disabled.song.bpm, 135);
+  assert.equal(disabled.song.tempoRamp.enabled, false);
+});
+
 test('count-in events use exact quarter-note timing and accent beat 1', () => {
   const events = core.createCountInEvents(120, 2, 10);
   assert.equal(events.length, 8);
@@ -730,6 +762,20 @@ test('tempo-ramp BPM calculation caps a partial final step at the target', () =>
   assert.equal(core.tempoRampBpmAfterLoops(100, 5, 2, 112, 4), 110);
   assert.equal(core.tempoRampBpmAfterLoops(100, 5, 2, 112, 6), 112);
   assert.equal(core.tempoRampBpmAfterLoops(100, 5, 2, 112, 1000), 112);
+});
+
+test('the default tempo ramp starts at rounded half speed', () => {
+  assert.deepEqual(core.defaultTempoRampForTarget(135), {
+    startingBpm: 70,
+    stepBpm: 5,
+    loopsPerStep: 3,
+    targetBpm: 135,
+  });
+  assert.equal(core.defaultTempoRampForTarget(120).startingBpm, 60);
+  assert.equal(core.defaultTempoRampForTarget(134).startingBpm, 65);
+  assert.equal(core.defaultTempoRampForTarget(59).startingBpm, 30);
+  assert.equal(core.defaultTempoRampForTarget(31).startingBpm, 30);
+  assert.throws(() => core.defaultTempoRampForTarget(30), /target greater than 30/);
 });
 
 test('loop tempo transitions use exact audio-clock boundaries', () => {
@@ -821,4 +867,16 @@ test('the page contains valid sound-test tokens', () => {
   assert.equal(soundTestTokens.length, 20);
   assert.ok(soundTestTokens.every((token) => parser.parseStrumTokenValue(token).ok));
   assert.match(html, /<details id="strum-sound-test">/);
+  assert.match(html, /id="tempo-ramp-mode"/);
+  assert.match(html, /id="tempo-ramp-fields"[^>]*hidden/);
+  assert.match(html, /for="tempo-ramp-step"/);
+  assert.match(html, /for="tempo-ramp-loops"/);
+  assert.match(html, /for="tempo-ramp-target"/);
+
+  const css = fs.readFileSync(
+    path.join(__dirname, '..', 'tools', 'guitar-strumming', 'styles.css'),
+    'utf8',
+  );
+  assert.match(css, /\.tempo-ramp-fields\s*\{[^}]*grid-template-columns/s);
+  assert.match(css, /@media \(max-width: 38rem\)/);
 });

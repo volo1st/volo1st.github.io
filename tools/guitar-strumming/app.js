@@ -14,9 +14,16 @@
 
   const elements = {
     source: document.getElementById('song-source'),
+    bpmNumberLabel: document.getElementById('bpm-number-label'),
     bpmNumber: document.getElementById('bpm-number'),
+    bpmRangeLabel: document.getElementById('bpm-range-label'),
     bpmRange: document.getElementById('bpm-range'),
     countIn: document.getElementById('count-in'),
+    tempoRampMode: document.getElementById('tempo-ramp-mode'),
+    tempoRampFields: document.getElementById('tempo-ramp-fields'),
+    tempoRampStep: document.getElementById('tempo-ramp-step'),
+    tempoRampLoops: document.getElementById('tempo-ramp-loops'),
+    tempoRampTarget: document.getElementById('tempo-ramp-target'),
     validationSummary: document.getElementById('validation-summary'),
     validationErrors: document.getElementById('validation-errors'),
     songSummary: document.getElementById('song-summary'),
@@ -67,7 +74,7 @@
       clearSourceParametersAfterSourceChange();
       validateSource('text');
     });
-    elements.bpmNumber.addEventListener('input', () => {
+    elements.bpmNumber.addEventListener('change', () => {
       updateBpmFromControl(elements.bpmNumber.value);
     });
     elements.bpmRange.addEventListener('input', () => {
@@ -76,6 +83,16 @@
     elements.countIn.addEventListener('change', () => {
       updateCountInFromControl(elements.countIn.value);
     });
+    elements.tempoRampMode.addEventListener('change', () => {
+      updateTempoRampMode(elements.tempoRampMode.value);
+    });
+    for (const rampField of [
+      elements.tempoRampStep,
+      elements.tempoRampLoops,
+      elements.tempoRampTarget,
+    ]) {
+      rampField.addEventListener('change', updateTempoRampFromControls);
+    }
     elements.playPause.addEventListener('click', handlePlayPause);
     elements.restart.addEventListener('click', restartPlayback);
     elements.soundTest.addEventListener('click', handleSoundTestClick);
@@ -131,6 +148,8 @@
       haltPlayback({ resetPosition: true });
       countInRequired = false;
       elements.countIn.value = '';
+      synchronizeBpmControls(null);
+      synchronizeTempoRampControls(null);
       invalidatePreparedShare('The requested source did not load.');
       renderValidationErrors([{
         code: `transport_${error.code || 'decode_failed'}`,
@@ -164,6 +183,8 @@
       haltPlayback({ resetPosition: true });
       countInRequired = false;
       elements.countIn.value = '';
+      synchronizeBpmControls(null);
+      synchronizeTempoRampControls(null);
       invalidatePreparedShare('Fix the source before you create a share link.');
       renderValidationErrors(result.errors);
       renderSongSummary();
@@ -187,6 +208,8 @@
       haltPlayback({ resetPosition: true });
       countInRequired = false;
       elements.countIn.value = '';
+      synchronizeBpmControls(null);
+      synchronizeTempoRampControls(null);
       invalidatePreparedShare('Fix the timeline before you create a share link.');
       renderValidationErrors([{
         code: 'timeline_error',
@@ -233,8 +256,9 @@
     lastValidSource = source;
     renderValidationErrors([]);
     renderSongSummary();
-    synchronizeBpmControls(result.song.bpm);
+    synchronizeBpmControls(result.song);
     synchronizeCountInControl(result.song.countInBars);
+    synchronizeTempoRampControls(result.song);
     prepareShareUrl(source);
     if (rampCurrentBpm === null) resetTempoRampState();
 
@@ -322,6 +346,14 @@
   }
 
   function updateBpmFromControl(rawValue) {
+    const maximum = parsedSong && parsedSong.tempoRamp.enabled
+      ? parsedSong.tempoRamp.targetBpm - 1
+      : 300;
+    if (!/^\d+$/.test(rawValue) || Number(rawValue) < 30 || Number(rawValue) > maximum) {
+      if (parsedSong) synchronizeBpmControls(parsedSong);
+      setPlaybackStatus(`BPM must be a whole number from 30 through ${maximum}.`);
+      return;
+    }
     const updatedSource = parser.replaceBpmDirective(elements.source.value, rawValue);
     if (updatedSource === null) {
       setPlaybackStatus('Fix the bpm: directive before you use the BPM controls.');
@@ -332,9 +364,25 @@
     validateSource('bpm-control');
   }
 
-  function synchronizeBpmControls(bpm) {
-    elements.bpmNumber.value = String(bpm);
-    elements.bpmRange.value = String(bpm);
+  function synchronizeBpmControls(song) {
+    if (!song) {
+      elements.bpmNumberLabel.textContent = 'Beats per minute';
+      elements.bpmRangeLabel.textContent = 'Tempo slider';
+      elements.bpmNumber.max = '300';
+      elements.bpmRange.max = '300';
+      return;
+    }
+    const maximum = song.tempoRamp.enabled ? song.tempoRamp.targetBpm - 1 : 300;
+    elements.bpmNumberLabel.textContent = song.tempoRamp.enabled
+      ? 'Starting beats per minute'
+      : 'Beats per minute';
+    elements.bpmRangeLabel.textContent = song.tempoRamp.enabled
+      ? 'Starting tempo slider'
+      : 'Tempo slider';
+    elements.bpmNumber.max = String(maximum);
+    elements.bpmRange.max = String(maximum);
+    elements.bpmNumber.value = String(song.bpm);
+    elements.bpmRange.value = String(song.bpm);
   }
 
   function updateCountInFromControl(rawValue) {
@@ -352,6 +400,129 @@
 
   function synchronizeCountInControl(countInBars) {
     elements.countIn.value = String(countInBars);
+  }
+
+  function updateTempoRampMode(mode) {
+    if (!parsedSong) {
+      synchronizeTempoRampControls(null);
+      setPlaybackStatus('Fix the source before you use the Tempo ramp control.');
+      return;
+    }
+
+    if (mode === 'increase' && !parsedSong.tempoRamp.enabled) {
+      let ramp;
+      try {
+        ramp = core.defaultTempoRampForTarget(parsedSong.bpm);
+      } catch (error) {
+        synchronizeTempoRampControls(parsedSong);
+        setPlaybackStatus(error.message);
+        return;
+      }
+      applyTempoRampSourceChange(
+        ramp.startingBpm,
+        `+${ramp.stepBpm}/${ramp.loopsPerStep}/${ramp.targetBpm}`,
+      );
+      return;
+    }
+
+    if (mode === 'off' && parsedSong.tempoRamp.enabled) {
+      applyTempoRampSourceChange(parsedSong.tempoRamp.targetBpm, 'off');
+      return;
+    }
+
+    synchronizeTempoRampControls(parsedSong);
+  }
+
+  function updateTempoRampFromControls() {
+    if (!parsedSong || !parsedSong.tempoRamp.enabled) {
+      synchronizeTempoRampControls(parsedSong);
+      setPlaybackStatus('Enable the tempo ramp before you edit its settings.');
+      return;
+    }
+
+    const fields = [
+      {
+        element: elements.tempoRampStep,
+        label: 'Tempo-ramp step',
+        minimum: 1,
+        maximum: 20,
+      },
+      {
+        element: elements.tempoRampLoops,
+        label: 'Loops per step',
+        minimum: 1,
+        maximum: 99,
+      },
+      {
+        element: elements.tempoRampTarget,
+        label: 'Target BPM',
+        minimum: parsedSong.bpm + 1,
+        maximum: 300,
+      },
+    ];
+    const values = [];
+    for (const field of fields) {
+      const rawValue = field.element.value;
+      const value = Number(rawValue);
+      if (
+        !/^\d+$/.test(rawValue)
+        || value < field.minimum
+        || value > field.maximum
+      ) {
+        synchronizeTempoRampControls(parsedSong);
+        setPlaybackStatus(
+          `${field.label} must be a whole number from ${field.minimum} through ${field.maximum}.`,
+        );
+        return;
+      }
+      values.push(value);
+    }
+
+    const updatedSource = parser.replaceTempoRampDirective(
+      elements.source.value,
+      `+${values[0]}/${values[1]}/${values[2]}`,
+    );
+    if (updatedSource === null) {
+      synchronizeTempoRampControls(parsedSong);
+      setPlaybackStatus('Fix the tempo-ramp: directive before you use its controls.');
+      return;
+    }
+    applyControlSource(updatedSource, 'tempo-ramp-control');
+  }
+
+  function applyTempoRampSourceChange(bpm, tempoRampValue) {
+    const bpmSource = parser.replaceBpmDirective(elements.source.value, bpm);
+    const updatedSource = bpmSource === null
+      ? null
+      : parser.replaceTempoRampDirective(bpmSource, tempoRampValue);
+    if (updatedSource === null) {
+      synchronizeTempoRampControls(parsedSong);
+      setPlaybackStatus('Fix the bpm: and tempo-ramp: directives before you use this control.');
+      return;
+    }
+    applyControlSource(updatedSource, 'tempo-ramp-control');
+  }
+
+  function applyControlSource(updatedSource, origin) {
+    clearSourceParametersAfterSourceChange();
+    elements.source.value = updatedSource;
+    validateSource(origin);
+  }
+
+  function synchronizeTempoRampControls(song) {
+    const enabled = Boolean(song && song.tempoRamp.enabled);
+    elements.tempoRampMode.value = song ? (enabled ? 'increase' : 'off') : '';
+    elements.tempoRampFields.hidden = !enabled;
+    if (!enabled) {
+      elements.tempoRampStep.value = '';
+      elements.tempoRampLoops.value = '';
+      elements.tempoRampTarget.value = '';
+      return;
+    }
+    elements.tempoRampStep.value = String(song.tempoRamp.stepBpm);
+    elements.tempoRampLoops.value = String(song.tempoRamp.loopsPerStep);
+    elements.tempoRampTarget.min = String(song.bpm + 1);
+    elements.tempoRampTarget.value = String(song.tempoRamp.targetBpm);
   }
 
   async function prepareShareUrl(source) {
@@ -888,6 +1059,7 @@
 
   function updateControls() {
     const playbackAvailable = Boolean(parsedTimeline) && audioSupported;
+    const rampEnabled = Boolean(parsedSong && parsedSong.tempoRamp.enabled);
     elements.playPause.disabled = !playbackAvailable || playbackState === 'starting';
     elements.restart.disabled = !playbackAvailable || playbackState === 'starting';
     elements.playPause.textContent = playbackState === 'playing' ? 'Pause' : 'Play';
@@ -895,6 +1067,14 @@
     elements.copyShareLink.disabled = !preparedShare
       || preparedShare.source !== elements.source.value;
     elements.copySource.disabled = false;
+    elements.tempoRampMode.disabled = !parsedSong || playbackState === 'starting';
+    for (const rampField of [
+      elements.tempoRampStep,
+      elements.tempoRampLoops,
+      elements.tempoRampTarget,
+    ]) {
+      rampField.disabled = !rampEnabled || playbackState === 'starting';
+    }
     for (const button of elements.soundTestButtons) {
       button.disabled = !audioSupported || playbackState === 'starting';
     }
@@ -908,6 +1088,10 @@
     elements.bpmNumber.disabled = true;
     elements.bpmRange.disabled = true;
     elements.countIn.disabled = true;
+    elements.tempoRampMode.disabled = true;
+    elements.tempoRampStep.disabled = true;
+    elements.tempoRampLoops.disabled = true;
+    elements.tempoRampTarget.disabled = true;
     elements.preset.disabled = true;
     elements.copyShareLink.disabled = true;
     elements.copySource.disabled = true;

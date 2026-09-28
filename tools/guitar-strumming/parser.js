@@ -849,13 +849,17 @@
     return replaceDirectiveValue(source, 'count-in', replacementValue);
   }
 
+  function replaceTempoRampDirective(source, replacementValue) {
+    return replaceDirectiveValue(source, 'tempo-ramp', replacementValue);
+  }
+
   function replaceDirectiveValue(source, directiveName, replacementValue) {
     const sourceText = String(source);
     const newline = sourceText.includes('\r\n') ? '\r\n' : '\n';
     const lines = sourceText.split(/\r?\n/);
     const escapedName = directiveName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const directivePattern = new RegExp(`^\\s*${escapedName}\\s*:`);
-    const valuePattern = new RegExp(`^(\\s*${escapedName}\\s*:\\s*)(\\S*)(\\s*)$`);
+    const valuePattern = new RegExp(`^(\\s*${escapedName}\\s*:\\s*)(.*?)(\\s*)$`);
     const matchingIndexes = [];
     lines.forEach((line, index) => {
       if (directivePattern.test(line)) matchingIndexes.push(index);
@@ -933,5 +937,6 @@
     parseStrumTokenValue,
     replaceBpmDirective,
     replaceCountInDirective,
+    replaceTempoRampDirective,
   });
 }));

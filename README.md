@@ -19,6 +19,8 @@ The guitar tool includes a local catalog of reviewed practice exercises. The cat
 
 The guitar source requires one `tempo-ramp:` directive. Use `off` to keep a fixed tempo. Use a value such as `+5/2/120` to increase the tempo by 5 beats per minute after every 2 completed loops until it reaches 120 beats per minute. The ramp supports only increasing tempo. It applies changes at loop boundaries.
 
+The Practice section has controls for the tempo ramp. When the user enables the ramp, the tool treats the fixed BPM as the target. It starts at half of that tempo, rounded to the nearest 5 BPM, and uses a default increase of 5 BPM after every 3 loops. When the user disables the ramp, the target becomes the fixed BPM again.
+
 ## Local use
 
 Open `index.html` in a browser. The website does not need a build step.

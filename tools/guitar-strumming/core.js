@@ -220,6 +220,20 @@
     return Math.min(targetBpm, startingBpm + (completedSteps * stepBpm));
   }
 
+  function defaultTempoRampForTarget(targetBpm) {
+    requireValidBpm(targetBpm);
+    if (targetBpm === 30) {
+      throw new RangeError('Tempo ramp needs a target greater than 30 BPM.');
+    }
+    const roundedHalf = Math.round((targetBpm / 2) / 5) * 5;
+    return Object.freeze({
+      startingBpm: Math.max(30, roundedHalf),
+      stepBpm: 5,
+      loopsPerStep: 3,
+      targetBpm,
+    });
+  }
+
   function completedLoopsAtTime(segment, audioTime) {
     if (!segment || typeof segment !== 'object') {
       throw new TypeError('A playback segment is required.');
@@ -460,6 +474,7 @@
     createLoopTempoTransition,
     createTempoTransition,
     cycleDurationSeconds,
+    defaultTempoRampForTarget,
     eventTimeSeconds,
     nextBarBoundary,
     normalizeSong,

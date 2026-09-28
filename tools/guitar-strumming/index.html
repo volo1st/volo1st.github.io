@@ -69,11 +69,11 @@
       <h2 id="tempo-heading">Tempo</h2>
       <div class="tempo-controls">
         <div>
-          <label for="bpm-number">Beats per minute</label>
+          <label id="bpm-number-label" for="bpm-number">Beats per minute</label>
           <input id="bpm-number" type="number" min="30" max="300" step="1" value="100" inputmode="numeric" />
         </div>
         <div>
-          <label for="bpm-range">Tempo slider</label>
+          <label id="bpm-range-label" for="bpm-range">Tempo slider</label>
           <input id="bpm-range" type="range" min="30" max="300" step="1" value="100" />
         </div>
       </div>
@@ -89,6 +89,33 @@
         <option value="2">2 bars</option>
       </select>
       <p class="help-text">The count-in plays before a fresh start. It does not repeat with the loop.</p>
+
+      <div class="tempo-ramp-control">
+        <label for="tempo-ramp-mode">Tempo ramp</label>
+        <select id="tempo-ramp-mode" aria-describedby="tempo-ramp-help">
+          <option value="off">Off</option>
+          <option value="increase">Increase</option>
+        </select>
+        <p id="tempo-ramp-help" class="help-text">
+          Increase starts at half of the current tempo, rounded to the nearest 5 BPM.
+          It uses the current tempo as the target.
+        </p>
+        <fieldset id="tempo-ramp-fields" class="tempo-ramp-fields" hidden>
+          <legend>Increase settings</legend>
+          <div>
+            <label for="tempo-ramp-step">Step (BPM)</label>
+            <input id="tempo-ramp-step" type="number" min="1" max="20" step="1" inputmode="numeric" />
+          </div>
+          <div>
+            <label for="tempo-ramp-loops">Loops per step</label>
+            <input id="tempo-ramp-loops" type="number" min="1" max="99" step="1" inputmode="numeric" />
+          </div>
+          <div>
+            <label for="tempo-ramp-target">Target BPM</label>
+            <input id="tempo-ramp-target" type="number" min="31" max="300" step="1" inputmode="numeric" />
+          </div>
+        </fieldset>
+      </div>
     </section>
 
     <section aria-labelledby="playback-heading">
