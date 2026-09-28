@@ -1103,6 +1103,48 @@ Automated evidence: The repository check passed on 2026-09-28. It covered the st
 
 Manual evidence: The user confirmed that the Swing control worked well in the browser test.
 
+## 11.11 Mobile Practice Interface
+
+Status: Implemented and verified on 2026-09-28.
+
+Make the active practice controls the first content after the page title.
+
+Use **Guitar Strum Machine** as the page title.
+
+Remove the introductory description and the teaching-tool label.
+
+Keep the Preset control, its teaching goal, Play, Restart, playback status, tempo, Count-in, Capo, Swing, and Speed up controls in one compact practice panel.
+
+Show a short arrangement summary in this panel.
+
+Merge the visual presentation of the tempo number and slider. Keep the number editable for exact tempo entry.
+
+Use different colours for Play and Pause. Keep the visible button text and pressed state, so colour is not the only state indicator.
+
+Rename the source editor to **Edit arrangement**. Keep it closed by default.
+
+Keep the arrangement text as the single source of truth.
+
+Open the arrangement editor when validation fails. Do not close it automatically after the user fixes an error.
+
+Move normal instructions into one Help section. Keep Help closed by default.
+
+Keep the Sound test closed by default.
+
+Keep validation errors next to the arrangement text. Keep exceptional status messages visible in the practice panel.
+
+Use native controls and details elements. Preserve keyboard operation, visible focus, narrow-screen support, and use at 200 percent zoom.
+
+Do not change the text format, parser, audio behavior, preset content, or share-link format in this package.
+
+Accepted risk: A user must open Edit arrangement to copy or share custom source. This keeps the normal practice view compact.
+
+Failure behavior: If the source or timeline is invalid, stop playback, disable unavailable controls, open Edit arrangement, and show each error next to the text.
+
+Automated evidence: The repository check passed on 2026-09-28. It covered the compact practice layout, collapsed sections, state-dependent Play and Pause styling, responsive settings, accessible references, compact summary, and automatic editor opening for errors.
+
+Manual evidence: The user confirmed that the redesigned interface worked well in the browser preview.
+
 ---
 
 # 12. MVP Acceptance Criteria

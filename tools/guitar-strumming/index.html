@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Create looping guitar strumming backing tracks from plain text." />
-  <title>Guitar Strumming Backing Track</title>
+  <title>Guitar Strum Machine</title>
   <link rel="stylesheet" href="./styles.css" />
   <script src="./catalog.js" defer></script>
   <script src="./parser.js" defer></script>
@@ -16,218 +16,216 @@
 </head>
 <body>
   <main>
-    <p class="tool-label">Teaching tool</p>
-    <h1>Guitar strumming backing track</h1>
-    <p>
-      Enter a chord progression and strumming pattern. The tool plays the song as a loop.
-      Audio stays on this device. A share link contains the complete source text.
-    </p>
+    <h1>Guitar Strum Machine</h1>
 
-    <section aria-labelledby="source-heading">
-      <h2 id="source-heading">Song source</h2>
+    <section class="practice-workspace" aria-labelledby="practice-heading">
+      <h2 id="practice-heading" class="visually-hidden">Practice</h2>
       <div class="preset-control">
         <label for="song-preset">Preset</label>
-        <select id="song-preset" aria-describedby="preset-help preset-goal">
-          <option value="">Custom source</option>
+        <select id="song-preset" aria-describedby="preset-goal">
+          <option value="">Custom arrangement</option>
         </select>
-        <p id="preset-help" class="help-text">
-          Select a preset to replace the source. The tool asks before it replaces your edits.
-        </p>
         <p id="preset-goal" class="preset-goal" role="status" aria-live="polite">
           Select a preset to see its teaching goal.
         </p>
       </div>
-      <label for="song-source">Plain-text song</label>
-      <p id="source-help" class="help-text">
-        Use one chord bar and one strum bar for each bar after repeat expansion.
-      </p>
-      <textarea id="song-source" aria-describedby="source-help validation-summary" spellcheck="false"></textarea>
 
-      <div class="button-group">
-        <button id="copy-share-link" type="button" disabled>Copy share link</button>
-        <button id="copy-source" type="button">Copy source</button>
-      </div>
-      <p class="help-text">Anyone who receives a share link can read its source text.</p>
-      <p id="share-status" class="help-text" role="status" aria-live="polite">
-        Preparing share controls.
-      </p>
-      <div id="manual-share-copy" class="manual-copy" hidden>
-        <label for="manual-share-link">Share link for manual copy</label>
-        <input id="manual-share-link" type="text" readonly />
-        <p class="help-text">Copy the selected link manually.</p>
-      </div>
-
-      <div class="validation-panel">
-        <p id="validation-summary" class="validation-summary" role="status" aria-live="polite">
-          Validating input.
-        </p>
-        <ul id="validation-errors" class="validation-errors" hidden></ul>
-      </div>
-    </section>
-
-    <section aria-labelledby="tempo-heading">
-      <h2 id="tempo-heading">Tempo</h2>
-      <div class="tempo-controls">
-        <div>
-          <label id="bpm-number-label" for="bpm-number">Beats per minute</label>
-          <input id="bpm-number" type="number" min="30" max="300" step="1" value="100" inputmode="numeric" />
+      <div class="transport-row">
+        <div class="transport-controls">
+          <button id="play-pause" type="button" aria-pressed="false" disabled>Play</button>
+          <button id="restart" class="secondary-button" type="button" disabled>Restart</button>
         </div>
-        <div>
-          <label id="bpm-range-label" for="bpm-range">Tempo slider</label>
-          <input id="bpm-range" type="range" min="30" max="300" step="1" value="100" />
-        </div>
-      </div>
-      <p class="help-text">A manual tempo change during playback starts at the next bar. A tempo-ramp change starts at a loop boundary.</p>
-    </section>
-
-    <section aria-labelledby="practice-heading">
-      <h2 id="practice-heading">Practice</h2>
-      <label for="count-in">Count-in</label>
-      <select id="count-in">
-        <option value="0">Off</option>
-        <option value="1" selected>1 bar</option>
-        <option value="2">2 bars</option>
-      </select>
-      <p class="help-text">The count-in plays before a fresh start. It does not repeat with the loop.</p>
-
-      <div class="capo-control">
-        <label for="capo-fret">Capo</label>
-        <select id="capo-fret" aria-describedby="capo-help">
-          <option value="0">Off</option>
-          <option value="1">Fret 1</option>
-          <option value="2">Fret 2</option>
-          <option value="3">Fret 3</option>
-          <option value="4">Fret 4</option>
-          <option value="5">Fret 5</option>
-          <option value="6">Fret 6</option>
-          <option value="7">Fret 7</option>
-          <option value="8">Fret 8</option>
-          <option value="9">Fret 9</option>
-          <option value="10">Fret 10</option>
-          <option value="11">Fret 11</option>
-          <option value="12">Fret 12</option>
-        </select>
-        <p id="capo-help" class="help-text">
-          Chord names are finger shapes. The capo raises the sounding pitch.
-        </p>
-      </div>
-
-      <div class="swing-control">
-        <label for="swing-feel">Swing</label>
-        <select id="swing-feel" aria-describedby="swing-help">
-          <option value="off">Off</option>
-          <option value="55">Light (55%)</option>
-          <option value="60">Medium (60%)</option>
-          <option value="67">Triplet (67%)</option>
-          <option value="75">Heavy (75%)</option>
-        </select>
-        <p id="swing-help" class="help-text">
-          Select a common eighth-note feel. Edit <code>swing:</code> in the source for another value.
-        </p>
-      </div>
-
-      <div class="tempo-ramp-control">
-        <label for="tempo-ramp-mode">Tempo ramp</label>
-        <select id="tempo-ramp-mode" aria-describedby="tempo-ramp-help">
-          <option value="off">Off</option>
-          <option value="increase">Increase</option>
-        </select>
-        <p id="tempo-ramp-help" class="help-text">
-          Increase starts at half of the current tempo, rounded to the nearest 5 BPM.
-          It uses the current tempo as the target.
-        </p>
-        <fieldset id="tempo-ramp-fields" class="tempo-ramp-fields" hidden>
-          <legend>Increase settings</legend>
-          <div>
-            <label for="tempo-ramp-step">Step (BPM)</label>
-            <input id="tempo-ramp-step" type="number" min="1" max="20" step="1" inputmode="numeric" />
-          </div>
-          <div>
-            <label for="tempo-ramp-loops">Loops per step</label>
-            <input id="tempo-ramp-loops" type="number" min="1" max="99" step="1" inputmode="numeric" />
-          </div>
-          <div>
-            <label for="tempo-ramp-target">Target BPM</label>
-            <input id="tempo-ramp-target" type="number" min="31" max="300" step="1" inputmode="numeric" />
-          </div>
-        </fieldset>
-      </div>
-    </section>
-
-    <section aria-labelledby="playback-heading">
-      <h2 id="playback-heading">Playback</h2>
-      <p id="song-summary">No playable song is available.</p>
-      <div class="button-group">
-        <button id="play-pause" type="button" aria-pressed="false" disabled>Play</button>
-        <button id="restart" type="button" disabled>Restart</button>
-      </div>
-      <div class="status-panel">
-        <h3>Status</h3>
         <p id="playback-status" role="status" aria-live="polite">Preparing the tool.</p>
       </div>
+
+      <p id="song-summary" class="song-summary">No playable song is available.</p>
+
+      <div class="tempo-control">
+        <div class="tempo-heading">
+          <label id="bpm-number-label" for="bpm-number">Tempo</label>
+          <div class="bpm-value">
+            <input id="bpm-number" type="number" min="30" max="300" step="1" value="100" inputmode="numeric" />
+            <span aria-hidden="true">BPM</span>
+          </div>
+        </div>
+        <label id="bpm-range-label" class="visually-hidden" for="bpm-range">Tempo slider</label>
+        <input id="bpm-range" type="range" min="30" max="300" step="1" value="100" />
+      </div>
+
+      <div class="practice-grid">
+        <div class="setting-field">
+          <label for="count-in">Count-in</label>
+          <select id="count-in">
+            <option value="0">Off</option>
+            <option value="1" selected>1 bar</option>
+            <option value="2">2 bars</option>
+          </select>
+        </div>
+
+        <div class="setting-field capo-control">
+          <label for="capo-fret">Capo</label>
+          <select id="capo-fret">
+            <option value="0">Off</option>
+            <option value="1">Fret 1</option>
+            <option value="2">Fret 2</option>
+            <option value="3">Fret 3</option>
+            <option value="4">Fret 4</option>
+            <option value="5">Fret 5</option>
+            <option value="6">Fret 6</option>
+            <option value="7">Fret 7</option>
+            <option value="8">Fret 8</option>
+            <option value="9">Fret 9</option>
+            <option value="10">Fret 10</option>
+            <option value="11">Fret 11</option>
+            <option value="12">Fret 12</option>
+          </select>
+        </div>
+
+        <div class="setting-field swing-control">
+          <label for="swing-feel">Swing</label>
+          <select id="swing-feel">
+            <option value="off">Off</option>
+            <option value="55">Light (55%)</option>
+            <option value="60">Medium (60%)</option>
+            <option value="67">Triplet (67%)</option>
+            <option value="75">Heavy (75%)</option>
+          </select>
+        </div>
+
+        <div class="setting-field tempo-ramp-control">
+          <label for="tempo-ramp-mode">Speed up</label>
+          <select id="tempo-ramp-mode">
+            <option value="off">Off</option>
+            <option value="increase">On</option>
+          </select>
+        </div>
+      </div>
+
+      <fieldset id="tempo-ramp-fields" class="tempo-ramp-fields" hidden>
+        <legend>Speed-up settings</legend>
+        <div>
+          <label for="tempo-ramp-step">Increase (BPM)</label>
+          <input id="tempo-ramp-step" type="number" min="1" max="20" step="1" inputmode="numeric" />
+        </div>
+        <div>
+          <label for="tempo-ramp-loops">After loops</label>
+          <input id="tempo-ramp-loops" type="number" min="1" max="99" step="1" inputmode="numeric" />
+        </div>
+        <div>
+          <label for="tempo-ramp-target">Target (BPM)</label>
+          <input id="tempo-ramp-target" type="number" min="31" max="300" step="1" inputmode="numeric" />
+        </div>
+      </fieldset>
     </section>
 
-    <details>
-      <summary>Format and supported chords</summary>
-      <p>Use <code>count-in: 0</code>, <code>1</code>, or <code>2</code> after the BPM directive.</p>
-      <p>Use <code>tempo-ramp: off</code> after the count-in directive. To increase the tempo, use a value such as <code>tempo-ramp: +5/2/120</code>. This value adds 5 BPM after every 2 completed loops until it reaches 120 BPM.</p>
-      <p>Use <code>capo: 0</code> for no capo. Use a value from <code>1</code> through <code>12</code> to raise the sounding pitch while you keep the written chord shapes.</p>
-      <p>Use <code>swing: off</code> for straight timing. Use a whole number from <code>50</code> through <code>75</code> to set the first eighth note's share of each beat. Use <code>swing: 67</code> for an approximate two-to-one triplet feel.</p>
-      <p>Use <code>D</code> for a downstroke, <code>U</code> for an upstroke, and <code>-</code> for no strum.</p>
-      <p>Add <code>2</code>, <code>3</code>, or <code>4</code> to limit the string count. A downstroke starts with the lowest-pitched playable string. An upstroke starts with the highest-pitched playable string.</p>
-      <p>Add <code>P</code> for palm mute. Add <code>X</code> for a dead strum. Add <code>!</code> last for an accent.</p>
-      <p>Write tokens in this order: direction, string count, articulation, accent. Example: <code>D3P!</code>.</p>
-      <p>Use <code>Chord@N</code> for a chord change at slot N. The change occurs before a strum at the same slot.</p>
-      <p>Use <code>xN</code> after one bar to repeat that bar N times in total.</p>
-      <p>Supported chords:</p>
-      <p class="chord-list"><code>A Am Bb Bm C Cm D Dm Em F F#m G Am7 C7 Cmaj7 D7 G7 Cadd9 Dsus4 G5 Am/G C/E D/F# G/B</code></p>
+    <details id="arrangement-editor">
+      <summary>Edit arrangement</summary>
+      <div class="details-content">
+        <label for="song-source">Arrangement text</label>
+        <textarea id="song-source" aria-describedby="validation-summary" spellcheck="false"></textarea>
+
+        <div class="validation-panel">
+          <p id="validation-summary" class="validation-summary" role="status" aria-live="polite">
+            Validating input.
+          </p>
+          <ul id="validation-errors" class="validation-errors" hidden></ul>
+        </div>
+
+        <div class="button-group">
+          <button id="copy-share-link" type="button" disabled>Copy share link</button>
+          <button id="copy-source" class="secondary-button" type="button">Copy source</button>
+        </div>
+        <p id="share-status" class="context-status" role="status" aria-live="polite">
+          Preparing share controls.
+        </p>
+        <div id="manual-share-copy" class="manual-copy" hidden>
+          <label for="manual-share-link">Share link for manual copy</label>
+          <input id="manual-share-link" type="text" readonly />
+          <p>Copy the selected link manually.</p>
+        </div>
+      </div>
+    </details>
+
+    <details id="help">
+      <summary>Help</summary>
+      <div class="details-content help-content">
+        <h2>Practice controls</h2>
+        <p>Select a preset to replace the arrangement. The tool asks before it replaces your edits.</p>
+        <p>A manual tempo change during playback starts at the next bar. A speed-up change starts at a loop boundary.</p>
+        <p>The count-in plays before a fresh start. It does not repeat with the loop.</p>
+        <p>Chord names are finger shapes. The capo raises the sounding pitch.</p>
+        <p>Select a common Swing value. Edit <code>swing:</code> in the arrangement for another value.</p>
+        <p>Speed up starts at half of the current tempo, rounded to the nearest 5 BPM. It uses the current tempo as the target.</p>
+
+        <h2>Arrangement format</h2>
+        <p>Use one chord bar and one strum bar for each bar after repeat expansion.</p>
+        <p>Use <code>count-in: 0</code>, <code>1</code>, or <code>2</code> after the BPM directive.</p>
+        <p>Use <code>tempo-ramp: off</code> after the count-in directive. To increase the tempo, use a value such as <code>tempo-ramp: +5/2/120</code>. This value adds 5 BPM after every 2 completed loops until it reaches 120 BPM.</p>
+        <p>Use <code>capo: 0</code> for no capo. Use a value from <code>1</code> through <code>12</code> to raise the sounding pitch while you keep the written chord shapes.</p>
+        <p>Use <code>swing: off</code> for straight timing. Use a whole number from <code>50</code> through <code>75</code> to set the first eighth note's share of each beat. Use <code>swing: 67</code> for an approximate two-to-one triplet feel.</p>
+        <p>Use <code>D</code> for a downstroke, <code>U</code> for an upstroke, and <code>-</code> for no strum.</p>
+        <p>Add <code>2</code>, <code>3</code>, or <code>4</code> to limit the string count. A downstroke starts with the lowest-pitched playable string. An upstroke starts with the highest-pitched playable string.</p>
+        <p>Add <code>P</code> for palm mute. Add <code>X</code> for a dead strum. Add <code>!</code> last for an accent.</p>
+        <p>Write tokens in this order: direction, string count, articulation, accent. Example: <code>D3P!</code>.</p>
+        <p>Use <code>Chord@N</code> for a chord change at slot N. The change occurs before a strum at the same slot.</p>
+        <p>Use <code>xN</code> after one bar to repeat that bar N times in total.</p>
+        <p>Supported chords:</p>
+        <p class="chord-list"><code>A Am Bb Bm C Cm D Dm Em F F#m G Am7 C7 Cmaj7 D7 G7 Cadd9 Dsus4 G5 Am/G C/E D/F# G/B</code></p>
+
+        <h2>Sharing</h2>
+        <p>A share link contains the complete arrangement text. Anyone who receives the link can read the text.</p>
+        <p>Audio stays on this device.</p>
+
+        <h2>Sound test</h2>
+        <p>Each button plays one isolated G chord. A sound test pauses song playback. It does not change the arrangement.</p>
+      </div>
     </details>
 
     <details id="strum-sound-test">
       <summary>Strum sound test</summary>
-      <p>Each button plays one isolated G chord. A sound test pauses song playback. It does not change the source.</p>
-
-      <div class="sound-test-group">
-        <h3>Downstroke range</h3>
-        <div class="sound-test-buttons">
-          <button type="button" data-strum-token="D">D</button>
-          <button type="button" data-strum-token="D4">D4</button>
-          <button type="button" data-strum-token="D3">D3</button>
-          <button type="button" data-strum-token="D2">D2</button>
+      <div class="details-content">
+        <div class="sound-test-group">
+          <h3>Downstroke range</h3>
+          <div class="sound-test-buttons">
+            <button type="button" data-strum-token="D">D</button>
+            <button type="button" data-strum-token="D4">D4</button>
+            <button type="button" data-strum-token="D3">D3</button>
+            <button type="button" data-strum-token="D2">D2</button>
+          </div>
         </div>
-      </div>
 
-      <div class="sound-test-group">
-        <h3>Upstroke range</h3>
-        <div class="sound-test-buttons">
-          <button type="button" data-strum-token="U">U</button>
-          <button type="button" data-strum-token="U4">U4</button>
-          <button type="button" data-strum-token="U3">U3</button>
-          <button type="button" data-strum-token="U2">U2</button>
+        <div class="sound-test-group">
+          <h3>Upstroke range</h3>
+          <div class="sound-test-buttons">
+            <button type="button" data-strum-token="U">U</button>
+            <button type="button" data-strum-token="U4">U4</button>
+            <button type="button" data-strum-token="U3">U3</button>
+            <button type="button" data-strum-token="U2">U2</button>
+          </div>
         </div>
-      </div>
 
-      <div class="sound-test-group">
-        <h3>Downstroke sound</h3>
-        <div class="sound-test-buttons">
-          <button type="button" data-strum-token="D3">D3</button>
-          <button type="button" data-strum-token="D3P">D3P</button>
-          <button type="button" data-strum-token="D3X">D3X</button>
-          <button type="button" data-strum-token="D3!">D3!</button>
-          <button type="button" data-strum-token="D3P!">D3P!</button>
-          <button type="button" data-strum-token="D3X!">D3X!</button>
+        <div class="sound-test-group">
+          <h3>Downstroke sound</h3>
+          <div class="sound-test-buttons">
+            <button type="button" data-strum-token="D3">D3</button>
+            <button type="button" data-strum-token="D3P">D3P</button>
+            <button type="button" data-strum-token="D3X">D3X</button>
+            <button type="button" data-strum-token="D3!">D3!</button>
+            <button type="button" data-strum-token="D3P!">D3P!</button>
+            <button type="button" data-strum-token="D3X!">D3X!</button>
+          </div>
         </div>
-      </div>
 
-      <div class="sound-test-group">
-        <h3>Upstroke sound</h3>
-        <div class="sound-test-buttons">
-          <button type="button" data-strum-token="U3">U3</button>
-          <button type="button" data-strum-token="U3P">U3P</button>
-          <button type="button" data-strum-token="U3X">U3X</button>
-          <button type="button" data-strum-token="U3!">U3!</button>
-          <button type="button" data-strum-token="U3P!">U3P!</button>
-          <button type="button" data-strum-token="U3X!">U3X!</button>
+        <div class="sound-test-group">
+          <h3>Upstroke sound</h3>
+          <div class="sound-test-buttons">
+            <button type="button" data-strum-token="U3">U3</button>
+            <button type="button" data-strum-token="U3P">U3P</button>
+            <button type="button" data-strum-token="U3X">U3X</button>
+            <button type="button" data-strum-token="U3!">U3!</button>
+            <button type="button" data-strum-token="U3P!">U3P!</button>
+            <button type="button" data-strum-token="U3X!">U3X!</button>
+          </div>
         </div>
       </div>
     </details>

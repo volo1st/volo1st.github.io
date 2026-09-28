@@ -1047,13 +1047,20 @@ test('exact transitions can advance across several tempo boundaries after a stal
   assert.ok(recovered.scheduled.every((event) => event.eventTime >= stalledNow));
 });
 
-test('the page contains valid sound-test tokens', () => {
+test('the page contains the mobile practice interface and valid sound-test tokens', () => {
   const htmlPath = path.join(__dirname, '..', 'tools', 'guitar-strumming', 'index.html');
   const html = fs.readFileSync(htmlPath, 'utf8');
   const soundTestTokens = [...html.matchAll(/data-strum-token="([^"]+)"/g)]
     .map((tokenMatch) => tokenMatch[1]);
   assert.equal(soundTestTokens.length, 20);
   assert.ok(soundTestTokens.every((token) => parser.parseStrumTokenValue(token).ok));
+  assert.match(html, /<title>Guitar Strum Machine<\/title>/);
+  assert.match(html, /<section class="practice-workspace"/);
+  assert.match(html, /<details id="arrangement-editor">/);
+  assert.match(html, /<summary>Edit arrangement<\/summary>/);
+  assert.match(html, /<details id="help">/);
+  assert.doesNotMatch(html, /<details id="(?:arrangement-editor|help|strum-sound-test)" open/);
+  assert.ok(html.indexOf('class="practice-workspace"') < html.indexOf('id="arrangement-editor"'));
   assert.match(html, /<details id="strum-sound-test">/);
   assert.match(html, /id="tempo-ramp-mode"/);
   assert.match(html, /id="tempo-ramp-fields"[^>]*hidden/);
@@ -1062,9 +1069,8 @@ test('the page contains valid sound-test tokens', () => {
   assert.match(html, /for="tempo-ramp-target"/);
   assert.match(html, /id="capo-fret"/);
   assert.match(html, /for="capo-fret"/);
-  assert.match(html, /id="swing-feel"[^>]*aria-describedby="swing-help"/);
+  assert.match(html, /id="swing-feel"/);
   assert.match(html, /for="swing-feel"/);
-  assert.match(html, /id="swing-help"/);
   assert.match(html, /<code>swing: off<\/code>/);
   const capoOptions = html.match(/<select id="capo-fret"[^>]*>([\s\S]*?)<\/select>/)[1];
   assert.equal([...capoOptions.matchAll(/<option /g)].length, 13);
@@ -1079,7 +1085,9 @@ test('the page contains valid sound-test tokens', () => {
     'utf8',
   );
   assert.match(css, /\.tempo-ramp-fields\s*\{[^}]*grid-template-columns/s);
-  assert.match(css, /\.swing-control select\s*\{[^}]*width:/s);
+  assert.match(css, /\.practice-grid\s*\{[^}]*grid-template-columns:\s*repeat\(2/s);
+  assert.match(css, /#play-pause\[aria-pressed="true"\]/);
+  assert.match(css, /\.setting-field select\s*\{[^}]*width:/s);
   assert.match(css, /@media \(max-width: 38rem\)/);
 
   const app = fs.readFileSync(
@@ -1089,4 +1097,6 @@ test('the page contains valid sound-test tokens', () => {
   assert.match(app, /replaceSwingDirective\(elements\.source\.value, rawValue\)/);
   assert.match(app, /Custom \(\$\{value\}%\)/);
   assert.match(app, /data-custom-swing/);
+  assert.match(app, /elements\.editor\.open = true/);
+  assert.match(app, /\.join\(' · '\)/);
 });

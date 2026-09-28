@@ -13,6 +13,7 @@
   const BOUNDARY_EPSILON_SECONDS = 0.000001;
 
   const elements = {
+    editor: document.getElementById('arrangement-editor'),
     source: document.getElementById('song-source'),
     bpmNumberLabel: document.getElementById('bpm-number-label'),
     bpmNumber: document.getElementById('bpm-number'),
@@ -283,29 +284,29 @@
         if (countInEndTime !== null) {
           haltPlayback({ resetPosition: true });
           countInRequired = parsedSong.countInBars > 0;
-          setPlaybackStatus('BPM changed. Press Play to start the new count-in.');
+          setPlaybackStatus('Tempo changed. Press Play to restart the count-in.');
         } else {
           requestTempoChange(nextTimeline);
         }
       } else {
-        setPlaybackStatus(`BPM is ${result.song.bpm}. Press Play when you are ready.`);
+        setPlaybackStatus(`Ready at ${result.song.bpm} BPM.`);
       }
     } else if (sourceChanged) {
       haltPlayback({ resetPosition: true });
       countInRequired = parsedSong.countInBars > 0;
       setPlaybackStatus(activeRampSettingChanged
-        ? 'The tempo-ramp settings changed. Playback reset to bar 1, slot 1.'
-        : 'The source changed. Playback is ready at bar 1, slot 1.');
+        ? 'Speed-up settings changed. Ready at bar 1.'
+        : 'Arrangement changed. Ready at bar 1.');
     } else if (origin === 'initial') {
       resetTempoRampState();
       countInRequired = parsedSong.countInBars > 0;
-      setPlaybackStatus('The song is valid. Press Play when you are ready.');
+      setPlaybackStatus('Ready.');
     } else if (!previousSong) {
       haltPlayback({ resetPosition: true });
       countInRequired = parsedSong.countInBars > 0;
-      setPlaybackStatus('The song is valid. Playback is ready at bar 1, slot 1.');
+      setPlaybackStatus('Ready at bar 1.');
     } else if (origin === 'bpm-control') {
-      setPlaybackStatus(`BPM is ${result.song.bpm}. Press Play when you are ready.`);
+      setPlaybackStatus(`Ready at ${result.song.bpm} BPM.`);
     }
 
     updateControls();
@@ -327,7 +328,7 @@
     elements.preset.value = preset ? preset.slug : '';
     elements.presetGoal.textContent = preset
       ? `${preset.teachingLevel}. ${preset.teachingGoal}`
-      : 'Custom source. Select a preset to replace it with a catalog exercise.';
+      : 'Custom arrangement. Select a preset to start again.';
   }
 
   function handlePresetChange() {
@@ -341,7 +342,7 @@
       && elements.source.value !== sourceReplacementBaseline;
     if (
       hasSessionEdits
-      && !root.confirm('Replace the current source with this preset? Your current edits will be lost.')
+      && !root.confirm('Replace the current arrangement with this preset? Your current edits will be lost.')
     ) {
       synchronizePresetSelection(elements.source.value);
       setShareStatus('Preset loading was cancelled. The current source is unchanged.');
@@ -382,7 +383,7 @@
 
   function synchronizeBpmControls(song) {
     if (!song) {
-      elements.bpmNumberLabel.textContent = 'Beats per minute';
+      elements.bpmNumberLabel.textContent = 'Tempo';
       elements.bpmRangeLabel.textContent = 'Tempo slider';
       elements.bpmNumber.max = '300';
       elements.bpmRange.max = '300';
@@ -390,8 +391,8 @@
     }
     const maximum = song.tempoRamp.enabled ? song.tempoRamp.targetBpm - 1 : 300;
     elements.bpmNumberLabel.textContent = song.tempoRamp.enabled
-      ? 'Starting beats per minute'
-      : 'Beats per minute';
+      ? 'Starting tempo'
+      : 'Tempo';
     elements.bpmRangeLabel.textContent = song.tempoRamp.enabled
       ? 'Starting tempo slider'
       : 'Tempo slider';
@@ -483,7 +484,7 @@
   function updateTempoRampMode(mode) {
     if (!parsedSong) {
       synchronizeTempoRampControls(null);
-      setPlaybackStatus('Fix the source before you use the Tempo ramp control.');
+      setPlaybackStatus('Fix the arrangement before you use the Speed up control.');
       return;
     }
 
@@ -514,7 +515,7 @@
   function updateTempoRampFromControls() {
     if (!parsedSong || !parsedSong.tempoRamp.enabled) {
       synchronizeTempoRampControls(parsedSong);
-      setPlaybackStatus('Enable the tempo ramp before you edit its settings.');
+      setPlaybackStatus('Turn on Speed up before you edit its settings.');
       return;
     }
 
@@ -562,7 +563,7 @@
     );
     if (updatedSource === null) {
       synchronizeTempoRampControls(parsedSong);
-      setPlaybackStatus('Fix the tempo-ramp: directive before you use its controls.');
+      setPlaybackStatus('Fix the tempo-ramp: directive before you use the Speed up controls.');
       return;
     }
     applyControlSource(updatedSource, 'tempo-ramp-control');
@@ -887,7 +888,7 @@
       setPlaybackStartStatus(countInBars);
     } else {
       activeSegment = null;
-      setPlaybackStatus('Ready at bar 1, slot 1.');
+      setPlaybackStatus('Ready at bar 1.');
       updateControls();
     }
   }
@@ -926,7 +927,7 @@
       const now = audioEngine.context.currentTime;
       if (countInEndTime !== null && now >= countInEndTime - BOUNDARY_EPSILON_SECONDS) {
         countInEndTime = null;
-        setPlaybackStatus('Playing. The song will loop.');
+        setPlaybackStatus('Playing.');
       }
       promoteTempoTransition(now);
       const horizonTime = now + SCHEDULE_AHEAD_SECONDS;
@@ -1111,6 +1112,7 @@
       return;
     }
 
+    elements.editor.open = true;
     for (const error of errors) {
       const listItem = document.createElement('li');
       listItem.textContent = parser.formatValidationError(error);
@@ -1128,24 +1130,17 @@
       elements.songSummary.textContent = 'No playable song is available.';
       return;
     }
+    const barCount = parsedSong.chordBars.length;
     elements.songSummary.textContent = [
-      `${parsedSong.chordBars.length} bars.`,
-      `Grid size ${parsedSong.gridSize}.`,
-      `${parsedSong.bpm} beats per minute.`,
-      parsedSong.countInBars === 0
-        ? 'Count-in is off.'
-        : `${parsedSong.countInBars}-bar count-in.`,
+      `${barCount} ${barCount === 1 ? 'bar' : 'bars'}`,
       parsedSong.tempoRamp.enabled
-        ? `Tempo ramp: +${parsedSong.tempoRamp.stepBpm} BPM every ${parsedSong.tempoRamp.loopsPerStep} loops, target ${parsedSong.tempoRamp.targetBpm} BPM.`
-        : 'Tempo ramp is off.',
-      parsedSong.capoFret === 0
-        ? 'Capo is off.'
-        : `Capo fret ${parsedSong.capoFret}.`,
+        ? `${parsedSong.bpm}–${parsedSong.tempoRamp.targetBpm} BPM`
+        : `${parsedSong.bpm} BPM`,
+      parsedSong.capoFret === 0 ? 'Capo off' : `Capo ${parsedSong.capoFret}`,
       parsedSong.swingPercent === null
-        ? 'Swing is off.'
-        : `Swing is ${parsedSong.swingPercent} percent.`,
-      'Looping is on.',
-    ].join(' ');
+        ? 'Swing off'
+        : `Swing ${parsedSong.swingPercent}%`,
+    ].join(' · ');
   }
 
   function updateControls() {
@@ -1174,6 +1169,7 @@
   }
 
   function showFatalError(message) {
+    elements.editor.open = true;
     elements.validationSummary.textContent = message;
     elements.validationSummary.className = 'validation-summary invalid';
     elements.playPause.disabled = true;
@@ -1200,7 +1196,7 @@
 
   function setPlaybackStartStatus(countInBars) {
     if (countInBars === 0) {
-      setPlaybackStatus('Playing. The song will loop.');
+      setPlaybackStatus('Playing.');
       return;
     }
     const unit = countInBars === 1 ? 'bar' : 'bars';
