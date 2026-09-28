@@ -139,6 +139,7 @@
       throw new ShareError('url_invalid', 'The current page URL is invalid.');
     }
     url.hash = '';
+    url.searchParams.delete('preset');
     url.searchParams.set('song', `v1.${codec}.${payload}`);
     return url.href;
   }

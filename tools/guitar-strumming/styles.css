@@ -131,6 +131,41 @@ button:focus-visible {
   margin-bottom: 0.35rem;
 }
 
+.preset-control {
+  margin-bottom: 1rem;
+}
+
+.preset-control label {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.preset-control select {
+  width: min(100%, 28rem);
+}
+
+.preset-goal {
+  margin: 0.5rem 0 0;
+  padding: 0.65rem 0.75rem;
+  border-left: 0.3rem solid #27644e;
+  background: #edf5f1;
+}
+
+.preset-notice {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid #a9a38f;
+  color: #4a4a43;
+}
+
+.preset-notice h2 {
+  font-size: 1rem;
+}
+
+.preset-notice p {
+  margin-bottom: 0;
+}
+
 .validation-panel {
   margin-top: 0.75rem;
 }

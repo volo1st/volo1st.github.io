@@ -24,11 +24,12 @@ function makeSongUrl(codec, bytes) {
 
 test('short source uses raw Base64URL and round-trips exactly', async () => {
   const source = 'D';
-  const result = await share.createShareUrl(source, baseUrl);
+  const result = await share.createShareUrl(source, `${baseUrl.replace('#section', '')}&preset=old-v1#section`);
   assert.equal(result.codec, 'raw');
   assert.ok(result.url.length <= share.MAX_SHARE_URL_LENGTH);
   assert.doesNotMatch(new URL(result.url).searchParams.get('song'), /[+/=]/);
   assert.equal(new URL(result.url).searchParams.get('keep'), '1');
+  assert.equal(new URL(result.url).searchParams.get('preset'), null);
   assert.equal(new URL(result.url).hash, '');
 
   const decoded = await share.decodeSongFromUrl(result.url);
@@ -143,17 +144,9 @@ test('source that cannot round-trip through UTF-8 is rejected', async () => {
   );
 });
 
-test('the default page source makes an exact share-link round trip', async () => {
+test('the page loads sharing before the application', () => {
   const htmlPath = path.join(__dirname, '..', 'tools', 'guitar-strumming', 'index.html');
   const html = fs.readFileSync(htmlPath, 'utf8');
-  const sourceMatch = html.match(/<textarea id="song-source"[^>]*>([\s\S]*?)<\/textarea>/);
-  assert.ok(sourceMatch);
-  const result = await share.createShareUrl(
-    sourceMatch[1],
-    'https://example.test/tools/guitar-strumming/',
-  );
-  assert.ok(result.url.length <= share.MAX_SHARE_URL_LENGTH);
-  assert.equal((await share.decodeSongFromUrl(result.url)).source, sourceMatch[1]);
   assert.ok(html.indexOf('src="./share.js"') < html.indexOf('src="./app.js"'));
   assert.match(html, /id="copy-share-link"/);
   assert.match(html, /id="copy-source"/);

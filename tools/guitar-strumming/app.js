@@ -6,6 +6,7 @@
   const catalog = root.GuitarChordCatalog;
   const audioApi = root.GuitarStrummingAudio;
   const shareApi = root.GuitarStrummingShare;
+  const presetApi = root.GuitarStrummingPresets;
   const START_LEAD_SECONDS = 0.05;
   const SCHEDULE_AHEAD_SECONDS = 0.2;
   const SCHEDULER_INTERVAL_MILLISECONDS = 25;
@@ -29,6 +30,8 @@
     shareStatus: document.getElementById('share-status'),
     manualShareCopy: document.getElementById('manual-share-copy'),
     manualShareLink: document.getElementById('manual-share-link'),
+    preset: document.getElementById('song-preset'),
+    presetGoal: document.getElementById('preset-goal'),
   };
 
   let parsedSong = null;
@@ -49,15 +52,17 @@
   let preparedShare = null;
   let sharePreparationGeneration = 0;
   let copyRequestGeneration = 0;
+  let sourceReplacementBaseline = null;
 
   async function initialize() {
-    if (!core || !parser || !catalog || !audioApi || !shareApi) {
+    if (!core || !parser || !catalog || !audioApi || !shareApi || !presetApi) {
       showFatalError('The tool scripts did not load. Reload the page.');
       return;
     }
 
+    populatePresetOptions();
     elements.source.addEventListener('input', () => {
-      clearShareParameterAfterSourceChange();
+      clearSourceParametersAfterSourceChange();
       validateSource('text');
     });
     elements.bpmNumber.addEventListener('input', () => {
@@ -74,6 +79,7 @@
     elements.soundTest.addEventListener('click', handleSoundTestClick);
     elements.copyShareLink.addEventListener('click', handleCopyShareLink);
     elements.copySource.addEventListener('click', handleCopySource);
+    elements.preset.addEventListener('change', handlePresetChange);
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
     audioSupported = audioApi.isSupported();
@@ -88,13 +94,34 @@
 
   async function loadInitialSource() {
     try {
+      const presetResult = presetApi.resolvePresetFromUrl(root.location.href);
+      if (presetResult.found) {
+        elements.source.value = presetResult.preset.source;
+        sourceReplacementBaseline = presetResult.preset.source;
+        synchronizePresetSelection(presetResult.preset.source);
+        setShareStatus(`Loaded preset: ${presetResult.preset.title}.`);
+        return 'preset';
+      }
+
       const decoded = await shareApi.decodeSongFromUrl(root.location.href);
-      if (!decoded.found) return 'initial';
-      elements.source.value = decoded.source;
-      setShareStatus(`Loaded a ${decoded.codec} share link.`);
-      return 'shared';
+      if (decoded.found) {
+        elements.source.value = decoded.source;
+        sourceReplacementBaseline = decoded.source;
+        synchronizePresetSelection(decoded.source);
+        setShareStatus(`Loaded a ${decoded.codec} share link.`);
+        return 'shared';
+      }
+
+      const defaultPreset = presetApi.getDefaultPreset();
+      elements.source.value = defaultPreset.source;
+      sourceReplacementBaseline = defaultPreset.source;
+      synchronizePresetSelection(defaultPreset.source);
+      setShareStatus(`Loaded preset: ${defaultPreset.title}.`);
+      return 'initial';
     } catch (error) {
       elements.source.value = '';
+      sourceReplacementBaseline = null;
+      synchronizePresetSelection('');
       parsedSong = null;
       parsedTimeline = null;
       musicalContentKey = null;
@@ -102,18 +129,18 @@
       haltPlayback({ resetPosition: true });
       countInRequired = false;
       elements.countIn.value = '';
-      invalidatePreparedShare('The shared source did not load.');
+      invalidatePreparedShare('The requested source did not load.');
       renderValidationErrors([{
-        code: `share_${error.code || 'decode_failed'}`,
+        code: `transport_${error.code || 'decode_failed'}`,
         line: null,
         section: null,
         bar: null,
         slot: null,
         field: 'share',
-        message: error.message || 'The shared source did not load.',
+        message: error.message || 'The requested source did not load.',
       }]);
       renderSongSummary();
-      setPlaybackStatus('Playback is unavailable because the shared source did not load.');
+      setPlaybackStatus('Playback is unavailable because the requested source did not load.');
       updateControls();
       return null;
     }
@@ -121,6 +148,7 @@
 
   function validateSource(origin) {
     const source = elements.source.value;
+    synchronizePresetSelection(source);
     const previousSong = parsedSong;
     const previousContentKey = musicalContentKey;
     const previousSource = lastValidSource;
@@ -226,13 +254,63 @@
     updateControls();
   }
 
+  function populatePresetOptions() {
+    for (const preset of presetApi.listPresets()) {
+      const option = document.createElement('option');
+      option.value = preset.slug;
+      option.textContent = preset.presetType === 'Exercise'
+        ? `${preset.teachingLevel}: ${preset.title}`
+        : `${preset.presetType}: ${preset.title}`;
+      elements.preset.append(option);
+    }
+  }
+
+  function synchronizePresetSelection(source) {
+    const preset = presetApi.findPresetBySource(source);
+    elements.preset.value = preset ? preset.slug : '';
+    elements.presetGoal.textContent = preset
+      ? `${preset.teachingLevel}. ${preset.teachingGoal}`
+      : 'Custom source. Select a preset to replace it with a catalog exercise.';
+  }
+
+  function handlePresetChange() {
+    const preset = presetApi.getPreset(elements.preset.value);
+    if (!preset) {
+      synchronizePresetSelection(elements.source.value);
+      return;
+    }
+
+    const hasSessionEdits = sourceReplacementBaseline !== null
+      && elements.source.value !== sourceReplacementBaseline;
+    if (
+      hasSessionEdits
+      && !root.confirm('Replace the current source with this preset? Your current edits will be lost.')
+    ) {
+      synchronizePresetSelection(elements.source.value);
+      setShareStatus('Preset loading was cancelled. The current source is unchanged.');
+      return;
+    }
+
+    try {
+      const presetLink = presetApi.createPresetUrl(preset.slug, root.location.href);
+      root.history.replaceState(null, '', presetLink.url);
+    } catch (error) {
+      setShareStatus('The preset loaded, but the browser could not update the current URL.');
+    }
+
+    elements.source.value = preset.source;
+    sourceReplacementBaseline = preset.source;
+    synchronizePresetSelection(preset.source);
+    validateSource('preset');
+  }
+
   function updateBpmFromControl(rawValue) {
     const updatedSource = parser.replaceBpmDirective(elements.source.value, rawValue);
     if (updatedSource === null) {
       setPlaybackStatus('Fix the bpm: directive before you use the BPM controls.');
       return;
     }
-    clearShareParameterAfterSourceChange();
+    clearSourceParametersAfterSourceChange();
     elements.source.value = updatedSource;
     validateSource('bpm-control');
   }
@@ -250,7 +328,7 @@
       setPlaybackStatus('Fix the count-in: directive before you use the Count-in control.');
       return;
     }
-    clearShareParameterAfterSourceChange();
+    clearSourceParametersAfterSourceChange();
     elements.source.value = updatedSource;
     validateSource('count-in-control');
   }
@@ -267,10 +345,15 @@
     updateControls();
 
     try {
-      const result = await shareApi.createShareUrl(source, root.location.href);
+      const matchingPreset = presetApi.findPresetBySource(source);
+      const result = matchingPreset
+        ? presetApi.createPresetUrl(matchingPreset.slug, root.location.href)
+        : await shareApi.createShareUrl(source, root.location.href);
       if (generation !== sharePreparationGeneration || elements.source.value !== source) return;
       preparedShare = Object.freeze({ ...result, source });
-      const codecName = result.codec === 'gzip' ? 'gzip' : 'raw';
+      const codecName = result.codec === 'preset'
+        ? 'preset'
+        : (result.codec === 'gzip' ? 'gzip' : 'raw');
       setShareStatus(`Share link is ready. Format: ${codecName}. Length: ${result.urlLength} characters.`);
     } catch (error) {
       if (generation !== sharePreparationGeneration || elements.source.value !== source) return;
@@ -289,7 +372,7 @@
     updateControls();
   }
 
-  function clearShareParameterAfterSourceChange() {
+  function clearSourceParametersAfterSourceChange() {
     sharePreparationGeneration += 1;
     copyRequestGeneration += 1;
     preparedShare = null;
@@ -297,12 +380,13 @@
 
     try {
       const url = new URL(root.location.href);
-      if (url.searchParams.has('song')) {
+      if (url.searchParams.has('song') || url.searchParams.has('preset')) {
         url.searchParams.delete('song');
+        url.searchParams.delete('preset');
         root.history.replaceState(null, '', url.href);
       }
     } catch (error) {
-      setShareStatus('The browser could not remove the old share parameter.');
+      setShareStatus('The browser could not remove the old source parameter.');
     }
   }
 
@@ -717,6 +801,7 @@
     elements.bpmNumber.disabled = true;
     elements.bpmRange.disabled = true;
     elements.countIn.disabled = true;
+    elements.preset.disabled = true;
     elements.copyShareLink.disabled = true;
     elements.copySource.disabled = true;
     for (const button of elements.soundTestButtons) button.disabled = true;

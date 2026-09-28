@@ -651,14 +651,9 @@ test('a BPM transition maps the next bar boundary to the new tempo', () => {
   assert.ok(firstEventTime >= transition.boundary.audioTime);
 });
 
-test('the default source in the page is valid', () => {
+test('the page contains valid sound-test tokens', () => {
   const htmlPath = path.join(__dirname, '..', 'tools', 'guitar-strumming', 'index.html');
   const html = fs.readFileSync(htmlPath, 'utf8');
-  const match = html.match(/<textarea id="song-source"[^>]*>([\s\S]*?)<\/textarea>/);
-  assert.ok(match);
-  const result = parser.parseSongSource(match[1], { catalog });
-  assert.equal(result.ok, true);
-
   const soundTestTokens = [...html.matchAll(/data-strum-token="([^"]+)"/g)]
     .map((tokenMatch) => tokenMatch[1]);
   assert.equal(soundTestTokens.length, 20);

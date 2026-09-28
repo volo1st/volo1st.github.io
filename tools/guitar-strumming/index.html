@@ -11,6 +11,7 @@
   <script src="./core.js" defer></script>
   <script src="./audio-engine.js" defer></script>
   <script src="./share.js" defer></script>
+  <script src="./preset-catalog.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
@@ -24,19 +25,23 @@
 
     <section aria-labelledby="source-heading">
       <h2 id="source-heading">Song source</h2>
+      <div class="preset-control">
+        <label for="song-preset">Preset</label>
+        <select id="song-preset" aria-describedby="preset-help preset-goal">
+          <option value="">Custom source</option>
+        </select>
+        <p id="preset-help" class="help-text">
+          Select a preset to replace the source. The tool asks before it replaces your edits.
+        </p>
+        <p id="preset-goal" class="preset-goal" role="status" aria-live="polite">
+          Select a preset to see its teaching goal.
+        </p>
+      </div>
       <label for="song-source">Plain-text song</label>
       <p id="source-help" class="help-text">
         Use one chord bar and one strum bar for each bar after repeat expansion.
       </p>
-      <textarea id="song-source" aria-describedby="source-help validation-summary" spellcheck="false">4/4#8
-bpm: 100
-count-in: 1
-
-chords:
-| C G/B@8 | G/B | Am F@8 | F |
-
-strum:
-| D - D4 U! - U3P D2X U | x4</textarea>
+      <textarea id="song-source" aria-describedby="source-help validation-summary" spellcheck="false"></textarea>
 
       <div class="button-group">
         <button id="copy-share-link" type="button" disabled>Copy share link</button>
@@ -160,6 +165,15 @@ strum:
         </div>
       </div>
     </details>
+
+    <footer class="preset-notice" aria-labelledby="preset-notice-heading">
+      <h2 id="preset-notice-heading">Song exercise notice</h2>
+      <p>
+        Song exercises are unofficial user transcriptions for teaching.
+        They contain chord and rhythm data. They do not include lyrics, melody notation, audio, or artwork.
+        The catalog does not claim approval by or affiliation with a rights holder.
+      </p>
+    </footer>
   </main>
 </body>
 </html>

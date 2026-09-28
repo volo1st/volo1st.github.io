@@ -763,7 +763,7 @@ The source can be visible to GitHub Pages, the chat service, and a URL-shortenin
 
 ## 11.5 Curated Presets
 
-Status: Decided.
+Status: Complete.
 
 Store curated presets in a local JavaScript catalog.
 
@@ -831,7 +831,9 @@ Convert the initial example into the first preset when preset support is impleme
 
 Complete a rights review before publishing a preset based on an identifiable commercial song.
 
-Start with original exercises, public-domain material, or material that the publisher has permission to distribute.
+Start with original exercises, public-domain material, material that the publisher has permission to distribute, or a reviewed short user transcription.
+
+Decision change on 2026-09-28: Permit a short user transcription when it contains only chord and rhythm teaching data. Label it as unofficial. Do not include lyrics, melody notation, audio, artwork, or a claim of approval. Record the accepted risk and remove or revise the entry if a rights holder objects.
 
 ## 11.6 Practice Tempo Ramp
 
