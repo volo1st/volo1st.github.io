@@ -1041,7 +1041,7 @@ Verification evidence: The automated parser, timeline, pitch, preset, and interf
 
 ## 11.9 Swing
 
-Status: Implemented on 2026-09-28. Manual verification is pending.
+Status: Implemented and verified on 2026-09-28.
 
 Require this directive after `capo:` and before `chords:`:
 
@@ -1075,7 +1075,7 @@ Do not add compatibility handling until the owner explicitly declares the `v1.0.
 
 Automated evidence: The repository check passed on 2026-09-28. It covered parser failures, straight-time equivalence, all supported grids, fixed audio-clock timing through 1,000 loops, unchanged timing boundaries, playhead conversion, presets, and format help.
 
-Manual evidence: Pending verification on iPhone Safari and desktop Chrome.
+Manual evidence: The user confirmed that the swing playback sounded correct in the browser test.
 
 ---
 

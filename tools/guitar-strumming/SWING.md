@@ -102,8 +102,8 @@ Manually verify:
 
 ## Completion Status
 
-Status: Implemented. Manual verification is pending.
+Status: Complete.
 
 Automated evidence: The repository check passed on 2026-09-28. It covered parser failures, straight-time equivalence, all supported grids, fixed audio-clock timing through 1,000 loops, unchanged timing boundaries, playhead conversion, presets, and format help.
 
-Manual evidence: Pending verification on iPhone Safari and desktop Chrome.
+Manual evidence: The user confirmed on 2026-09-28 that the swing playback sounded correct in the browser test.
