@@ -154,6 +154,7 @@ function makeDemonstrationSong({ bpm = 100, gridSize = 8 } = {}) {
 const validSource = `4/4#8
 bpm: 100
 count-in: 1
+tempo-ramp: off
 
 chords:
 | C G/B@8 | G/B | Am F@8 | F |
@@ -335,6 +336,7 @@ test('the parser accepts whitespace, lowercase strums, and repeats in both secti
     4/4 # 8
     bpm: 120
     count-in: 2
+    tempo-ramp: off
 
     chords:
     | C G/B@8 | x2
@@ -398,7 +400,7 @@ test('the parser rejects unsupported modifiers and modifier order', () => {
     const result = parser.parseSongSource(source, { catalog });
     const error = result.errors.find((item) => item.code === 'strum_token_invalid');
     assert.ok(error, `${token} was not rejected`);
-    assert.equal(error.line, 9);
+    assert.equal(error.line, 10);
     assert.equal(error.section, 'strum');
     assert.equal(error.bar, 1);
     assert.equal(error.slot, 1);
@@ -429,7 +431,7 @@ test('the parser reports empty and incomplete input', () => {
   assert.equal(empty.errors[0].code, 'source_empty');
 
   const incomplete = parser.parseSongSource(
-    '4/4#8\nbpm: 100\ncount-in: 1\nchords:',
+    '4/4#8\nbpm: 100\ncount-in: 1\ntempo-ramp: off\nchords:',
     { catalog },
   );
   assert.ok(incomplete.errors.some((error) => error.code === 'strum_section_missing'));
@@ -459,6 +461,73 @@ test('the parser rejects missing, duplicate, malformed, and out-of-range count-i
   }
 });
 
+test('the parser accepts disabled and enabled tempo ramps', () => {
+  const disabled = parser.parseSongSource(validSource, { catalog });
+  assert.equal(disabled.ok, true);
+  assert.deepEqual(disabled.song.tempoRamp, {
+    enabled: false,
+    stepBpm: null,
+    loopsPerStep: null,
+    targetBpm: null,
+  });
+
+  const enabled = parser.parseSongSource(
+    validSource.replace('tempo-ramp: off', 'tempo-ramp: +5 / 2 / 120'),
+    { catalog },
+  );
+  assert.equal(enabled.ok, true);
+  assert.deepEqual(enabled.song.tempoRamp, {
+    enabled: true,
+    stepBpm: 5,
+    loopsPerStep: 2,
+    targetBpm: 120,
+  });
+  assert.ok(Object.isFrozen(enabled.song.tempoRamp));
+});
+
+test('the parser rejects missing, duplicate, and misplaced tempo-ramp directives', () => {
+  const cases = [
+    [validSource.replace('tempo-ramp: off\n', ''), 'tempo_ramp_missing'],
+    [validSource.replace('chords:', 'tempo-ramp: off\nchords:'), 'tempo_ramp_duplicate'],
+    [validSource.replace('strum:', 'tempo-ramp: off\nstrum:'), 'tempo_ramp_duplicate'],
+  ];
+  for (const [source, code] of cases) {
+    const result = parser.parseSongSource(source, { catalog });
+    const error = result.errors.find((item) => item.code === code);
+    assert.ok(error, `${code} was not reported`);
+    assert.equal(error.field, 'tempo-ramp');
+  }
+});
+
+test('the parser reports independent tempo-ramp field errors', () => {
+  const cases = [
+    ['5/2/120', 'tempo_ramp_sign', 'tempo-ramp-step'],
+    ['+five/2/120', 'tempo_ramp_step_format', 'tempo-ramp-step'],
+    ['+0/2/120', 'tempo_ramp_step_range', 'tempo-ramp-step'],
+    ['+5/two/120', 'tempo_ramp_loops_format', 'tempo-ramp-loops'],
+    ['+5/100/120', 'tempo_ramp_loops_range', 'tempo-ramp-loops'],
+    ['+5/2/one-twenty', 'tempo_ramp_target_format', 'tempo-ramp-target'],
+    ['+5/2/301', 'tempo_ramp_target_range', 'tempo-ramp-target'],
+    ['+5/2/100', 'tempo_ramp_target_start', 'tempo-ramp-target'],
+  ];
+  for (const [value, code, field] of cases) {
+    const source = validSource.replace('tempo-ramp: off', `tempo-ramp: ${value}`);
+    const result = parser.parseSongSource(source, { catalog });
+    const error = result.errors.find((item) => item.code === code);
+    assert.ok(error, `${code} was not reported`);
+    assert.equal(error.field, field);
+  }
+
+  const combined = parser.parseSongSource(
+    validSource.replace('tempo-ramp: off', 'tempo-ramp: +0/100/301'),
+    { catalog },
+  );
+  assert.deepEqual(
+    combined.errors.map((error) => error.field),
+    ['tempo-ramp-step', 'tempo-ramp-loops', 'tempo-ramp-target'],
+  );
+});
+
 test('the parser expands xN to N total bars', () => {
   const result = parser.parseSongSource(validSource, { catalog });
   assert.equal(result.ok, true);
@@ -470,6 +539,7 @@ test('the parser rejects document-order and unknown-directive errors', () => {
   const wrongOrder = parser.parseSongSource(`4/4#8
 tempo: 100
 count-in: 1
+tempo-ramp: off
 chords:
 | C |
 strum:
@@ -504,7 +574,7 @@ test('the parser rejects invalid chord-change slots with musical locations', () 
     const error = result.errors.find((item) => item.code === code);
     assert.ok(error, `${code} was not reported`);
     assert.equal(error.section, 'chords');
-    assert.equal(error.line, 6);
+    assert.equal(error.line, 7);
   }
 });
 
@@ -513,7 +583,7 @@ test('the parser rejects unsupported chords and reports their source bar', () =>
   const result = parser.parseSongSource(source, { catalog });
   const error = result.errors.find((item) => item.code === 'chord_unsupported');
   assert.ok(error);
-  assert.equal(error.line, 6);
+  assert.equal(error.line, 7);
   assert.equal(error.bar, 1);
   assert.equal(error.slot, 8);
 });
@@ -532,6 +602,7 @@ test('the parser rejects repeat and expanded bar-count limits', () => {
   const overflowSource = `4/4#8
 bpm: 100
 count-in: 1
+tempo-ramp: off
 chords:
 | C | x999 | C | x2
 strum:
@@ -544,6 +615,7 @@ test('the parser accepts the maximum single repeat count', () => {
   const source = `4/4#8
 bpm: 100
 count-in: 1
+tempo-ramp: off
 chords:
 | C | x999
 strum:
@@ -649,6 +721,96 @@ test('a BPM transition maps the next bar boundary to the new tempo', () => {
     transition.segment.timeline,
   );
   assert.ok(firstEventTime >= transition.boundary.audioTime);
+});
+
+test('tempo-ramp BPM calculation caps a partial final step at the target', () => {
+  assert.equal(core.tempoRampBpmAfterLoops(100, 5, 2, 112, 0), 100);
+  assert.equal(core.tempoRampBpmAfterLoops(100, 5, 2, 112, 1), 100);
+  assert.equal(core.tempoRampBpmAfterLoops(100, 5, 2, 112, 2), 105);
+  assert.equal(core.tempoRampBpmAfterLoops(100, 5, 2, 112, 4), 110);
+  assert.equal(core.tempoRampBpmAfterLoops(100, 5, 2, 112, 6), 112);
+  assert.equal(core.tempoRampBpmAfterLoops(100, 5, 2, 112, 1000), 112);
+});
+
+test('loop tempo transitions use exact audio-clock boundaries', () => {
+  const baseTimeline = core.normalizeSong(makeDemonstrationSong({ bpm: 100, gridSize: 8 }));
+  const currentSegment = {
+    timeline: baseTimeline,
+    events: core.playableEvents(baseTimeline),
+    originTime: 10,
+    cursor: core.createScheduleCursor(),
+    completedLoopsAtOrigin: 0,
+  };
+  const nextTimeline = core.timelineWithBpm(baseTimeline, 105);
+  const transition = core.createLoopTempoTransition(currentSegment, nextTimeline, 2);
+  const expectedBoundary = 10 + (2 * core.cycleDurationSeconds(baseTimeline));
+  assert.equal(transition.boundary.sourceSlot, 0);
+  assert.ok(Math.abs(transition.boundary.audioTime - expectedBoundary) < 0.000001);
+  assert.equal(transition.segment.originTime, transition.boundary.audioTime);
+  assert.equal(transition.segment.timeline.bpm, 105);
+});
+
+test('completed-loop state supports pause, resume, and 1,000 loops', () => {
+  const timeline = core.normalizeSong(makeDemonstrationSong({ bpm: 137, gridSize: 24 }));
+  const cycleDuration = core.cycleDurationSeconds(timeline);
+  const segment = {
+    timeline,
+    originTime: 5,
+    completedLoopsAtOrigin: 7,
+  };
+  assert.equal(core.completedLoopsAtTime(segment, 5 + (0.75 * cycleDuration)), 7);
+  assert.equal(core.completedLoopsAtTime(segment, 5 + cycleDuration), 8);
+  assert.equal(core.completedLoopsAtTime(segment, 5 + (993 * cycleDuration)), 1000);
+
+  const resumedSegment = {
+    timeline,
+    originTime: 100 - (0.75 * cycleDuration),
+    completedLoopsAtOrigin: 7,
+  };
+  assert.equal(core.completedLoopsAtTime(resumedSegment, 100), 7);
+  assert.equal(core.completedLoopsAtTime(resumedSegment, 100 + (0.25 * cycleDuration)), 8);
+});
+
+test('exact transitions can advance across several tempo boundaries after a stall', () => {
+  const baseTimeline = core.normalizeSong(makeDemonstrationSong({ bpm: 100, gridSize: 8 }));
+  let segment = {
+    timeline: baseTimeline,
+    events: core.playableEvents(baseTimeline),
+    originTime: 2,
+    cursor: core.createScheduleCursor(),
+    completedLoopsAtOrigin: 0,
+  };
+  const boundaryTimes = [];
+  for (const bpm of [105, 110, 112]) {
+    const transition = core.createLoopTempoTransition(
+      segment,
+      core.timelineWithBpm(baseTimeline, bpm),
+      2,
+    );
+    boundaryTimes.push(transition.boundary.audioTime);
+    segment = {
+      ...transition.segment,
+      completedLoopsAtOrigin: segment.completedLoopsAtOrigin + 2,
+    };
+  }
+  assert.ok(boundaryTimes[0] < boundaryTimes[1]);
+  assert.ok(boundaryTimes[1] < boundaryTimes[2]);
+  assert.equal(segment.timeline.bpm, 112);
+  assert.equal(segment.completedLoopsAtOrigin, 6);
+
+  const stalledNow = boundaryTimes[2] + (0.5 * core.cycleDurationSeconds(segment.timeline));
+  assert.equal(core.completedLoopsAtTime(segment, stalledNow), 6);
+  const events = core.playableEvents(segment.timeline);
+  const recovered = core.collectScheduleBatch({
+    timeline: segment.timeline,
+    events,
+    cursor: core.createScheduleCursor(),
+    originTime: segment.originTime,
+    now: stalledNow,
+    horizonTime: stalledNow + 0.2,
+  });
+  assert.ok(recovered.skipped.length > 0);
+  assert.ok(recovered.scheduled.every((event) => event.eventTime >= stalledNow));
 });
 
 test('the page contains valid sound-test tokens', () => {

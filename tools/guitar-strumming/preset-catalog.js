@@ -33,6 +33,7 @@
       source: `4/4#8
 bpm: 100
 count-in: 1
+tempo-ramp: off
 
 chords:
 | C G/B@8 | G/B | Am F@8 | F |
@@ -51,6 +52,7 @@ strum:
       source: `4/4#8
 bpm: 80
 count-in: 1
+tempo-ramp: off
 
 chords:
 | C | G | Am | F |
@@ -69,6 +71,7 @@ strum:
       source: `4/4#8
 bpm: 88
 count-in: 1
+tempo-ramp: off
 
 chords:
 | G | C | D | Em |
@@ -87,6 +90,7 @@ strum:
       source: `4/4#8
 bpm: 92
 count-in: 1
+tempo-ramp: off
 
 chords:
 | Cmaj7 | Am7 | D7 | G7 |
@@ -106,6 +110,7 @@ strum:
       source: `4/4#16
 bpm: 120
 count-in: 1
+tempo-ramp: off
 
 chords:
 | Am | C | G | D7 |
@@ -125,6 +130,7 @@ strum:
       source: `4/4#8
 bpm: 135
 count-in: 1
+tempo-ramp: off
 
 chords:
 | C D@8 | D | G Em@8 | Em |

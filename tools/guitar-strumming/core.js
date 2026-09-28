@@ -13,6 +13,7 @@
   const VALID_STRING_COUNTS = new Set([2, 3, 4]);
   const VALID_ARTICULATIONS = new Set(['normal', 'palm-mute', 'dead']);
   const OPEN_STRING_MIDI = Object.freeze([40, 45, 50, 55, 59, 64]);
+  const TIMING_EPSILON_SECONDS = 0.000000001;
 
   function slotDurationSeconds(bpm, gridSize) {
     requireValidTiming(bpm, gridSize);
@@ -176,6 +177,105 @@
 
   function cycleDurationSeconds(timeline) {
     return timeline.durationSlots * slotDurationSeconds(timeline.bpm, timeline.gridSize);
+  }
+
+  function timelineWithBpm(timeline, bpm) {
+    requireTimelineShape(timeline);
+    requireValidBpm(bpm);
+    return Object.freeze({
+      ...timeline,
+      bpm,
+    });
+  }
+
+  function requireTimelineShape(timeline) {
+    if (!timeline || typeof timeline !== 'object') {
+      throw new TypeError('A timeline is required.');
+    }
+    requireValidTiming(timeline.bpm, timeline.gridSize);
+    if (!Number.isInteger(timeline.durationSlots) || timeline.durationSlots < 1) {
+      throw new RangeError('Timeline duration must be a positive whole number of slots.');
+    }
+    if (!Array.isArray(timeline.events)) {
+      throw new TypeError('Timeline events are required.');
+    }
+  }
+
+  function tempoRampBpmAfterLoops(startingBpm, stepBpm, loopsPerStep, targetBpm, completedLoops) {
+    requireValidBpm(startingBpm);
+    requireValidBpm(targetBpm);
+    if (!Number.isInteger(stepBpm) || stepBpm < 1 || stepBpm > 20) {
+      throw new RangeError('Tempo-ramp step must be a whole number from 1 through 20.');
+    }
+    if (!Number.isInteger(loopsPerStep) || loopsPerStep < 1 || loopsPerStep > 99) {
+      throw new RangeError('Tempo-ramp loop interval must be a whole number from 1 through 99.');
+    }
+    if (targetBpm <= startingBpm) {
+      throw new RangeError('Tempo-ramp target must be greater than the starting BPM.');
+    }
+    if (!Number.isInteger(completedLoops) || completedLoops < 0) {
+      throw new RangeError('Completed-loop count must be a non-negative whole number.');
+    }
+    const completedSteps = Math.floor(completedLoops / loopsPerStep);
+    return Math.min(targetBpm, startingBpm + (completedSteps * stepBpm));
+  }
+
+  function completedLoopsAtTime(segment, audioTime) {
+    if (!segment || typeof segment !== 'object') {
+      throw new TypeError('A playback segment is required.');
+    }
+    requireTimelineShape(segment.timeline);
+    if (!Number.isFinite(segment.originTime) || segment.originTime < 0) {
+      throw new RangeError('Segment origin time must be a non-negative number.');
+    }
+    if (!Number.isFinite(audioTime) || audioTime < 0) {
+      throw new RangeError('Audio time must be a non-negative number.');
+    }
+    if (
+      !Number.isInteger(segment.completedLoopsAtOrigin)
+      || segment.completedLoopsAtOrigin < 0
+    ) {
+      throw new RangeError('Segment completed-loop count must be a non-negative whole number.');
+    }
+    const elapsed = Math.max(0, audioTime - segment.originTime);
+    const elapsedLoops = Math.floor(
+      (elapsed + TIMING_EPSILON_SECONDS) / cycleDurationSeconds(segment.timeline),
+    );
+    return segment.completedLoopsAtOrigin + elapsedLoops;
+  }
+
+  function createLoopTempoTransition(currentSegment, nextTimeline, loopsUntilBoundary) {
+    if (!currentSegment || typeof currentSegment !== 'object') {
+      throw new TypeError('A current playback segment is required.');
+    }
+    requireTimelineShape(currentSegment.timeline);
+    requireTimelineShape(nextTimeline);
+    if (
+      currentSegment.timeline.gridSize !== nextTimeline.gridSize
+      || currentSegment.timeline.durationSlots !== nextTimeline.durationSlots
+    ) {
+      throw new RangeError('A BPM transition cannot change the grid or song length.');
+    }
+    if (!Number.isInteger(loopsUntilBoundary) || loopsUntilBoundary < 1) {
+      throw new RangeError('Loops until a tempo boundary must be a positive whole number.');
+    }
+    const audioTime = currentSegment.originTime
+      + (loopsUntilBoundary * cycleDurationSeconds(currentSegment.timeline));
+    const boundary = Object.freeze({
+      absoluteSlot: loopsUntilBoundary * currentSegment.timeline.durationSlots,
+      sourceSlot: 0,
+      audioTime,
+    });
+    const events = playableEvents(nextTimeline);
+    return Object.freeze({
+      boundary,
+      segment: Object.freeze({
+        timeline: nextTimeline,
+        events,
+        originTime: audioTime,
+        cursor: createScheduleCursor(),
+      }),
+    });
   }
 
   function eventTimeSeconds(originTime, loopIndex, event, timeline) {
@@ -352,10 +452,12 @@
     OPEN_STRING_MIDI,
     VALID_GRID_SIZES,
     collectScheduleBatch,
+    completedLoopsAtTime,
     countInDurationSeconds,
     createCountInEvents,
     createScheduleCursor,
     createScheduleCursorAtPosition,
+    createLoopTempoTransition,
     createTempoTransition,
     cycleDurationSeconds,
     eventTimeSeconds,
@@ -367,5 +469,7 @@
     selectStringIndexes,
     slotDurationSeconds,
     stringMidiNote,
+    tempoRampBpmAfterLoops,
+    timelineWithBpm,
   });
 }));

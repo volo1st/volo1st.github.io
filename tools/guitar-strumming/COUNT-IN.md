@@ -21,7 +21,7 @@ This package does not add a metronome during the song, a spoken count, or a temp
 
 ## Source and Control Design
 
-Place `count-in:` after `bpm:` and before `chords:`.
+Place `count-in:` after `bpm:`. The current document grammar places `tempo-ramp:` after it.
 
 Accept only `0`, `1`, or `2`.
 

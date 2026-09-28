@@ -79,7 +79,7 @@ Each such control must read its value from the source and write its change back 
 
 Do not keep a second persistent value outside the source.
 
-Keep transient playback state outside the source. This state includes Play or Pause state, the current playback position, audio-context state, validation messages, and status messages.
+Keep transient playback state outside the source. This state includes Play or Pause state, the current playback position, the current ramp tempo, the completed-loop count, audio-context state, validation messages, and status messages.
 
 ## 3.1 Header
 
@@ -89,6 +89,7 @@ Syntax:
 4/4#<grid-size>
 bpm: <number>
 count-in: <bars>
+tempo-ramp: <value>
 ```
 
 The header must be the first non-blank line.
@@ -96,6 +97,8 @@ The header must be the first non-blank line.
 The `bpm:` directive must be the next non-blank line.
 
 The `count-in:` directive must be the next non-blank line after `bpm:`.
+
+The `tempo-ramp:` directive must be the next non-blank line after `count-in:`.
 
 Example meanings:
 
@@ -114,6 +117,8 @@ Each bar uses the same grid size.
 `bpm:` defines the global playback tempo in quarter-note beats per minute.
 
 `count-in:` defines whether playback starts with 0, 1, or 2 count-in bars.
+
+`tempo-ramp:` defines whether the tempo increases at loop boundaries.
 
 One 4/4 bar lasts four beats.
 
@@ -219,6 +224,7 @@ After repeat expansion, the chord section and strum section must contain the sam
 4/4#8
 bpm: 138
 count-in: 1
+tempo-ramp: off
 
 chords:
 | C D@8 | D | G Em@8 | Em |
@@ -354,7 +360,7 @@ The parser must:
 
 - ignore extra spaces
 - ignore blank lines
-- require the header, `bpm:`, `chords:`, and `strum:` in that order
+- require the header, `bpm:`, `count-in:`, `tempo-ramp:`, `chords:`, and `strum:` in that order
 - require each directive and section label exactly once
 - treat directive and section-label text as case-sensitive
 - treat `D` and `U` case-insensitively
@@ -562,7 +568,7 @@ Status: Implemented and verified on 2026-09-28.
 
 Add the count-in as the first Phase 2 feature.
 
-Use this directive after `bpm:` and before `chords:`:
+Use this directive after `bpm:` and before `tempo-ramp:`:
 
 ```text
 count-in: <bars>
@@ -837,7 +843,7 @@ Decision change on 2026-09-28: Permit a short user transcription when it contain
 
 ## 11.6 Practice Tempo Ramp
 
-Status: Decided.
+Status: Implemented and verified on 2026-09-28.
 
 Implement the text directive before adding a user interface control.
 
@@ -848,6 +854,8 @@ tempo-ramp: <value>
 ```
 
 Place `tempo-ramp:` after `count-in:` and before `chords:`.
+
+Decision on 2026-09-28: Replace the existing unpublished preset sources in place. Backward compatibility for source without this directive is not required.
 
 Use `off` to disable the tempo ramp:
 
@@ -916,6 +924,8 @@ After a user-interface stall, recover at the correct loop, tempo, and musical po
 A future interface control must read and edit only the `tempo-ramp:` directive.
 
 A future interface summary can show the expanded meaning, such as `+5 BPM every 2 loops, target 120 BPM`.
+
+Verification evidence: The automated parser and timing checks passed on 2026-09-28. The user confirmed that the quick ramp test worked in the browser. The test covered a count-in, two loop-boundary increases, a partial final step, Pause and Play, and Restart.
 
 ---
 
@@ -1074,7 +1084,7 @@ Status: Decided.
 
 Status: Decided.
 
-- Require the header, `bpm:`, `count-in:`, `chords:`, and `strum:` in that order.
+- Require the header, `bpm:`, `count-in:`, `tempo-ramp:`, `chords:`, and `strum:` in that order.
 - Require each directive and section label exactly once.
 - Use exact lowercase directive and section-label text.
 - Ignore blank lines and extra spaces.

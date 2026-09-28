@@ -49,6 +49,8 @@
   let skippedLateStrums = 0;
   let countInEndTime = null;
   let countInRequired = false;
+  let rampCurrentBpm = null;
+  let rampCompletedLoops = 0;
   let preparedShare = null;
   let sharePreparationGeneration = 0;
   let copyRequestGeneration = 0;
@@ -211,7 +213,18 @@
       && sourceChanged
       && previousContentKey === nextContentKey
       && previousSong.bpm !== result.song.bpm
+      && !previousSong.tempoRamp.enabled
+      && !result.song.tempoRamp.enabled
       && neutralPreviousSource === neutralNextSource,
+    );
+    const activeRampSettingChanged = Boolean(
+      previousSong
+      && sourceChanged
+      && (previousSong.tempoRamp.enabled || result.song.tempoRamp.enabled)
+      && (
+        previousSong.bpm !== result.song.bpm
+        || JSON.stringify(previousSong.tempoRamp) !== JSON.stringify(result.song.tempoRamp)
+      )
     );
 
     parsedSong = result.song;
@@ -223,6 +236,7 @@
     synchronizeBpmControls(result.song.bpm);
     synchronizeCountInControl(result.song.countInBars);
     prepareShareUrl(source);
+    if (rampCurrentBpm === null) resetTempoRampState();
 
     if (sourceChanged && bpmOnlyChange) {
       if (playbackState === 'playing') {
@@ -239,8 +253,11 @@
     } else if (sourceChanged) {
       haltPlayback({ resetPosition: true });
       countInRequired = parsedSong.countInBars > 0;
-      setPlaybackStatus('The source changed. Playback is ready at bar 1, slot 1.');
+      setPlaybackStatus(activeRampSettingChanged
+        ? 'The tempo-ramp settings changed. Playback reset to bar 1, slot 1.'
+        : 'The source changed. Playback is ready at bar 1, slot 1.');
     } else if (origin === 'initial') {
+      resetTempoRampState();
       countInRequired = parsedSong.countInBars > 0;
       setPlaybackStatus('The song is valid. Press Play when you are ready.');
     } else if (!previousSong) {
@@ -528,13 +545,16 @@
 
   function beginPlaybackAtPosition(context, sourceSlot, useCountIn) {
     clearSchedulerTimer();
-    const slotDuration = core.slotDurationSeconds(parsedTimeline.bpm, parsedTimeline.gridSize);
-    const normalizedSourceSlot = sourceSlot % parsedTimeline.durationSlots;
-    const events = core.playableEvents(parsedTimeline);
+    const playbackTimeline = parsedSong.tempoRamp.enabled
+      ? core.timelineWithBpm(parsedTimeline, rampCurrentBpm)
+      : parsedTimeline;
+    const slotDuration = core.slotDurationSeconds(playbackTimeline.bpm, playbackTimeline.gridSize);
+    const normalizedSourceSlot = sourceSlot % playbackTimeline.durationSlots;
+    const events = core.playableEvents(playbackTimeline);
     const countInBars = useCountIn ? parsedSong.countInBars : 0;
     const countInStartTime = context.currentTime + START_LEAD_SECONDS;
     const countInEvents = core.createCountInEvents(
-      parsedTimeline.bpm,
+      playbackTimeline.bpm,
       countInBars,
       countInStartTime,
     );
@@ -542,14 +562,15 @@
       audioEngine.playCountInClick(event.eventTime, event.accented);
     }
     const startTime = countInStartTime + core.countInDurationSeconds(
-      parsedTimeline.bpm,
+      playbackTimeline.bpm,
       countInBars,
     );
     activeSegment = {
-      timeline: parsedTimeline,
+      timeline: playbackTimeline,
       events,
       originTime: startTime - (normalizedSourceSlot * slotDuration),
       cursor: core.createScheduleCursorAtPosition(events, normalizedSourceSlot),
+      completedLoopsAtOrigin: rampCompletedLoops,
     };
     pendingTransition = null;
     countInEndTime = countInBars > 0 ? startTime : null;
@@ -557,6 +578,7 @@
     playheadSlot = normalizedSourceSlot;
     skippedLateStrums = 0;
     playbackState = 'playing';
+    planTempoRampTransition();
     pumpScheduler();
     schedulerTimer = root.setInterval(pumpScheduler, SCHEDULER_INTERVAL_MILLISECONDS);
     updateControls();
@@ -567,6 +589,7 @@
     requestGeneration += 1;
     if (activeSegment && audioEngine && audioEngine.context) {
       promoteTempoTransition(audioEngine.context.currentTime);
+      synchronizeTempoRampProgress(audioEngine.context.currentTime);
       playheadSlot = core.playheadSlotAtTime(
         activeSegment.originTime,
         audioEngine.context.currentTime,
@@ -591,7 +614,10 @@
     pendingTransition = null;
     countInEndTime = null;
     playbackState = 'paused';
-    if (options.resetPosition) playheadSlot = 0;
+    if (options.resetPosition) {
+      playheadSlot = 0;
+      resetTempoRampState();
+    }
     updateControls();
   }
 
@@ -599,6 +625,7 @@
     if (!parsedTimeline || !audioSupported || playbackState === 'starting') return;
     playheadSlot = 0;
     pendingTransition = null;
+    resetTempoRampState();
     countInRequired = parsedSong.countInBars > 0;
     if (audioEngine) audioEngine.stopAll();
 
@@ -619,12 +646,14 @@
     const transition = core.createTempoTransition(activeSegment, nextTimeline, now);
     audioEngine.cancelScheduledFrom(transition.boundary.audioTime);
     pendingTransition = {
+      kind: 'manual',
       boundary: transition.boundary,
       segment: {
         timeline: transition.segment.timeline,
         events: transition.segment.events,
         originTime: transition.segment.originTime,
         cursor: transition.segment.cursor,
+        completedLoopsAtOrigin: rampCompletedLoops,
       },
     };
     pumpScheduler();
@@ -699,12 +728,87 @@
   }
 
   function promoteTempoTransition(now) {
-    if (!pendingTransition || now < pendingTransition.boundary.audioTime) return;
-    activeSegment = pendingTransition.segment;
-    pendingTransition = null;
-    if (playbackState === 'playing') {
-      setPlaybackStatus(`Playing at ${activeSegment.timeline.bpm} beats per minute.`);
+    let tempoChanged = false;
+    while (
+      pendingTransition
+      && now >= pendingTransition.boundary.audioTime - BOUNDARY_EPSILON_SECONDS
+    ) {
+      const promoted = pendingTransition;
+      activeSegment = promoted.segment;
+      pendingTransition = null;
+      rampCurrentBpm = activeSegment.timeline.bpm;
+      if (promoted.kind === 'ramp') {
+        rampCompletedLoops = promoted.completedLoopsAtBoundary;
+        planTempoRampTransition();
+      }
+      tempoChanged = true;
     }
+    synchronizeTempoRampProgress(now);
+    if (tempoChanged && playbackState === 'playing') {
+      setPlaybackStatus(tempoRampPlaybackStatus());
+    }
+  }
+
+  function planTempoRampTransition() {
+    if (
+      !parsedSong
+      || !parsedSong.tempoRamp.enabled
+      || !activeSegment
+      || pendingTransition
+      || rampCurrentBpm >= parsedSong.tempoRamp.targetBpm
+    ) return;
+
+    const ramp = parsedSong.tempoRamp;
+    const completedRemainder = rampCompletedLoops % ramp.loopsPerStep;
+    const loopsUntilBoundary = completedRemainder === 0
+      ? ramp.loopsPerStep
+      : ramp.loopsPerStep - completedRemainder;
+    const completedLoopsAtBoundary = rampCompletedLoops + loopsUntilBoundary;
+    const nextBpm = core.tempoRampBpmAfterLoops(
+      parsedSong.bpm,
+      ramp.stepBpm,
+      ramp.loopsPerStep,
+      ramp.targetBpm,
+      completedLoopsAtBoundary,
+    );
+    const nextTimeline = core.timelineWithBpm(parsedTimeline, nextBpm);
+    const transition = core.createLoopTempoTransition(
+      activeSegment,
+      nextTimeline,
+      loopsUntilBoundary,
+    );
+    pendingTransition = {
+      kind: 'ramp',
+      completedLoopsAtBoundary,
+      boundary: transition.boundary,
+      segment: {
+        timeline: transition.segment.timeline,
+        events: transition.segment.events,
+        originTime: transition.segment.originTime,
+        cursor: transition.segment.cursor,
+        completedLoopsAtOrigin: completedLoopsAtBoundary,
+      },
+    };
+  }
+
+  function synchronizeTempoRampProgress(now) {
+    if (!parsedSong || !parsedSong.tempoRamp.enabled || !activeSegment) return;
+    rampCompletedLoops = core.completedLoopsAtTime(activeSegment, now);
+  }
+
+  function resetTempoRampState() {
+    rampCurrentBpm = parsedSong ? parsedSong.bpm : null;
+    rampCompletedLoops = 0;
+  }
+
+  function tempoRampPlaybackStatus() {
+    if (!parsedSong || !parsedSong.tempoRamp.enabled) {
+      return `Playing at ${activeSegment.timeline.bpm} beats per minute.`;
+    }
+    if (rampCurrentBpm >= parsedSong.tempoRamp.targetBpm) {
+      return `Playing at the target tempo of ${rampCurrentBpm} beats per minute.`;
+    }
+    return `Playing at ${rampCurrentBpm} beats per minute. Completed loops: ${rampCompletedLoops}.`;
   }
 
   function getAudioEngine() {
@@ -775,6 +879,9 @@
       parsedSong.countInBars === 0
         ? 'Count-in is off.'
         : `${parsedSong.countInBars}-bar count-in.`,
+      parsedSong.tempoRamp.enabled
+        ? `Tempo ramp: +${parsedSong.tempoRamp.stepBpm} BPM every ${parsedSong.tempoRamp.loopsPerStep} loops, target ${parsedSong.tempoRamp.targetBpm} BPM.`
+        : 'Tempo ramp is off.',
       'Looping is on.',
     ].join(' ');
   }

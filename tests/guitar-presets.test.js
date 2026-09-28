@@ -49,6 +49,7 @@ test('the current example is the default preset without duplicated page source',
   const expectedSource = `4/4#8
 bpm: 100
 count-in: 1
+tempo-ramp: off
 
 chords:
 | C G/B@8 | G/B | Am F@8 | F |

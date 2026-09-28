@@ -34,7 +34,7 @@
     if (!countInEntry || !/^count-in\s*:/.test(countInEntry.text)) {
       addError(
         errors,
-        !countInEntry || countInEntry.text === 'chords:'
+        !countInEntry || countInEntry.text === 'chords:' || /^tempo-ramp\s*:/.test(countInEntry.text)
           ? 'count_in_missing'
           : directiveCode(countInEntry && countInEntry.text),
         countInEntry ? countInEntry.line : null,
@@ -48,26 +48,51 @@
     }
     const countInBars = parseCountIn(countInEntry, errors);
 
-    if (!lines[3] || lines[3].text !== 'chords:') {
-      const entry = lines[3] || lines.at(-1);
-      const isDuplicateCountIn = entry && /^count-in\s*:/.test(entry.text);
+    const tempoRampEntry = lines[3];
+    if (!tempoRampEntry || !/^tempo-ramp\s*:/.test(tempoRampEntry.text)) {
       addError(
         errors,
-        isDuplicateCountIn ? 'count_in_duplicate' : directiveCode(entry && entry.text),
+        !tempoRampEntry || tempoRampEntry.text === 'chords:'
+          ? 'tempo_ramp_missing'
+          : directiveCode(tempoRampEntry && tempoRampEntry.text),
+        tempoRampEntry ? tempoRampEntry.line : null,
+        null,
+        null,
+        null,
+        'tempo-ramp',
+        'Expected tempo-ramp: off or a value such as +5/2/120 after the count-in directive.',
+      );
+      return makeResult(null, errors);
+    }
+    const tempoRamp = parseTempoRamp(tempoRampEntry, bpm, errors);
+
+    if (!lines[4] || lines[4].text !== 'chords:') {
+      const entry = lines[4] || lines.at(-1);
+      const isDuplicateCountIn = entry && /^count-in\s*:/.test(entry.text);
+      const isDuplicateTempoRamp = entry && /^tempo-ramp\s*:/.test(entry.text);
+      addError(
+        errors,
+        isDuplicateCountIn
+          ? 'count_in_duplicate'
+          : (isDuplicateTempoRamp ? 'tempo_ramp_duplicate' : directiveCode(entry && entry.text)),
         entry ? entry.line : sourceLines.length,
         null,
         null,
         null,
-        isDuplicateCountIn ? 'count-in' : 'document',
+        isDuplicateCountIn
+          ? 'count-in'
+          : (isDuplicateTempoRamp ? 'tempo-ramp' : 'document'),
         isDuplicateCountIn
           ? 'The count-in: directive can occur only once.'
-          : 'Expected chords: after the count-in directive.',
+          : (isDuplicateTempoRamp
+            ? 'The tempo-ramp: directive can occur only once.'
+            : 'Expected chords: after the tempo-ramp directive.'),
       );
       return makeResult(null, errors);
     }
 
     const strumLabelIndex = lines.findIndex((entry, index) => (
-      index > 3 && entry.text === 'strum:'
+      index > 4 && entry.text === 'strum:'
     ));
     if (strumLabelIndex === -1) {
       addError(
@@ -83,7 +108,7 @@
       return makeResult(null, errors);
     }
 
-    const duplicateChordLabel = lines.find((entry, index) => index > 3 && entry.text === 'chords:');
+    const duplicateChordLabel = lines.find((entry, index) => index > 4 && entry.text === 'chords:');
     if (duplicateChordLabel) {
       addError(
         errors,
@@ -112,13 +137,13 @@
       );
     }
 
-    const chordLines = lines.slice(4, strumLabelIndex);
+    const chordLines = lines.slice(5, strumLabelIndex);
     const strumLines = lines.slice(strumLabelIndex + 1);
     if (chordLines.length === 0) {
       addError(
         errors,
         'chords_section_empty',
-        lines[3].line,
+        lines[4].line,
         'chords',
         null,
         null,
@@ -167,13 +192,20 @@
       );
     }
 
-    if (errors.length > 0 || gridSize === null || bpm === null || countInBars === null) {
+    if (
+      errors.length > 0
+      || gridSize === null
+      || bpm === null
+      || countInBars === null
+      || tempoRamp === null
+    ) {
       return makeResult(null, errors);
     }
 
     const song = Object.freeze({
       bpm,
       countInBars,
+      tempoRamp,
       gridSize,
       chordBars: Object.freeze(chordBars.map((bar) => Object.freeze(bar.changes))),
       strumBars: Object.freeze(strumBars.map((bar) => Object.freeze(bar.tokens))),
@@ -311,6 +343,165 @@
     return countInBars;
   }
 
+  function parseTempoRamp(entry, startingBpm, errors) {
+    const match = entry.text.match(/^tempo-ramp\s*:\s*(.*)$/);
+    if (!match || match[1] === '') {
+      addError(
+        errors,
+        'tempo_ramp_format',
+        entry.line,
+        null,
+        null,
+        null,
+        'tempo-ramp',
+        'Use tempo-ramp: off or a value such as +5/2/120.',
+      );
+      return null;
+    }
+
+    const value = match[1].trim();
+    if (value === 'off') {
+      return Object.freeze({
+        enabled: false,
+        stepBpm: null,
+        loopsPerStep: null,
+        targetBpm: null,
+      });
+    }
+
+    const parts = value.split('/').map((part) => part.trim());
+    if (parts.length !== 3) {
+      addError(
+        errors,
+        'tempo_ramp_format',
+        entry.line,
+        null,
+        null,
+        null,
+        'tempo-ramp',
+        'Use +step/loops/target, such as +5/2/120.',
+      );
+      return null;
+    }
+
+    const errorCount = errors.length;
+    const [stepPart, loopsPart, targetPart] = parts;
+    if (!stepPart.startsWith('+')) {
+      addError(
+        errors,
+        'tempo_ramp_sign',
+        entry.line,
+        null,
+        null,
+        null,
+        'tempo-ramp-step',
+        'The tempo-ramp step must start with +.',
+      );
+    }
+
+    const stepText = stepPart.startsWith('+') ? stepPart.slice(1) : stepPart;
+    const stepBpm = parseTempoRampInteger({
+      text: stepText,
+      minimum: 1,
+      maximum: 20,
+      formatCode: 'tempo_ramp_step_format',
+      rangeCode: 'tempo_ramp_step_range',
+      field: 'tempo-ramp-step',
+      label: 'Tempo-ramp step',
+      line: entry.line,
+      errors,
+    });
+    const loopsPerStep = parseTempoRampInteger({
+      text: loopsPart,
+      minimum: 1,
+      maximum: 99,
+      formatCode: 'tempo_ramp_loops_format',
+      rangeCode: 'tempo_ramp_loops_range',
+      field: 'tempo-ramp-loops',
+      label: 'Tempo-ramp loop interval',
+      line: entry.line,
+      errors,
+    });
+    const targetBpm = parseTempoRampInteger({
+      text: targetPart,
+      minimum: 30,
+      maximum: 300,
+      formatCode: 'tempo_ramp_target_format',
+      rangeCode: 'tempo_ramp_target_range',
+      field: 'tempo-ramp-target',
+      label: 'Tempo-ramp target',
+      line: entry.line,
+      errors,
+    });
+
+    if (
+      targetBpm !== null
+      && startingBpm !== null
+      && targetBpm <= startingBpm
+    ) {
+      addError(
+        errors,
+        'tempo_ramp_target_start',
+        entry.line,
+        null,
+        null,
+        null,
+        'tempo-ramp-target',
+        'The tempo-ramp target must be greater than the starting BPM.',
+      );
+    }
+
+    if (errors.length !== errorCount) return null;
+    return Object.freeze({
+      enabled: true,
+      stepBpm,
+      loopsPerStep,
+      targetBpm,
+    });
+  }
+
+  function parseTempoRampInteger(options) {
+    const {
+      text,
+      minimum,
+      maximum,
+      formatCode,
+      rangeCode,
+      field,
+      label,
+      line,
+      errors,
+    } = options;
+    if (!/^\d+$/.test(text)) {
+      addError(
+        errors,
+        formatCode,
+        line,
+        null,
+        null,
+        null,
+        field,
+        `${label} must be a whole number from ${minimum} through ${maximum}.`,
+      );
+      return null;
+    }
+    const value = Number(text);
+    if (value < minimum || value > maximum) {
+      addError(
+        errors,
+        rangeCode,
+        line,
+        null,
+        null,
+        null,
+        field,
+        `${label} must be from ${minimum} through ${maximum}.`,
+      );
+      return null;
+    }
+    return value;
+  }
+
   function parseSectionBars(options) {
     const { lines, section, gridSize, catalog, errors } = options;
     const bars = [];
@@ -331,23 +522,30 @@
         const isComment = text[cursor] === '#';
         const looksLikeDirective = /^[a-z][a-z-]*\s*:/i.test(text.slice(cursor));
         const isDuplicateCountIn = /^count-in\s*:/.test(text.slice(cursor));
+        const isDuplicateTempoRamp = /^tempo-ramp\s*:/.test(text.slice(cursor));
         addError(
           errors,
           isComment
             ? 'comments_not_supported'
             : (isDuplicateCountIn
               ? 'count_in_duplicate'
-              : (looksLikeDirective ? 'unknown_directive' : 'bar_syntax')),
+              : (isDuplicateTempoRamp
+                ? 'tempo_ramp_duplicate'
+                : (looksLikeDirective ? 'unknown_directive' : 'bar_syntax'))),
           entry.line,
           section,
           bars.length + 1,
           null,
-          'bar',
+          isDuplicateCountIn
+            ? 'count-in'
+            : (isDuplicateTempoRamp ? 'tempo-ramp' : 'bar'),
           isComment
             ? 'Comments are not supported.'
             : (isDuplicateCountIn
               ? 'The count-in: directive can occur only once.'
-              : 'Each section line must contain one or more | ... | bars.'),
+              : (isDuplicateTempoRamp
+                ? 'The tempo-ramp: directive can occur only once.'
+                : 'Each section line must contain one or more | ... | bars.')),
         );
         return;
       }
