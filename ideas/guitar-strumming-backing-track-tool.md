@@ -671,7 +671,7 @@ Keep palm mute separate from dead strum and from stopping a ringing chord after 
 
 ## 11.4 Shareable Source
 
-Status: Implemented. Deployed HTTPS clipboard verification is pending.
+Status: Complete. The WeChat version and URL-shortener metadata were not captured. Record them if future delivery behavior must be reproduced.
 
 Keep the plain-text source as the shared content and the single source of truth.
 

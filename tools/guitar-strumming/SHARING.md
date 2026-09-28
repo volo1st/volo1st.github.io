@@ -127,7 +127,7 @@ Manually test:
 
 ## Completion Status
 
-Status: Implementation complete. Deployed HTTPS clipboard verification is pending.
+Status: Complete. The optional delivery metadata gap is recorded below.
 
 - [x] Automated checks pass.
   Evidence: `./scripts/check.sh` passed on 2026-09-28. The sharing test file contains 12 passing tests.
@@ -141,5 +141,6 @@ Status: Implementation complete. Deployed HTTPS clipboard verification is pendin
   Evidence: A shortened link preserved and loaded the shared source on 2026-09-28.
   Accepted risk: WeChat showed a warning before it opened the shortened link. The third-party warning is outside the tool's control.
 - [ ] Delivery metadata is recorded.
-  The WeChat version, shortener name, and shortened URL length are pending.
-- [ ] Deployed HTTPS clipboard check passes.
+  Evidence gap: The WeChat version, shortener name, and shortened URL length were not captured. Record these values if future delivery behavior must be reproduced.
+- [x] Deployed HTTPS clipboard check passes.
+  Evidence: The deployed tool matched commit `d133d4b`. The user confirmed automatic link copy and exact source loading in Mac Chrome and iPhone Safari on 2026-09-28.
