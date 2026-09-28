@@ -805,6 +805,88 @@ Complete a rights review before publishing a preset based on an identifiable com
 
 Start with original exercises, public-domain material, or material that the publisher has permission to distribute.
 
+## 11.6 Practice Tempo Ramp
+
+Status: Decided.
+
+Implement the text directive before adding a user interface control.
+
+Require this directive exactly once after the feature is implemented:
+
+```text
+tempo-ramp: <value>
+```
+
+Place `tempo-ramp:` after `count-in:` and before `chords:`.
+
+Use `off` to disable the tempo ramp:
+
+```text
+tempo-ramp: off
+```
+
+Use this compact positional form to enable it:
+
+```text
+tempo-ramp: +<step-bpm>/<loops-per-step>/<target-bpm>
+```
+
+Example:
+
+```text
+tempo-ramp: +5/2/120
+```
+
+This example increases the tempo by 5 BPM after every 2 completed loops until the tempo reaches 120 BPM.
+
+Require the `+` sign.
+
+Reserve a `-` sign for a possible future decreasing ramp. Do not accept it initially.
+
+Require all three values as whole numbers.
+
+Permit optional spaces around each `/` separator.
+
+The step must be from 1 through 20 BPM.
+
+The loop interval must be from 1 through 99 completed loops.
+
+The target must be greater than the starting `bpm:` value and no more than 300 BPM.
+
+Report a separate field error for an invalid step, loop interval, or target.
+
+Do not infer a missing value or silently correct an invalid value.
+
+Treat `bpm:` as the starting tempo.
+
+Apply each tempo increase at a loop boundary after the configured number of completed loops.
+
+If a full step would pass the target, use the target tempo for the next loop.
+
+After the target is reached, continue looping at the target tempo.
+
+Do not play another count-in at a tempo-change boundary.
+
+Pause must preserve the current tempo, completed-loop count, and musical position.
+
+Resume must continue the same ramp state.
+
+Restart must restore the starting `bpm:` value, reset the completed-loop count, return to bar 1, slot 1, and use the configured count-in.
+
+If the ramp is active, an edit to `bpm:` or `tempo-ramp:` must stop playback and reset the ramp.
+
+Store the starting tempo, step, loop interval, and target as separate parsed values.
+
+Store the current tempo and completed-loop count only as transient playback state.
+
+Calculate every tempo segment from an audio-clock boundary. Do not derive a new boundary from a delayed user-interface callback.
+
+After a user-interface stall, recover at the correct loop, tempo, and musical position without a burst of late strums.
+
+A future interface control must read and edit only the `tempo-ramp:` directive.
+
+A future interface summary can show the expanded meaning, such as `+5 BPM every 2 loops, target 120 BPM`.
+
 ---
 
 # 12. MVP Acceptance Criteria
