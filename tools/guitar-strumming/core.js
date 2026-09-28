@@ -72,12 +72,22 @@
     }
   }
 
+  function requireValidSwingPercent(swingPercent) {
+    if (
+      swingPercent !== null
+      && (!Number.isInteger(swingPercent) || swingPercent < 50 || swingPercent > 75)
+    ) {
+      throw new RangeError('Swing must be null or a whole number from 50 through 75.');
+    }
+  }
+
   function normalizeSong(song) {
     if (!song || typeof song !== 'object') {
       throw new TypeError('Song data is required.');
     }
     requireValidTiming(song.bpm, song.gridSize);
     requireValidCapoFret(song.capoFret);
+    requireValidSwingPercent(song.swingPercent);
     if (!Array.isArray(song.chordBars) || !Array.isArray(song.strumBars)) {
       throw new TypeError('Chord bars and strum bars are required.');
     }
@@ -118,6 +128,7 @@
     return Object.freeze({
       bpm: song.bpm,
       capoFret: song.capoFret,
+      swingPercent: song.swingPercent,
       gridSize: song.gridSize,
       barCount: song.chordBars.length,
       durationSlots: song.chordBars.length * song.gridSize,
@@ -202,6 +213,7 @@
     }
     requireValidTiming(timeline.bpm, timeline.gridSize);
     requireValidCapoFret(timeline.capoFret);
+    requireValidSwingPercent(timeline.swingPercent);
     if (!Number.isInteger(timeline.durationSlots) || timeline.durationSlots < 1) {
       throw new RangeError('Timeline duration must be a positive whole number of slots.');
     }
@@ -305,10 +317,36 @@
     if (!Number.isInteger(loopIndex) || loopIndex < 0) {
       throw new RangeError('Loop index must be a non-negative whole number.');
     }
-    const slotDuration = slotDurationSeconds(timeline.bpm, timeline.gridSize);
     return originTime
-      + (loopIndex * timeline.durationSlots * slotDuration)
-      + (event.absoluteSlotIndex * slotDuration);
+      + (loopIndex * cycleDurationSeconds(timeline))
+      + slotPositionSeconds(
+        event.absoluteSlotIndex,
+        timeline.bpm,
+        timeline.gridSize,
+        timeline.swingPercent,
+      );
+  }
+
+  function slotPositionSeconds(slotPosition, bpm, gridSize, swingPercent) {
+    requireValidTiming(bpm, gridSize);
+    requireValidSwingPercent(swingPercent);
+    if (!Number.isFinite(slotPosition) || slotPosition < 0) {
+      throw new RangeError('Slot position must be a non-negative number.');
+    }
+    if (swingPercent === null || swingPercent === 50) {
+      return slotPosition * slotDurationSeconds(bpm, gridSize);
+    }
+
+    const slotsPerBeat = gridSize / 4;
+    const slotsPerEighth = gridSize / 8;
+    const completedBeats = Math.floor(slotPosition / slotsPerBeat);
+    const slotWithinBeat = slotPosition - (completedBeats * slotsPerBeat);
+    const firstEighthShare = swingPercent / 100;
+    const beatFraction = slotWithinBeat < slotsPerEighth
+      ? (slotWithinBeat / slotsPerEighth) * firstEighthShare
+      : firstEighthShare
+        + (((slotWithinBeat - slotsPerEighth) / slotsPerEighth) * (1 - firstEighthShare));
+    return (completedBeats + beatFraction) * (60 / bpm);
   }
 
   function createScheduleCursor() {
@@ -330,8 +368,23 @@
   }
 
   function playheadSlotAtTime(originTime, audioTime, timeline) {
-    const slotDuration = slotDurationSeconds(timeline.bpm, timeline.gridSize);
-    const elapsedSlots = Math.max(0, (audioTime - originTime) / slotDuration);
+    if (timeline.swingPercent === null || timeline.swingPercent === 50) {
+      const slotDuration = slotDurationSeconds(timeline.bpm, timeline.gridSize);
+      const elapsedSlots = Math.max(0, (audioTime - originTime) / slotDuration);
+      return positiveModulo(elapsedSlots, timeline.durationSlots);
+    }
+    const beatDuration = 60 / timeline.bpm;
+    const elapsedBeats = Math.max(0, (audioTime - originTime) / beatDuration);
+    const completedBeats = Math.floor(elapsedBeats);
+    const beatFraction = elapsedBeats - completedBeats;
+    const slotsPerBeat = timeline.gridSize / 4;
+    const slotsPerEighth = timeline.gridSize / 8;
+    const firstEighthShare = timeline.swingPercent / 100;
+    const slotWithinBeat = beatFraction < firstEighthShare
+      ? (beatFraction / firstEighthShare) * slotsPerEighth
+      : slotsPerEighth
+        + (((beatFraction - firstEighthShare) / (1 - firstEighthShare)) * slotsPerEighth);
+    const elapsedSlots = (completedBeats * slotsPerBeat) + slotWithinBeat;
     return positiveModulo(elapsedSlots, timeline.durationSlots);
   }
 
@@ -492,6 +545,7 @@
     playableEvents,
     resolveVoicingPitches,
     selectStringIndexes,
+    slotPositionSeconds,
     slotDurationSeconds,
     stringMidiNote,
     tempoRampBpmAfterLoops,

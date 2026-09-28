@@ -125,7 +125,7 @@ function renderStrum(stringPitches, strum) {
   return engine.context;
 }
 
-function makeDemonstrationSong({ bpm = 100, gridSize = 8 } = {}) {
+function makeDemonstrationSong({ bpm = 100, gridSize = 8, swingPercent = null } = {}) {
   const pattern = Array.from({ length: gridSize }, (_, index) => (
     [
       makeStrum('D'),
@@ -141,6 +141,7 @@ function makeDemonstrationSong({ bpm = 100, gridSize = 8 } = {}) {
   return {
     bpm,
     capoFret: 0,
+    swingPercent,
     gridSize,
     chordBars: [
       [{ chord: 'C', slot: 1 }, { chord: 'G/B', slot: gridSize }],
@@ -157,6 +158,7 @@ bpm: 100
 count-in: 1
 tempo-ramp: off
 capo: 0
+swing: off
 
 chords:
 | C G/B@8 | G/B | Am F@8 | F |
@@ -293,6 +295,79 @@ test('event timestamps do not accumulate drift through 1,000 loops', () => {
   }
 });
 
+test('50 percent swing is equivalent to straight timing', () => {
+  for (const gridSize of [8, 16, 24]) {
+    const slotDuration = core.slotDurationSeconds(137, gridSize);
+    for (let slotPosition = 0; slotPosition <= gridSize * 2; slotPosition += 1) {
+      const expected = slotPosition * slotDuration;
+      assert.ok(Math.abs(
+        core.slotPositionSeconds(slotPosition, 137, gridSize, null) - expected,
+      ) <= 0.000000001);
+      assert.ok(Math.abs(
+        core.slotPositionSeconds(slotPosition, 137, gridSize, 50) - expected,
+      ) <= 0.000000001);
+    }
+  }
+});
+
+test('swing divides eighth-note pairs across every supported grid', () => {
+  const expectedFirstBeatOffsets = new Map([
+    [8, [0, 0.6, 1]],
+    [16, [0, 0.3, 0.6, 0.8, 1]],
+    [24, [0, 0.2, 0.4, 0.6, 0.7333333333333333, 0.8666666666666667, 1]],
+  ]);
+  for (const [gridSize, expectedOffsets] of expectedFirstBeatOffsets) {
+    const actualOffsets = expectedOffsets.map((unused, slotPosition) => (
+      core.slotPositionSeconds(slotPosition, 60, gridSize, 60)
+    ));
+    actualOffsets.forEach((actual, index) => {
+      assert.ok(Math.abs(actual - expectedOffsets[index]) <= 0.000000001);
+    });
+  }
+});
+
+test('swing keeps beat, bar, loop, and repeated-loop boundaries unchanged', () => {
+  for (const gridSize of [8, 16, 24]) {
+    const straight = core.normalizeSong(makeDemonstrationSong({ bpm: 123, gridSize }));
+    const swung = core.normalizeSong(makeDemonstrationSong({
+      bpm: 123,
+      gridSize,
+      swingPercent: 67,
+    }));
+    const beatSlots = gridSize / 4;
+    for (let beatIndex = 0; beatIndex <= 4; beatIndex += 1) {
+      assert.equal(
+        core.slotPositionSeconds(beatIndex * beatSlots, 123, gridSize, 67),
+        beatIndex * (60 / 123),
+      );
+    }
+    assert.equal(core.cycleDurationSeconds(swung), core.cycleDurationSeconds(straight));
+
+    const event = core.playableEvents(swung).at(-1);
+    const firstTime = core.eventTimeSeconds(12.345, 0, event, swung);
+    const distantTime = core.eventTimeSeconds(12.345, 999, event, swung);
+    assert.ok(Math.abs(
+      (distantTime - firstTime) - (999 * core.cycleDurationSeconds(swung)),
+    ) <= 0.000001);
+  }
+});
+
+test('the swung playhead converts audio time back to its source slot', () => {
+  for (const gridSize of [8, 16, 24]) {
+    const timeline = core.normalizeSong(makeDemonstrationSong({
+      bpm: 115,
+      gridSize,
+      swingPercent: 67,
+    }));
+    const positions = [0, 0.5, 1, (gridSize / 4) + 0.5, gridSize - 0.5];
+    for (const slotPosition of positions) {
+      const audioTime = 7 + core.slotPositionSeconds(slotPosition, 115, gridSize, 67);
+      const recovered = core.playheadSlotAtTime(7, audioTime, timeline);
+      assert.ok(Math.abs(recovered - slotPosition) <= 0.000001);
+    }
+  }
+});
+
 test('a 100 millisecond UI stall does not miss an event with the prototype horizon', () => {
   const timeline = core.normalizeSong(makeDemonstrationSong({ bpm: 300, gridSize: 24 }));
   const events = core.playableEvents(timeline);
@@ -349,6 +424,7 @@ test('the parser accepts whitespace, lowercase strums, and repeats in both secti
     count-in: 2
     tempo-ramp: off
     capo: 0
+    swing: off
 
     chords:
     | C G/B@8 | x2
@@ -412,7 +488,7 @@ test('the parser rejects unsupported modifiers and modifier order', () => {
     const result = parser.parseSongSource(source, { catalog });
     const error = result.errors.find((item) => item.code === 'strum_token_invalid');
     assert.ok(error, `${token} was not rejected`);
-    assert.equal(error.line, 11);
+    assert.equal(error.line, 12);
     assert.equal(error.section, 'strum');
     assert.equal(error.bar, 1);
     assert.equal(error.slot, 1);
@@ -443,7 +519,7 @@ test('the parser reports empty and incomplete input', () => {
   assert.equal(empty.errors[0].code, 'source_empty');
 
   const incomplete = parser.parseSongSource(
-    '4/4#8\nbpm: 100\ncount-in: 1\ntempo-ramp: off\ncapo: 0\nchords:',
+    '4/4#8\nbpm: 100\ncount-in: 1\ntempo-ramp: off\ncapo: 0\nswing: off\nchords:',
     { catalog },
   );
   assert.ok(incomplete.errors.some((error) => error.code === 'strum_section_missing'));
@@ -567,6 +643,38 @@ test('the parser rejects missing, duplicate, misplaced, and invalid capo directi
   }
 });
 
+test('the parser accepts disabled and numeric swing values', () => {
+  const disabled = parser.parseSongSource(validSource, { catalog });
+  assert.equal(disabled.ok, true);
+  assert.equal(disabled.song.swingPercent, null);
+
+  for (const swingPercent of [50, 67, 75]) {
+    const source = validSource.replace('swing: off', `swing: ${swingPercent}`);
+    const result = parser.parseSongSource(source, { catalog });
+    assert.equal(result.ok, true);
+    assert.equal(result.song.swingPercent, swingPercent);
+    assert.equal(core.normalizeSong(result.song).swingPercent, swingPercent);
+  }
+});
+
+test('the parser rejects missing, duplicate, misplaced, and invalid swing directives', () => {
+  const cases = [
+    [validSource.replace('swing: off\n', ''), 'swing_missing'],
+    [validSource.replace('chords:', 'swing: 60\nchords:'), 'swing_duplicate'],
+    [validSource.replace('strum:', 'swing: 60\nstrum:'), 'swing_duplicate'],
+    [validSource.replace('swing: off', 'swing: triplet'), 'swing_format'],
+    [validSource.replace('swing: off', 'swing: 67.5'), 'swing_format'],
+    [validSource.replace('swing: off', 'swing: 49'), 'swing_range'],
+    [validSource.replace('swing: off', 'swing: 76'), 'swing_range'],
+  ];
+  for (const [source, code] of cases) {
+    const result = parser.parseSongSource(source, { catalog });
+    const error = result.errors.find((item) => item.code === code);
+    assert.ok(error, `${code} was not reported`);
+    assert.equal(error.field, 'swing');
+  }
+});
+
 test('the parser expands xN to N total bars', () => {
   const result = parser.parseSongSource(validSource, { catalog });
   assert.equal(result.ok, true);
@@ -580,6 +688,7 @@ tempo: 100
 count-in: 1
 tempo-ramp: off
 capo: 0
+swing: off
 chords:
 | C |
 strum:
@@ -614,7 +723,7 @@ test('the parser rejects invalid chord-change slots with musical locations', () 
     const error = result.errors.find((item) => item.code === code);
     assert.ok(error, `${code} was not reported`);
     assert.equal(error.section, 'chords');
-    assert.equal(error.line, 8);
+    assert.equal(error.line, 9);
   }
 });
 
@@ -623,7 +732,7 @@ test('the parser rejects unsupported chords and reports their source bar', () =>
   const result = parser.parseSongSource(source, { catalog });
   const error = result.errors.find((item) => item.code === 'chord_unsupported');
   assert.ok(error);
-  assert.equal(error.line, 8);
+  assert.equal(error.line, 9);
   assert.equal(error.bar, 1);
   assert.equal(error.slot, 8);
 });
@@ -644,6 +753,7 @@ bpm: 100
 count-in: 1
 tempo-ramp: off
 capo: 0
+swing: off
 chords:
 | C | x999 | C | x2
 strum:
@@ -658,6 +768,7 @@ bpm: 100
 count-in: 1
 tempo-ramp: off
 capo: 0
+swing: off
 chords:
 | C | x999
 strum:
@@ -713,6 +824,19 @@ test('capo replacement preserves LF and CRLF line ends', () => {
   assert.equal(parser.replaceCapoDirective('capo: 0\ncapo: 1', '2'), null);
 });
 
+test('swing replacement preserves LF and CRLF line ends', () => {
+  assert.equal(
+    parser.replaceSwingDirective(validSource, '67'),
+    validSource.replace('swing: off', 'swing: 67'),
+  );
+  const crlfSource = validSource.replace(/\n/g, '\r\n');
+  assert.equal(
+    parser.replaceSwingDirective(crlfSource, '75'),
+    crlfSource.replace('swing: off', 'swing: 75'),
+  );
+  assert.equal(parser.replaceSwingDirective('swing: off\nswing: 60', '50'), null);
+});
+
 test('tempo-ramp enable and disable replacements preserve valid source', () => {
   const fixed135 = validSource.replace('bpm: 100', 'bpm: 135');
   const startingSource = parser.replaceBpmDirective(fixed135, '70');
@@ -755,14 +879,16 @@ test('count-in timing supports its full BPM and bar ranges', () => {
   assert.throws(() => core.createCountInEvents(120, 1, -1), /non-negative/);
 });
 
-test('musical content keys ignore BPM and include capo, grid, and event content', () => {
+test('musical content keys ignore BPM and include capo, swing, grid, and event content', () => {
   const first = parser.parseSongSource(validSource, { catalog }).song;
   const second = parser.parseSongSource(validSource.replace('bpm: 100', 'bpm: 140'), { catalog }).song;
   const changed = parser.parseSongSource(validSource.replace('G/B@8', 'D@8'), { catalog }).song;
   const capoChanged = parser.parseSongSource(validSource.replace('capo: 0', 'capo: 2'), { catalog }).song;
+  const swingChanged = parser.parseSongSource(validSource.replace('swing: off', 'swing: 60'), { catalog }).song;
   assert.equal(parser.musicalContentKey(first), parser.musicalContentKey(second));
   assert.notEqual(parser.musicalContentKey(first), parser.musicalContentKey(changed));
   assert.notEqual(parser.musicalContentKey(first), parser.musicalContentKey(capoChanged));
+  assert.notEqual(parser.musicalContentKey(first), parser.musicalContentKey(swingChanged));
 });
 
 test('playhead calculation preserves a paused musical position', () => {
@@ -836,7 +962,11 @@ test('the default tempo ramp starts at rounded half speed', () => {
 });
 
 test('loop tempo transitions use exact audio-clock boundaries', () => {
-  const baseTimeline = core.normalizeSong(makeDemonstrationSong({ bpm: 100, gridSize: 8 }));
+  const baseTimeline = core.normalizeSong(makeDemonstrationSong({
+    bpm: 100,
+    gridSize: 8,
+    swingPercent: 67,
+  }));
   const currentSegment = {
     timeline: baseTimeline,
     events: core.playableEvents(baseTimeline),
@@ -851,6 +981,7 @@ test('loop tempo transitions use exact audio-clock boundaries', () => {
   assert.ok(Math.abs(transition.boundary.audioTime - expectedBoundary) < 0.000001);
   assert.equal(transition.segment.originTime, transition.boundary.audioTime);
   assert.equal(transition.segment.timeline.bpm, 105);
+  assert.equal(transition.segment.timeline.swingPercent, 67);
 });
 
 test('completed-loop state supports pause, resume, and 1,000 loops', () => {
@@ -931,6 +1062,7 @@ test('the page contains valid sound-test tokens', () => {
   assert.match(html, /for="tempo-ramp-target"/);
   assert.match(html, /id="capo-fret"/);
   assert.match(html, /for="capo-fret"/);
+  assert.match(html, /<code>swing: off<\/code>/);
   const capoOptions = html.match(/<select id="capo-fret"[^>]*>([\s\S]*?)<\/select>/)[1];
   assert.equal([...capoOptions.matchAll(/<option /g)].length, 13);
 

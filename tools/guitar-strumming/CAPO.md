@@ -8,7 +8,7 @@ Keep the chord catalog unchanged.
 
 ## Source Form
 
-Require `capo:` exactly once after `tempo-ramp:` and before `chords:`.
+Require `capo:` exactly once after `tempo-ramp:` and before `swing:`.
 
 Use a whole number from 0 through 12.
 

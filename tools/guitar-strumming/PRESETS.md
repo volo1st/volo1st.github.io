@@ -46,7 +46,7 @@ The initial catalog contains four original entries and two short user transcript
 
 The expressive feature demo is the former page example and the default preset.
 
-Current pre-release preset sources include `capo: 0`.
+Current pre-release preset sources include `capo: 0` and `swing: off`.
 
 Show each teaching goal below the Preset dropdown.
 

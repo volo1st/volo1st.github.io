@@ -70,7 +70,7 @@
     if (!capoEntry || !/^capo\s*:/.test(capoEntry.text)) {
       addError(
         errors,
-        !capoEntry || capoEntry.text === 'chords:'
+        !capoEntry || capoEntry.text === 'chords:' || /^swing\s*:/.test(capoEntry.text)
           ? 'capo_missing'
           : directiveCode(capoEntry && capoEntry.text),
         capoEntry ? capoEntry.line : null,
@@ -84,18 +84,39 @@
     }
     const capoFret = parseCapo(capoEntry, errors);
 
-    if (!lines[5] || lines[5].text !== 'chords:') {
-      const entry = lines[5] || lines.at(-1);
+    const swingEntry = lines[5];
+    if (!swingEntry || !/^swing\s*:/.test(swingEntry.text)) {
+      addError(
+        errors,
+        !swingEntry || swingEntry.text === 'chords:'
+          ? 'swing_missing'
+          : directiveCode(swingEntry && swingEntry.text),
+        swingEntry ? swingEntry.line : null,
+        null,
+        null,
+        null,
+        'swing',
+        'Expected swing: off or a whole number from 50 through 75 after capo.',
+      );
+      return makeResult(null, errors);
+    }
+    const swingPercent = parseSwing(swingEntry, errors);
+
+    if (!lines[6] || lines[6].text !== 'chords:') {
+      const entry = lines[6] || lines.at(-1);
       const isDuplicateCountIn = entry && /^count-in\s*:/.test(entry.text);
       const isDuplicateTempoRamp = entry && /^tempo-ramp\s*:/.test(entry.text);
       const isDuplicateCapo = entry && /^capo\s*:/.test(entry.text);
+      const isDuplicateSwing = entry && /^swing\s*:/.test(entry.text);
       addError(
         errors,
         isDuplicateCountIn
           ? 'count_in_duplicate'
           : (isDuplicateTempoRamp
             ? 'tempo_ramp_duplicate'
-            : (isDuplicateCapo ? 'capo_duplicate' : directiveCode(entry && entry.text))),
+            : (isDuplicateCapo
+              ? 'capo_duplicate'
+              : (isDuplicateSwing ? 'swing_duplicate' : directiveCode(entry && entry.text)))),
         entry ? entry.line : sourceLines.length,
         null,
         null,
@@ -104,20 +125,22 @@
           ? 'count-in'
           : (isDuplicateTempoRamp
             ? 'tempo-ramp'
-            : (isDuplicateCapo ? 'capo' : 'document')),
+            : (isDuplicateCapo ? 'capo' : (isDuplicateSwing ? 'swing' : 'document'))),
         isDuplicateCountIn
           ? 'The count-in: directive can occur only once.'
           : (isDuplicateTempoRamp
             ? 'The tempo-ramp: directive can occur only once.'
             : (isDuplicateCapo
               ? 'The capo: directive can occur only once.'
-              : 'Expected chords: after the capo directive.')),
+              : (isDuplicateSwing
+                ? 'The swing: directive can occur only once.'
+                : 'Expected chords: after the swing directive.'))),
       );
       return makeResult(null, errors);
     }
 
     const strumLabelIndex = lines.findIndex((entry, index) => (
-      index > 5 && entry.text === 'strum:'
+      index > 6 && entry.text === 'strum:'
     ));
     if (strumLabelIndex === -1) {
       addError(
@@ -133,7 +156,7 @@
       return makeResult(null, errors);
     }
 
-    const duplicateChordLabel = lines.find((entry, index) => index > 5 && entry.text === 'chords:');
+    const duplicateChordLabel = lines.find((entry, index) => index > 6 && entry.text === 'chords:');
     if (duplicateChordLabel) {
       addError(
         errors,
@@ -162,13 +185,13 @@
       );
     }
 
-    const chordLines = lines.slice(6, strumLabelIndex);
+    const chordLines = lines.slice(7, strumLabelIndex);
     const strumLines = lines.slice(strumLabelIndex + 1);
     if (chordLines.length === 0) {
       addError(
         errors,
         'chords_section_empty',
-        lines[5].line,
+        lines[6].line,
         'chords',
         null,
         null,
@@ -224,6 +247,7 @@
       || countInBars === null
       || tempoRamp === null
       || capoFret === null
+      || swingPercent === undefined
     ) {
       return makeResult(null, errors);
     }
@@ -233,6 +257,7 @@
       countInBars,
       tempoRamp,
       capoFret,
+      swingPercent,
       gridSize,
       chordBars: Object.freeze(chordBars.map((bar) => Object.freeze(bar.changes))),
       strumBars: Object.freeze(strumBars.map((bar) => Object.freeze(bar.tokens))),
@@ -561,6 +586,52 @@
     return capoFret;
   }
 
+  function parseSwing(entry, errors) {
+    const match = entry.text.match(/^swing\s*:\s*(\S+)$/);
+    if (!match) {
+      addError(
+        errors,
+        'swing_format',
+        entry.line,
+        null,
+        null,
+        null,
+        'swing',
+        'Use swing: off or a whole number from 50 through 75.',
+      );
+      return undefined;
+    }
+    if (match[1] === 'off') return null;
+    if (!/^\d+$/.test(match[1])) {
+      addError(
+        errors,
+        'swing_format',
+        entry.line,
+        null,
+        null,
+        null,
+        'swing',
+        'Swing must be off or a whole number from 50 through 75.',
+      );
+      return undefined;
+    }
+    const swingPercent = Number(match[1]);
+    if (swingPercent < 50 || swingPercent > 75) {
+      addError(
+        errors,
+        'swing_range',
+        entry.line,
+        null,
+        null,
+        null,
+        'swing',
+        'Swing must be from 50 through 75.',
+      );
+      return undefined;
+    }
+    return swingPercent;
+  }
+
   function parseSectionBars(options) {
     const { lines, section, gridSize, catalog, errors } = options;
     const bars = [];
@@ -583,6 +654,7 @@
         const isDuplicateCountIn = /^count-in\s*:/.test(text.slice(cursor));
         const isDuplicateTempoRamp = /^tempo-ramp\s*:/.test(text.slice(cursor));
         const isDuplicateCapo = /^capo\s*:/.test(text.slice(cursor));
+        const isDuplicateSwing = /^swing\s*:/.test(text.slice(cursor));
         addError(
           errors,
           isComment
@@ -593,7 +665,9 @@
                 ? 'tempo_ramp_duplicate'
                 : (isDuplicateCapo
                   ? 'capo_duplicate'
-                  : (looksLikeDirective ? 'unknown_directive' : 'bar_syntax')))),
+                  : (isDuplicateSwing
+                    ? 'swing_duplicate'
+                    : (looksLikeDirective ? 'unknown_directive' : 'bar_syntax'))))),
           entry.line,
           section,
           bars.length + 1,
@@ -602,7 +676,7 @@
             ? 'count-in'
             : (isDuplicateTempoRamp
               ? 'tempo-ramp'
-              : (isDuplicateCapo ? 'capo' : 'bar')),
+              : (isDuplicateCapo ? 'capo' : (isDuplicateSwing ? 'swing' : 'bar'))),
           isComment
             ? 'Comments are not supported.'
             : (isDuplicateCountIn
@@ -611,7 +685,9 @@
                 ? 'The tempo-ramp: directive can occur only once.'
                 : (isDuplicateCapo
                   ? 'The capo: directive can occur only once.'
-                  : 'Each section line must contain one or more | ... | bars.'))),
+                  : (isDuplicateSwing
+                    ? 'The swing: directive can occur only once.'
+                    : 'Each section line must contain one or more | ... | bars.')))),
         );
         return;
       }
@@ -923,6 +999,10 @@
     return replaceDirectiveValue(source, 'capo', replacementValue);
   }
 
+  function replaceSwingDirective(source, replacementValue) {
+    return replaceDirectiveValue(source, 'swing', replacementValue);
+  }
+
   function replaceDirectiveValue(source, directiveName, replacementValue) {
     const sourceText = String(source);
     const newline = sourceText.includes('\r\n') ? '\r\n' : '\n';
@@ -947,6 +1027,7 @@
     return JSON.stringify({
       gridSize: song.gridSize,
       capoFret: song.capoFret,
+      swingPercent: song.swingPercent,
       chordBars: song.chordBars,
       strumBars: song.strumBars,
     });
@@ -1009,6 +1090,7 @@
     replaceBpmDirective,
     replaceCapoDirective,
     replaceCountInDirective,
+    replaceSwingDirective,
     replaceTempoRampDirective,
   });
 }));

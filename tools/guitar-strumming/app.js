@@ -747,7 +747,6 @@
     const playbackTimeline = parsedSong.tempoRamp.enabled
       ? core.timelineWithBpm(parsedTimeline, rampCurrentBpm)
       : parsedTimeline;
-    const slotDuration = core.slotDurationSeconds(playbackTimeline.bpm, playbackTimeline.gridSize);
     const normalizedSourceSlot = sourceSlot % playbackTimeline.durationSlots;
     const events = core.playableEvents(playbackTimeline);
     const countInBars = useCountIn ? parsedSong.countInBars : 0;
@@ -767,7 +766,12 @@
     activeSegment = {
       timeline: playbackTimeline,
       events,
-      originTime: startTime - (normalizedSourceSlot * slotDuration),
+      originTime: startTime - core.slotPositionSeconds(
+        normalizedSourceSlot,
+        playbackTimeline.bpm,
+        playbackTimeline.gridSize,
+        playbackTimeline.swingPercent,
+      ),
       cursor: core.createScheduleCursorAtPosition(events, normalizedSourceSlot),
       completedLoopsAtOrigin: rampCompletedLoops,
     };
@@ -1087,6 +1091,9 @@
       parsedSong.capoFret === 0
         ? 'Capo is off.'
         : `Capo fret ${parsedSong.capoFret}.`,
+      parsedSong.swingPercent === null
+        ? 'Swing is off.'
+        : `Swing is ${parsedSong.swingPercent} percent.`,
       'Looping is on.',
     ].join(' ');
   }

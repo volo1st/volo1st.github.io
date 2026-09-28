@@ -91,6 +91,7 @@ bpm: <number>
 count-in: <bars>
 tempo-ramp: <value>
 capo: <fret>
+swing: <value>
 ```
 
 The header must be the first non-blank line.
@@ -103,11 +104,13 @@ The `tempo-ramp:` directive must be the next non-blank line after `count-in:`.
 
 The `capo:` directive must be the next non-blank line after `tempo-ramp:`.
 
+The `swing:` directive must be the next non-blank line after `capo:`.
+
 Example meanings:
 
-- `4/4#8` = 4/4 time with 8 equal slots per bar
-- `4/4#16` = 4/4 time with 16 equal slots per bar
-- `4/4#24` = 4/4 time with 24 equal slots per bar
+- `4/4#8` = 4/4 time with 8 slot positions per bar
+- `4/4#16` = 4/4 time with 16 slot positions per bar
+- `4/4#24` = 4/4 time with 24 slot positions per bar
 
 The MVP supports only 4/4 time.
 
@@ -125,9 +128,11 @@ Each bar uses the same grid size.
 
 `capo:` defines how many semitones the capo raises each played string.
 
+`swing:` defines the timing ratio for each pair of eighth notes.
+
 One 4/4 bar lasts four beats.
 
-The duration of one slot is the bar duration divided by `grid-size`.
+When swing is off, the duration of one slot is the bar duration divided by `grid-size`.
 
 ---
 
@@ -231,6 +236,7 @@ bpm: 138
 count-in: 1
 tempo-ramp: off
 capo: 0
+swing: off
 
 chords:
 | C D@8 | D | G Em@8 | Em |
@@ -366,7 +372,7 @@ The parser must:
 
 - ignore extra spaces
 - ignore blank lines
-- require the header, `bpm:`, `count-in:`, `tempo-ramp:`, `capo:`, `chords:`, and `strum:` in that order
+- require the header, `bpm:`, `count-in:`, `tempo-ramp:`, `capo:`, `swing:`, `chords:`, and `strum:` in that order
 - require each directive and section label exactly once
 - treat directive and section-label text as case-sensitive
 - treat `D` and `U` case-insensitively
@@ -1033,6 +1039,44 @@ Do not add transposition, automatic chord-name conversion, alternate tuning, or 
 
 Verification evidence: The automated parser, timeline, pitch, preset, and interface checks passed on 2026-09-28. The user confirmed source and dropdown synchronization, audible pitch changes, unchanged chord names, playback reset, fixed and ramped tempo playback, keyboard use, and responsive layout.
 
+## 11.9 Swing
+
+Status: Implemented on 2026-09-28. Manual verification is pending.
+
+Require this directive after `capo:` and before `chords:`:
+
+```text
+swing: <value>
+```
+
+Use `off` or a whole-number percent from 50 through 75.
+
+Treat the percentage as the part of each quarter-note beat assigned to the first eighth note.
+
+Assign the remaining percentage to the second eighth note.
+
+Use 50 for straight eighth notes.
+
+Use 67 for an approximate two-to-one triplet feel.
+
+For 16-slot and 24-slot grids, divide each eighth-note part equally among its smaller slots.
+
+Keep beat, bar, loop, and tempo-ramp boundary durations unchanged.
+
+Keep the source text as the only swing control in this package.
+
+Do not add per-bar swing, humanization, random timing, accent changes, or genre presets.
+
+Replace current pre-release preset sources in place with `swing: off`.
+
+Old pre-release raw and gzip source links without `swing:` can become invalid.
+
+Do not add compatibility handling until the owner explicitly declares the `v1.0.0` release.
+
+Automated evidence: The repository check passed on 2026-09-28. It covered parser failures, straight-time equivalence, all supported grids, fixed audio-clock timing through 1,000 loops, unchanged timing boundaries, playhead conversion, presets, and format help.
+
+Manual evidence: Pending verification on iPhone Safari and desktop Chrome.
+
 ---
 
 # 12. MVP Acceptance Criteria
@@ -1190,7 +1234,7 @@ Status: Decided.
 
 Status: Decided.
 
-- Require the header, `bpm:`, `count-in:`, `tempo-ramp:`, `capo:`, `chords:`, and `strum:` in that order.
+- Require the header, `bpm:`, `count-in:`, `tempo-ramp:`, `capo:`, `swing:`, `chords:`, and `strum:` in that order.
 - Require each directive and section label exactly once.
 - Use exact lowercase directive and section-label text.
 - Ignore blank lines and extra spaces.
