@@ -71,8 +71,8 @@ Manually verify:
 
 ## Completion Status
 
-Status: Implemented. Manual verification is pending.
+Status: Complete.
 
 Automated evidence: The repository check passed on 2026-09-28. It covered the standard options, labels, help reference, custom-value logic, source replacement, disabled-state code, responsive styles, and all existing tests.
 
-Manual evidence: Pending browser verification.
+Manual evidence: The user confirmed on 2026-09-28 that the Swing control worked well in the browser test.

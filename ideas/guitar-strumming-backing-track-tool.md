@@ -1079,7 +1079,7 @@ Manual evidence: The user confirmed that the swing playback sounded correct in t
 
 ## 11.10 Swing Control
 
-Status: Implemented on 2026-09-28. Manual verification is pending.
+Status: Implemented and verified on 2026-09-28.
 
 Add a Swing dropdown to the Practice section.
 
@@ -1101,7 +1101,7 @@ Keep the textarea as the single source of truth.
 
 Automated evidence: The repository check passed on 2026-09-28. It covered the standard options, labels, help reference, custom-value logic, source replacement, disabled-state code, responsive styles, and all existing tests.
 
-Manual evidence: Pending browser verification.
+Manual evidence: The user confirmed that the Swing control worked well in the browser test.
 
 ---
 
