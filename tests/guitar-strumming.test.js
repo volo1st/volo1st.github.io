@@ -34,6 +34,7 @@ function makeDemonstrationSong({ bpm = 100, gridSize = 8 } = {}) {
 
 const validSource = `4/4#8
 bpm: 100
+count-in: 1
 
 chords:
 | C G/B@8 | G/B | Am F@8 | F |
@@ -144,6 +145,7 @@ test('the parser accepts whitespace, lowercase strums, and repeats in both secti
   const source = `
     4/4 # 8
     bpm: 120
+    count-in: 2
 
     chords:
     | C G/B@8 | x2
@@ -154,6 +156,7 @@ test('the parser accepts whitespace, lowercase strums, and repeats in both secti
   const result = parser.parseSongSource(source, { catalog });
   assert.equal(result.ok, true);
   assert.equal(result.song.bpm, 120);
+  assert.equal(result.song.countInBars, 2);
   assert.equal(result.song.gridSize, 8);
   assert.equal(result.song.chordBars.length, 2);
   assert.equal(result.song.strumBars.length, 2);
@@ -170,8 +173,35 @@ test('the parser reports empty and incomplete input', () => {
   const empty = parser.parseSongSource('  \n', { catalog });
   assert.equal(empty.errors[0].code, 'source_empty');
 
-  const incomplete = parser.parseSongSource('4/4#8\nbpm: 100\nchords:', { catalog });
+  const incomplete = parser.parseSongSource(
+    '4/4#8\nbpm: 100\ncount-in: 1\nchords:',
+    { catalog },
+  );
   assert.ok(incomplete.errors.some((error) => error.code === 'strum_section_missing'));
+});
+
+test('the parser accepts count-in values 0, 1, and 2', () => {
+  for (const countInBars of [0, 1, 2]) {
+    const source = validSource.replace('count-in: 1', `count-in: ${countInBars}`);
+    const result = parser.parseSongSource(source, { catalog });
+    assert.equal(result.ok, true);
+    assert.equal(result.song.countInBars, countInBars);
+  }
+});
+
+test('the parser rejects missing, duplicate, malformed, and out-of-range count-in directives', () => {
+  const cases = [
+    [validSource.replace('count-in: 1\n', ''), 'count_in_missing'],
+    [validSource.replace('chords:', 'count-in: 2\nchords:'), 'count_in_duplicate'],
+    [validSource.replace('count-in: 1', 'count-in: one'), 'count_in_format'],
+    [validSource.replace('count-in: 1', 'count-in: 3'), 'count_in_range'],
+  ];
+  for (const [source, code] of cases) {
+    const result = parser.parseSongSource(source, { catalog });
+    const error = result.errors.find((item) => item.code === code);
+    assert.ok(error, `${code} was not reported`);
+    assert.equal(error.field, 'count-in');
+  }
 });
 
 test('the parser expands xN to N total bars', () => {
@@ -184,6 +214,7 @@ test('the parser expands xN to N total bars', () => {
 test('the parser rejects document-order and unknown-directive errors', () => {
   const wrongOrder = parser.parseSongSource(`4/4#8
 tempo: 100
+count-in: 1
 chords:
 | C |
 strum:
@@ -218,7 +249,7 @@ test('the parser rejects invalid chord-change slots with musical locations', () 
     const error = result.errors.find((item) => item.code === code);
     assert.ok(error, `${code} was not reported`);
     assert.equal(error.section, 'chords');
-    assert.equal(error.line, 5);
+    assert.equal(error.line, 6);
   }
 });
 
@@ -227,7 +258,7 @@ test('the parser rejects unsupported chords and reports their source bar', () =>
   const result = parser.parseSongSource(source, { catalog });
   const error = result.errors.find((item) => item.code === 'chord_unsupported');
   assert.ok(error);
-  assert.equal(error.line, 5);
+  assert.equal(error.line, 6);
   assert.equal(error.bar, 1);
   assert.equal(error.slot, 8);
 });
@@ -245,6 +276,7 @@ test('the parser rejects repeat and expanded bar-count limits', () => {
 
   const overflowSource = `4/4#8
 bpm: 100
+count-in: 1
 chords:
 | C | x999 | C | x2
 strum:
@@ -256,6 +288,7 @@ strum:
 test('the parser accepts the maximum single repeat count', () => {
   const source = `4/4#8
 bpm: 100
+count-in: 1
 chords:
 | C | x999
 strum:
@@ -275,6 +308,37 @@ test('BPM replacement changes only the BPM directive value and preserves line en
   const replaced = parser.replaceBpmDirective(crlfSource, '138');
   assert.equal(replaced, crlfSource.replace('bpm: 100', 'bpm: 138'));
   assert.equal(parser.replaceBpmDirective('4/4#8\nchords:', '100'), null);
+});
+
+test('count-in replacement changes only its value and preserves line ends', () => {
+  const crlfSource = validSource.replace(/\n/g, '\r\n');
+  const replaced = parser.replaceCountInDirective(crlfSource, '2');
+  assert.equal(replaced, crlfSource.replace('count-in: 1', 'count-in: 2'));
+  assert.equal(parser.replaceCountInDirective('4/4#8\nbpm: 100\nchords:', '1'), null);
+  assert.equal(
+    parser.replaceCountInDirective('count-in: 1\ncount-in: 2', '0'),
+    null,
+  );
+});
+
+test('count-in events use exact quarter-note timing and accent beat 1', () => {
+  const events = core.createCountInEvents(120, 2, 10);
+  assert.equal(events.length, 8);
+  assert.deepEqual(
+    events.filter((event) => event.accented).map((event) => event.absoluteBeatIndex),
+    [0, 4],
+  );
+  assert.deepEqual(events.map((event) => event.eventTime), [10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5]);
+  assert.equal(core.countInDurationSeconds(120, 2), 4);
+  assert.equal(10 + core.countInDurationSeconds(120, 2), 14);
+});
+
+test('count-in timing supports its full BPM and bar ranges', () => {
+  assert.equal(core.createCountInEvents(30, 0, 0).length, 0);
+  assert.equal(core.countInDurationSeconds(30, 2), 16);
+  assert.equal(core.countInDurationSeconds(300, 1), 0.8);
+  assert.throws(() => core.createCountInEvents(120, 3, 0), /0, 1, or 2/);
+  assert.throws(() => core.createCountInEvents(120, 1, -1), /non-negative/);
 });
 
 test('musical content keys ignore BPM and include grid and event content', () => {

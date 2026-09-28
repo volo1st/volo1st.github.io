@@ -29,6 +29,7 @@
       </p>
       <textarea id="song-source" aria-describedby="source-help validation-summary" spellcheck="false">4/4#8
 bpm: 100
+count-in: 1
 
 chords:
 | C G/B@8 | G/B | Am F@8 | F |
@@ -59,6 +60,17 @@ strum:
       <p class="help-text">A tempo change during playback starts at the next bar.</p>
     </section>
 
+    <section aria-labelledby="practice-heading">
+      <h2 id="practice-heading">Practice</h2>
+      <label for="count-in">Count-in</label>
+      <select id="count-in">
+        <option value="0">Off</option>
+        <option value="1" selected>1 bar</option>
+        <option value="2">2 bars</option>
+      </select>
+      <p class="help-text">The count-in plays before a fresh start. It does not repeat with the loop.</p>
+    </section>
+
     <section aria-labelledby="playback-heading">
       <h2 id="playback-heading">Playback</h2>
       <p id="song-summary">No playable song is available.</p>
@@ -74,6 +86,7 @@ strum:
 
     <details>
       <summary>Format and supported chords</summary>
+      <p>Use <code>count-in: 0</code>, <code>1</code>, or <code>2</code> after the BPM directive.</p>
       <p>Use <code>D</code> for a downstroke, <code>U</code> for an upstroke, and <code>-</code> for no strum.</p>
       <p>Use <code>Chord@N</code> for a chord change at slot N. The change occurs before a strum at the same slot.</p>
       <p>Use <code>xN</code> after one bar to repeat that bar N times in total.</p>

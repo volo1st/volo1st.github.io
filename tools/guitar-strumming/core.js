@@ -19,11 +19,48 @@
   }
 
   function requireValidTiming(bpm, gridSize) {
+    requireValidBpm(bpm);
+    if (!VALID_GRID_SIZES.includes(gridSize)) {
+      throw new RangeError('Grid size must be 8, 16, or 24.');
+    }
+  }
+
+  function requireValidBpm(bpm) {
     if (!Number.isInteger(bpm) || bpm < 30 || bpm > 300) {
       throw new RangeError('BPM must be a whole number from 30 through 300.');
     }
-    if (!VALID_GRID_SIZES.includes(gridSize)) {
-      throw new RangeError('Grid size must be 8, 16, or 24.');
+  }
+
+  function countInDurationSeconds(bpm, countInBars) {
+    requireValidBpm(bpm);
+    requireValidCountInBars(countInBars);
+    return countInBars * 4 * (60 / bpm);
+  }
+
+  function createCountInEvents(bpm, countInBars, startTime) {
+    requireValidBpm(bpm);
+    requireValidCountInBars(countInBars);
+    if (!Number.isFinite(startTime) || startTime < 0) {
+      throw new RangeError('Count-in start time must be a non-negative number.');
+    }
+    const beatDuration = 60 / bpm;
+    const events = [];
+    for (let absoluteBeatIndex = 0; absoluteBeatIndex < countInBars * 4; absoluteBeatIndex += 1) {
+      const beatIndex = (absoluteBeatIndex % 4) + 1;
+      events.push(Object.freeze({
+        absoluteBeatIndex,
+        barIndex: Math.floor(absoluteBeatIndex / 4) + 1,
+        beatIndex,
+        accented: beatIndex === 1,
+        eventTime: startTime + (absoluteBeatIndex * beatDuration),
+      }));
+    }
+    return Object.freeze(events);
+  }
+
+  function requireValidCountInBars(countInBars) {
+    if (!Number.isInteger(countInBars) || countInBars < 0 || countInBars > 2) {
+      throw new RangeError('Count-in must be 0, 1, or 2 bars.');
     }
   }
 
@@ -276,6 +313,8 @@
     OPEN_STRING_MIDI,
     VALID_GRID_SIZES,
     collectScheduleBatch,
+    countInDurationSeconds,
+    createCountInEvents,
     createScheduleCursor,
     createScheduleCursorAtPosition,
     createTempoTransition,

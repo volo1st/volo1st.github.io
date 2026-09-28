@@ -6,6 +6,7 @@
 
   const BUFFER_VARIATION_COUNT = 3;
   const PLUCK_DURATION_SECONDS = 2.4;
+  const COUNT_IN_CLICK_DURATION_SECONDS = 0.055;
   const RESUME_TIMEOUT_MILLISECONDS = 2000;
 
   function isSupported() {
@@ -89,6 +90,38 @@
         const midiNote = stringPitches[stringIndex];
         this.playString(midiNote, when + (attackIndex * stringDelay), velocity, when);
       });
+    }
+
+    playCountInClick(when, accented) {
+      if (!this.context || this.context.state !== 'running') {
+        throw new Error('The audio context is not running.');
+      }
+      const source = this.context.createOscillator();
+      const gain = this.context.createGain();
+      const velocity = accented ? 0.18 : 0.11;
+
+      source.type = 'triangle';
+      source.frequency.setValueAtTime(accented ? 1320 : 880, when);
+      gain.gain.setValueAtTime(0.0001, when);
+      gain.gain.exponentialRampToValueAtTime(velocity, when + 0.002);
+      gain.gain.exponentialRampToValueAtTime(
+        0.0001,
+        when + COUNT_IN_CLICK_DURATION_SECONDS,
+      );
+
+      source.connect(gain);
+      gain.connect(this.masterGain);
+
+      const voice = { source, gain, scheduledEventTime: when };
+      this.activeVoices.add(voice);
+      source.addEventListener('ended', () => {
+        source.disconnect();
+        gain.disconnect();
+        this.activeVoices.delete(voice);
+      }, { once: true });
+
+      source.start(when);
+      source.stop(when + COUNT_IN_CLICK_DURATION_SECONDS + 0.01);
     }
 
     playString(midiNote, when, velocity, scheduledEventTime) {

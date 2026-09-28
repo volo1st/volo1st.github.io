@@ -86,7 +86,8 @@ textarea {
   background: #fff;
 }
 
-input[type="number"] {
+input[type="number"],
+select {
   width: 8rem;
   min-height: 2.75rem;
   padding: 0.5rem;
@@ -102,6 +103,7 @@ input[type="range"] {
 
 textarea:focus-visible,
 input:focus-visible,
+select:focus-visible,
 summary:focus-visible,
 button:focus-visible {
   outline: 3px solid #d78300;

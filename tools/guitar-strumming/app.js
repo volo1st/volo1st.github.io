@@ -14,6 +14,7 @@
     source: document.getElementById('song-source'),
     bpmNumber: document.getElementById('bpm-number'),
     bpmRange: document.getElementById('bpm-range'),
+    countIn: document.getElementById('count-in'),
     validationSummary: document.getElementById('validation-summary'),
     validationErrors: document.getElementById('validation-errors'),
     songSummary: document.getElementById('song-summary'),
@@ -35,6 +36,8 @@
   let schedulerTimer = null;
   let requestGeneration = 0;
   let skippedLateStrums = 0;
+  let countInEndTime = null;
+  let countInRequired = false;
 
   function initialize() {
     if (!core || !parser || !catalog || !audioApi) {
@@ -48,6 +51,9 @@
     });
     elements.bpmRange.addEventListener('input', () => {
       updateBpmFromControl(elements.bpmRange.value);
+    });
+    elements.countIn.addEventListener('change', () => {
+      updateCountInFromControl(elements.countIn.value);
     });
     elements.playPause.addEventListener('click', handlePlayPause);
     elements.restart.addEventListener('click', restartPlayback);
@@ -74,6 +80,8 @@
       musicalContentKey = null;
       lastValidSource = null;
       haltPlayback({ resetPosition: true });
+      countInRequired = false;
+      elements.countIn.value = '';
       renderValidationErrors(result.errors);
       renderSongSummary();
       setPlaybackStatus(
@@ -94,6 +102,8 @@
       musicalContentKey = null;
       lastValidSource = null;
       haltPlayback({ resetPosition: true });
+      countInRequired = false;
+      elements.countIn.value = '';
       renderValidationErrors([{
         code: 'timeline_error',
         line: null,
@@ -129,18 +139,31 @@
     renderValidationErrors([]);
     renderSongSummary();
     synchronizeBpmControls(result.song.bpm);
+    synchronizeCountInControl(result.song.countInBars);
 
     if (sourceChanged && bpmOnlyChange) {
       if (playbackState === 'playing') {
-        requestTempoChange(nextTimeline);
+        if (countInEndTime !== null) {
+          haltPlayback({ resetPosition: true });
+          countInRequired = parsedSong.countInBars > 0;
+          setPlaybackStatus('BPM changed. Press Play to start the new count-in.');
+        } else {
+          requestTempoChange(nextTimeline);
+        }
       } else {
         setPlaybackStatus(`BPM is ${result.song.bpm}. Press Play when you are ready.`);
       }
     } else if (sourceChanged) {
       haltPlayback({ resetPosition: true });
+      countInRequired = parsedSong.countInBars > 0;
       setPlaybackStatus('The source changed. Playback is ready at bar 1, slot 1.');
     } else if (origin === 'initial') {
+      countInRequired = parsedSong.countInBars > 0;
       setPlaybackStatus('The song is valid. Press Play when you are ready.');
+    } else if (!previousSong) {
+      haltPlayback({ resetPosition: true });
+      countInRequired = parsedSong.countInBars > 0;
+      setPlaybackStatus('The song is valid. Playback is ready at bar 1, slot 1.');
     } else if (origin === 'bpm-control') {
       setPlaybackStatus(`BPM is ${result.song.bpm}. Press Play when you are ready.`);
     }
@@ -163,6 +186,22 @@
     elements.bpmRange.value = String(bpm);
   }
 
+  function updateCountInFromControl(rawValue) {
+    const previousValue = parsedSong ? String(parsedSong.countInBars) : '';
+    const updatedSource = parser.replaceCountInDirective(elements.source.value, rawValue);
+    if (updatedSource === null) {
+      elements.countIn.value = previousValue;
+      setPlaybackStatus('Fix the count-in: directive before you use the Count-in control.');
+      return;
+    }
+    elements.source.value = updatedSource;
+    validateSource('count-in-control');
+  }
+
+  function synchronizeCountInControl(countInBars) {
+    elements.countIn.value = String(countInBars);
+  }
+
   async function handlePlayPause() {
     if (playbackState === 'playing') {
       pausePlayback('Playback paused.');
@@ -180,8 +219,9 @@
       const engine = getAudioEngine();
       const context = await engine.ensureRunning();
       if (requestId !== requestGeneration) return;
-      beginPlaybackAtPosition(context, playheadSlot);
-      setPlaybackStatus('Playing. The song will loop.');
+      const useCountIn = countInRequired && playheadSlot === 0;
+      const countInBars = beginPlaybackAtPosition(context, playheadSlot, useCountIn);
+      setPlaybackStartStatus(countInBars);
     } catch (error) {
       haltPlayback({ resetPosition: false });
       setPlaybackStatus(`Audio did not start. ${error.message}`);
@@ -193,12 +233,25 @@
     }
   }
 
-  function beginPlaybackAtPosition(context, sourceSlot) {
+  function beginPlaybackAtPosition(context, sourceSlot, useCountIn) {
     clearSchedulerTimer();
     const slotDuration = core.slotDurationSeconds(parsedTimeline.bpm, parsedTimeline.gridSize);
     const normalizedSourceSlot = sourceSlot % parsedTimeline.durationSlots;
     const events = core.playableEvents(parsedTimeline);
-    const startTime = context.currentTime + START_LEAD_SECONDS;
+    const countInBars = useCountIn ? parsedSong.countInBars : 0;
+    const countInStartTime = context.currentTime + START_LEAD_SECONDS;
+    const countInEvents = core.createCountInEvents(
+      parsedTimeline.bpm,
+      countInBars,
+      countInStartTime,
+    );
+    for (const event of countInEvents) {
+      audioEngine.playCountInClick(event.eventTime, event.accented);
+    }
+    const startTime = countInStartTime + core.countInDurationSeconds(
+      parsedTimeline.bpm,
+      countInBars,
+    );
     activeSegment = {
       timeline: parsedTimeline,
       events,
@@ -206,12 +259,15 @@
       cursor: core.createScheduleCursorAtPosition(events, normalizedSourceSlot),
     };
     pendingTransition = null;
+    countInEndTime = countInBars > 0 ? startTime : null;
+    countInRequired = false;
     playheadSlot = normalizedSourceSlot;
     skippedLateStrums = 0;
     playbackState = 'playing';
     pumpScheduler();
     schedulerTimer = root.setInterval(pumpScheduler, SCHEDULER_INTERVAL_MILLISECONDS);
     updateControls();
+    return countInBars;
   }
 
   function pausePlayback(message) {
@@ -228,6 +284,7 @@
     if (audioEngine) audioEngine.stopAll();
     activeSegment = null;
     pendingTransition = null;
+    countInEndTime = null;
     playbackState = 'paused';
     setPlaybackStatus(message);
     updateControls();
@@ -239,6 +296,7 @@
     if (audioEngine) audioEngine.stopAll();
     activeSegment = null;
     pendingTransition = null;
+    countInEndTime = null;
     playbackState = 'paused';
     if (options.resetPosition) playheadSlot = 0;
     updateControls();
@@ -248,11 +306,12 @@
     if (!parsedTimeline || !audioSupported || playbackState === 'starting') return;
     playheadSlot = 0;
     pendingTransition = null;
+    countInRequired = parsedSong.countInBars > 0;
     if (audioEngine) audioEngine.stopAll();
 
     if (playbackState === 'playing' && audioEngine && audioEngine.context) {
-      beginPlaybackAtPosition(audioEngine.context, 0);
-      setPlaybackStatus('Playback restarted at bar 1, slot 1.');
+      const countInBars = beginPlaybackAtPosition(audioEngine.context, 0, countInRequired);
+      setPlaybackStartStatus(countInBars);
     } else {
       activeSegment = null;
       setPlaybackStatus('Ready at bar 1, slot 1.');
@@ -290,6 +349,10 @@
 
     try {
       const now = audioEngine.context.currentTime;
+      if (countInEndTime !== null && now >= countInEndTime - BOUNDARY_EPSILON_SECONDS) {
+        countInEndTime = null;
+        setPlaybackStatus('Playing. The song will loop.');
+      }
       promoteTempoTransition(now);
       const horizonTime = now + SCHEDULE_AHEAD_SECONDS;
 
@@ -411,6 +474,9 @@
       `${parsedSong.chordBars.length} bars.`,
       `Grid size ${parsedSong.gridSize}.`,
       `${parsedSong.bpm} beats per minute.`,
+      parsedSong.countInBars === 0
+        ? 'Count-in is off.'
+        : `${parsedSong.countInBars}-bar count-in.`,
       'Looping is on.',
     ].join(' ');
   }
@@ -430,11 +496,21 @@
     elements.restart.disabled = true;
     elements.bpmNumber.disabled = true;
     elements.bpmRange.disabled = true;
+    elements.countIn.disabled = true;
     setPlaybackStatus(message);
   }
 
   function setPlaybackStatus(message) {
     elements.status.textContent = message;
+  }
+
+  function setPlaybackStartStatus(countInBars) {
+    if (countInBars === 0) {
+      setPlaybackStatus('Playing. The song will loop.');
+      return;
+    }
+    const unit = countInBars === 1 ? 'bar' : 'bars';
+    setPlaybackStatus(`Counting in for ${countInBars} ${unit}.`);
   }
 
   initialize();

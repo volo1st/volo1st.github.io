@@ -29,23 +29,44 @@
     const gridSize = parseHeader(lines[0], errors);
     const bpm = parseBpm(lines[1], errors);
 
-    if (!lines[2] || lines[2].text !== 'chords:') {
-      const entry = lines[2] || lines.at(-1);
+    const countInEntry = lines[2];
+    if (!countInEntry || !/^count-in\s*:/.test(countInEntry.text)) {
       addError(
         errors,
-        directiveCode(entry && entry.text),
+        !countInEntry || countInEntry.text === 'chords:'
+          ? 'count_in_missing'
+          : directiveCode(countInEntry && countInEntry.text),
+        countInEntry ? countInEntry.line : null,
+        null,
+        null,
+        null,
+        'count-in',
+        'Expected count-in: 0, 1, or 2 after the BPM directive.',
+      );
+      return makeResult(null, errors);
+    }
+    const countInBars = parseCountIn(countInEntry, errors);
+
+    if (!lines[3] || lines[3].text !== 'chords:') {
+      const entry = lines[3] || lines.at(-1);
+      const isDuplicateCountIn = entry && /^count-in\s*:/.test(entry.text);
+      addError(
+        errors,
+        isDuplicateCountIn ? 'count_in_duplicate' : directiveCode(entry && entry.text),
         entry ? entry.line : sourceLines.length,
         null,
         null,
         null,
-        'document',
-        'Expected chords: after the BPM directive.',
+        isDuplicateCountIn ? 'count-in' : 'document',
+        isDuplicateCountIn
+          ? 'The count-in: directive can occur only once.'
+          : 'Expected chords: after the count-in directive.',
       );
       return makeResult(null, errors);
     }
 
     const strumLabelIndex = lines.findIndex((entry, index) => (
-      index > 2 && entry.text === 'strum:'
+      index > 3 && entry.text === 'strum:'
     ));
     if (strumLabelIndex === -1) {
       addError(
@@ -61,7 +82,7 @@
       return makeResult(null, errors);
     }
 
-    const duplicateChordLabel = lines.find((entry, index) => index > 2 && entry.text === 'chords:');
+    const duplicateChordLabel = lines.find((entry, index) => index > 3 && entry.text === 'chords:');
     if (duplicateChordLabel) {
       addError(
         errors,
@@ -90,13 +111,13 @@
       );
     }
 
-    const chordLines = lines.slice(3, strumLabelIndex);
+    const chordLines = lines.slice(4, strumLabelIndex);
     const strumLines = lines.slice(strumLabelIndex + 1);
     if (chordLines.length === 0) {
       addError(
         errors,
         'chords_section_empty',
-        lines[2].line,
+        lines[3].line,
         'chords',
         null,
         null,
@@ -145,12 +166,13 @@
       );
     }
 
-    if (errors.length > 0 || gridSize === null || bpm === null) {
+    if (errors.length > 0 || gridSize === null || bpm === null || countInBars === null) {
       return makeResult(null, errors);
     }
 
     const song = Object.freeze({
       bpm,
+      countInBars,
       gridSize,
       chordBars: Object.freeze(chordBars.map((bar) => Object.freeze(bar.changes))),
       strumBars: Object.freeze(strumBars.map((bar) => Object.freeze(bar.tokens))),
@@ -256,6 +278,38 @@
     return bpm;
   }
 
+  function parseCountIn(entry, errors) {
+    const match = entry.text.match(/^count-in\s*:\s*(\S+)$/);
+    if (!match || !/^\d+$/.test(match[1])) {
+      addError(
+        errors,
+        'count_in_format',
+        entry.line,
+        null,
+        null,
+        null,
+        'count-in',
+        'Count-in must be 0, 1, or 2 bars.',
+      );
+      return null;
+    }
+    const countInBars = Number(match[1]);
+    if (countInBars < 0 || countInBars > 2) {
+      addError(
+        errors,
+        'count_in_range',
+        entry.line,
+        null,
+        null,
+        null,
+        'count-in',
+        'Count-in must be 0, 1, or 2 bars.',
+      );
+      return null;
+    }
+    return countInBars;
+  }
+
   function parseSectionBars(options) {
     const { lines, section, gridSize, catalog, errors } = options;
     const bars = [];
@@ -275,9 +329,14 @@
       if (text[cursor] !== '|') {
         const isComment = text[cursor] === '#';
         const looksLikeDirective = /^[a-z][a-z-]*\s*:/i.test(text.slice(cursor));
+        const isDuplicateCountIn = /^count-in\s*:/.test(text.slice(cursor));
         addError(
           errors,
-          isComment ? 'comments_not_supported' : (looksLikeDirective ? 'unknown_directive' : 'bar_syntax'),
+          isComment
+            ? 'comments_not_supported'
+            : (isDuplicateCountIn
+              ? 'count_in_duplicate'
+              : (looksLikeDirective ? 'unknown_directive' : 'bar_syntax')),
           entry.line,
           section,
           bars.length + 1,
@@ -285,7 +344,9 @@
           'bar',
           isComment
             ? 'Comments are not supported.'
-            : 'Each section line must contain one or more | ... | bars.',
+            : (isDuplicateCountIn
+              ? 'The count-in: directive can occur only once.'
+              : 'Each section line must contain one or more | ... | bars.'),
         );
         return;
       }
@@ -545,17 +606,28 @@
   }
 
   function replaceBpmDirective(source, replacementValue) {
+    return replaceDirectiveValue(source, 'bpm', replacementValue);
+  }
+
+  function replaceCountInDirective(source, replacementValue) {
+    return replaceDirectiveValue(source, 'count-in', replacementValue);
+  }
+
+  function replaceDirectiveValue(source, directiveName, replacementValue) {
     const sourceText = String(source);
     const newline = sourceText.includes('\r\n') ? '\r\n' : '\n';
     const lines = sourceText.split(/\r?\n/);
+    const escapedName = directiveName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const directivePattern = new RegExp(`^\\s*${escapedName}\\s*:`);
+    const valuePattern = new RegExp(`^(\\s*${escapedName}\\s*:\\s*)(\\S*)(\\s*)$`);
     const matchingIndexes = [];
     lines.forEach((line, index) => {
-      if (/^\s*bpm\s*:/.test(line)) matchingIndexes.push(index);
+      if (directivePattern.test(line)) matchingIndexes.push(index);
     });
     if (matchingIndexes.length !== 1) return null;
 
     const lineIndex = matchingIndexes[0];
-    const match = lines[lineIndex].match(/^(\s*bpm\s*:\s*)(\S*)(\s*)$/);
+    const match = lines[lineIndex].match(valuePattern);
     if (!match) return null;
     lines[lineIndex] = `${match[1]}${String(replacementValue)}${match[3]}`;
     return lines.join(newline);
@@ -623,5 +695,6 @@
     musicalContentKey,
     parseSongSource,
     replaceBpmDirective,
+    replaceCountInDirective,
   });
 }));

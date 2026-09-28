@@ -88,11 +88,14 @@ Syntax:
 ```text
 4/4#<grid-size>
 bpm: <number>
+count-in: <bars>
 ```
 
 The header must be the first non-blank line.
 
 The `bpm:` directive must be the next non-blank line.
+
+The `count-in:` directive must be the next non-blank line after `bpm:`.
 
 Example meanings:
 
@@ -109,6 +112,8 @@ The MVP supports grid sizes of 8, 16, and 24.
 Each bar uses the same grid size.
 
 `bpm:` defines the global playback tempo in quarter-note beats per minute.
+
+`count-in:` defines whether playback starts with 0, 1, or 2 count-in bars.
 
 One 4/4 bar lasts four beats.
 
@@ -197,6 +202,7 @@ After repeat expansion, the chord section and strum section must contain the sam
 ```text
 4/4#8
 bpm: 138
+count-in: 1
 
 chords:
 | C D@8 | D | G Em@8 | Em |
@@ -213,6 +219,7 @@ Interpretation:
 - The song uses 4/4 time.
 - Each bar has 8 equal timing slots.
 - Playback tempo is 138 BPM.
+- Playback starts with one count-in bar.
 - Bar 1 starts on C and changes to D at slot 8.
 - Bar 2 starts on D.
 - Bar 3 starts on G and changes to Em at slot 8.
@@ -534,7 +541,7 @@ A user interface control is a view and editor of its source directive.
 
 ## 11.2 Count-In
 
-Status: Decided.
+Status: Implemented and verified on 2026-09-28.
 
 Add the count-in as the first Phase 2 feature.
 
@@ -1044,7 +1051,7 @@ Status: Decided.
 
 Status: Decided.
 
-- Require the header, `bpm:`, `chords:`, and `strum:` in that order.
+- Require the header, `bpm:`, `count-in:`, `chords:`, and `strum:` in that order.
 - Require each directive and section label exactly once.
 - Use exact lowercase directive and section-label text.
 - Ignore blank lines and extra spaces.
