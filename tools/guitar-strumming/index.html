@@ -10,6 +10,7 @@
   <script src="./parser.js" defer></script>
   <script src="./core.js" defer></script>
   <script src="./audio-engine.js" defer></script>
+  <script src="./share.js" defer></script>
   <script src="./app.js" defer></script>
 </head>
 <body>
@@ -18,7 +19,7 @@
     <h1>Guitar strumming backing track</h1>
     <p>
       Enter a chord progression and strumming pattern. The tool plays the song as a loop.
-      Audio and source text stay on this device.
+      Audio stays on this device. A share link contains the complete source text.
     </p>
 
     <section aria-labelledby="source-heading">
@@ -36,6 +37,20 @@ chords:
 
 strum:
 | D - D4 U! - U3P D2X U | x4</textarea>
+
+      <div class="button-group">
+        <button id="copy-share-link" type="button" disabled>Copy share link</button>
+        <button id="copy-source" type="button">Copy source</button>
+      </div>
+      <p class="help-text">Anyone who receives a share link can read its source text.</p>
+      <p id="share-status" class="help-text" role="status" aria-live="polite">
+        Preparing share controls.
+      </p>
+      <div id="manual-share-copy" class="manual-copy" hidden>
+        <label for="manual-share-link">Share link for manual copy</label>
+        <input id="manual-share-link" type="text" readonly />
+        <p class="help-text">Copy the selected link manually.</p>
+      </div>
 
       <div class="validation-panel">
         <p id="validation-summary" class="validation-summary" role="status" aria-live="polite">

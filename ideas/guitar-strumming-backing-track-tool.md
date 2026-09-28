@@ -671,7 +671,7 @@ Keep palm mute separate from dead strum and from stopping a ringing chord after 
 
 ## 11.4 Shareable Source
 
-Status: Decided, except for the tested link-length limit.
+Status: Implemented. Deployed HTTPS clipboard verification is pending.
 
 Keep the plain-text source as the shared content and the single source of truth.
 
@@ -741,9 +741,13 @@ If decoding succeeds but source validation fails, preserve the decoded source an
 
 Insert decoded content only as a text control value. Do not interpret it as HTML.
 
-Set a decoded-source byte limit before decompression is implemented.
+Limit decoded source to 65,536 UTF-8 bytes.
 
-Set the encoded URL limit only after delivery tests pass.
+Limit a complete generated share URL to 750 characters.
+
+WeChat stopped recognizing a 1,542-character test URL after character 808. The limit keeps a margin below this observed boundary.
+
+Direct links with 176 and 693 characters opened correctly from WeChat on the target iPhone.
 
 Test direct links of multiple sizes through the current WeChat release on the target iPhone.
 

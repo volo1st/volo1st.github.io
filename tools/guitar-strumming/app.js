@@ -5,6 +5,7 @@
   const parser = root.GuitarStrummingParser;
   const catalog = root.GuitarChordCatalog;
   const audioApi = root.GuitarStrummingAudio;
+  const shareApi = root.GuitarStrummingShare;
   const START_LEAD_SECONDS = 0.05;
   const SCHEDULE_AHEAD_SECONDS = 0.2;
   const SCHEDULER_INTERVAL_MILLISECONDS = 25;
@@ -23,6 +24,11 @@
     status: document.getElementById('playback-status'),
     soundTest: document.getElementById('strum-sound-test'),
     soundTestButtons: [...document.querySelectorAll('[data-strum-token]')],
+    copyShareLink: document.getElementById('copy-share-link'),
+    copySource: document.getElementById('copy-source'),
+    shareStatus: document.getElementById('share-status'),
+    manualShareCopy: document.getElementById('manual-share-copy'),
+    manualShareLink: document.getElementById('manual-share-link'),
   };
 
   let parsedSong = null;
@@ -40,14 +46,20 @@
   let skippedLateStrums = 0;
   let countInEndTime = null;
   let countInRequired = false;
+  let preparedShare = null;
+  let sharePreparationGeneration = 0;
+  let copyRequestGeneration = 0;
 
-  function initialize() {
-    if (!core || !parser || !catalog || !audioApi) {
+  async function initialize() {
+    if (!core || !parser || !catalog || !audioApi || !shareApi) {
       showFatalError('The tool scripts did not load. Reload the page.');
       return;
     }
 
-    elements.source.addEventListener('input', () => validateSource('text'));
+    elements.source.addEventListener('input', () => {
+      clearShareParameterAfterSourceChange();
+      validateSource('text');
+    });
     elements.bpmNumber.addEventListener('input', () => {
       updateBpmFromControl(elements.bpmNumber.value);
     });
@@ -60,14 +72,51 @@
     elements.playPause.addEventListener('click', handlePlayPause);
     elements.restart.addEventListener('click', restartPlayback);
     elements.soundTest.addEventListener('click', handleSoundTestClick);
+    elements.copyShareLink.addEventListener('click', handleCopyShareLink);
+    elements.copySource.addEventListener('click', handleCopySource);
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
     audioSupported = audioApi.isSupported();
-    validateSource('initial');
+    const sourceOrigin = await loadInitialSource();
+    if (sourceOrigin === null) return;
+    validateSource(sourceOrigin);
     if (!audioSupported) {
       setPlaybackStatus('Audio is unavailable in this browser. You can still edit and validate the song.');
     }
     updateControls();
+  }
+
+  async function loadInitialSource() {
+    try {
+      const decoded = await shareApi.decodeSongFromUrl(root.location.href);
+      if (!decoded.found) return 'initial';
+      elements.source.value = decoded.source;
+      setShareStatus(`Loaded a ${decoded.codec} share link.`);
+      return 'shared';
+    } catch (error) {
+      elements.source.value = '';
+      parsedSong = null;
+      parsedTimeline = null;
+      musicalContentKey = null;
+      lastValidSource = null;
+      haltPlayback({ resetPosition: true });
+      countInRequired = false;
+      elements.countIn.value = '';
+      invalidatePreparedShare('The shared source did not load.');
+      renderValidationErrors([{
+        code: `share_${error.code || 'decode_failed'}`,
+        line: null,
+        section: null,
+        bar: null,
+        slot: null,
+        field: 'share',
+        message: error.message || 'The shared source did not load.',
+      }]);
+      renderSongSummary();
+      setPlaybackStatus('Playback is unavailable because the shared source did not load.');
+      updateControls();
+      return null;
+    }
   }
 
   function validateSource(origin) {
@@ -85,6 +134,7 @@
       haltPlayback({ resetPosition: true });
       countInRequired = false;
       elements.countIn.value = '';
+      invalidatePreparedShare('Fix the source before you create a share link.');
       renderValidationErrors(result.errors);
       renderSongSummary();
       setPlaybackStatus(
@@ -107,6 +157,7 @@
       haltPlayback({ resetPosition: true });
       countInRequired = false;
       elements.countIn.value = '';
+      invalidatePreparedShare('Fix the timeline before you create a share link.');
       renderValidationErrors([{
         code: 'timeline_error',
         line: null,
@@ -143,6 +194,7 @@
     renderSongSummary();
     synchronizeBpmControls(result.song.bpm);
     synchronizeCountInControl(result.song.countInBars);
+    prepareShareUrl(source);
 
     if (sourceChanged && bpmOnlyChange) {
       if (playbackState === 'playing') {
@@ -180,6 +232,7 @@
       setPlaybackStatus('Fix the bpm: directive before you use the BPM controls.');
       return;
     }
+    clearShareParameterAfterSourceChange();
     elements.source.value = updatedSource;
     validateSource('bpm-control');
   }
@@ -197,12 +250,126 @@
       setPlaybackStatus('Fix the count-in: directive before you use the Count-in control.');
       return;
     }
+    clearShareParameterAfterSourceChange();
     elements.source.value = updatedSource;
     validateSource('count-in-control');
   }
 
   function synchronizeCountInControl(countInBars) {
     elements.countIn.value = String(countInBars);
+  }
+
+  async function prepareShareUrl(source) {
+    sharePreparationGeneration += 1;
+    const generation = sharePreparationGeneration;
+    preparedShare = null;
+    setShareStatus('Preparing the share link.');
+    updateControls();
+
+    try {
+      const result = await shareApi.createShareUrl(source, root.location.href);
+      if (generation !== sharePreparationGeneration || elements.source.value !== source) return;
+      preparedShare = Object.freeze({ ...result, source });
+      const codecName = result.codec === 'gzip' ? 'gzip' : 'raw';
+      setShareStatus(`Share link is ready. Format: ${codecName}. Length: ${result.urlLength} characters.`);
+    } catch (error) {
+      if (generation !== sharePreparationGeneration || elements.source.value !== source) return;
+      preparedShare = null;
+      setShareStatus(error.message || 'The share link is unavailable.');
+    }
+    updateControls();
+  }
+
+  function invalidatePreparedShare(message) {
+    sharePreparationGeneration += 1;
+    copyRequestGeneration += 1;
+    preparedShare = null;
+    hideManualShareLink();
+    setShareStatus(message);
+    updateControls();
+  }
+
+  function clearShareParameterAfterSourceChange() {
+    sharePreparationGeneration += 1;
+    copyRequestGeneration += 1;
+    preparedShare = null;
+    hideManualShareLink();
+
+    try {
+      const url = new URL(root.location.href);
+      if (url.searchParams.has('song')) {
+        url.searchParams.delete('song');
+        root.history.replaceState(null, '', url.href);
+      }
+    } catch (error) {
+      setShareStatus('The browser could not remove the old share parameter.');
+    }
+  }
+
+  function handleCopyShareLink() {
+    if (!preparedShare || preparedShare.source !== elements.source.value) return;
+    const share = preparedShare;
+    copyRequestGeneration += 1;
+    const requestId = copyRequestGeneration;
+
+    try {
+      root.history.replaceState(null, '', share.url);
+    } catch (error) {
+      setShareStatus('The browser could not put the share link in the current URL.');
+      return;
+    }
+
+    writeClipboard(share.url).then(() => {
+      if (requestId !== copyRequestGeneration) return;
+      hideManualShareLink();
+      setShareStatus(`Copied the ${share.codec} share link. Length: ${share.urlLength} characters.`);
+    }, () => {
+      if (requestId !== copyRequestGeneration) return;
+      showManualShareLink(share.url);
+      setShareStatus('Automatic copy failed. Copy the selected share link manually.');
+    });
+  }
+
+  function handleCopySource() {
+    const source = elements.source.value;
+    copyRequestGeneration += 1;
+    const requestId = copyRequestGeneration;
+    writeClipboard(source).then(() => {
+      if (requestId !== copyRequestGeneration) return;
+      setShareStatus('Copied the exact source text.');
+    }, () => {
+      if (requestId !== copyRequestGeneration) return;
+      elements.source.focus();
+      elements.source.select();
+      setShareStatus('Automatic copy failed. Copy the selected source text manually.');
+    });
+  }
+
+  function writeClipboard(text) {
+    if (!root.navigator || !root.navigator.clipboard || !root.navigator.clipboard.writeText) {
+      return Promise.reject(new Error('Clipboard access is unavailable.'));
+    }
+    try {
+      return Promise.resolve(root.navigator.clipboard.writeText(text));
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  function showManualShareLink(url) {
+    elements.manualShareLink.value = url;
+    elements.manualShareCopy.hidden = false;
+    elements.manualShareLink.focus();
+    elements.manualShareLink.select();
+  }
+
+  function hideManualShareLink() {
+    elements.manualShareCopy.hidden = true;
+    elements.manualShareLink.value = '';
+  }
+
+  function setShareStatus(message) {
+    elements.shareStatus.textContent = message;
   }
 
   async function handleSoundTestClick(event) {
@@ -534,6 +701,9 @@
     elements.restart.disabled = !playbackAvailable || playbackState === 'starting';
     elements.playPause.textContent = playbackState === 'playing' ? 'Pause' : 'Play';
     elements.playPause.setAttribute('aria-pressed', String(playbackState === 'playing'));
+    elements.copyShareLink.disabled = !preparedShare
+      || preparedShare.source !== elements.source.value;
+    elements.copySource.disabled = false;
     for (const button of elements.soundTestButtons) {
       button.disabled = !audioSupported || playbackState === 'starting';
     }
@@ -547,6 +717,8 @@
     elements.bpmNumber.disabled = true;
     elements.bpmRange.disabled = true;
     elements.countIn.disabled = true;
+    elements.copyShareLink.disabled = true;
+    elements.copySource.disabled = true;
     for (const button of elements.soundTestButtons) button.disabled = true;
     setPlaybackStatus(message);
   }
@@ -564,5 +736,7 @@
     setPlaybackStatus(`Counting in for ${countInBars} ${unit}.`);
   }
 
-  initialize();
+  initialize().catch((error) => {
+    showFatalError(`The tool did not start. ${error.message}`);
+  });
 }(typeof globalThis !== 'undefined' ? globalThis : this));

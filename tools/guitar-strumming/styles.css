@@ -96,6 +96,15 @@ select {
   font: inherit;
 }
 
+input[type="text"] {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.5rem;
+  border: 2px solid #777263;
+  border-radius: 0.35rem;
+  font: 1rem/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
 input[type="range"] {
   width: min(100%, 24rem);
   min-height: 2.75rem;
@@ -124,6 +133,22 @@ button:focus-visible {
 
 .validation-panel {
   margin-top: 0.75rem;
+}
+
+.manual-copy {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  border-left: 0.3rem solid #8b6508;
+  background: #fff7dc;
+}
+
+.manual-copy label {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.manual-copy p {
+  margin-bottom: 0;
 }
 
 .validation-summary {

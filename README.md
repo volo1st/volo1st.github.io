@@ -13,6 +13,8 @@ See [`website-roadmap.md`](website-roadmap.md) for the product direction and del
 - [Chinese-English String Sorter](tools/song_order/) sorts text into a numbered list.
 - [Guitar Strumming Backing Track](tools/guitar-strumming/) makes a looping guitar backing track from plain-text input. The home page does not link to this tool yet.
 
+The guitar tool can put the complete source in a share URL. Anyone who receives the URL can read the source. A browser sends the URL query to the website host when it opens the link. A URL-shortener service also receives the URL. A generated share URL must not exceed 750 characters. Decoded source must not exceed 65,536 UTF-8 bytes.
+
 ## Local use
 
 Open `index.html` in a browser. The website does not need a build step.
