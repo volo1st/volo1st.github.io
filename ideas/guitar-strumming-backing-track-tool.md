@@ -90,6 +90,7 @@ Syntax:
 bpm: <number>
 count-in: <bars>
 tempo-ramp: <value>
+capo: <fret>
 ```
 
 The header must be the first non-blank line.
@@ -99,6 +100,8 @@ The `bpm:` directive must be the next non-blank line.
 The `count-in:` directive must be the next non-blank line after `bpm:`.
 
 The `tempo-ramp:` directive must be the next non-blank line after `count-in:`.
+
+The `capo:` directive must be the next non-blank line after `tempo-ramp:`.
 
 Example meanings:
 
@@ -119,6 +122,8 @@ Each bar uses the same grid size.
 `count-in:` defines whether playback starts with 0, 1, or 2 count-in bars.
 
 `tempo-ramp:` defines whether the tempo increases at loop boundaries.
+
+`capo:` defines how many semitones the capo raises each played string.
 
 One 4/4 bar lasts four beats.
 
@@ -225,6 +230,7 @@ After repeat expansion, the chord section and strum section must contain the sam
 bpm: 138
 count-in: 1
 tempo-ramp: off
+capo: 0
 
 chords:
 | C D@8 | D | G Em@8 | Em |
@@ -360,7 +366,7 @@ The parser must:
 
 - ignore extra spaces
 - ignore blank lines
-- require the header, `bpm:`, `count-in:`, `tempo-ramp:`, `chords:`, and `strum:` in that order
+- require the header, `bpm:`, `count-in:`, `tempo-ramp:`, `capo:`, `chords:`, and `strum:` in that order
 - require each directive and section label exactly once
 - treat directive and section-label text as case-sensitive
 - treat `D` and `U` case-insensitively
@@ -561,6 +567,16 @@ The plain-text source remains the single source of truth for each Phase 2 song o
 Define the text representation before adding a user interface control for a persistent setting.
 
 A user interface control is a view and editor of its source directive.
+
+### Pre-release compatibility
+
+Decision on 2026-09-28: Treat the tool as pre-release until the owner explicitly declares it ready for `v1.0.0`.
+
+Before that declaration, source grammar, preset source, preset slugs, and share-link behavior can change without backward compatibility.
+
+Do not create a new preset or transport version only to preserve pre-release behavior.
+
+After the `v1.0.0` declaration, use semantic versioning and define compatibility rules before a breaking change.
 
 ## 11.2 Count-In
 
@@ -803,9 +819,9 @@ Require URL-safe lowercase slugs.
 
 Require every slug and preset source to be unique.
 
-Do not change the source associated with a published slug.
+Before `v1.0.0`, the pre-release compatibility decision in section 11.1 overrides preset source stability.
 
-If preset source changes, add a new versioned slug.
+After `v1.0.0`, do not change the source associated with a published slug. If preset source changes, add a new versioned slug.
 
 The `preset` parameter and `song` parameter are mutually exclusive.
 
@@ -853,7 +869,7 @@ Require this directive exactly once after the feature is implemented:
 tempo-ramp: <value>
 ```
 
-Place `tempo-ramp:` after `count-in:` and before `chords:`.
+Place `tempo-ramp:` after `count-in:` and before `capo:`.
 
 Decision on 2026-09-28: Replace the existing unpublished preset sources in place. Backward compatibility for source without this directive is not required.
 
@@ -974,6 +990,48 @@ Any ramp-control change stops playback and resets the ramp to bar 1, slot 1.
 Support keyboard use, narrow screens, and 200 percent zoom.
 
 Verification evidence: The automated checks passed on 2026-09-28. The user confirmed enable and disable behavior, field editing, invalid-value source preservation, fixed-tempo playback, keyboard use, and the responsive layout.
+
+## 11.8 Capo
+
+Status: Implemented and verified on 2026-09-28.
+
+Require this directive after `tempo-ramp:` and before `chords:`:
+
+```text
+capo: <fret>
+```
+
+Require `fret` to be a whole number from 0 through 12.
+
+Use `0` for no capo.
+
+Treat each chord identifier as a finger shape relative to the capo.
+
+Raise every played string by one semitone for each capo fret.
+
+Do not change a muted `x` string.
+
+Do not rewrite chord identifiers when the capo changes.
+
+Add a Capo dropdown with Off and fret 1 through fret 12.
+
+The dropdown must read from and edit only the `capo:` directive.
+
+A capo edit must stop playback and reset it to bar 1, slot 1.
+
+Include the capo in normalized timeline data and musical-content identity.
+
+Show the capo setting in the song summary.
+
+Reject a missing, duplicate, misplaced, malformed, or out-of-range directive.
+
+Replace current pre-release preset sources in place with `capo: 0`.
+
+Old pre-release raw and gzip source links without `capo:` can become invalid.
+
+Do not add transposition, automatic chord-name conversion, alternate tuning, or a capo-specific chord catalog in this package.
+
+Verification evidence: The automated parser, timeline, pitch, preset, and interface checks passed on 2026-09-28. The user confirmed source and dropdown synchronization, audible pitch changes, unchanged chord names, playback reset, fixed and ramped tempo playback, keyboard use, and responsive layout.
 
 ---
 
@@ -1126,13 +1184,13 @@ Status: Decided.
 - Use `0` for an open string.
 - Use `x` for a string that the strum does not play.
 - Do not treat an excluded `x` string as a percussive muted or dead strum.
-- Keep capo support and alternate tunings outside the MVP.
+- Keep alternate tunings outside the MVP. Implement capo support as a Phase 2 feature.
 
 ## 13.10 Document Grammar
 
 Status: Decided.
 
-- Require the header, `bpm:`, `count-in:`, `tempo-ramp:`, `chords:`, and `strum:` in that order.
+- Require the header, `bpm:`, `count-in:`, `tempo-ramp:`, `capo:`, `chords:`, and `strum:` in that order.
 - Require each directive and section label exactly once.
 - Use exact lowercase directive and section-label text.
 - Ignore blank lines and extra spaces.

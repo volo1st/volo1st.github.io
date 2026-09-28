@@ -21,6 +21,8 @@ The guitar source requires one `tempo-ramp:` directive. Use `off` to keep a fixe
 
 The Practice section has controls for the tempo ramp. When the user enables the ramp, the tool treats the fixed BPM as the target. It starts at half of that tempo, rounded to the nearest 5 BPM, and uses a default increase of 5 BPM after every 3 loops. When the user disables the ramp, the target becomes the fixed BPM again.
 
+The guitar source requires one `capo:` directive with a value from 0 through 12. Chord identifiers describe finger shapes relative to the capo. The Capo dropdown edits the directive. A capo raises the sounding pitch without changing the chord identifiers.
+
 ## Local use
 
 Open `index.html` in a browser. The website does not need a build step.

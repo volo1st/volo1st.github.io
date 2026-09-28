@@ -34,6 +34,7 @@
 bpm: 100
 count-in: 1
 tempo-ramp: off
+capo: 0
 
 chords:
 | C G/B@8 | G/B | Am F@8 | F |
@@ -53,6 +54,7 @@ strum:
 bpm: 80
 count-in: 1
 tempo-ramp: off
+capo: 0
 
 chords:
 | C | G | Am | F |
@@ -72,6 +74,7 @@ strum:
 bpm: 88
 count-in: 1
 tempo-ramp: off
+capo: 0
 
 chords:
 | G | C | D | Em |
@@ -91,6 +94,7 @@ strum:
 bpm: 92
 count-in: 1
 tempo-ramp: off
+capo: 0
 
 chords:
 | Cmaj7 | Am7 | D7 | G7 |
@@ -111,6 +115,7 @@ strum:
 bpm: 120
 count-in: 1
 tempo-ramp: off
+capo: 0
 
 chords:
 | Am | C | G | D7 |
@@ -131,6 +136,7 @@ strum:
 bpm: 135
 count-in: 1
 tempo-ramp: off
+capo: 0
 
 chords:
 | C D@8 | D | G Em@8 | Em |

@@ -29,7 +29,9 @@ Require lowercase URL-safe slugs that end in a positive version number such as `
 
 Require unique slugs and unique source strings.
 
-Do not change the source of a published slug. Add a new versioned slug when source changes.
+Before the owner declares `v1.0.0`, a preset slug and its source can change without a compatibility version.
+
+After that declaration, do not change the source of a published slug. Add a new versioned slug when source changes.
 
 ## Initial Catalog
 
@@ -43,6 +45,8 @@ The initial catalog contains four original entries and two short user transcript
 - a Viva La Vida syncopated strumming exercise.
 
 The expressive feature demo is the former page example and the default preset.
+
+Current pre-release preset sources include `capo: 0`.
 
 Show each teaching goal below the Preset dropdown.
 

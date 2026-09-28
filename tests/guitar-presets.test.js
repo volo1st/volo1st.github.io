@@ -50,6 +50,7 @@ test('the current example is the default preset without duplicated page source',
 bpm: 100
 count-in: 1
 tempo-ramp: off
+capo: 0
 
 chords:
 | C G/B@8 | G/B | Am F@8 | F |

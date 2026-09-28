@@ -131,10 +131,12 @@ button:focus-visible {
   margin-bottom: 0.35rem;
 }
 
+.capo-control,
 .tempo-ramp-control {
   margin-top: 1rem;
 }
 
+.capo-control > label,
 .tempo-ramp-control > label {
   display: block;
   margin-bottom: 0.35rem;

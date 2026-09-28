@@ -140,6 +140,7 @@ function makeDemonstrationSong({ bpm = 100, gridSize = 8 } = {}) {
   ));
   return {
     bpm,
+    capoFret: 0,
     gridSize,
     chordBars: [
       [{ chord: 'C', slot: 1 }, { chord: 'G/B', slot: gridSize }],
@@ -155,6 +156,7 @@ const validSource = `4/4#8
 bpm: 100
 count-in: 1
 tempo-ramp: off
+capo: 0
 
 chords:
 | C G/B@8 | G/B | Am F@8 | F |
@@ -255,6 +257,15 @@ test('the core resolves a catalog voicing to six string pitches', () => {
   assert.deepEqual(core.resolveVoicingPitches(cVoicing), ['x', 48, 52, 55, 60, 64]);
 });
 
+test('capo raises every played string and preserves muted strings', () => {
+  const cVoicing = catalog.getDefaultVoicing('C').frets;
+  assert.deepEqual(core.resolveVoicingPitches(cVoicing, 2), ['x', 50, 54, 57, 62, 66]);
+
+  const allStrings = core.resolveVoicingPitches([0, 1, 2, 3, 4, 5], 12);
+  assert.deepEqual(allStrings, [52, 58, 64, 70, 75, 81]);
+  assert.throws(() => core.resolveVoicingPitches(cVoicing, 13), /0 through 12/);
+});
+
 test('a chord change is active before a strum at the same slot', () => {
   const timeline = core.normalizeSong(makeDemonstrationSong());
   const event = timeline.events.find((item) => item.barIndex === 1 && item.slotIndex === 8);
@@ -337,6 +348,7 @@ test('the parser accepts whitespace, lowercase strums, and repeats in both secti
     bpm: 120
     count-in: 2
     tempo-ramp: off
+    capo: 0
 
     chords:
     | C G/B@8 | x2
@@ -400,7 +412,7 @@ test('the parser rejects unsupported modifiers and modifier order', () => {
     const result = parser.parseSongSource(source, { catalog });
     const error = result.errors.find((item) => item.code === 'strum_token_invalid');
     assert.ok(error, `${token} was not rejected`);
-    assert.equal(error.line, 10);
+    assert.equal(error.line, 11);
     assert.equal(error.section, 'strum');
     assert.equal(error.bar, 1);
     assert.equal(error.slot, 1);
@@ -431,7 +443,7 @@ test('the parser reports empty and incomplete input', () => {
   assert.equal(empty.errors[0].code, 'source_empty');
 
   const incomplete = parser.parseSongSource(
-    '4/4#8\nbpm: 100\ncount-in: 1\ntempo-ramp: off\nchords:',
+    '4/4#8\nbpm: 100\ncount-in: 1\ntempo-ramp: off\ncapo: 0\nchords:',
     { catalog },
   );
   assert.ok(incomplete.errors.some((error) => error.code === 'strum_section_missing'));
@@ -528,6 +540,33 @@ test('the parser reports independent tempo-ramp field errors', () => {
   );
 });
 
+test('the parser accepts capo frets 0 through 12', () => {
+  for (const capoFret of [0, 1, 7, 12]) {
+    const source = validSource.replace('capo: 0', `capo: ${capoFret}`);
+    const result = parser.parseSongSource(source, { catalog });
+    assert.equal(result.ok, true);
+    assert.equal(result.song.capoFret, capoFret);
+    assert.equal(core.normalizeSong(result.song).capoFret, capoFret);
+  }
+});
+
+test('the parser rejects missing, duplicate, misplaced, and invalid capo directives', () => {
+  const cases = [
+    [validSource.replace('capo: 0\n', ''), 'capo_missing'],
+    [validSource.replace('chords:', 'capo: 2\nchords:'), 'capo_duplicate'],
+    [validSource.replace('strum:', 'capo: 2\nstrum:'), 'capo_duplicate'],
+    [validSource.replace('capo: 0', 'capo: one'), 'capo_format'],
+    [validSource.replace('capo: 0', 'capo: 1.5'), 'capo_format'],
+    [validSource.replace('capo: 0', 'capo: 13'), 'capo_range'],
+  ];
+  for (const [source, code] of cases) {
+    const result = parser.parseSongSource(source, { catalog });
+    const error = result.errors.find((item) => item.code === code);
+    assert.ok(error, `${code} was not reported`);
+    assert.equal(error.field, 'capo');
+  }
+});
+
 test('the parser expands xN to N total bars', () => {
   const result = parser.parseSongSource(validSource, { catalog });
   assert.equal(result.ok, true);
@@ -540,6 +579,7 @@ test('the parser rejects document-order and unknown-directive errors', () => {
 tempo: 100
 count-in: 1
 tempo-ramp: off
+capo: 0
 chords:
 | C |
 strum:
@@ -574,7 +614,7 @@ test('the parser rejects invalid chord-change slots with musical locations', () 
     const error = result.errors.find((item) => item.code === code);
     assert.ok(error, `${code} was not reported`);
     assert.equal(error.section, 'chords');
-    assert.equal(error.line, 7);
+    assert.equal(error.line, 8);
   }
 });
 
@@ -583,7 +623,7 @@ test('the parser rejects unsupported chords and reports their source bar', () =>
   const result = parser.parseSongSource(source, { catalog });
   const error = result.errors.find((item) => item.code === 'chord_unsupported');
   assert.ok(error);
-  assert.equal(error.line, 7);
+  assert.equal(error.line, 8);
   assert.equal(error.bar, 1);
   assert.equal(error.slot, 8);
 });
@@ -603,6 +643,7 @@ test('the parser rejects repeat and expanded bar-count limits', () => {
 bpm: 100
 count-in: 1
 tempo-ramp: off
+capo: 0
 chords:
 | C | x999 | C | x2
 strum:
@@ -616,6 +657,7 @@ test('the parser accepts the maximum single repeat count', () => {
 bpm: 100
 count-in: 1
 tempo-ramp: off
+capo: 0
 chords:
 | C | x999
 strum:
@@ -656,6 +698,19 @@ test('tempo-ramp replacement supports compact and spaced directive values', () =
   const spaced = parser.replaceTempoRampDirective(spacedSource, 'off');
   assert.equal(spaced, validSource.replace('tempo-ramp: off', 'tempo-ramp: off   '));
   assert.equal(parser.replaceTempoRampDirective('tempo-ramp: off\ntempo-ramp: off', 'off'), null);
+});
+
+test('capo replacement preserves LF and CRLF line ends', () => {
+  assert.equal(
+    parser.replaceCapoDirective(validSource, '7'),
+    validSource.replace('capo: 0', 'capo: 7'),
+  );
+  const crlfSource = validSource.replace(/\n/g, '\r\n');
+  assert.equal(
+    parser.replaceCapoDirective(crlfSource, '12'),
+    crlfSource.replace('capo: 0', 'capo: 12'),
+  );
+  assert.equal(parser.replaceCapoDirective('capo: 0\ncapo: 1', '2'), null);
 });
 
 test('tempo-ramp enable and disable replacements preserve valid source', () => {
@@ -700,12 +755,14 @@ test('count-in timing supports its full BPM and bar ranges', () => {
   assert.throws(() => core.createCountInEvents(120, 1, -1), /non-negative/);
 });
 
-test('musical content keys ignore BPM and include grid and event content', () => {
+test('musical content keys ignore BPM and include capo, grid, and event content', () => {
   const first = parser.parseSongSource(validSource, { catalog }).song;
   const second = parser.parseSongSource(validSource.replace('bpm: 100', 'bpm: 140'), { catalog }).song;
   const changed = parser.parseSongSource(validSource.replace('G/B@8', 'D@8'), { catalog }).song;
+  const capoChanged = parser.parseSongSource(validSource.replace('capo: 0', 'capo: 2'), { catalog }).song;
   assert.equal(parser.musicalContentKey(first), parser.musicalContentKey(second));
   assert.notEqual(parser.musicalContentKey(first), parser.musicalContentKey(changed));
+  assert.notEqual(parser.musicalContentKey(first), parser.musicalContentKey(capoChanged));
 });
 
 test('playhead calculation preserves a paused musical position', () => {
@@ -872,6 +929,10 @@ test('the page contains valid sound-test tokens', () => {
   assert.match(html, /for="tempo-ramp-step"/);
   assert.match(html, /for="tempo-ramp-loops"/);
   assert.match(html, /for="tempo-ramp-target"/);
+  assert.match(html, /id="capo-fret"/);
+  assert.match(html, /for="capo-fret"/);
+  const capoOptions = html.match(/<select id="capo-fret"[^>]*>([\s\S]*?)<\/select>/)[1];
+  assert.equal([...capoOptions.matchAll(/<option /g)].length, 13);
 
   const css = fs.readFileSync(
     path.join(__dirname, '..', 'tools', 'guitar-strumming', 'styles.css'),

@@ -19,6 +19,7 @@
     bpmRangeLabel: document.getElementById('bpm-range-label'),
     bpmRange: document.getElementById('bpm-range'),
     countIn: document.getElementById('count-in'),
+    capoFret: document.getElementById('capo-fret'),
     tempoRampMode: document.getElementById('tempo-ramp-mode'),
     tempoRampFields: document.getElementById('tempo-ramp-fields'),
     tempoRampStep: document.getElementById('tempo-ramp-step'),
@@ -82,6 +83,9 @@
     });
     elements.countIn.addEventListener('change', () => {
       updateCountInFromControl(elements.countIn.value);
+    });
+    elements.capoFret.addEventListener('change', () => {
+      updateCapoFromControl(elements.capoFret.value);
     });
     elements.tempoRampMode.addEventListener('change', () => {
       updateTempoRampMode(elements.tempoRampMode.value);
@@ -148,6 +152,7 @@
       haltPlayback({ resetPosition: true });
       countInRequired = false;
       elements.countIn.value = '';
+      elements.capoFret.value = '';
       synchronizeBpmControls(null);
       synchronizeTempoRampControls(null);
       invalidatePreparedShare('The requested source did not load.');
@@ -183,6 +188,7 @@
       haltPlayback({ resetPosition: true });
       countInRequired = false;
       elements.countIn.value = '';
+      elements.capoFret.value = '';
       synchronizeBpmControls(null);
       synchronizeTempoRampControls(null);
       invalidatePreparedShare('Fix the source before you create a share link.');
@@ -208,6 +214,7 @@
       haltPlayback({ resetPosition: true });
       countInRequired = false;
       elements.countIn.value = '';
+      elements.capoFret.value = '';
       synchronizeBpmControls(null);
       synchronizeTempoRampControls(null);
       invalidatePreparedShare('Fix the timeline before you create a share link.');
@@ -258,6 +265,7 @@
     renderSongSummary();
     synchronizeBpmControls(result.song);
     synchronizeCountInControl(result.song.countInBars);
+    synchronizeCapoControl(result.song.capoFret);
     synchronizeTempoRampControls(result.song);
     prepareShareUrl(source);
     if (rampCurrentBpm === null) resetTempoRampState();
@@ -400,6 +408,26 @@
 
   function synchronizeCountInControl(countInBars) {
     elements.countIn.value = String(countInBars);
+  }
+
+  function updateCapoFromControl(rawValue) {
+    const previousValue = parsedSong ? String(parsedSong.capoFret) : '';
+    if (!/^\d+$/.test(rawValue) || Number(rawValue) < 0 || Number(rawValue) > 12) {
+      elements.capoFret.value = previousValue;
+      setPlaybackStatus('Capo fret must be a whole number from 0 through 12.');
+      return;
+    }
+    const updatedSource = parser.replaceCapoDirective(elements.source.value, rawValue);
+    if (updatedSource === null) {
+      elements.capoFret.value = previousValue;
+      setPlaybackStatus('Fix the capo: directive before you use the Capo control.');
+      return;
+    }
+    applyControlSource(updatedSource, 'capo-control');
+  }
+
+  function synchronizeCapoControl(capoFret) {
+    elements.capoFret.value = String(capoFret);
   }
 
   function updateTempoRampMode(mode) {
@@ -880,7 +908,10 @@
       if (!voicing) {
         throw new Error(`The catalog does not contain ${event.activeChord}.`);
       }
-      const stringPitches = core.resolveVoicingPitches(voicing.frets);
+      const stringPitches = core.resolveVoicingPitches(
+        voicing.frets,
+        segment.timeline.capoFret,
+      );
       audioEngine.playStrum(stringPitches, {
         direction: event.direction,
         stringCount: event.stringCount,
@@ -1053,6 +1084,9 @@
       parsedSong.tempoRamp.enabled
         ? `Tempo ramp: +${parsedSong.tempoRamp.stepBpm} BPM every ${parsedSong.tempoRamp.loopsPerStep} loops, target ${parsedSong.tempoRamp.targetBpm} BPM.`
         : 'Tempo ramp is off.',
+      parsedSong.capoFret === 0
+        ? 'Capo is off.'
+        : `Capo fret ${parsedSong.capoFret}.`,
       'Looping is on.',
     ].join(' ');
   }
@@ -1068,6 +1102,7 @@
       || preparedShare.source !== elements.source.value;
     elements.copySource.disabled = false;
     elements.tempoRampMode.disabled = !parsedSong || playbackState === 'starting';
+    elements.capoFret.disabled = !parsedSong || playbackState === 'starting';
     for (const rampField of [
       elements.tempoRampStep,
       elements.tempoRampLoops,
@@ -1088,6 +1123,7 @@
     elements.bpmNumber.disabled = true;
     elements.bpmRange.disabled = true;
     elements.countIn.disabled = true;
+    elements.capoFret.disabled = true;
     elements.tempoRampMode.disabled = true;
     elements.tempoRampStep.disabled = true;
     elements.tempoRampLoops.disabled = true;

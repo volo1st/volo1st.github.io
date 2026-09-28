@@ -66,11 +66,18 @@
     }
   }
 
+  function requireValidCapoFret(capoFret) {
+    if (!Number.isInteger(capoFret) || capoFret < 0 || capoFret > 12) {
+      throw new RangeError('Capo fret must be a whole number from 0 through 12.');
+    }
+  }
+
   function normalizeSong(song) {
     if (!song || typeof song !== 'object') {
       throw new TypeError('Song data is required.');
     }
     requireValidTiming(song.bpm, song.gridSize);
+    requireValidCapoFret(song.capoFret);
     if (!Array.isArray(song.chordBars) || !Array.isArray(song.strumBars)) {
       throw new TypeError('Chord bars and strum bars are required.');
     }
@@ -110,6 +117,7 @@
 
     return Object.freeze({
       bpm: song.bpm,
+      capoFret: song.capoFret,
       gridSize: song.gridSize,
       barCount: song.chordBars.length,
       durationSlots: song.chordBars.length * song.gridSize,
@@ -193,6 +201,7 @@
       throw new TypeError('A timeline is required.');
     }
     requireValidTiming(timeline.bpm, timeline.gridSize);
+    requireValidCapoFret(timeline.capoFret);
     if (!Number.isInteger(timeline.durationSlots) || timeline.durationSlots < 1) {
       throw new RangeError('Timeline duration must be a positive whole number of slots.');
     }
@@ -449,12 +458,13 @@
     return OPEN_STRING_MIDI[stringIndex] + fret;
   }
 
-  function resolveVoicingPitches(frets) {
+  function resolveVoicingPitches(frets, capoFret = 0) {
     if (!Array.isArray(frets) || frets.length !== 6) {
       throw new RangeError('A voicing must contain six string values.');
     }
+    requireValidCapoFret(capoFret);
     return frets.map((fret, stringIndex) => (
-      fret === 'x' ? 'x' : stringMidiNote(stringIndex, fret)
+      fret === 'x' ? 'x' : stringMidiNote(stringIndex, fret) + capoFret
     ));
   }
 

@@ -52,7 +52,7 @@
     if (!tempoRampEntry || !/^tempo-ramp\s*:/.test(tempoRampEntry.text)) {
       addError(
         errors,
-        !tempoRampEntry || tempoRampEntry.text === 'chords:'
+        !tempoRampEntry || tempoRampEntry.text === 'chords:' || /^capo\s*:/.test(tempoRampEntry.text)
           ? 'tempo_ramp_missing'
           : directiveCode(tempoRampEntry && tempoRampEntry.text),
         tempoRampEntry ? tempoRampEntry.line : null,
@@ -66,33 +66,58 @@
     }
     const tempoRamp = parseTempoRamp(tempoRampEntry, bpm, errors);
 
-    if (!lines[4] || lines[4].text !== 'chords:') {
-      const entry = lines[4] || lines.at(-1);
+    const capoEntry = lines[4];
+    if (!capoEntry || !/^capo\s*:/.test(capoEntry.text)) {
+      addError(
+        errors,
+        !capoEntry || capoEntry.text === 'chords:'
+          ? 'capo_missing'
+          : directiveCode(capoEntry && capoEntry.text),
+        capoEntry ? capoEntry.line : null,
+        null,
+        null,
+        null,
+        'capo',
+        'Expected capo: followed by a whole number from 0 through 12 after tempo-ramp.',
+      );
+      return makeResult(null, errors);
+    }
+    const capoFret = parseCapo(capoEntry, errors);
+
+    if (!lines[5] || lines[5].text !== 'chords:') {
+      const entry = lines[5] || lines.at(-1);
       const isDuplicateCountIn = entry && /^count-in\s*:/.test(entry.text);
       const isDuplicateTempoRamp = entry && /^tempo-ramp\s*:/.test(entry.text);
+      const isDuplicateCapo = entry && /^capo\s*:/.test(entry.text);
       addError(
         errors,
         isDuplicateCountIn
           ? 'count_in_duplicate'
-          : (isDuplicateTempoRamp ? 'tempo_ramp_duplicate' : directiveCode(entry && entry.text)),
+          : (isDuplicateTempoRamp
+            ? 'tempo_ramp_duplicate'
+            : (isDuplicateCapo ? 'capo_duplicate' : directiveCode(entry && entry.text))),
         entry ? entry.line : sourceLines.length,
         null,
         null,
         null,
         isDuplicateCountIn
           ? 'count-in'
-          : (isDuplicateTempoRamp ? 'tempo-ramp' : 'document'),
+          : (isDuplicateTempoRamp
+            ? 'tempo-ramp'
+            : (isDuplicateCapo ? 'capo' : 'document')),
         isDuplicateCountIn
           ? 'The count-in: directive can occur only once.'
           : (isDuplicateTempoRamp
             ? 'The tempo-ramp: directive can occur only once.'
-            : 'Expected chords: after the tempo-ramp directive.'),
+            : (isDuplicateCapo
+              ? 'The capo: directive can occur only once.'
+              : 'Expected chords: after the capo directive.')),
       );
       return makeResult(null, errors);
     }
 
     const strumLabelIndex = lines.findIndex((entry, index) => (
-      index > 4 && entry.text === 'strum:'
+      index > 5 && entry.text === 'strum:'
     ));
     if (strumLabelIndex === -1) {
       addError(
@@ -108,7 +133,7 @@
       return makeResult(null, errors);
     }
 
-    const duplicateChordLabel = lines.find((entry, index) => index > 4 && entry.text === 'chords:');
+    const duplicateChordLabel = lines.find((entry, index) => index > 5 && entry.text === 'chords:');
     if (duplicateChordLabel) {
       addError(
         errors,
@@ -137,13 +162,13 @@
       );
     }
 
-    const chordLines = lines.slice(5, strumLabelIndex);
+    const chordLines = lines.slice(6, strumLabelIndex);
     const strumLines = lines.slice(strumLabelIndex + 1);
     if (chordLines.length === 0) {
       addError(
         errors,
         'chords_section_empty',
-        lines[4].line,
+        lines[5].line,
         'chords',
         null,
         null,
@@ -198,6 +223,7 @@
       || bpm === null
       || countInBars === null
       || tempoRamp === null
+      || capoFret === null
     ) {
       return makeResult(null, errors);
     }
@@ -206,6 +232,7 @@
       bpm,
       countInBars,
       tempoRamp,
+      capoFret,
       gridSize,
       chordBars: Object.freeze(chordBars.map((bar) => Object.freeze(bar.changes))),
       strumBars: Object.freeze(strumBars.map((bar) => Object.freeze(bar.tokens))),
@@ -502,6 +529,38 @@
     return value;
   }
 
+  function parseCapo(entry, errors) {
+    const match = entry.text.match(/^capo\s*:\s*(\S+)$/);
+    if (!match || !/^\d+$/.test(match[1])) {
+      addError(
+        errors,
+        'capo_format',
+        entry.line,
+        null,
+        null,
+        null,
+        'capo',
+        'Capo fret must be a whole number from 0 through 12.',
+      );
+      return null;
+    }
+    const capoFret = Number(match[1]);
+    if (capoFret < 0 || capoFret > 12) {
+      addError(
+        errors,
+        'capo_range',
+        entry.line,
+        null,
+        null,
+        null,
+        'capo',
+        'Capo fret must be from 0 through 12.',
+      );
+      return null;
+    }
+    return capoFret;
+  }
+
   function parseSectionBars(options) {
     const { lines, section, gridSize, catalog, errors } = options;
     const bars = [];
@@ -523,6 +582,7 @@
         const looksLikeDirective = /^[a-z][a-z-]*\s*:/i.test(text.slice(cursor));
         const isDuplicateCountIn = /^count-in\s*:/.test(text.slice(cursor));
         const isDuplicateTempoRamp = /^tempo-ramp\s*:/.test(text.slice(cursor));
+        const isDuplicateCapo = /^capo\s*:/.test(text.slice(cursor));
         addError(
           errors,
           isComment
@@ -531,21 +591,27 @@
               ? 'count_in_duplicate'
               : (isDuplicateTempoRamp
                 ? 'tempo_ramp_duplicate'
-                : (looksLikeDirective ? 'unknown_directive' : 'bar_syntax'))),
+                : (isDuplicateCapo
+                  ? 'capo_duplicate'
+                  : (looksLikeDirective ? 'unknown_directive' : 'bar_syntax')))),
           entry.line,
           section,
           bars.length + 1,
           null,
           isDuplicateCountIn
             ? 'count-in'
-            : (isDuplicateTempoRamp ? 'tempo-ramp' : 'bar'),
+            : (isDuplicateTempoRamp
+              ? 'tempo-ramp'
+              : (isDuplicateCapo ? 'capo' : 'bar')),
           isComment
             ? 'Comments are not supported.'
             : (isDuplicateCountIn
               ? 'The count-in: directive can occur only once.'
               : (isDuplicateTempoRamp
                 ? 'The tempo-ramp: directive can occur only once.'
-                : 'Each section line must contain one or more | ... | bars.')),
+                : (isDuplicateCapo
+                  ? 'The capo: directive can occur only once.'
+                  : 'Each section line must contain one or more | ... | bars.'))),
         );
         return;
       }
@@ -853,6 +919,10 @@
     return replaceDirectiveValue(source, 'tempo-ramp', replacementValue);
   }
 
+  function replaceCapoDirective(source, replacementValue) {
+    return replaceDirectiveValue(source, 'capo', replacementValue);
+  }
+
   function replaceDirectiveValue(source, directiveName, replacementValue) {
     const sourceText = String(source);
     const newline = sourceText.includes('\r\n') ? '\r\n' : '\n';
@@ -876,6 +946,7 @@
   function musicalContentKey(song) {
     return JSON.stringify({
       gridSize: song.gridSize,
+      capoFret: song.capoFret,
       chordBars: song.chordBars,
       strumBars: song.strumBars,
     });
@@ -936,6 +1007,7 @@
     parseSongSource,
     parseStrumTokenValue,
     replaceBpmDirective,
+    replaceCapoDirective,
     replaceCountInDirective,
     replaceTempoRampDirective,
   });

@@ -10,7 +10,7 @@ Do not add an interface control in this package.
 
 ## Source Form
 
-Require `tempo-ramp:` exactly once after `count-in:` and before `chords:`.
+Require `tempo-ramp:` exactly once after `count-in:` and before `capo:`.
 
 Use `off` to disable the ramp.
 
