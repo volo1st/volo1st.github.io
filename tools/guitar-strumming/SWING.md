@@ -47,7 +47,7 @@ Derive every event time from the fixed audio-clock origin. Do not add timing to 
 
 Provide the source directive and validation feedback.
 
-Do not add a separate swing control in this package.
+The later Swing control package provides the source-backed dropdown. See `SWING-CONTROL.md`.
 
 Do not add different swing values for individual bars or beats.
 

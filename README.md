@@ -23,7 +23,7 @@ The Practice section has controls for the tempo ramp. When the user enables the 
 
 The guitar source requires one `capo:` directive with a value from 0 through 12. Chord identifiers describe finger shapes relative to the capo. The Capo dropdown edits the directive. A capo raises the sounding pitch without changing the chord identifiers.
 
-The guitar source requires one `swing:` directive. Use `off` for straight timing. Use a whole number from 50 through 75 to set the first eighth note's share of each beat. A value of 67 gives an approximate two-to-one triplet feel. Swing changes event timing but does not change the duration of a beat, bar, or loop.
+The guitar source requires one `swing:` directive. Use `off` for straight timing. Use a whole number from 50 through 75 to set the first eighth note's share of each beat. A value of 67 gives an approximate two-to-one triplet feel. Swing changes event timing but does not change the duration of a beat, bar, or loop. The Swing dropdown edits the directive. Edit the source to use a custom numeric value.
 
 ## Local use
 

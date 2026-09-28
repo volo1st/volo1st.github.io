@@ -1077,6 +1077,32 @@ Automated evidence: The repository check passed on 2026-09-28. It covered parser
 
 Manual evidence: The user confirmed that the swing playback sounded correct in the browser test.
 
+## 11.10 Swing Control
+
+Status: Implemented on 2026-09-28. Manual verification is pending.
+
+Add a Swing dropdown to the Practice section.
+
+Use Off, Light (55%), Medium (60%), Triplet (67%), and Heavy (75%) as the standard choices.
+
+Do not add 50 percent as a standard choice. Off already provides straight timing.
+
+When the source contains another valid numeric value, show `Custom (N%)` as the selected choice.
+
+Do not rewrite a custom value during synchronization.
+
+The dropdown must read from and edit only the `swing:` directive.
+
+A successful change must stop playback and reset it to bar 1, slot 1.
+
+If safe replacement fails, keep the source unchanged and restore the parsed selection.
+
+Keep the textarea as the single source of truth.
+
+Automated evidence: The repository check passed on 2026-09-28. It covered the standard options, labels, help reference, custom-value logic, source replacement, disabled-state code, responsive styles, and all existing tests.
+
+Manual evidence: Pending browser verification.
+
 ---
 
 # 12. MVP Acceptance Criteria

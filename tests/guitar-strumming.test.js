@@ -648,7 +648,7 @@ test('the parser accepts disabled and numeric swing values', () => {
   assert.equal(disabled.ok, true);
   assert.equal(disabled.song.swingPercent, null);
 
-  for (const swingPercent of [50, 67, 75]) {
+  for (const swingPercent of [50, 62, 67, 75]) {
     const source = validSource.replace('swing: off', `swing: ${swingPercent}`);
     const result = parser.parseSongSource(source, { catalog });
     assert.equal(result.ok, true);
@@ -1062,14 +1062,31 @@ test('the page contains valid sound-test tokens', () => {
   assert.match(html, /for="tempo-ramp-target"/);
   assert.match(html, /id="capo-fret"/);
   assert.match(html, /for="capo-fret"/);
+  assert.match(html, /id="swing-feel"[^>]*aria-describedby="swing-help"/);
+  assert.match(html, /for="swing-feel"/);
+  assert.match(html, /id="swing-help"/);
   assert.match(html, /<code>swing: off<\/code>/);
   const capoOptions = html.match(/<select id="capo-fret"[^>]*>([\s\S]*?)<\/select>/)[1];
   assert.equal([...capoOptions.matchAll(/<option /g)].length, 13);
+  const swingOptions = html.match(/<select id="swing-feel"[^>]*>([\s\S]*?)<\/select>/)[1];
+  assert.deepEqual(
+    [...swingOptions.matchAll(/<option value="([^"]+)">/g)].map((match) => match[1]),
+    ['off', '55', '60', '67', '75'],
+  );
 
   const css = fs.readFileSync(
     path.join(__dirname, '..', 'tools', 'guitar-strumming', 'styles.css'),
     'utf8',
   );
   assert.match(css, /\.tempo-ramp-fields\s*\{[^}]*grid-template-columns/s);
+  assert.match(css, /\.swing-control select\s*\{[^}]*width:/s);
   assert.match(css, /@media \(max-width: 38rem\)/);
+
+  const app = fs.readFileSync(
+    path.join(__dirname, '..', 'tools', 'guitar-strumming', 'app.js'),
+    'utf8',
+  );
+  assert.match(app, /replaceSwingDirective\(elements\.source\.value, rawValue\)/);
+  assert.match(app, /Custom \(\$\{value\}%\)/);
+  assert.match(app, /data-custom-swing/);
 });

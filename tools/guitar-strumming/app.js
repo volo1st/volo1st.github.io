@@ -20,6 +20,7 @@
     bpmRange: document.getElementById('bpm-range'),
     countIn: document.getElementById('count-in'),
     capoFret: document.getElementById('capo-fret'),
+    swingFeel: document.getElementById('swing-feel'),
     tempoRampMode: document.getElementById('tempo-ramp-mode'),
     tempoRampFields: document.getElementById('tempo-ramp-fields'),
     tempoRampStep: document.getElementById('tempo-ramp-step'),
@@ -87,6 +88,9 @@
     elements.capoFret.addEventListener('change', () => {
       updateCapoFromControl(elements.capoFret.value);
     });
+    elements.swingFeel.addEventListener('change', () => {
+      updateSwingFromControl(elements.swingFeel.value);
+    });
     elements.tempoRampMode.addEventListener('change', () => {
       updateTempoRampMode(elements.tempoRampMode.value);
     });
@@ -153,6 +157,7 @@
       countInRequired = false;
       elements.countIn.value = '';
       elements.capoFret.value = '';
+      synchronizeSwingControl(undefined);
       synchronizeBpmControls(null);
       synchronizeTempoRampControls(null);
       invalidatePreparedShare('The requested source did not load.');
@@ -189,6 +194,7 @@
       countInRequired = false;
       elements.countIn.value = '';
       elements.capoFret.value = '';
+      synchronizeSwingControl(undefined);
       synchronizeBpmControls(null);
       synchronizeTempoRampControls(null);
       invalidatePreparedShare('Fix the source before you create a share link.');
@@ -215,6 +221,7 @@
       countInRequired = false;
       elements.countIn.value = '';
       elements.capoFret.value = '';
+      synchronizeSwingControl(undefined);
       synchronizeBpmControls(null);
       synchronizeTempoRampControls(null);
       invalidatePreparedShare('Fix the timeline before you create a share link.');
@@ -266,6 +273,7 @@
     synchronizeBpmControls(result.song);
     synchronizeCountInControl(result.song.countInBars);
     synchronizeCapoControl(result.song.capoFret);
+    synchronizeSwingControl(result.song.swingPercent);
     synchronizeTempoRampControls(result.song);
     prepareShareUrl(source);
     if (rampCurrentBpm === null) resetTempoRampState();
@@ -428,6 +436,48 @@
 
   function synchronizeCapoControl(capoFret) {
     elements.capoFret.value = String(capoFret);
+  }
+
+  function updateSwingFromControl(rawValue) {
+    const previousValue = parsedSong && parsedSong.swingPercent !== null
+      ? String(parsedSong.swingPercent)
+      : 'off';
+    if (
+      rawValue !== 'off'
+      && (!/^\d+$/.test(rawValue) || Number(rawValue) < 50 || Number(rawValue) > 75)
+    ) {
+      synchronizeSwingControl(parsedSong ? parsedSong.swingPercent : undefined);
+      setPlaybackStatus('Swing must be off or a whole number from 50 through 75.');
+      return;
+    }
+    const updatedSource = parser.replaceSwingDirective(elements.source.value, rawValue);
+    if (updatedSource === null) {
+      elements.swingFeel.value = previousValue;
+      setPlaybackStatus('Fix the swing: directive before you use the Swing control.');
+      return;
+    }
+    applyControlSource(updatedSource, 'swing-control');
+  }
+
+  function synchronizeSwingControl(swingPercent) {
+    const oldCustomOption = elements.swingFeel.querySelector('[data-custom-swing]');
+    if (oldCustomOption) oldCustomOption.remove();
+    if (swingPercent === undefined) {
+      elements.swingFeel.value = '';
+      return;
+    }
+
+    const value = swingPercent === null ? 'off' : String(swingPercent);
+    const hasStandardOption = [...elements.swingFeel.options]
+      .some((option) => option.value === value);
+    if (!hasStandardOption) {
+      const customOption = document.createElement('option');
+      customOption.value = value;
+      customOption.textContent = `Custom (${value}%)`;
+      customOption.dataset.customSwing = 'true';
+      elements.swingFeel.append(customOption);
+    }
+    elements.swingFeel.value = value;
   }
 
   function updateTempoRampMode(mode) {
@@ -1110,6 +1160,7 @@
     elements.copySource.disabled = false;
     elements.tempoRampMode.disabled = !parsedSong || playbackState === 'starting';
     elements.capoFret.disabled = !parsedSong || playbackState === 'starting';
+    elements.swingFeel.disabled = !parsedSong || playbackState === 'starting';
     for (const rampField of [
       elements.tempoRampStep,
       elements.tempoRampLoops,
@@ -1131,6 +1182,7 @@
     elements.bpmRange.disabled = true;
     elements.countIn.disabled = true;
     elements.capoFret.disabled = true;
+    elements.swingFeel.disabled = true;
     elements.tempoRampMode.disabled = true;
     elements.tempoRampStep.disabled = true;
     elements.tempoRampLoops.disabled = true;
