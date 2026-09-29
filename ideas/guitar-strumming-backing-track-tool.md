@@ -1510,7 +1510,7 @@ Manual evidence: The user confirmed that the number-notation workflow works well
 
 ## 11.14 Shared Arrangements and Exercise Profiles
 
-Status: Specification approved on 2026-09-29. Implementation has not started.
+Status: Implemented and verified on 2026-09-29.
 
 ### Purpose
 
@@ -1723,6 +1723,10 @@ Add automated tests for these cases:
 13. English and Simplified Chinese translation key sets remain identical.
 
 Verify both profiles on iPhone Safari and desktop Chrome. Confirm the displayed key, chord views, playback chords, preset replacement confirmation, and share-link behavior.
+
+Automated evidence: The repository check passed on 2026-09-29. It covered shared arrangement references, deterministic materialization, intended C-major and G-major sounding chords, parser and timeline validation, stable catalog failures, preset and source URL behavior, translations, asset hashes, and existing preset regressions.
+
+Manual evidence: The user confirmed that both Viva La Vida exercise profiles work correctly on 2026-09-29.
 
 ---
 

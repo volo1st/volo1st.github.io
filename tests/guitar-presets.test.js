@@ -7,8 +7,10 @@ const test = require('node:test');
 
 const chordCatalog = require('../tools/guitar-strumming/catalog.js');
 const core = require('../tools/guitar-strumming/core.js');
+const guitarI18n = require('../tools/guitar-strumming/i18n.js');
 const parser = require('../tools/guitar-strumming/parser.js');
 const presets = require('../tools/guitar-strumming/preset-catalog.js');
+const share = require('../tools/guitar-strumming/share.js');
 
 function expectCode(code) {
   return (error) => {
@@ -17,9 +19,9 @@ function expectCode(code) {
   };
 }
 
-test('the initial catalog contains six unique reviewed presets', () => {
+test('the catalog contains seven unique reviewed presets', () => {
   const entries = presets.listPresets();
-  assert.equal(entries.length, 6);
+  assert.equal(entries.length, 7);
   assert.equal(new Set(entries.map((entry) => entry.slug)).size, entries.length);
   assert.equal(new Set(entries.map((entry) => entry.source)).size, entries.length);
   assert.ok(entries.every((entry) => presets.SLUG_PATTERN.test(entry.slug)));
@@ -31,10 +33,68 @@ test('the initial catalog contains six unique reviewed presets', () => {
     ['Exercise', 'Feature demo', 'Song exercise'].includes(entry.presetType)
   )));
   const songExercises = entries.filter((entry) => entry.presetType === 'Song exercise');
-  assert.equal(songExercises.length, 2);
+  assert.equal(songExercises.length, 3);
   assert.ok(songExercises.every((entry) => entry.rightsNotice.startsWith('Unofficial')));
   assert.ok(Object.isFrozen(entries));
   assert.ok(entries.every((entry) => Object.isFrozen(entry) && Object.isFrozen(entry.tags)));
+});
+
+test('two Viva La Vida profiles use one shared arrangement', () => {
+  const arrangements = presets.listSharedArrangements();
+  const profiles = presets.listExerciseProfiles();
+  assert.equal(arrangements.length, 1);
+  assert.equal(arrangements[0].id, 'viva-la-vida-v1');
+  assert.equal(arrangements[0].originalKey, 'Ab major');
+  assert.equal(arrangements[0].chordSource, '| 4 5@8 | 5 | 1 6:m@8 | 6:m |');
+  assert.equal(profiles.length, 2);
+  assert.ok(profiles.every((profile) => profile.arrangementId === arrangements[0].id));
+  assert.ok(Object.isFrozen(arrangements) && Object.isFrozen(arrangements[0]));
+  assert.ok(Object.isFrozen(profiles) && profiles.every(Object.isFrozen));
+});
+
+test('Viva La Vida profiles materialize distinct complete sources from shared music', () => {
+  const melody = presets.getPreset('viva-la-vida-melody-backing-c-v1');
+  const strumming = presets.getPreset('viva-la-vida-syncopated-strumming-g-v1');
+  assert.ok(melody);
+  assert.ok(strumming);
+  assert.equal(melody.arrangementId, 'viva-la-vida-v1');
+  assert.equal(strumming.arrangementId, 'viva-la-vida-v1');
+  assert.match(melody.source, /original-key: Ab major\nkey: C major\nnotation: numbers\ncapo: 0/);
+  assert.match(strumming.source, /original-key: Ab major\nkey: G major\nnotation: numbers\ncapo: 0/);
+  assert.equal(
+    melody.source.slice(melody.source.indexOf('chords:')),
+    strumming.source.slice(strumming.source.indexOf('chords:')),
+  );
+  assert.doesNotMatch(melody.source, /\r/);
+  assert.doesNotMatch(strumming.source, /\r/);
+  assert.notEqual(melody.source, strumming.source);
+  assert.equal(presets.getPreset('viva-la-vida-syncopated-strumming-v1'), null);
+});
+
+test('Viva La Vida profile titles and goals have both translations', () => {
+  for (const profile of presets.listExerciseProfiles()) {
+    for (const suffix of ['title', 'goal']) {
+      const key = `guitar.preset.${profile.slug}.${suffix}`;
+      assert.ok(Object.hasOwn(guitarI18n.catalogs['en-AU'], key), key);
+      assert.ok(Object.hasOwn(guitarI18n.catalogs['zh-Hans'], key), key);
+    }
+  }
+});
+
+test('Viva La Vida profiles resolve to their intended sounding chords', () => {
+  const cases = [
+    ['viva-la-vida-melody-backing-c-v1', [['F', 'G'], ['G'], ['C', 'Am'], ['Am']]],
+    ['viva-la-vida-syncopated-strumming-g-v1', [['C', 'D'], ['D'], ['G', 'Em'], ['Em']]],
+  ];
+  for (const [slug, expected] of cases) {
+    const parsed = parser.parseSongSource(presets.getPreset(slug).source, { catalog: chordCatalog });
+    assert.equal(parsed.ok, true);
+    assert.deepEqual(
+      parsed.song.chordBars.map((bar) => bar.map((change) => change.soundingChord)),
+      expected,
+    );
+    assert.doesNotThrow(() => core.normalizeSong(parsed.song));
+  }
 });
 
 test('every preset passes the normal parser and timeline checks', () => {
@@ -102,6 +162,46 @@ test('catalog validation rejects invalid and duplicate entries', () => {
   );
 });
 
+test('shared-arrangement validation rejects invalid composition safely', () => {
+  const arrangement = presets.listSharedArrangements()[0];
+  const profile = presets.listExerciseProfiles()[0];
+  assert.throws(
+    () => presets.validateArrangementEntries([arrangement, { ...arrangement }]),
+    expectCode('arrangement_id_duplicate'),
+  );
+  assert.throws(
+    () => presets.createExercisePresets([], [profile]),
+    expectCode('arrangement_reference_missing'),
+  );
+  const { bpm: unusedBpm, ...profileWithoutBpm } = profile;
+  assert.equal(unusedBpm, 135);
+  assert.throws(
+    () => presets.createExercisePresets([arrangement], [profileWithoutBpm]),
+    expectCode('exercise_profile_default_missing'),
+  );
+  assert.throws(
+    () => presets.createExercisePresets(
+      [{ ...arrangement, chordSource: '| 9 5@8 | 5 | 1 6:m@8 | 6:m |' }],
+      [profile],
+    ),
+    expectCode('preset_materialized_source_invalid'),
+  );
+  assert.throws(
+    () => presets.createExercisePresets(
+      [arrangement],
+      [profile, { ...profile, slug: 'duplicate-source-v1' }],
+    ),
+    expectCode('preset_source_duplicate'),
+  );
+  assert.throws(
+    () => presets.createExercisePresets(
+      [arrangement],
+      [{ ...profile, playingKey: 'A minor' }],
+    ),
+    expectCode('exercise_profile_key_mode_mismatch'),
+  );
+});
+
 test('preset URL resolution accepts one known preset', () => {
   assert.deepEqual(
     presets.resolvePresetFromUrl('https://example.test/tool?keep=1'),
@@ -149,6 +249,19 @@ test('exact source lookup selects only catalog source', () => {
   const preset = presets.getPreset('seventh-chord-turnaround-v1');
   assert.equal(presets.findPresetBySource(preset.source), preset);
   assert.equal(presets.findPresetBySource(`${preset.source}\n`), null);
+});
+
+test('materialized preset source uses a preset URL and edited source uses a full URL', async () => {
+  const preset = presets.getPreset('viva-la-vida-melody-backing-c-v1');
+  const editedSource = preset.source.replace('bpm: 135', 'bpm: 100');
+  assert.equal(presets.findPresetBySource(preset.source), preset);
+  assert.equal(presets.findPresetBySource(editedSource), null);
+
+  const presetUrl = presets.createPresetUrl(preset.slug, 'https://example.test/tool');
+  assert.equal(new URL(presetUrl.url).searchParams.get('preset'), preset.slug);
+  const sourceUrl = await share.createShareUrl(editedSource, 'https://example.test/tool');
+  assert.equal(new URL(sourceUrl.url).searchParams.get('preset'), null);
+  assert.ok(new URL(sourceUrl.url).searchParams.has('song'));
 });
 
 test('the page loads the preset catalog before the application', () => {

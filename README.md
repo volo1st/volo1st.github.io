@@ -21,6 +21,8 @@ The guitar tool can put the complete source in a share URL. Anyone who receives 
 
 The guitar tool includes a local catalog of reviewed practice exercises. The catalog can include a short user transcription when it contains only chord and rhythm teaching data and has a clear unofficial notice. It does not include lyrics, melody notation, audio, or artwork. A preset does not make a network request. A preset URL uses a stable versioned slug. Published preset source does not change. A source revision uses a new slug.
 
+The catalog can use one versioned arrangement for multiple exercise profiles. Each profile has its own teaching goal, playing key, and practice defaults. The catalog materializes a complete plain-text source when the preset loads. The text remains the runtime source of truth. The Viva La Vida arrangement provides separate C-major melody-backing and G-major strumming profiles without duplicating its chord and strum transcription.
+
 The guitar source requires one `tempo-ramp:` directive. Use `off` to keep a fixed tempo. Use a value such as `+5/2/120` to increase the tempo by 5 beats per minute after every 2 completed loops until it reaches 120 beats per minute. The ramp supports only increasing tempo. It applies changes at loop boundaries.
 
 The Practice section has controls for the tempo ramp. When the user enables the ramp, the tool treats the fixed BPM as the target. It starts at half of that tempo, rounded to the nearest 5 BPM, and uses a default increase of 5 BPM after every 3 loops. When the user disables the ramp, the target becomes the fixed BPM again.
