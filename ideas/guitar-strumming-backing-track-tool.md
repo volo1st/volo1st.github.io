@@ -863,6 +863,8 @@ Start with original exercises, public-domain material, material that the publish
 
 Decision change on 2026-09-28: Permit a short user transcription when it contains only chord and rhythm teaching data. Label it as unofficial. Do not include lyrics, melody notation, audio, artwork, or a claim of approval. Record the accepted risk and remove or revise the entry if a rights holder objects.
 
+Decision change on 2026-09-29: Section 11.14 permits a catalog preset to materialize its complete source from a shared arrangement and an exercise profile. The materialized source remains the authoritative preset content after loading.
+
 ## 11.6 Practice Tempo Ramp
 
 Status: Implemented and verified on 2026-09-28.
@@ -1505,6 +1507,222 @@ Verify the interface on the current iPhone Safari and desktop Chrome targets. Te
 Automated evidence: The repository check passed on 2026-09-29. It covered key parsing, natural-minor degrees, explicit qualities, slash chords, playing-key changes, capo changes, return to the original key, audio-event equivalence, unavailable shapes, read-only chord-guide views, translations, local assets, and legacy regressions.
 
 Manual evidence: The user confirmed that the number-notation workflow works well on 2026-09-29.
+
+## 11.14 Shared Arrangements and Exercise Profiles
+
+Status: Specification approved on 2026-09-29. Implementation has not started.
+
+### Purpose
+
+Let two or more exercises use the same musical arrangement without duplicating its chord and strum transcription.
+
+Keep the student interface simple. Show one preset for each distinct teaching task.
+
+Keep the complete plain-text source as the single source of truth after a preset loads.
+
+Do not add a database, build step, framework, or network request.
+
+### Catalog Model
+
+Use three conceptual layers:
+
+1. A shared arrangement contains stable musical content.
+2. An exercise profile contains the teaching purpose and default performance settings.
+3. A materialized source is the complete text copied into the arrangement editor.
+
+The first implementation must use local JavaScript objects.
+
+#### Shared Arrangement
+
+A shared arrangement must contain:
+
+- a stable versioned arrangement identifier;
+- the source title or exercise title;
+- the grid header;
+- the original key for a number arrangement;
+- the notation type;
+- the chord section;
+- the strum section; and
+- shared rights metadata and notice, when required.
+
+The original key belongs to the shared arrangement. It must not vary between exercise profiles that reference the same arrangement.
+
+Treat a versioned arrangement as immutable after publication. If its musical content changes, create a new arrangement version.
+
+Do not store a complete source string in each exercise profile.
+
+#### Exercise Profile
+
+An exercise profile must contain:
+
+- a stable versioned preset slug;
+- a reference to one shared arrangement;
+- a student-facing preset title;
+- a teaching goal;
+- a teaching level;
+- search or grouping tags;
+- the playing key for a number arrangement;
+- the default capo fret;
+- the default beats per minute;
+- the default count-in;
+- the default tempo ramp; and
+- the default swing value.
+
+The playing key belongs to the exercise profile. It describes the sounding key for that teaching task.
+
+The capo, tempo, count-in, tempo ramp, and swing values are profile defaults. They become normal source directives after materialization.
+
+Treat a versioned exercise profile as immutable after publication. If its teaching identity or materialized source changes, create a new preset slug.
+
+#### Materialized Source
+
+Create one deterministic materializer that combines an arrangement and an exercise profile.
+
+The materializer must produce the existing complete source format in this order:
+
+```text
+4/4#8
+bpm: <profile value>
+count-in: <profile value>
+tempo-ramp: <profile value>
+original-key: <arrangement value>
+key: <profile value>
+notation: numbers
+capo: <profile value>
+swing: <profile value>
+
+chords:
+<arrangement chord bars>
+
+strum:
+<arrangement strum bars>
+```
+
+Use line-feed characters and stable spacing. Do not depend on object-property order.
+
+After preset selection, copy the materialized source into the textarea before normal validation.
+
+After this copy, the text is the only runtime source of truth. Controls must edit the text. They must not edit the arrangement or profile object.
+
+The arrangement and profile are catalog templates. They are not a second live state.
+
+Share links must keep the current behavior:
+
+- Use the short preset URL when the text exactly matches a materialized profile source.
+- Use the complete raw or gzip source URL when the text does not exactly match a catalog source.
+
+Copy source must copy the complete materialized text.
+
+### Viva La Vida Exercises
+
+Create one shared arrangement for the reviewed short transcription.
+
+Use this musical identity:
+
+```text
+arrangement: viva-la-vida-v1
+original-key: Ab major
+notation: numbers
+grid: 4/4#8
+```
+
+Use this chord section:
+
+```text
+| 4 5@8 | 5 | 1 6:m@8 | 6:m |
+```
+
+Keep the current four strum bars unchanged.
+
+Create these two visible exercise profiles:
+
+| Preset | Playing key | Capo | Sounding chords | Teaching purpose |
+| --- | --- | ---: | --- | --- |
+| Viva La Vida — melody backing in C | C major | 0 | F G C Am | Provide a C-major backing track for melody practice. |
+| Viva La Vida — syncopated strumming in G | G major | 0 | C D G Em | Practise the reviewed syncopated strumming pattern with beginner-friendly chords. |
+
+Use separate, explicit versioned slugs:
+
+```text
+viva-la-vida-melody-backing-c-v1
+viva-la-vida-syncopated-strumming-g-v1
+```
+
+Use 135 beats per minute, a one-bar count-in, no tempo ramp, no capo, and straight timing as the initial defaults for both profiles.
+
+Do not put melody notes in the catalog or source. The melody profile supplies only its backing track.
+
+Keep the existing unofficial-transcription notice. Do not add lyrics, melody notation, audio, artwork, or a claim of rights-holder approval.
+
+### Interface Behaviour
+
+Show both exercise profiles as separate entries in the existing Preset dropdown.
+
+Do not add a second Song or Exercise dropdown.
+
+Selecting either profile must require only one preset action. The student must not have to open Key and shapes before playback.
+
+After loading, the student can still change Play in, Play with, tempo, count-in, tempo ramp, swing, or source text.
+
+A change to a loaded source must not modify the catalog arrangement or profile.
+
+Keep the current confirmation before a preset replaces edited text.
+
+Add English and Simplified Chinese translations for both profile titles and teaching goals. Keep the published song title unchanged.
+
+### Compatibility and Migration
+
+Keep the public preset-catalog interface compatible with the current application. Each returned preset entry must still expose a complete `source` value.
+
+The `source` value for a composed profile is derived. Do not author a second copy of that source.
+
+Keep existing presets unchanged in the first implementation. They can continue to store complete source strings.
+
+Use the shared-arrangement model first for the two Viva La Vida profiles. Migrate another preset only when it needs more than one exercise profile or another clear benefit.
+
+This staged migration is an accepted temporary mixed catalog model. Keep the materialization logic isolated so the application does not need separate loading paths.
+
+The site is still before `v1.0.0`. Replace the current Viva La Vida pre-release preset and slug with the two explicit exercise profiles.
+
+Do not support the removed pre-release Viva La Vida slug as an alias.
+
+### Validation and Failure Behaviour
+
+Validate the arrangement catalog before exposing any preset.
+
+Reject:
+
+- a duplicate arrangement identifier;
+- a duplicate preset slug;
+- an exercise profile that references a missing arrangement;
+- an exercise profile with a missing required default;
+- mismatched original-key and playing-key modes;
+- duplicate materialized sources; and
+- materialized source that fails the normal parser or timeline validation.
+
+If materialization fails, report the catalog error. Do not return a partial source or silently load the default preset.
+
+Do not silently copy a setting from another profile.
+
+### Acceptance Tests
+
+Add automated tests for these cases:
+
+1. Both Viva La Vida profiles reference one arrangement definition.
+2. Both materialized sources contain the same number chords and strum bars.
+3. Both materialized sources use `original-key: Ab major` and `capo: 0`.
+4. The melody-backing profile uses `key: C major` and resolves to F, G, C, and A minor.
+5. The strumming profile uses `key: G major` and resolves to C, D, G, and E minor.
+6. Both materialized sources pass the normal parser and timeline checks.
+7. Each profile has a unique slug and materialized source.
+8. The preset catalog still returns a complete `source` value for every entry.
+9. A missing arrangement reference stops catalog creation with a stable error code.
+10. Invalid materialized source stops catalog creation with a stable error code.
+11. Existing non-Viva presets keep their source and URL behavior.
+12. An exact materialized source uses its preset URL. Edited text uses a full source URL.
+13. English and Simplified Chinese translation key sets remain identical.
+
+Verify both profiles on iPhone Safari and desktop Chrome. Confirm the displayed key, chord views, playback chords, preset replacement confirmation, and share-link behavior.
 
 ---
 
