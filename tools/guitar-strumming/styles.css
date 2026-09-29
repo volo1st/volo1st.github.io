@@ -275,15 +275,105 @@ button:focus-visible {
   border: 1px solid #a9a38f;
   border-radius: 0.4rem;
   background: #fff;
+  scroll-padding-left: 0.65rem;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
-.chord-guide {
+.chord-timeline {
+  display: flex;
+  gap: 0.65rem;
   width: max-content;
   min-width: 100%;
   margin: 0;
-  padding: 0.65rem 0.75rem;
-  font: 700 1rem/1.5 ui-monospace, SFMono-Regular, Consolas, monospace;
-  white-space: pre;
+  padding: 0.65rem;
+  list-style: none;
+}
+
+.chord-bar-card {
+  position: relative;
+  flex: 0 0 max(clamp(15rem, 78vw, 18rem), calc(var(--bar-min-width) + 1.1rem));
+  width: max(clamp(15rem, 78vw, 18rem), calc(var(--bar-min-width) + 1.1rem));
+  padding: 0.55rem;
+  border: 1px solid #a9a38f;
+  border-radius: 0.45rem;
+  background: #fffdf7;
+  scroll-snap-align: start;
+}
+
+.chord-bar-number {
+  display: block;
+  color: #4a4a43;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.chord-label-lanes {
+  position: relative;
+  height: calc(var(--label-lane-count) * 2rem + 0.35rem);
+  margin: 0.35rem 0 0;
+}
+
+.chord-change-label {
+  position: absolute;
+  top: calc(var(--label-lane) * 2rem);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  max-width: none;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.3rem;
+  white-space: nowrap;
+  background: #edf5f1;
+}
+
+.chord-change-label.align-center {
+  transform: translateX(-50%);
+}
+
+.chord-change-label.align-end {
+  transform: translateX(-100%);
+}
+
+.chord-name {
+  font: 700 1rem/1.35 ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.chord-timing-cue {
+  color: #5c594e;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.chord-duration-band {
+  position: relative;
+  height: 1rem;
+  overflow: hidden;
+  border: 1px solid #777263;
+  border-radius: 0.25rem;
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent 0,
+    transparent calc(25% - 1px),
+    #777263 calc(25% - 1px),
+    #777263 25%
+  );
+}
+
+.chord-duration-region {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: rgb(58 134 102 / 35%);
+}
+
+.chord-duration-region + .chord-duration-region {
+  border-left: 2px solid #27644e;
+}
+
+.chord-duration-region.alternate {
+  background: rgb(215 131 0 / 28%);
 }
 
 .number-chord-controls {

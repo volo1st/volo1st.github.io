@@ -189,24 +189,6 @@
     }).join(' ');
   }
 
-  function formatPracticeChordGuide(song, requestedView, arrangementOpen) {
-    if (!song || !Array.isArray(song.chordBars)) {
-      throw new TypeError('A parsed arrangement is required.');
-    }
-    if (!['shapes', 'numbers', 'sounding'].includes(requestedView)) {
-      throw new RangeError('Chord view must be shapes, numbers, or sounding.');
-    }
-    if (song.notation === 'numbers') {
-      return formatChordGuide(song, arrangementOpen ? requestedView : 'shapes');
-    }
-    return song.chordBars.map((bar) => {
-      const changes = bar.map((change) => (
-        `${change.chord}${change.slot === 1 ? '' : `@${change.slot}`}`
-      ));
-      return `| ${changes.join(' ')} |`;
-    }).join(' ');
-  }
-
   function chordIdentifier(numberChord, key) {
     const root = alteredScalePitch(key, numberChord.degree, numberChord.rootAccidental);
     const suffix = QUALITY_SUFFIXES[numberChord.quality];
@@ -296,7 +278,6 @@
 
   return Object.freeze({
     formatChordGuide,
-    formatPracticeChordGuide,
     keyFromPitchClass,
     listCapoConfigurations,
     parseKey,

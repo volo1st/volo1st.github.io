@@ -1863,7 +1863,7 @@ Manual evidence: The user confirmed the redesigned practice surface and the sing
 
 ## 11.16 Student Chord Presentation
 
-Status: Deferred after the initial stage outline on 2026-09-29. Do not implement this section yet.
+Status: Stage 1 implemented with representative browser verification on 2026-09-29.
 
 ### Purpose
 
@@ -1899,6 +1899,75 @@ Show beat positions and proportional chord regions in each bar.
 
 Show chord labels for the selected chord view. Keep Shapes as the normal student view.
 
+Support the current 8-slot, 16-slot, and 24-slot source grids in Stage 1.
+
+Use a grid-independent position model. Support a presentation grid when its size is divisible by four. This model must accommodate a future 32-slot grid without structural changes.
+
+Do not add 32 to the source grammar or playback support in this package.
+
+For each chord change, derive its beat number, subdivision number, subdivisions per beat, and proportional position in the bar.
+
+Draw the four main beat divisions and the chord-change boundaries. Do not draw a line or label for every source slot.
+
+Keep friendly timing words in a separate label formatter. Do not make count words part of the musical model.
+
+For an 8-slot grid, use standard eighth-note cues such as `4 &` for an off-beat change.
+
+For a 16-slot grid, use standard sixteenth-note cues such as `2 e`, `2 &`, and `2 a`.
+
+For a 24-slot grid, show the exact proportional change position and the main beat divisions. Do not impose sextuplet count syllables.
+
+For a future grid without an approved count vocabulary, use the same visual fallback as the 24-slot grid.
+
+Counting systems can use different syllables. Keep the label policy replaceable without changes to the presentation model.
+
+References:
+
+- [LibreTexts: Sixteenth Notes](https://human.libretexts.org/Courses/Sierra_College/Equipping_the_Musical_Ear/07%3A_Beat_Divisions/7.02%3A_Simple_Meter_Beat_Divisions/7.2.02%3A_Sixteenth_Notes)
+- [Open Music Theory: Compound Meter and Time Signatures](https://viva.pressbooks.pub/openmusictheory/chapter/compound-meters-and-time-signatures/)
+
+Do not show an `@N` source operator for any grid size.
+
+Render chord names in a label lane above the proportional duration band. Anchor each label to the chord-change boundary.
+
+Do not stretch a short chord region to make its label fit. Do not truncate a chord name.
+
+Keep a label inside the bar card when its anchor is near the left or right edge.
+
+If labels overlap, stagger them across two label rows. If two rows are not sufficient, increase the width of that bar card without changing any proportional chord position.
+
+On a phone, show one bar card at a readable width and leave a small part of the next card visible as a horizontal-scroll cue.
+
+Use horizontal scrolling and start-aligned scroll snapping. Start at bar 1 after a page load or exercise change.
+
+Do not save the chart scroll position. Do not add chart navigation buttons or automatic movement in Stage 1.
+
+On a wider screen, show multiple cards when space permits. Keep the normal bar width consistent. Permit a dense bar to become wider when its labels require more space.
+
+Make the timeline scroll region keyboard focusable. Keep visible focus and keyboard scrolling.
+
+Show every expanded bar in playback order. Give each card its displayed bar number.
+
+Do not infer repeats from identical bars. Do not reconstruct a source `xN` operator in the presentation layer.
+
+Render the full validated arrangement up to the existing 1,000-bar limit. Test presentation-model creation at this limit.
+
+Accept substantial manual horizontal scrolling for a long arrangement in Stage 1. Stage 2 can add playback following.
+
+If a later feature presents compact repeats, preserve explicit repeat metadata in the parser. Do not guess musical structure from chord equality.
+
+Do not add a separate screen-reader description, spoken chord-name formatter, or accessibility-specific timing narration in Stage 1.
+
+Keep the visible bar number, chord name, and timing cue as document text. Use semantic list structure. Preserve keyboard scrolling and visible focus as baseline repository requirements.
+
+Render the chord timeline only from a parsed musical model or the existing recoverable number-arrangement candidate.
+
+After another source-validation error, remove the timeline immediately. Do not keep a stale chart or render part of a malformed bar.
+
+If presentation-model creation fails for otherwise valid source, hide the chart and show a clear presentation error. Keep the source text unchanged.
+
+Do not fall back to source notation such as `@N` after a presentation error.
+
 Do not add playback highlighting, automatic following, chord diagrams, or strumming visualization in Stage 1.
 
 #### Stage 2: Playback Presentation
@@ -1915,15 +1984,37 @@ Evaluate chord diagrams, strumming visualization, section labels, and repeat pre
 
 Do not include a Stage 3 item only because the presentation layer can support it.
 
-### Stage 1 Decisions Still Required
+### Stage 1 Acceptance Tests
 
-- Define the beat and subdivision labels for each supported grid.
-- Define how a chord region displays when it is too narrow for its label.
-- Define the bar-card width and phone viewport behavior.
-- Define how the chart presents repeated and long arrangements.
-- Define the accessible description for each bar and chord change.
-- Define invalid and incomplete model behavior.
-- Define tests and supported-browser verification.
+Add automated tests for these cases:
+
+1. Create exact proportional chord regions for 8-slot, 16-slot, and 24-slot grids.
+2. Create a presentation model for a synthetic 32-slot song without adding 32 to the source grammar.
+3. Show standard eighth-note cues for off-beat changes in an 8-slot grid.
+4. Show standard `e`, `&`, and `a` cues for off-beat changes in a 16-slot grid.
+5. Do not add count syllables to off-beat changes in a 24-slot grid.
+6. Resolve Shapes, Numbers, and Sounding labels without changing the parsed song.
+7. Keep edge labels inside the card, use no more than two label rows, and increase card width when required.
+8. Preserve expanded bar order and create a model for 1,000 bars.
+9. Remove stale presentation after a source error.
+10. Do not put an `@N` source operator in presentation output.
+11. Keep the current source parser rejection for a 32-slot header.
+12. Keep existing parser, playback, preset, sharing, and translation tests passing.
+
+Manually verify these cases:
+
+- both Viva La Vida exercises;
+- the 16-slot Get Lucky exercise;
+- a 24-slot arrangement with a mid-bar chord change;
+- a long chord name at the final subdivision;
+- overlapping chord labels;
+- touch scrolling and scroll snapping in iPhone Safari;
+- keyboard scrolling and 200 percent zoom in desktop Chrome; and
+- unchanged playback and share-link behavior.
+
+Automated evidence: The repository check passed on 2026-09-29. It covered exact 8-slot, 16-slot, and 24-slot positions; a forward-compatible synthetic 32-slot model; timing cues; chord views; label lanes and edge alignment; dense-card widening; 1,000 expanded bars; incomplete-model rejection; stale-view clearing; source-operator exclusion; translation parity; asset hashes; and existing parser, playback, preset, and sharing regressions.
+
+Manual evidence: The user confirmed that the chord timeline, horizontal card interaction, and playback worked correctly in the browser preview on 2026-09-29. The user also confirmed the corrected chord-boundary marker after the final-region border was removed. This pass did not separately record the custom 24-slot, dense-label, keyboard, or 200 percent zoom checks. Keep these cases in the future regression checklist.
 
 ---
 

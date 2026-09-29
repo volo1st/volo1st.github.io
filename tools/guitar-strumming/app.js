@@ -5,6 +5,7 @@
   const parser = root.GuitarStrummingParser;
   const catalog = root.GuitarChordCatalog;
   const harmony = root.GuitarHarmony;
+  const presentation = root.GuitarStrummingPresentation;
   const audioApi = root.GuitarStrummingAudio;
   const shareApi = root.GuitarStrummingShare;
   const presetApi = root.GuitarStrummingPresets;
@@ -36,6 +37,8 @@
     keySummary: document.getElementById('key-summary'),
     chordViewButtons: [...document.querySelectorAll('[data-chord-view]')],
     chordGuide: document.getElementById('chord-guide'),
+    chordGuideScroll: document.getElementById('chord-guide-scroll'),
+    chordPresentationError: document.getElementById('chord-presentation-error'),
     originalKey: document.getElementById('original-key'),
     playingKey: document.getElementById('playing-key'),
     guitarConfiguration: document.getElementById('guitar-configuration'),
@@ -85,7 +88,17 @@
   let chordView = loadChordView();
 
   async function initialize() {
-    if (!core || !parser || !catalog || !harmony || !audioApi || !shareApi || !presetApi || !i18n) {
+    if (
+      !core
+      || !parser
+      || !catalog
+      || !harmony
+      || !presentation
+      || !audioApi
+      || !shareApi
+      || !presetApi
+      || !i18n
+    ) {
       showFatalError('guitar.status.scriptsFailed');
       return;
     }
@@ -1337,11 +1350,22 @@
   function renderPracticeDisplay() {
     const song = currentNumberSong() || parsedSong;
     elements.practiceChordGuideRegion.hidden = !song;
+    elements.chordGuide.replaceChildren();
+    elements.chordGuideScroll.hidden = false;
+    elements.chordPresentationError.hidden = true;
     if (song) {
-      const guide = harmony.formatPracticeChordGuide(song, chordView, elements.editor.open);
-      elements.chordGuide.textContent = displayMusicText(guide);
-    } else {
-      elements.chordGuide.textContent = '';
+      try {
+        const timeline = presentation.createChordTimeline(
+          song,
+          chordView,
+          elements.editor.open,
+        );
+        renderChordTimeline(timeline);
+      } catch (_error) {
+        elements.chordGuideScroll.hidden = true;
+        elements.chordPresentationError.hidden = false;
+        elements.chordPresentationError.textContent = t('guitar.presentationUnavailable');
+      }
     }
 
     const isNumberSong = Boolean(song && song.notation === 'numbers');
@@ -1371,6 +1395,60 @@
     renderGuitarConfigurations(song);
     elements.returnOriginalKey.disabled = sameKey(song.originalKey, song.playingKey);
     elements.keyShapesStatus.textContent = t('guitar.configurationHelp');
+  }
+
+  function renderChordTimeline(timeline) {
+    const fragment = document.createDocumentFragment();
+    for (const bar of timeline.bars) {
+      const card = document.createElement('li');
+      card.className = 'chord-bar-card';
+      card.style.setProperty('--bar-min-width', `${bar.minWidthRem}rem`);
+
+      const barNumber = document.createElement('span');
+      barNumber.className = 'chord-bar-number';
+      barNumber.textContent = t('guitar.barNumber', { number: bar.number });
+      card.append(barNumber);
+
+      const labelLanes = document.createElement('div');
+      labelLanes.className = 'chord-label-lanes';
+      labelLanes.style.setProperty('--label-lane-count', String(bar.labelLaneCount));
+      for (const change of bar.changes) {
+        const label = document.createElement('span');
+        label.className = `chord-change-label align-${change.labelAlign}`;
+        label.style.left = `${change.start * 100}%`;
+        label.style.setProperty('--label-lane', String(change.labelLane));
+
+        const chordName = document.createElement('span');
+        chordName.className = 'chord-name';
+        chordName.textContent = displayMusicText(change.label);
+        label.append(chordName);
+
+        if (change.timingCue) {
+          const timingCue = document.createElement('span');
+          timingCue.className = 'chord-timing-cue';
+          timingCue.textContent = change.timingCue;
+          label.append(timingCue);
+        }
+        labelLanes.append(label);
+      }
+      card.append(labelLanes);
+
+      const durationBand = document.createElement('div');
+      durationBand.className = 'chord-duration-band';
+      durationBand.setAttribute('aria-hidden', 'true');
+      for (const [changeIndex, change] of bar.changes.entries()) {
+        const region = document.createElement('span');
+        region.className = changeIndex % 2 === 0
+          ? 'chord-duration-region'
+          : 'chord-duration-region alternate';
+        region.style.left = `${change.start * 100}%`;
+        region.style.width = `${(change.end - change.start) * 100}%`;
+        durationBand.append(region);
+      }
+      card.append(durationBand);
+      fragment.append(card);
+    }
+    elements.chordGuide.append(fragment);
   }
 
   function renderKeyOptions(select, selectedKey, mode) {

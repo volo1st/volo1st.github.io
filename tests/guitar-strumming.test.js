@@ -9,6 +9,7 @@ const catalog = require('../tools/guitar-strumming/catalog.js');
 const core = require('../tools/guitar-strumming/core.js');
 const harmony = require('../tools/guitar-strumming/harmony.js');
 const parser = require('../tools/guitar-strumming/parser.js');
+const presentation = require('../tools/guitar-strumming/presentation.js');
 const siteI18n = require('../assets/i18n.js');
 const guitarI18n = require('../tools/guitar-strumming/i18n.js');
 require('../tools/guitar-strumming/audio-engine.js');
@@ -413,7 +414,7 @@ test('chord-guide views are read-only projections of the source', () => {
   assert.equal(JSON.stringify(result.song), before);
 });
 
-test('the practice chord guide keeps shapes in the closed student view', () => {
+test('the chord presentation keeps shapes in the closed student view', () => {
   const numberResult = parser.parseSongSource(validNumberSource, { catalog });
   const shapeResult = parser.parseSongSource(
     validNumberSource
@@ -422,18 +423,124 @@ test('the practice chord guide keeps shapes in the closed student view', () => {
     { catalog },
   );
 
-  assert.equal(
-    harmony.formatPracticeChordGuide(numberResult.song, 'numbers', false),
-    '| G/B | | Cadd9 | | D7 | | Em |',
+  const closedNumber = presentation.createChordTimeline(numberResult.song, 'numbers', false);
+  const openNumber = presentation.createChordTimeline(numberResult.song, 'sounding', true);
+  const shapeTimeline = presentation.createChordTimeline(shapeResult.song, 'numbers', true);
+
+  assert.equal(closedNumber.view, 'shapes');
+  assert.deepEqual(closedNumber.bars.map((bar) => bar.changes[0].label), [
+    'G/B', 'Cadd9', 'D7', 'Em',
+  ]);
+  assert.equal(openNumber.view, 'sounding');
+  assert.deepEqual(openNumber.bars.map((bar) => bar.changes[0].label), [
+    'Bb/D', 'Ebadd9', 'F7', 'Gm',
+  ]);
+  assert.deepEqual(shapeTimeline.bars.map((bar) => bar.changes[0].label), [
+    'G/B', 'Cadd9', 'D7', 'Em',
+  ]);
+});
+
+test('the chord presentation resolves exact positions and timing cues', () => {
+  const eighthSong = {
+    gridSize: 8,
+    notation: 'shapes',
+    chordBars: [[
+      { chord: 'C', slot: 1 },
+      { chord: 'Cmaj7', slot: 8 },
+    ]],
+  };
+  const sixteenthSong = {
+    gridSize: 16,
+    notation: 'shapes',
+    chordBars: [[
+      { chord: 'C', slot: 1 },
+      { chord: 'Am', slot: 6 },
+      { chord: 'F', slot: 7 },
+      { chord: 'G', slot: 8 },
+    ]],
+  };
+  const tripletSong = {
+    gridSize: 24,
+    notation: 'shapes',
+    chordBars: [[
+      { chord: 'C', slot: 1 },
+      { chord: 'G', slot: 8 },
+      { chord: 'Am', slot: 13 },
+    ]],
+  };
+  const eighth = presentation.createChordTimeline(eighthSong, 'shapes', false);
+  const sixteenth = presentation.createChordTimeline(sixteenthSong, 'shapes', false);
+  const triplet = presentation.createChordTimeline(tripletSong, 'shapes', false);
+
+  assert.deepEqual(
+    eighth.bars[0].changes.map(({ start, end, timingCue }) => ({ start, end, timingCue })),
+    [
+      { start: 0, end: 7 / 8, timingCue: '' },
+      { start: 7 / 8, end: 1, timingCue: '4 &' },
+    ],
   );
-  assert.equal(
-    harmony.formatPracticeChordGuide(numberResult.song, 'sounding', true),
-    '| Bb/D | | Ebadd9 | | F7 | | Gm |',
+  assert.equal(eighth.bars[0].changes[0].labelAlign, 'start');
+  assert.equal(eighth.bars[0].changes[1].labelAlign, 'end');
+  assert.deepEqual(
+    sixteenth.bars[0].changes.map((change) => change.timingCue),
+    ['', '2 e', '2 &', '2 a'],
   );
-  assert.equal(
-    harmony.formatPracticeChordGuide(shapeResult.song, 'numbers', true),
-    '| G/B | | Cadd9 | | D7 | | Em |',
-  );
+  assert.equal(sixteenth.bars[0].changes[1].start, 5 / 16);
+  assert.equal(triplet.bars[0].changes[1].start, 7 / 24);
+  assert.equal(triplet.bars[0].changes[1].timingCue, '');
+  assert.equal(triplet.bars[0].changes[2].timingCue, '3');
+});
+
+test('the chord presentation model accommodates a future 32-slot grid', () => {
+  const song = {
+    gridSize: 32,
+    notation: 'shapes',
+    chordBars: [[
+      { chord: 'Cmaj7', slot: 1 },
+      { chord: 'D/F#', slot: 2 },
+      { chord: 'Am/G', slot: 3 },
+    ]],
+  };
+  const result = presentation.createChordTimeline(song, 'shapes', false);
+
+  assert.equal(result.subdivisionsPerBeat, 8);
+  assert.equal(result.bars[0].changes[1].start, 1 / 32);
+  assert.equal(result.bars[0].changes[1].subdivisionNumber, 2);
+  assert.equal(result.bars[0].changes[1].timingCue, '');
+  assert.ok(result.bars[0].minWidthRem > 15);
+  assert.ok(result.bars[0].changes.every((change) => change.labelLane <= 1));
+  assert.equal(result.bars[0].changes[0].labelAlign, 'start');
+});
+
+test('the chord presentation preserves 1,000 expanded bars without source notation', () => {
+  const chordBars = Array.from({ length: 1000 }, (_, index) => [{
+    chord: index % 2 === 0 ? 'C' : 'G7',
+    slot: 1,
+  }]);
+  const result = presentation.createChordTimeline({
+    gridSize: 8,
+    notation: 'shapes',
+    chordBars,
+  }, 'shapes', false);
+
+  assert.equal(result.bars.length, 1000);
+  assert.equal(result.bars[0].number, 1);
+  assert.equal(result.bars[999].number, 1000);
+  assert.equal(result.bars[999].total, 1000);
+  assert.doesNotMatch(JSON.stringify(result), /@\d+/);
+});
+
+test('the chord presentation rejects incomplete bars instead of rendering a partial model', () => {
+  assert.throws(() => presentation.createChordTimeline({
+    gridSize: 8,
+    notation: 'shapes',
+    chordBars: [[]],
+  }, 'shapes', false), /at least one chord change/);
+  assert.throws(() => presentation.createChordTimeline({
+    gridSize: 8,
+    notation: 'shapes',
+    chordBars: [[{ chord: 'G', slot: 8 }]],
+  }, 'shapes', false), /start with a chord at slot 1/);
 });
 
 test('number arrangements require ordered keys with matching modes', () => {
@@ -1025,9 +1132,13 @@ foo: bar`, { catalog });
 });
 
 test('the parser rejects invalid BPM and grid values', () => {
-  const badGrid = parser.parseSongSource(validSource.replace('4/4#8', '4/4#12'), { catalog });
+  const badGrids = [12, 32].map((gridSize) => (
+    parser.parseSongSource(validSource.replace('4/4#8', `4/4#${gridSize}`), { catalog })
+  ));
   const badBpm = parser.parseSongSource(validSource.replace('bpm: 100', 'bpm: 30.5'), { catalog });
-  assert.ok(badGrid.errors.some((error) => error.code === 'grid_range'));
+  assert.ok(badGrids.every((result) => (
+    result.errors.some((error) => error.code === 'grid_range')
+  )));
   assert.ok(badBpm.errors.some((error) => error.code === 'bpm_format'));
 });
 
@@ -1406,7 +1517,8 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(html, /data-i18n="guitar\.startOver">Start over<\/button>/);
   assert.doesNotMatch(html, /id="song-summary"/);
   assert.match(html, /id="practice-chord-guide-region"[^>]*hidden/);
-  assert.match(html, /id="chord-guide"/);
+  assert.match(html, /<ol id="chord-guide" class="chord-timeline"><\/ol>/);
+  assert.match(html, /id="chord-presentation-error"[^>]*hidden/);
   assert.match(html, /<details id="practice-options"/);
   assert.match(html, /<summary[^>]*>Practice options<\/summary>/);
   assert.match(html, /<details id="arrangement-editor">/);
@@ -1437,6 +1549,7 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(html, /id="guitar-configuration"/);
   assert.match(html, /id="return-original-key"/);
   assert.ok(html.indexOf('src="./harmony.js') < html.indexOf('src="./parser.js'));
+  assert.ok(html.indexOf('src="./presentation.js') < html.indexOf('src="./app.js'));
   assert.match(html, /id="swing-feel"/);
   assert.match(html, /for="swing-feel"/);
   assert.match(html, /Use swing: off for straight timing/);
@@ -1465,6 +1578,14 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(css, /#play-pause\[aria-pressed="true"\]/);
   assert.match(css, /\.language-switcher button\[aria-pressed="true"\]/);
   assert.match(css, /\.chord-guide-scroll\s*\{[^}]*overflow-x:\s*auto/s);
+  assert.match(css, /\.chord-guide-scroll\s*\{[^}]*scroll-snap-type:\s*x mandatory/s);
+  assert.match(css, /\.chord-bar-card\s*\{[^}]*scroll-snap-align:\s*start/s);
+  assert.match(css, /\.chord-duration-band\s*\{[^}]*repeating-linear-gradient/s);
+  assert.match(
+    css,
+    /\.chord-duration-region \+ \.chord-duration-region\s*\{[^}]*border-left:/s,
+  );
+  assert.doesNotMatch(css, /\.chord-duration-region\s*\{[^}]*border-right:/s);
   assert.match(css, /\.chord-view-switcher button\[aria-pressed="false"\]:hover/);
   assert.match(css, /\.key-controls-grid\s*\{[^}]*grid-template-columns/s);
   assert.match(css, /\.setting-field select\s*\{[^}]*width:/s);
@@ -1478,7 +1599,9 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(app, /guitar\.swingCustom/);
   assert.match(app, /data-custom-swing/);
   assert.match(app, /localStorage\.setItem\('guitar-strumming-chord-view'/);
-  assert.match(app, /harmony\.formatPracticeChordGuide\(song, chordView, elements\.editor\.open\)/);
+  assert.match(app, /presentation\.createChordTimeline\(/);
+  assert.match(app, /elements\.chordGuide\.replaceChildren\(\)/);
+  assert.match(app, /function renderChordTimeline\(timeline\)/);
   assert.match(app, /elements\.editor\.addEventListener\('toggle', renderPracticeDisplay\)/);
   assert.match(app, /elements\.editor\.open = true/);
 });

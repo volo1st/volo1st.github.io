@@ -5,17 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Create looping guitar strumming backing tracks from plain text." data-i18n-content="guitar.description" />
   <title>Guitar Strum Machine</title>
-  <link rel="stylesheet" href="./styles.css?v=067666c3353d" />
+  <link rel="stylesheet" href="./styles.css?v=3cde40dedd93" />
   <script src="../../assets/i18n.js?v=1a4c0e39165a" defer></script>
-  <script src="./i18n.js?v=2468631821ee" defer></script>
+  <script src="./i18n.js?v=e74dd2dda57c" defer></script>
   <script src="./catalog.js?v=ae75bf58483e" defer></script>
-  <script src="./harmony.js?v=d7bfb0fe1dd8" defer></script>
+  <script src="./harmony.js?v=954aa42a57b9" defer></script>
+  <script src="./presentation.js?v=6c818e0fa690" defer></script>
   <script src="./parser.js?v=34c5a2512b98" defer></script>
   <script src="./core.js?v=147cce1158a5" defer></script>
   <script src="./audio-engine.js?v=cfce77a8155a" defer></script>
   <script src="./share.js?v=3dbf293aff76" defer></script>
   <script src="./preset-catalog.js?v=3a5030b3beaa" defer></script>
-  <script src="./app.js?v=7e95dcd079bc" defer></script>
+  <script src="./app.js?v=53bda1099ac8" defer></script>
   </head>
 <body>
   <main>
@@ -49,9 +50,10 @@
 
       <div id="practice-chord-guide-region" class="practice-chord-guide" hidden>
         <h2 id="chord-guide-heading" data-i18n="guitar.chords">Chords</h2>
-        <div class="chord-guide-scroll" tabindex="0" aria-labelledby="chord-guide-heading">
-          <pre id="chord-guide" class="chord-guide"></pre>
+        <div id="chord-guide-scroll" class="chord-guide-scroll" tabindex="0" aria-labelledby="chord-guide-heading">
+          <ol id="chord-guide" class="chord-timeline"></ol>
         </div>
+        <p id="chord-presentation-error" class="context-status" role="status" hidden data-i18n="guitar.presentationUnavailable">The chord chart is unavailable. Check Arrange and share.</p>
       </div>
 
       <div class="tempo-control">
