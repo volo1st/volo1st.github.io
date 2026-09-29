@@ -1636,10 +1636,10 @@ Keep the current four strum bars unchanged.
 
 Create these two visible exercise profiles:
 
-| Preset | Playing key | Capo | Sounding chords | Teaching purpose |
-| --- | --- | ---: | --- | --- |
-| Viva La Vida — melody backing in C | C major | 0 | F G C Am | Provide a C-major backing track for melody practice. |
-| Viva La Vida — syncopated strumming in G | G major | 0 | C D G Em | Practise the reviewed syncopated strumming pattern with beginner-friendly chords. |
+| Preset | Level | Playing key | Capo | Sounding chords | Teaching purpose |
+| --- | --- | --- | ---: | --- | --- |
+| Viva La Vida — melody backing in C | Beginner | C major | 0 | F G C Am | Provide a C-major backing track for melody practice. |
+| Viva La Vida — syncopated strumming in G | Intermediate | G major | 0 | C D G Em | Practise syncopated eighth-note strumming and mid-bar chord changes. |
 
 Use separate, explicit versioned slugs:
 

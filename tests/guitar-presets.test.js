@@ -48,6 +48,7 @@ test('two Viva La Vida profiles use one shared arrangement', () => {
   assert.equal(arrangements[0].chordSource, '| 4 5@8 | 5 | 1 6:m@8 | 6:m |');
   assert.equal(profiles.length, 2);
   assert.ok(profiles.every((profile) => profile.arrangementId === arrangements[0].id));
+  assert.deepEqual(profiles.map((profile) => profile.teachingLevel), ['Beginner', 'Intermediate']);
   assert.ok(Object.isFrozen(arrangements) && Object.isFrozen(arrangements[0]));
   assert.ok(Object.isFrozen(profiles) && profiles.every(Object.isFrozen));
 });
