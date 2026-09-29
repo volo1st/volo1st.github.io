@@ -107,6 +107,7 @@ test('versioned interface assets use their current content hash', () => {
         './harmony.js',
         './presentation.js',
         './notifications.js',
+        './screen-wake-lock.js',
         './parser.js',
         './core.js',
         './audio-engine.js',

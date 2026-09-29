@@ -11,6 +11,7 @@ const harmony = require('../tools/guitar-strumming/harmony.js');
 const parser = require('../tools/guitar-strumming/parser.js');
 const presentation = require('../tools/guitar-strumming/presentation.js');
 const notifications = require('../tools/guitar-strumming/notifications.js');
+const screenWakeLock = require('../tools/guitar-strumming/screen-wake-lock.js');
 const siteI18n = require('../assets/i18n.js');
 const guitarI18n = require('../tools/guitar-strumming/i18n.js');
 require('../tools/guitar-strumming/audio-engine.js');
@@ -597,6 +598,11 @@ test('playback notification policies hide routine states and retain important st
     tone: 'warning',
     timeoutMilliseconds: null,
   });
+  assert.deepEqual(notifications.policyForStatus('guitar.status.screenWakeUnavailable'), {
+    visible: true,
+    tone: 'warning',
+    timeoutMilliseconds: null,
+  });
   assert.deepEqual(notifications.policyForStatus('guitar.status.audioFailed'), {
     visible: true,
     tone: 'error',
@@ -642,6 +648,145 @@ test('playback notifications replace, expire, and dismiss without stale timer ch
   assert.equal(changes.at(-1).visible, false);
   notifier.show({ key: 'guitar.status.playing' });
   assert.equal(changes.at(-1).visible, false);
+});
+
+function makeWakeLockSentinel() {
+  const listeners = [];
+  return {
+    released: false,
+    addEventListener(type, listener) {
+      if (type === 'release') listeners.push(listener);
+    },
+    release() {
+      if (this.released) return Promise.resolve();
+      this.released = true;
+      for (const listener of listeners) listener();
+      return Promise.resolve();
+    },
+  };
+}
+
+test('screen wake lock follows playback start and stop without duplicate requests', async () => {
+  const requests = [];
+  const warnings = [];
+  const documentObject = { hidden: false };
+  const controller = screenWakeLock.createController({
+    navigator: {
+      wakeLock: {
+        request(type) {
+          requests.push(type);
+          return Promise.resolve(makeWakeLockSentinel());
+        },
+      },
+    },
+    document: documentObject,
+    onUnavailable() {
+      warnings.push('unavailable');
+    },
+  });
+
+  assert.equal(await controller.start(), true);
+  assert.equal(await controller.start(), true);
+  assert.deepEqual(requests, ['screen']);
+  assert.equal(controller.isHeld(), true);
+  controller.stop();
+  assert.equal(controller.isHeld(), false);
+  assert.deepEqual(warnings, []);
+});
+
+test('screen wake lock releases a late request after playback stops', async () => {
+  let finishRequest;
+  const sentinel = makeWakeLockSentinel();
+  const controller = screenWakeLock.createController({
+    navigator: {
+      wakeLock: {
+        request() {
+          return new Promise((resolve) => {
+            finishRequest = resolve;
+          });
+        },
+      },
+    },
+    document: { hidden: false },
+    onUnavailable() {},
+  });
+
+  const request = controller.start();
+  controller.stop();
+  finishRequest(sentinel);
+  assert.equal(await request, false);
+  assert.equal(sentinel.released, true);
+});
+
+test('screen wake lock failure warns without rejecting playback work', async () => {
+  const warnings = [];
+  const unsupported = screenWakeLock.createController({
+    navigator: {},
+    document: { hidden: false },
+    onUnavailable() {
+      warnings.push('unsupported');
+    },
+  });
+
+  assert.equal(unsupported.isSupported(), false);
+  assert.equal(await unsupported.start(), false);
+  assert.equal(await unsupported.start(), false);
+  assert.deepEqual(warnings, ['unsupported']);
+
+  unsupported.stop();
+  assert.equal(await unsupported.start(), false);
+  assert.deepEqual(warnings, ['unsupported', 'unsupported']);
+
+  const rejected = screenWakeLock.createController({
+    navigator: {
+      wakeLock: {
+        request() {
+          return Promise.reject(new Error('denied'));
+        },
+      },
+    },
+    document: { hidden: false },
+    onUnavailable() {
+      warnings.push('rejected');
+    },
+  });
+  assert.equal(await rejected.start(), false);
+  assert.deepEqual(warnings, ['unsupported', 'unsupported', 'rejected']);
+});
+
+test('screen wake lock warns after release and reacquires after visibility returns', async () => {
+  const firstSentinel = makeWakeLockSentinel();
+  const secondSentinel = makeWakeLockSentinel();
+  const thirdSentinel = makeWakeLockSentinel();
+  const sentinels = [firstSentinel, secondSentinel, thirdSentinel];
+  const warnings = [];
+  const documentObject = { hidden: false };
+  const controller = screenWakeLock.createController({
+    navigator: {
+      wakeLock: {
+        request() {
+          return Promise.resolve(sentinels.shift());
+        },
+      },
+    },
+    document: documentObject,
+    onUnavailable() {
+      warnings.push('released');
+    },
+  });
+
+  await controller.start();
+  documentObject.hidden = true;
+  await firstSentinel.release();
+  assert.deepEqual(warnings, []);
+  documentObject.hidden = false;
+  assert.equal(await controller.handleVisibilityChange(), true);
+  assert.equal(controller.isHeld(), true);
+  await secondSentinel.release();
+  assert.deepEqual(warnings, ['released']);
+  assert.equal(await controller.handleVisibilityChange(), true);
+  assert.equal(controller.isHeld(), true);
+  assert.equal(sentinels.length, 0);
 });
 
 test('the chord presentation preserves 1,000 expanded bars without source notation', () => {
@@ -1701,6 +1846,7 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.ok(html.indexOf('src="./harmony.js') < html.indexOf('src="./parser.js'));
   assert.ok(html.indexOf('src="./presentation.js') < html.indexOf('src="./app.js'));
   assert.ok(html.indexOf('src="./notifications.js') < html.indexOf('src="./app.js'));
+  assert.ok(html.indexOf('src="./screen-wake-lock.js') < html.indexOf('src="./app.js'));
   assert.match(html, /id="swing-feel"/);
   assert.match(html, /for="swing-feel"/);
   assert.match(html, /Use swing: off for straight timing/);
@@ -1759,6 +1905,10 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(app, /localStorage\.setItem\('guitar-strumming-chord-view'/);
   assert.match(app, /presentation\.createChordTimeline\(/);
   assert.match(app, /notifications\.createNotifier\(/);
+  assert.match(app, /screenWakeLockApi\.createController\(/);
+  assert.match(app, /screenWakeLock\.start\(\)/);
+  assert.ok([...app.matchAll(/screenWakeLock\.stop\(\)/g)].length >= 2);
+  assert.match(app, /screenWakeLock\.handleVisibilityChange\(\)/);
   assert.match(app, /playbackNotifier\.show\(currentPlaybackStatus\)/);
   assert.match(app, /elements\.chordGuide\.replaceChildren\(\)/);
   assert.match(app, /function renderChordTimeline\(timeline\)/);

@@ -27,6 +27,7 @@
     'guitar.status.recovered',
     'guitar.status.hiddenPause',
     'guitar.status.contextPause',
+    'guitar.status.screenWakeUnavailable',
   ]);
   const ERROR_KEYS = new Set([
     'guitar.status.audioUnavailable',

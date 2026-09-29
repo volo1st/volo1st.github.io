@@ -7,6 +7,7 @@
   const harmony = root.GuitarHarmony;
   const presentation = root.GuitarStrummingPresentation;
   const notifications = root.GuitarStrummingNotifications;
+  const screenWakeLockApi = root.GuitarScreenWakeLock;
   const audioApi = root.GuitarStrummingAudio;
   const shareApi = root.GuitarStrummingShare;
   const presetApi = root.GuitarStrummingPresets;
@@ -95,6 +96,7 @@
   let sourceReplacementBaseline = null;
   let currentPlaybackStatus = { key: 'guitar.status.preparing', parameters: {} };
   let playbackNotifier = null;
+  let screenWakeLock = null;
   let currentShareStatus = { key: 'guitar.share.preparing', parameters: {} };
   let currentValidationErrors = [];
   let fatalValidationStatus = null;
@@ -108,6 +110,7 @@
       || !harmony
       || !presentation
       || !notifications
+      || !screenWakeLockApi
       || !audioApi
       || !shareApi
       || !presetApi
@@ -121,6 +124,15 @@
       setTimeout: (callback, delay) => root.setTimeout(callback, delay),
       clearTimeout: (timer) => root.clearTimeout(timer),
       onChange: renderPlaybackNotification,
+    });
+    screenWakeLock = screenWakeLockApi.createController({
+      navigator: root.navigator,
+      document,
+      onUnavailable() {
+        if (playbackState === 'playing' || playbackState === 'starting') {
+          setPlaybackStatus('guitar.status.screenWakeUnavailable');
+        }
+      },
     });
     playbackNotifier.show(currentPlaybackStatus);
     renderPresetOptions();
@@ -955,6 +967,7 @@
       const useCountIn = countInRequired && playheadSlot === 0;
       const countInBars = beginPlaybackAtPosition(context, playheadSlot, useCountIn);
       setPlaybackStartStatus(countInBars);
+      screenWakeLock.start();
     } catch (error) {
       haltPlayback({ resetPosition: false });
       clearPlaybackPresentation();
@@ -1042,6 +1055,7 @@
     countInDisplayedBeats = null;
     playbackPresentationStartTime = null;
     playbackState = 'paused';
+    screenWakeLock.stop();
     setPlaybackStatus(statusKey, parameters);
     updateControls();
   }
@@ -1058,6 +1072,7 @@
     countInDisplayedBeats = null;
     playbackPresentationStartTime = null;
     playbackState = 'paused';
+    screenWakeLock.stop();
     if (options.resetPosition) {
       playheadSlot = 0;
       resetTempoRampState();
@@ -1289,6 +1304,10 @@
   function handleVisibilityChange() {
     if (document.hidden && (playbackState === 'playing' || playbackState === 'starting')) {
       pausePlayback('guitar.status.hiddenPause');
+      return;
+    }
+    if (!document.hidden && playbackState === 'playing') {
+      screenWakeLock.handleVisibilityChange();
     }
   }
 
