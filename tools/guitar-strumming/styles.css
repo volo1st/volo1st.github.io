@@ -227,14 +227,13 @@ button:focus-visible {
   background: #fff7dc;
 }
 
-.song-summary {
-  margin: 0.75rem 0 0;
-  color: #4a4a43;
-  font-size: 0.95rem;
+.practice-chord-guide {
+  margin-top: 0.75rem;
 }
 
-.number-chord-panel {
-  margin-top: 0.75rem;
+.practice-chord-guide h2 {
+  margin-bottom: 0.35rem;
+  font-size: 1rem;
 }
 
 .key-summary {
@@ -287,27 +286,28 @@ button:focus-visible {
   white-space: pre;
 }
 
-.key-shapes {
-  margin-top: 0.5rem;
-  background: #f8f6ef;
+.number-chord-controls {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #d2cdbd;
 }
 
-.key-shapes-content {
+.key-controls-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.75rem;
-  padding: 0.8rem;
+  margin-top: 0.75rem;
 }
 
-.key-shapes-content select {
+.key-controls-grid select {
   width: 100%;
 }
 
-.key-shapes-content .secondary-button {
+.key-controls-grid .secondary-button {
   align-self: end;
 }
 
-.key-shapes-content .context-status {
+.key-controls-grid .context-status {
   grid-column: 1 / -1;
   margin: 0;
 }
@@ -351,11 +351,19 @@ button:focus-visible {
   font-weight: 700;
 }
 
-.practice-grid {
+.practice-options {
+  background: #f8f6ef;
+}
+
+.practice-options-grid,
+.arrangement-settings-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.65rem 0.75rem;
-  margin-top: 0.8rem;
+}
+
+.arrangement-settings-grid {
+  margin-bottom: 1rem;
 }
 
 .setting-field {
@@ -573,18 +581,20 @@ code {
     grid-template-columns: 1fr;
   }
 
-  .key-shapes-content {
+  .key-controls-grid,
+  .arrangement-settings-grid {
     grid-template-columns: 1fr;
   }
 
-  .key-shapes-content .context-status {
+  .key-controls-grid .context-status {
     grid-column: auto;
   }
 }
 
 @media (max-width: 30rem) {
   .page-title-row h1 {
-    font-size: 1.75rem;
+    font-size: clamp(1.25rem, 6vw, 1.75rem);
+    white-space: nowrap;
   }
 }
 
@@ -593,7 +603,7 @@ code {
     width: min(100% - 1rem, 46rem);
   }
 
-  .practice-grid {
+  .practice-options-grid {
     grid-template-columns: 1fr;
   }
 

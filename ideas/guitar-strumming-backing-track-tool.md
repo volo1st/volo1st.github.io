@@ -1728,6 +1728,139 @@ Automated evidence: The repository check passed on 2026-09-29. It covered shared
 
 Manual evidence: The user confirmed that both Viva La Vida exercise profiles work correctly on 2026-09-29.
 
+## 11.15 Student Practice Surface
+
+Status: Implemented and verified on 2026-09-29.
+
+### Purpose
+
+Give beginner and intermediate students a small practice surface. Keep authoring and diagnostic controls available without putting them in the primary task flow.
+
+Use progressive disclosure. Do not add a persistent Beginner mode, Advanced mode, role selector, or settings page.
+
+Open shared links with all optional disclosures closed.
+
+### Primary Practice Surface
+
+Keep these items visible:
+
+- the selected exercise;
+- its teaching level and goal;
+- a read-only chord guide;
+- Play or Pause;
+- Start over;
+- a short playback status;
+- the tempo value; and
+- the tempo slider.
+
+Rename **Preset** to **Exercise**.
+
+Rename **Restart** to **Start over**.
+
+Do not add a separate Stop control. Pause preserves the position. Start over returns to the beginning.
+
+Remove the song summary. It duplicates values that are already visible or available in disclosures.
+
+Show the resolved guitar shapes in the chord guide during normal practice. Support legacy shape arrangements and number arrangements.
+
+Keep the chord guide horizontally scrollable. Keep its accessible label.
+
+Hide the chord guide when no parsed arrangement or recoverable number arrangement is available.
+
+### Practice Options
+
+Add one closed **Practice options** disclosure below the tempo control.
+
+Put these controls in it:
+
+- Count-in;
+- Speed up; and
+- all speed-up settings.
+
+Do not persist the open state. A page load or shared link must start with the disclosure closed.
+
+### Arrange and Share
+
+Rename **Edit arrangement** to **Arrange and share**.
+
+Keep this disclosure closed during normal practice.
+
+Put these controls and information in it:
+
+- original key;
+- playing key;
+- guitar configuration and capo;
+- Return to original key;
+- Shapes, Numbers, and Sounding view controls;
+- swing;
+- arrangement text;
+- validation messages;
+- Copy share link;
+- Copy source; and
+- manual copy fallback.
+
+For a legacy shape arrangement, show the existing Capo and Swing controls.
+
+For a number arrangement, show the key summary, key controls, guitar configurations, chord-view controls, and Swing control. Hide the standalone legacy Capo control.
+
+If validation finds an unavailable number shape, open Arrange and share and show the available guitar configurations.
+
+If source validation fails, open Arrange and share so the error and source remain visible.
+
+### Chord Views
+
+When Arrange and share is closed, always show Shapes in the primary chord guide.
+
+When Arrange and share is open, let Shapes, Numbers, or Sounding control the primary chord guide.
+
+Keep the saved chord-view preference for authoring convenience. Do not let that preference change the closed student view.
+
+Closing Arrange and share must immediately restore the Shapes view. It must not change source text, playback, selected exercise, or share URL.
+
+### Help and Sound Tests
+
+Keep Help closed by default.
+
+Move the strum sound test inside Help. Keep it in its own nested disclosure so the buttons do not appear until requested.
+
+Keep format instructions, sharing information, and technical explanations in Help.
+
+### Compatibility
+
+Do not change source grammar, playback scheduling, audio synthesis, preset content, preset URLs, or share-link encoding.
+
+The plain-text source remains the single source of truth.
+
+Keep the current English and Simplified Chinese language behavior. Translate all new or changed interface text in both languages.
+
+Keep visible focus, keyboard use, narrow-screen support, 200 percent zoom, and pinch zoom.
+
+Keep the page title on one line on the supported iPhone screen width.
+
+### Acceptance Tests
+
+Add automated tests for these cases:
+
+1. Exercise, chord guide, transport controls, playback status, and tempo are on the primary practice surface.
+2. The song summary is absent.
+3. Practice options is closed and contains Count-in and Speed up.
+4. Arrange and share is closed and contains authoring, key, swing, validation, and sharing controls.
+5. Help is closed and contains the closed strum sound-test disclosure.
+6. Play or Pause and Start over retain their existing behavior.
+7. A legacy arrangement shows shape chords in the primary guide.
+8. A number arrangement shows shape chords while Arrange and share is closed.
+9. The three number views control the primary guide while Arrange and share is open.
+10. Closing Arrange and share restores Shapes without changing source or playback state.
+11. A source error opens Arrange and share.
+12. An unsupported number shape opens Arrange and share and shows valid configurations.
+13. English and Simplified Chinese translation key sets remain identical.
+
+Verify the redesigned page on iPhone Safari and desktop Chrome. Test both Viva La Vida profiles, a legacy preset, keyboard use, narrow screens, horizontal chord scrolling, and 200 percent zoom.
+
+Automated evidence: The repository check passed on 2026-09-29. It covered the disclosure layout, accessible references, legacy and number chord guides, closed-view Shapes behavior, author chord views, automatic error disclosure, translation parity, asset hashes, and existing playback regressions.
+
+Manual evidence: The user confirmed the redesigned practice surface and the single-line phone title on 2026-09-29.
+
 ---
 
 # 12. MVP Acceptance Criteria

@@ -413,6 +413,29 @@ test('chord-guide views are read-only projections of the source', () => {
   assert.equal(JSON.stringify(result.song), before);
 });
 
+test('the practice chord guide keeps shapes in the closed student view', () => {
+  const numberResult = parser.parseSongSource(validNumberSource, { catalog });
+  const shapeResult = parser.parseSongSource(
+    validNumberSource
+      .replace('original-key: Bb major\nkey: Bb major\nnotation: numbers\n', '')
+      .replace('| 1/3 | 4:add9 | 5:7 | 6:m |', '| G/B | Cadd9 | D7 | Em |'),
+    { catalog },
+  );
+
+  assert.equal(
+    harmony.formatPracticeChordGuide(numberResult.song, 'numbers', false),
+    '| G/B | | Cadd9 | | D7 | | Em |',
+  );
+  assert.equal(
+    harmony.formatPracticeChordGuide(numberResult.song, 'sounding', true),
+    '| Bb/D | | Ebadd9 | | F7 | | Gm |',
+  );
+  assert.equal(
+    harmony.formatPracticeChordGuide(shapeResult.song, 'numbers', true),
+    '| G/B | | Cadd9 | | D7 | | Em |',
+  );
+});
+
 test('number arrangements require ordered keys with matching modes', () => {
   const cases = [
     [validNumberSource.replace('original-key: Bb major\n', ''), 'original_key_missing'],
@@ -1379,12 +1402,24 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.ok(soundTestTokens.every((token) => parser.parseStrumTokenValue(token).ok));
   assert.match(html, /<title>Guitar Strum Machine<\/title>/);
   assert.match(html, /<section class="practice-workspace"/);
+  assert.match(html, /data-i18n="guitar\.preset">Exercise<\/label>/);
+  assert.match(html, /data-i18n="guitar\.startOver">Start over<\/button>/);
+  assert.doesNotMatch(html, /id="song-summary"/);
+  assert.match(html, /id="practice-chord-guide-region"[^>]*hidden/);
+  assert.match(html, /id="chord-guide"/);
+  assert.match(html, /<details id="practice-options"/);
+  assert.match(html, /<summary[^>]*>Practice options<\/summary>/);
   assert.match(html, /<details id="arrangement-editor">/);
-  assert.match(html, /<summary[^>]*>Edit arrangement<\/summary>/);
+  assert.match(html, /<summary[^>]*>Arrange and share<\/summary>/);
   assert.match(html, /<details id="help">/);
-  assert.doesNotMatch(html, /<details id="(?:arrangement-editor|help|strum-sound-test)" open/);
+  assert.doesNotMatch(
+    html,
+    /<details id="(?:practice-options|arrangement-editor|help|strum-sound-test)"[^>]*\sopen(?:\s|>)/,
+  );
   assert.ok(html.indexOf('class="practice-workspace"') < html.indexOf('id="arrangement-editor"'));
   assert.match(html, /<details id="strum-sound-test">/);
+  assert.ok(html.indexOf('id="help"') < html.indexOf('id="strum-sound-test"'));
+  assert.ok(html.indexOf('id="strum-sound-test"') < html.indexOf('class="preset-notice"'));
   assert.match(html, /id="tempo-ramp-mode"/);
   assert.match(html, /id="tempo-ramp-fields"[^>]*hidden/);
   assert.match(html, /for="tempo-ramp-step"/);
@@ -1392,11 +1427,11 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(html, /for="tempo-ramp-target"/);
   assert.match(html, /id="capo-fret"/);
   assert.match(html, /for="capo-fret"/);
-  assert.match(html, /id="number-chord-panel"[^>]*hidden/);
+  assert.match(html, /id="number-chord-controls"[^>]*hidden/);
   assert.match(html, /data-chord-view="shapes"[^>]*aria-pressed="true"/);
   assert.match(html, /data-chord-view="numbers"/);
   assert.match(html, /data-chord-view="sounding"/);
-  assert.match(html, /<details id="key-shapes"/);
+  assert.doesNotMatch(html, /<details id="key-shapes"/);
   assert.match(html, /id="original-key"/);
   assert.match(html, /id="playing-key"/);
   assert.match(html, /id="guitar-configuration"/);
@@ -1426,12 +1461,12 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(css, /button,\s*select,\s*summary,\s*a\s*\{[^}]*touch-action:\s*manipulation/s);
   assert.doesNotMatch(html, /user-scalable\s*=\s*no|maximum-scale\s*=\s*1/i);
   assert.match(css, /\.tempo-ramp-fields\s*\{[^}]*grid-template-columns/s);
-  assert.match(css, /\.practice-grid\s*\{[^}]*grid-template-columns:\s*repeat\(2/s);
+  assert.match(css, /\.practice-options-grid,[\s\S]*grid-template-columns:\s*repeat\(2/);
   assert.match(css, /#play-pause\[aria-pressed="true"\]/);
   assert.match(css, /\.language-switcher button\[aria-pressed="true"\]/);
   assert.match(css, /\.chord-guide-scroll\s*\{[^}]*overflow-x:\s*auto/s);
   assert.match(css, /\.chord-view-switcher button\[aria-pressed="false"\]:hover/);
-  assert.match(css, /\.key-shapes-content\s*\{[^}]*grid-template-columns/s);
+  assert.match(css, /\.key-controls-grid\s*\{[^}]*grid-template-columns/s);
   assert.match(css, /\.setting-field select\s*\{[^}]*width:/s);
   assert.match(css, /@media \(max-width: 38rem\)/);
 
@@ -1443,9 +1478,9 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(app, /guitar\.swingCustom/);
   assert.match(app, /data-custom-swing/);
   assert.match(app, /localStorage\.setItem\('guitar-strumming-chord-view'/);
-  assert.match(app, /harmony\.formatChordGuide\(song, chordView\)/);
+  assert.match(app, /harmony\.formatPracticeChordGuide\(song, chordView, elements\.editor\.open\)/);
+  assert.match(app, /elements\.editor\.addEventListener\('toggle', renderPracticeDisplay\)/);
   assert.match(app, /elements\.editor\.open = true/);
-  assert.match(app, /\.join\(' · '\)/);
 });
 
 test('guitar translations have matching keys and format dynamic validation errors', () => {
