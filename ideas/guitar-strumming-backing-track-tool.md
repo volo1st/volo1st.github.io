@@ -1861,6 +1861,70 @@ Automated evidence: The repository check passed on 2026-09-29. It covered the di
 
 Manual evidence: The user confirmed the redesigned practice surface and the single-line phone title on 2026-09-29.
 
+## 11.16 Student Chord Presentation
+
+Status: Deferred after the initial stage outline on 2026-09-29. Do not implement this section yet.
+
+### Purpose
+
+Show chord timing in a form that a beginner can understand without learning the arrangement source syntax.
+
+Keep the student view simple. Put the necessary complexity in the presentation model and renderer.
+
+Do not show source operators such as `@8` in the student chord presentation.
+
+### Architecture
+
+Keep three separate layers:
+
+1. The plain-text arrangement is the single source of truth.
+2. The parser produces the musical model that playback uses.
+3. The presentation layer derives a read-only student view from the parsed musical model.
+
+Do not parse the source text again in the presentation layer.
+
+Do not let the presentation layer change source text, playback timing, preset identity, or share-link data.
+
+Use the same parsed chord-change positions for playback and presentation.
+
+### Delivery Stages
+
+#### Stage 1: Static Chord Timeline
+
+Replace the source-like chord guide with a visual chord timeline.
+
+Use horizontally scrollable bar cards with scroll snapping. Keep the presentation compact on a phone.
+
+Show beat positions and proportional chord regions in each bar.
+
+Show chord labels for the selected chord view. Keep Shapes as the normal student view.
+
+Do not add playback highlighting, automatic following, chord diagrams, or strumming visualization in Stage 1.
+
+#### Stage 2: Playback Presentation
+
+Highlight the current bar and chord without changing audio scheduling.
+
+Show the next chord when this helps the student prepare for a change.
+
+Evaluate optional automatic following. Do not let visual updates affect audio-clock timing.
+
+#### Stage 3: Teaching Enhancements
+
+Evaluate chord diagrams, strumming visualization, section labels, and repeat presentation as separate additions.
+
+Do not include a Stage 3 item only because the presentation layer can support it.
+
+### Stage 1 Decisions Still Required
+
+- Define the beat and subdivision labels for each supported grid.
+- Define how a chord region displays when it is too narrow for its label.
+- Define the bar-card width and phone viewport behavior.
+- Define how the chart presents repeated and long arrangements.
+- Define the accessible description for each bar and chord change.
+- Define invalid and incomplete model behavior.
+- Define tests and supported-browser verification.
+
 ---
 
 # 12. MVP Acceptance Criteria
