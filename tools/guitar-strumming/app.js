@@ -77,6 +77,13 @@
   let countInRequired = false;
   let rampCurrentBpm = null;
   let rampCompletedLoops = 0;
+  let chordTimeline = null;
+  let renderedChordTimeline = [];
+  let playbackPresentationState = Object.freeze({ mode: 'none', current: null });
+  let playbackPresentationFrame = null;
+  let playbackPresentationStartTime = null;
+  let chordTimelineFollowing = true;
+  let followedChordBarIndex = null;
   let preparedShare = null;
   let sharePreparationGeneration = 0;
   let copyRequestGeneration = 0;
@@ -149,6 +156,13 @@
     }
     elements.playPause.addEventListener('click', handlePlayPause);
     elements.restart.addEventListener('click', restartPlayback);
+    elements.chordGuideScroll.addEventListener('pointerdown', suspendChordTimelineFollowing, {
+      passive: true,
+    });
+    elements.chordGuideScroll.addEventListener('wheel', suspendChordTimelineFollowing, {
+      passive: true,
+    });
+    elements.chordGuideScroll.addEventListener('keydown', handleChordTimelineKeydown);
     elements.soundTest.addEventListener('click', handleSoundTestClick);
     elements.copyShareLink.addEventListener('click', handleCopyShareLink);
     elements.copySource.addEventListener('click', handleCopySource);
@@ -361,6 +375,7 @@
     } else if (origin === 'initial') {
       resetTempoRampState();
       countInRequired = parsedSong.countInBars > 0;
+      showReadyPlaybackPresentation();
       setPlaybackStatus('guitar.status.ready');
     } else if (!previousSong) {
       haltPlayback({ resetPosition: true });
@@ -371,6 +386,10 @@
     }
 
     updateControls();
+    if (origin === 'preset' || origin === 'initial' || origin === 'shared') {
+      enableChordTimelineFollowing();
+      scrollChordTimelineToStart(previousSong !== null);
+    }
   }
 
   function renderPresetOptions() {
@@ -908,6 +927,7 @@
     }
     if (playbackState === 'starting' || !parsedTimeline || !audioSupported) return;
 
+    enableChordTimelineFollowing();
     playbackState = 'starting';
     requestGeneration += 1;
     const requestId = requestGeneration;
@@ -923,6 +943,7 @@
       setPlaybackStartStatus(countInBars);
     } catch (error) {
       haltPlayback({ resetPosition: false });
+      clearPlaybackPresentation();
       setPlaybackStatus('guitar.status.audioFailed', { detail: error.message });
     } finally {
       if (requestId === requestGeneration && playbackState === 'starting') {
@@ -967,6 +988,7 @@
     };
     pendingTransition = null;
     countInEndTime = countInBars > 0 ? startTime : null;
+    playbackPresentationStartTime = startTime;
     countInRequired = false;
     playheadSlot = normalizedSourceSlot;
     skippedLateStrums = 0;
@@ -974,6 +996,7 @@
     planTempoRampTransition();
     pumpScheduler();
     schedulerTimer = root.setInterval(pumpScheduler, SCHEDULER_INTERVAL_MILLISECONDS);
+    startPlaybackPresentationLoop();
     updateControls();
     return countInBars;
   }
@@ -981,19 +1004,25 @@
   function pausePlayback(statusKey, parameters = {}) {
     requestGeneration += 1;
     if (activeSegment && audioEngine && audioEngine.context) {
-      promoteTempoTransition(audioEngine.context.currentTime);
-      synchronizeTempoRampProgress(audioEngine.context.currentTime);
-      playheadSlot = core.playheadSlotAtTime(
-        activeSegment.originTime,
-        audioEngine.context.currentTime,
-        activeSegment.timeline,
-      );
+      const now = audioEngine.context.currentTime;
+      if (playbackPresentationStartTime === null || now >= playbackPresentationStartTime) {
+        promoteTempoTransition(now);
+        synchronizeTempoRampProgress(now);
+        playheadSlot = core.playheadSlotAtTime(
+          activeSegment.originTime,
+          now,
+          activeSegment.timeline,
+        );
+        updatePlaybackPresentationAtTime(now);
+      }
     }
     clearSchedulerTimer();
+    stopPlaybackPresentationLoop();
     if (audioEngine) audioEngine.stopAll();
     activeSegment = null;
     pendingTransition = null;
     countInEndTime = null;
+    playbackPresentationStartTime = null;
     playbackState = 'paused';
     setPlaybackStatus(statusKey, parameters);
     updateControls();
@@ -1002,14 +1031,17 @@
   function haltPlayback(options) {
     requestGeneration += 1;
     clearSchedulerTimer();
+    stopPlaybackPresentationLoop();
     if (audioEngine) audioEngine.stopAll();
     activeSegment = null;
     pendingTransition = null;
     countInEndTime = null;
+    playbackPresentationStartTime = null;
     playbackState = 'paused';
     if (options.resetPosition) {
       playheadSlot = 0;
       resetTempoRampState();
+      showReadyPlaybackPresentation();
     }
     updateControls();
   }
@@ -1020,6 +1052,9 @@
     pendingTransition = null;
     resetTempoRampState();
     countInRequired = parsedSong.countInBars > 0;
+    enableChordTimelineFollowing();
+    showReadyPlaybackPresentation();
+    scrollChordTimelineToStart(true);
     if (audioEngine) audioEngine.stopAll();
 
     if (playbackState === 'playing' && audioEngine && audioEngine.context) {
@@ -1086,6 +1121,7 @@
       }
     } catch (error) {
       pausePlayback('guitar.status.stopped', { detail: error.message });
+      clearPlaybackPresentation();
     }
   }
 
@@ -1351,21 +1387,29 @@
     const song = currentNumberSong() || parsedSong;
     elements.practiceChordGuideRegion.hidden = !song;
     elements.chordGuide.replaceChildren();
+    chordTimeline = null;
+    renderedChordTimeline = [];
     elements.chordGuideScroll.hidden = false;
     elements.chordPresentationError.hidden = true;
     if (song) {
       try {
-        const timeline = presentation.createChordTimeline(
+        chordTimeline = presentation.createChordTimeline(
           song,
           chordView,
           elements.editor.open,
         );
-        renderChordTimeline(timeline);
+        renderChordTimeline(chordTimeline);
+        applyPlaybackPresentation(playbackPresentationState, true);
       } catch (_error) {
+        clearPlaybackPresentation();
+        chordTimeline = null;
+        renderedChordTimeline = [];
         elements.chordGuideScroll.hidden = true;
         elements.chordPresentationError.hidden = false;
         elements.chordPresentationError.textContent = t('guitar.presentationUnavailable');
       }
+    } else {
+      clearPlaybackPresentation();
     }
 
     const isNumberSong = Boolean(song && song.notation === 'numbers');
@@ -1409,9 +1453,16 @@
       barNumber.textContent = t('guitar.barNumber', { number: bar.number });
       card.append(barNumber);
 
+      const readyMarker = document.createElement('span');
+      readyMarker.className = 'chord-ready-marker';
+      readyMarker.textContent = t('guitar.chordReady');
+      readyMarker.hidden = true;
+      card.append(readyMarker);
+
       const labelLanes = document.createElement('div');
       labelLanes.className = 'chord-label-lanes';
       labelLanes.style.setProperty('--label-lane-count', String(bar.labelLaneCount));
+      const renderedChanges = [];
       for (const change of bar.changes) {
         const label = document.createElement('span');
         label.className = `chord-change-label align-${change.labelAlign}`;
@@ -1430,6 +1481,7 @@
           label.append(timingCue);
         }
         labelLanes.append(label);
+        renderedChanges.push({ label, region: null });
       }
       card.append(labelLanes);
 
@@ -1444,11 +1496,180 @@
         region.style.left = `${change.start * 100}%`;
         region.style.width = `${(change.end - change.start) * 100}%`;
         durationBand.append(region);
+        renderedChanges[changeIndex].region = region;
       }
       card.append(durationBand);
       fragment.append(card);
+      renderedChordTimeline.push({ card, readyMarker, changes: renderedChanges });
     }
     elements.chordGuide.append(fragment);
+  }
+
+  function showReadyPlaybackPresentation() {
+    if (!chordTimeline) {
+      clearPlaybackPresentation();
+      return;
+    }
+    applyPlaybackPresentation(presentation.createReadyPlaybackCue(chordTimeline));
+  }
+
+  function clearPlaybackPresentation() {
+    applyPlaybackPresentation(Object.freeze({ mode: 'none', current: null }));
+  }
+
+  function applyPlaybackPresentation(state, force = false) {
+    const cuePositions = [state.current].filter(Boolean);
+    const positionsFit = cuePositions.every((position) => (
+      renderedChordTimeline[position.barIndex]
+      && renderedChordTimeline[position.barIndex].changes[position.changeIndex]
+    ));
+    if (!positionsFit) {
+      state = Object.freeze({ mode: 'none', current: null });
+    }
+    const stateKey = JSON.stringify(state);
+    if (!force && stateKey === JSON.stringify(playbackPresentationState)) return;
+
+    for (const bar of renderedChordTimeline) {
+      bar.card.classList.remove('is-ready');
+      bar.readyMarker.hidden = true;
+      for (const change of bar.changes) {
+        change.label.classList.remove('is-current');
+        change.label.removeAttribute('aria-current');
+        change.region.classList.remove('is-current');
+      }
+    }
+
+    playbackPresentationState = state;
+    if (state.mode === 'ready' && renderedChordTimeline[0]) {
+      renderedChordTimeline[0].card.classList.add('is-ready');
+      renderedChordTimeline[0].readyMarker.hidden = false;
+    }
+    if (state.current) {
+      const currentBar = renderedChordTimeline[state.current.barIndex];
+      const currentChange = currentBar.changes[state.current.changeIndex];
+      currentChange.label.classList.add('is-current');
+      currentChange.label.setAttribute('aria-current', 'true');
+      currentChange.region.classList.add('is-current');
+    }
+
+    const activeBarIndex = state.current
+      ? state.current.barIndex
+      : state.mode === 'ready' ? 0 : null;
+    if (activeBarIndex !== null) followChordTimelineToBar(activeBarIndex, true);
+  }
+
+  function updatePlaybackPresentationAtTime(audioTime) {
+    if (!chordTimeline || !activeSegment) return true;
+    if (
+      playbackPresentationStartTime !== null
+      && audioTime < playbackPresentationStartTime
+    ) return true;
+
+    try {
+      const segment = pendingTransition
+        && audioTime >= pendingTransition.boundary.audioTime - BOUNDARY_EPSILON_SECONDS
+        ? pendingTransition.segment
+        : activeSegment;
+      const sourceSlot = core.playheadSlotAtTime(
+        segment.originTime,
+        audioTime,
+        segment.timeline,
+      );
+      applyPlaybackPresentation(presentation.playbackCueAtSlot(chordTimeline, sourceSlot));
+      return true;
+    } catch (_error) {
+      failPlaybackPresentation();
+      return false;
+    }
+  }
+
+  function startPlaybackPresentationLoop() {
+    stopPlaybackPresentationLoop();
+    if (typeof root.requestAnimationFrame !== 'function') {
+      failPlaybackPresentation();
+      return;
+    }
+
+    function updateFrame() {
+      playbackPresentationFrame = null;
+      if (
+        playbackState !== 'playing'
+        || !audioEngine
+        || !audioEngine.context
+        || !updatePlaybackPresentationAtTime(audioEngine.context.currentTime)
+      ) return;
+      playbackPresentationFrame = root.requestAnimationFrame(updateFrame);
+    }
+
+    playbackPresentationFrame = root.requestAnimationFrame(updateFrame);
+  }
+
+  function stopPlaybackPresentationLoop() {
+    if (playbackPresentationFrame === null) return;
+    if (typeof root.cancelAnimationFrame === 'function') {
+      root.cancelAnimationFrame(playbackPresentationFrame);
+    }
+    playbackPresentationFrame = null;
+  }
+
+  function failPlaybackPresentation() {
+    stopPlaybackPresentationLoop();
+    try {
+      clearPlaybackPresentation();
+    } catch (_error) {
+      playbackPresentationState = Object.freeze({ mode: 'none', current: null });
+    }
+    elements.chordPresentationError.hidden = false;
+    elements.chordPresentationError.textContent = t('guitar.playbackPresentationUnavailable');
+  }
+
+  function enableChordTimelineFollowing() {
+    chordTimelineFollowing = true;
+    followedChordBarIndex = null;
+    const activeBarIndex = playbackPresentationState.current
+      ? playbackPresentationState.current.barIndex
+      : playbackPresentationState.mode === 'ready' ? 0 : null;
+    if (activeBarIndex !== null) followChordTimelineToBar(activeBarIndex, true);
+  }
+
+  function suspendChordTimelineFollowing() {
+    chordTimelineFollowing = false;
+  }
+
+  function handleChordTimelineKeydown(event) {
+    if (['ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key)) {
+      suspendChordTimelineFollowing();
+    }
+  }
+
+  function followChordTimelineToBar(barIndex, smooth) {
+    if (!chordTimelineFollowing || followedChordBarIndex === barIndex) return;
+    const renderedBar = renderedChordTimeline[barIndex];
+    if (!renderedBar) return;
+    const containerRect = elements.chordGuideScroll.getBoundingClientRect();
+    const barRect = renderedBar.card.getBoundingClientRect();
+    const left = Math.max(
+      0,
+      elements.chordGuideScroll.scrollLeft + barRect.left - containerRect.left - 10,
+    );
+    elements.chordGuideScroll.scrollTo({
+      left,
+      behavior: smooth ? 'smooth' : 'auto',
+    });
+    followedChordBarIndex = barIndex;
+  }
+
+  function scrollChordTimelineToStart(smooth) {
+    if (typeof elements.chordGuideScroll.scrollTo === 'function') {
+      elements.chordGuideScroll.scrollTo({
+        left: 0,
+        behavior: smooth ? 'smooth' : 'auto',
+      });
+      followedChordBarIndex = 0;
+      return;
+    }
+    elements.chordGuideScroll.scrollLeft = 0;
+    followedChordBarIndex = 0;
   }
 
   function renderKeyOptions(select, selectedKey, mode) {

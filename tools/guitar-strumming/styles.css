@@ -302,11 +302,34 @@ button:focus-visible {
   scroll-snap-align: start;
 }
 
+.chord-bar-card.is-ready {
+  outline: 2px dashed #27644e;
+  outline-offset: -3px;
+}
+
 .chord-bar-number {
   display: block;
   color: #4a4a43;
   font-size: 0.8rem;
   font-weight: 700;
+}
+
+.chord-ready-marker {
+  position: absolute;
+  top: 0.42rem;
+  right: 0.55rem;
+  padding: 0.08rem 0.35rem;
+  border-radius: 999px;
+  color: #fff;
+  background: #27644e;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.chord-ready-marker[hidden] {
+  display: none;
 }
 
 .chord-label-lanes {
@@ -326,6 +349,16 @@ button:focus-visible {
   border-radius: 0.3rem;
   white-space: nowrap;
   background: #edf5f1;
+}
+
+.chord-change-label.is-current {
+  color: #fff;
+  background: #27644e;
+  box-shadow: 0 0 0 2px #173e30;
+}
+
+.chord-change-label.is-current .chord-timing-cue {
+  color: #fff;
 }
 
 .chord-change-label.align-center {
@@ -366,6 +399,10 @@ button:focus-visible {
   top: 0;
   bottom: 0;
   background: rgb(58 134 102 / 35%);
+}
+
+.chord-duration-region.is-current {
+  background: rgb(39 100 78 / 78%);
 }
 
 .chord-duration-region + .chord-duration-region {

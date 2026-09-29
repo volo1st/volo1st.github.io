@@ -1972,11 +1972,77 @@ Do not add playback highlighting, automatic following, chord diagrams, or strumm
 
 #### Stage 2: Playback Presentation
 
-Highlight the current bar and chord without changing audio scheduling.
+Highlight the current chord without changing audio scheduling.
 
-Show the next chord when this helps the student prepare for a change.
+Follow the active bar during playback. Do not let visual updates affect audio-clock timing.
 
-Evaluate optional automatic following. Do not let visual updates affect audio-clock timing.
+##### Stage 2A: Playback Highlighting
+
+Status: Implemented with browser verification on 2026-09-30.
+
+Show bar 1 as ready during the count-in. Do not show an active chord during the count-in.
+
+Activate the first chord when the song starts on the audio clock.
+
+Use the existing timeline for the current-chord cue. Do not add a separate status card.
+
+Give the active chord label and duration region a strong highlight. Do not add a separate outline to the current bar.
+
+Do not add a next-chord label, outline, duration marker, or other next-chord cue. Automatic bar following keeps upcoming chords visible without another visual state.
+
+On initial load, after an exercise change, and after Start over, show bar 1 as ready. Do not show an active chord.
+
+When playback is paused, freeze the active-chord cue at the exact paused position.
+
+If playback is paused during the count-in, keep bar 1 ready.
+
+After a source-validation error or an unrecoverable playback error, remove all playback cues. Keep the applicable error visible.
+
+Use `requestAnimationFrame` only to refresh the playback presentation.
+
+On each visual frame, derive the current position from `AudioContext.currentTime` and the applicable playback segment. Include the current tempo and swing timing.
+
+Update the Document Object Model only when the active presentation region changes.
+
+If the browser delays or drops visual frames, jump directly to the current audio position. Do not replay missed visual states.
+
+Stop the visual update loop after Pause or an error.
+
+Do not schedule, cancel, or delay audio from the visual update loop. Keep audio scheduling independent from presentation updates.
+
+After Start over or an exercise change, move the timeline to bar 1. This rule fixes retained scroll positions from the prior exercise.
+
+Follow the active bar during playback. Move the timeline only when playback enters a different bar. Do not move it for each strum or chord change.
+
+At a normal loop boundary, return the timeline to bar 1. Use a short, smooth horizontal movement.
+
+If the user manually scrolls the timeline, suspend automatic following. Enable it again after the next Play action or Start over.
+
+Pause must not change the scroll position.
+
+This rule replaces the initial decision to defer automatic following. Browser verification showed that highlighting without bar following was difficult to use.
+
+Stage 2A acceptance tests must confirm these cases:
+
+1. Exact chord-change boundaries select the new chord region.
+2. The ready state has no active chord.
+3. Count-in and playback cues change at the song origin on the audio clock.
+4. Pause freezes the cue at the paused position.
+5. A delayed visual frame selects the current audio-clock position directly.
+6. Start over and exercise changes return the timeline to bar 1.
+7. Playback follows each active bar and returns to bar 1 at the loop boundary.
+8. A presentation failure clears playback cues without changing source text or audio scheduling.
+9. English and Simplified Chinese presentation text has matching translation keys.
+10. Manual scrolling suspends automatic following until the next Play action or Start over.
+11. No next-chord cue or current-bar outline is present.
+
+Manually verify Stage 2A on iPhone Safari and desktop Chrome. Verify count-in, Pause, resume, Start over, a loop boundary, a tempo-ramp boundary, swing timing, manual scrolling, and an exercise change from a later visible bar.
+
+Automated evidence: The repository check passed on 2026-09-30. It covered exact chord boundaries, loop wrapping, the ready state, audio-clock position conversion for straight and swing timing, presentation styling, automatic-follow wiring, translation parity, asset hashes, and existing parser, playback, preset, and sharing regressions.
+
+Manual evidence: The user confirmed the simplified current-chord highlight and automatic bar following in the browser preview on 2026-09-30. The user also identified that highlighting without bar following was difficult to use and that the next-chord cues were distracting. The final design includes bar following and removes all next-chord cues and the current-bar outline.
+
+This pass did not separately record iPhone Safari, 200 percent zoom, keyboard scrolling, a tempo-ramp boundary, or custom swing timing. Keep these cases in the future regression checklist.
 
 #### Stage 3: Teaching Enhancements
 

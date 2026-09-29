@@ -512,6 +512,52 @@ test('the chord presentation model accommodates a future 32-slot grid', () => {
   assert.equal(result.bars[0].changes[0].labelAlign, 'start');
 });
 
+test('playback presentation selects exact chord boundaries and wraps with the loop', () => {
+  const timeline = presentation.createChordTimeline({
+    gridSize: 8,
+    notation: 'shapes',
+    chordBars: [
+      [{ chord: 'C', slot: 1 }, { chord: 'G', slot: 8 }],
+      [{ chord: 'G', slot: 1 }],
+      [{ chord: 'Am', slot: 1 }],
+    ],
+  }, 'shapes', false);
+
+  assert.deepEqual(presentation.playbackCueAtSlot(timeline, 6), {
+    mode: 'position',
+    current: { barIndex: 0, changeIndex: 0 },
+  });
+  assert.deepEqual(presentation.playbackCueAtSlot(timeline, 7), {
+    mode: 'position',
+    current: { barIndex: 0, changeIndex: 1 },
+  });
+  assert.deepEqual(presentation.playbackCueAtSlot(timeline, 16), {
+    mode: 'position',
+    current: { barIndex: 2, changeIndex: 0 },
+  });
+  assert.deepEqual(presentation.playbackCueAtSlot(timeline, 24), {
+    mode: 'position',
+    current: { barIndex: 0, changeIndex: 0 },
+  });
+});
+
+test('playback presentation has a ready state without an active chord', () => {
+  const timeline = presentation.createChordTimeline({
+    gridSize: 16,
+    notation: 'shapes',
+    chordBars: [[{ chord: 'C', slot: 1 }], [{ chord: 'C', slot: 1 }]],
+  }, 'shapes', false);
+
+  assert.deepEqual(presentation.createReadyPlaybackCue(timeline), {
+    mode: 'ready',
+    current: null,
+  });
+  assert.deepEqual(presentation.playbackCueAtSlot(timeline, 31.5), {
+    mode: 'position',
+    current: { barIndex: 1, changeIndex: 0 },
+  });
+});
+
 test('the chord presentation preserves 1,000 expanded bars without source notation', () => {
   const chordBars = Array.from({ length: 1000 }, (_, index) => [{
     chord: index % 2 === 0 ? 'C' : 'G7',
@@ -1580,6 +1626,9 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(css, /\.chord-guide-scroll\s*\{[^}]*overflow-x:\s*auto/s);
   assert.match(css, /\.chord-guide-scroll\s*\{[^}]*scroll-snap-type:\s*x mandatory/s);
   assert.match(css, /\.chord-bar-card\s*\{[^}]*scroll-snap-align:\s*start/s);
+  assert.match(css, /\.chord-duration-region\.is-current\s*\{[^}]*background:/s);
+  assert.doesNotMatch(css, /\.chord-bar-card\.is-current/);
+  assert.doesNotMatch(css, /\.is-next/);
   assert.match(css, /\.chord-duration-band\s*\{[^}]*repeating-linear-gradient/s);
   assert.match(
     css,
@@ -1602,6 +1651,15 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(app, /presentation\.createChordTimeline\(/);
   assert.match(app, /elements\.chordGuide\.replaceChildren\(\)/);
   assert.match(app, /function renderChordTimeline\(timeline\)/);
+  assert.match(app, /function startPlaybackPresentationLoop\(\)/);
+  assert.match(app, /requestAnimationFrame\(updateFrame\)/);
+  assert.match(app, /audioEngine\.context\.currentTime/);
+  assert.match(app, /function scrollChordTimelineToStart\(smooth\)/);
+  assert.match(app, /function followChordTimelineToBar\(barIndex, smooth\)/);
+  assert.match(app, /followChordTimelineToBar\(activeBarIndex, true\)/);
+  assert.match(app, /addEventListener\('pointerdown', suspendChordTimelineFollowing/);
+  assert.match(app, /enableChordTimelineFollowing\(\);[\s\S]*playbackState = 'starting'/);
+  assert.match(app, /origin === 'preset'/);
   assert.match(app, /elements\.editor\.addEventListener\('toggle', renderPracticeDisplay\)/);
   assert.match(app, /elements\.editor\.open = true/);
 });

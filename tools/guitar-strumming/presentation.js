@@ -33,6 +33,35 @@
     });
   }
 
+  function createReadyPlaybackCue(timeline) {
+    requireTimeline(timeline);
+    return Object.freeze({
+      mode: 'ready',
+      current: null,
+    });
+  }
+
+  function playbackCueAtSlot(timeline, sourceSlot) {
+    requireTimeline(timeline);
+    if (!Number.isFinite(sourceSlot) || sourceSlot < 0) {
+      throw new RangeError('The playback slot must be a non-negative number.');
+    }
+
+    const durationSlots = timeline.bars.length * timeline.gridSize;
+    const normalizedSlot = sourceSlot % durationSlots;
+    const barIndex = Math.floor(normalizedSlot / timeline.gridSize);
+    const slotInBar = normalizedSlot - (barIndex * timeline.gridSize);
+    const bar = timeline.bars[barIndex];
+    let changeIndex = 0;
+    for (let index = 1; index < bar.changes.length; index += 1) {
+      if (bar.changes[index].slot - 1 > slotInBar) break;
+      changeIndex = index;
+    }
+
+    const current = Object.freeze({ barIndex, changeIndex });
+    return Object.freeze({ mode: 'position', current });
+  }
+
   function createBar(bar, barIndex, barCount, gridSize, notation, view) {
     if (!Array.isArray(bar) || bar.length === 0) {
       throw new TypeError('Each chord bar must contain at least one chord change.');
@@ -182,6 +211,19 @@
     }
   }
 
+  function requireTimeline(timeline) {
+    if (
+      !timeline
+      || !Number.isInteger(timeline.gridSize)
+      || timeline.gridSize <= 0
+      || !Array.isArray(timeline.bars)
+      || timeline.bars.length === 0
+      || timeline.bars.some((bar) => !Array.isArray(bar.changes) || bar.changes.length === 0)
+    ) {
+      throw new TypeError('A complete chord timeline is required.');
+    }
+  }
+
   function requireChange(change, gridSize, previousSlot) {
     if (
       !change
@@ -196,6 +238,8 @@
 
   return Object.freeze({
     createChordTimeline,
+    createReadyPlaybackCue,
     musicalPosition,
+    playbackCueAtSlot,
   });
 }));
