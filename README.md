@@ -25,7 +25,9 @@ The guitar source requires one `tempo-ramp:` directive. Use `off` to keep a fixe
 
 The Practice section has controls for the tempo ramp. When the user enables the ramp, the tool treats the fixed BPM as the target. It starts at half of that tempo, rounded to the nearest 5 BPM, and uses a default increase of 5 BPM after every 3 loops. When the user disables the ramp, the target becomes the fixed BPM again.
 
-The guitar source requires one `capo:` directive with a value from 0 through 12. Chord identifiers describe finger shapes relative to the capo. The Capo dropdown edits the directive. A capo raises the sounding pitch without changing the chord identifiers.
+The guitar source requires one `capo:` directive with a value from 0 through 12. In a shape arrangement, chord identifiers describe finger shapes relative to the capo. The Capo dropdown edits the directive. A capo raises the sounding pitch without changing the chord identifiers.
+
+A number arrangement also requires `original-key:`, `key:`, and `notation: numbers` between `tempo-ramp:` and `capo:`. Number chords use mode-relative degrees, such as `1`, `6:m`, `5:7`, and `1/3`. The `key:` directive sets the sounding key. The capo selects guitar shapes without changing the sounding key. The interface shows the resolved shapes, numbers, and sounding chords. It rejects a guitar configuration when the local chord catalog does not contain a required shape.
 
 The guitar source requires one `swing:` directive. Use `off` for straight timing. Use a whole number from 50 through 75 to set the first eighth note's share of each beat. A value of 67 gives an approximate two-to-one triplet feel. Swing changes event timing but does not change the duration of a beat, bar, or loop. The Swing dropdown edits the directive. Edit the source to use a custom numeric value.
 

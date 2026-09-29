@@ -4,6 +4,7 @@
   const core = root.GuitarStrummingCore;
   const parser = root.GuitarStrummingParser;
   const catalog = root.GuitarChordCatalog;
+  const harmony = root.GuitarHarmony;
   const audioApi = root.GuitarStrummingAudio;
   const shareApi = root.GuitarStrummingShare;
   const presetApi = root.GuitarStrummingPresets;
@@ -31,6 +32,17 @@
     validationSummary: document.getElementById('validation-summary'),
     validationErrors: document.getElementById('validation-errors'),
     songSummary: document.getElementById('song-summary'),
+    numberChordPanel: document.getElementById('number-chord-panel'),
+    keySummary: document.getElementById('key-summary'),
+    chordViewButtons: [...document.querySelectorAll('[data-chord-view]')],
+    chordGuide: document.getElementById('chord-guide'),
+    keyShapes: document.getElementById('key-shapes'),
+    originalKey: document.getElementById('original-key'),
+    playingKey: document.getElementById('playing-key'),
+    guitarConfiguration: document.getElementById('guitar-configuration'),
+    returnOriginalKey: document.getElementById('return-original-key'),
+    keyShapesStatus: document.getElementById('key-shapes-status'),
+    legacyCapoControl: document.getElementById('legacy-capo-control'),
     playPause: document.getElementById('play-pause'),
     restart: document.getElementById('restart'),
     status: document.getElementById('playback-status'),
@@ -46,6 +58,7 @@
   };
 
   let parsedSong = null;
+  let numberDraftSong = null;
   let parsedTimeline = null;
   let musicalContentKey = null;
   let lastValidSource = null;
@@ -70,9 +83,10 @@
   let currentShareStatus = { key: 'guitar.share.preparing', parameters: {} };
   let currentValidationErrors = [];
   let fatalValidationStatus = null;
+  let chordView = loadChordView();
 
   async function initialize() {
-    if (!core || !parser || !catalog || !audioApi || !shareApi || !presetApi || !i18n) {
+    if (!core || !parser || !catalog || !harmony || !audioApi || !shareApi || !presetApi || !i18n) {
       showFatalError('guitar.status.scriptsFailed');
       return;
     }
@@ -94,6 +108,19 @@
     elements.capoFret.addEventListener('change', () => {
       updateCapoFromControl(elements.capoFret.value);
     });
+    elements.originalKey.addEventListener('change', () => {
+      updateOriginalKeyFromControl(elements.originalKey.value);
+    });
+    elements.playingKey.addEventListener('change', () => {
+      updatePlayingKeyFromControl(elements.playingKey.value);
+    });
+    elements.guitarConfiguration.addEventListener('change', () => {
+      updateCapoFromControl(elements.guitarConfiguration.value);
+    });
+    elements.returnOriginalKey.addEventListener('click', returnToOriginalKey);
+    for (const button of elements.chordViewButtons) {
+      button.addEventListener('click', () => setChordView(button.dataset.chordView));
+    }
     elements.swingFeel.addEventListener('change', () => {
       updateSwingFromControl(elements.swingFeel.value);
     });
@@ -158,6 +185,7 @@
       sourceReplacementBaseline = null;
       synchronizePresetSelection('');
       parsedSong = null;
+      numberDraftSong = null;
       parsedTimeline = null;
       musicalContentKey = null;
       lastValidSource = null;
@@ -195,6 +223,7 @@
 
     if (!result.ok) {
       parsedSong = null;
+      numberDraftSong = result.candidateSong || null;
       parsedTimeline = null;
       musicalContentKey = null;
       lastValidSource = null;
@@ -208,6 +237,7 @@
       invalidatePreparedShare('guitar.share.fixSource');
       renderValidationErrors(result.errors);
       renderSongSummary();
+      if (numberDraftSong) elements.keyShapes.open = true;
       setPlaybackStatus(
         result.errors.length === 1 ? 'guitar.status.fixOne' : 'guitar.status.fixMany',
         { count: result.errors.length },
@@ -270,8 +300,19 @@
         || JSON.stringify(previousSong.tempoRamp) !== JSON.stringify(result.song.tempoRamp)
       )
     );
+    const originalKeyOnlyChange = Boolean(
+      previousSong
+      && previousSong.notation === 'numbers'
+      && result.song.notation === 'numbers'
+      && sourceChanged
+      && previousContentKey === nextContentKey
+      && previousSong.originalKey.canonicalText !== result.song.originalKey.canonicalText
+      && parser.replaceOriginalKeyDirective(previousSource, '__ORIGINAL_KEY__')
+        === parser.replaceOriginalKeyDirective(source, '__ORIGINAL_KEY__')
+    );
 
     parsedSong = result.song;
+    numberDraftSong = null;
     parsedTimeline = nextTimeline;
     musicalContentKey = nextContentKey;
     lastValidSource = source;
@@ -297,6 +338,8 @@
       } else {
         setPlaybackStatus('guitar.status.readyBpm', { bpm: result.song.bpm });
       }
+    } else if (sourceChanged && originalKeyOnlyChange) {
+      setPlaybackStatus('guitar.status.originalKeyChanged');
     } else if (sourceChanged) {
       haltPlayback({ resetPosition: true });
       countInRequired = parsedSong.countInBars > 0;
@@ -456,6 +499,62 @@
 
   function synchronizeCapoControl(capoFret) {
     elements.capoFret.value = String(capoFret);
+  }
+
+  function updateOriginalKeyFromControl(value) {
+    const song = currentNumberSong();
+    if (!song) return;
+    const updatedSource = parser.replaceOriginalKeyDirective(elements.source.value, value);
+    if (updatedSource === null) {
+      renderNumberChordPanel(song);
+      setPlaybackStatus('guitar.status.fixOriginalKey');
+      return;
+    }
+    applyControlSource(updatedSource, 'original-key-control');
+  }
+
+  function updatePlayingKeyFromControl(value) {
+    const song = currentNumberSong();
+    if (!song) return;
+    const updatedSource = parser.replaceKeyDirective(elements.source.value, value);
+    if (updatedSource === null) {
+      renderNumberChordPanel(song);
+      setPlaybackStatus('guitar.status.fixPlayingKey');
+      return;
+    }
+    applyControlSource(updatedSource, 'playing-key-control');
+  }
+
+  function returnToOriginalKey() {
+    const song = currentNumberSong();
+    if (!song) return;
+    updatePlayingKeyFromControl(song.originalKey.canonicalText);
+  }
+
+  function setChordView(value) {
+    if (!['shapes', 'numbers', 'sounding'].includes(value)) return;
+    chordView = value;
+    try {
+      root.localStorage.setItem('guitar-strumming-chord-view', value);
+    } catch (_error) {
+      // Keep the selected view for this page session.
+    }
+    renderNumberChordPanel(currentNumberSong());
+  }
+
+  function loadChordView() {
+    try {
+      const saved = root.localStorage.getItem('guitar-strumming-chord-view');
+      if (['shapes', 'numbers', 'sounding'].includes(saved)) return saved;
+    } catch (_error) {
+      // Use the first-use default when storage is unavailable.
+    }
+    return 'shapes';
+  }
+
+  function currentNumberSong() {
+    const song = parsedSong || numberDraftSong;
+    return song && song.notation === 'numbers' ? song : null;
   }
 
   function updateSwingFromControl(rawValue) {
@@ -1237,12 +1336,13 @@
   }
 
   function renderSongSummary() {
+    renderNumberChordPanel(currentNumberSong());
     if (!parsedSong) {
       elements.songSummary.textContent = t('guitar.summary.none');
       return;
     }
     const barCount = parsedSong.chordBars.length;
-    elements.songSummary.textContent = [
+    const summaryParts = [
       t(barCount === 1 ? 'guitar.summary.bar' : 'guitar.summary.bars', { count: barCount }),
       parsedSong.tempoRamp.enabled
         ? t('guitar.summary.rampTempo', {
@@ -1250,18 +1350,107 @@
           target: parsedSong.tempoRamp.targetBpm,
         })
         : t('guitar.summary.fixedTempo', { bpm: parsedSong.bpm }),
-      parsedSong.capoFret === 0
+    ];
+    if (parsedSong.notation !== 'numbers') {
+      summaryParts.push(parsedSong.capoFret === 0
         ? t('guitar.summary.capoOff')
-        : t('guitar.summary.capo', { fret: parsedSong.capoFret }),
-      parsedSong.swingPercent === null
+        : t('guitar.summary.capo', { fret: parsedSong.capoFret }));
+    }
+    summaryParts.push(parsedSong.swingPercent === null
         ? t('guitar.summary.swingOff')
-        : t('guitar.summary.swing', { percent: parsedSong.swingPercent }),
-    ].join(' · ');
+        : t('guitar.summary.swing', { percent: parsedSong.swingPercent }));
+    elements.songSummary.textContent = summaryParts.join(' · ');
+  }
+
+  function renderNumberChordPanel(song) {
+    const isNumberSong = Boolean(song && song.notation === 'numbers');
+    elements.numberChordPanel.hidden = !isNumberSong;
+    elements.legacyCapoControl.hidden = isNumberSong;
+    if (!isNumberSong) return;
+
+    const shapeKey = harmony.keyFromPitchClass(
+      song.playingKey.pitchClass - song.capoFret,
+      song.playingKey.mode,
+    );
+    const summaryParameters = {
+      originalKey: displayMusicText(song.originalKey.canonicalText),
+      playingKey: displayMusicText(song.playingKey.canonicalText),
+      shapeKey: displayMusicText(shapeKey.canonicalTonic),
+      capo: song.capoFret,
+    };
+    elements.keySummary.textContent = sameKey(song.originalKey, song.playingKey)
+      ? t(song.capoFret === 0 ? 'guitar.keySummarySameNoCapo' : 'guitar.keySummarySame', summaryParameters)
+      : t(song.capoFret === 0 ? 'guitar.keySummaryChangedNoCapo' : 'guitar.keySummaryChanged', summaryParameters);
+
+    for (const button of elements.chordViewButtons) {
+      button.setAttribute('aria-pressed', String(button.dataset.chordView === chordView));
+    }
+    elements.chordGuide.textContent = displayMusicText(harmony.formatChordGuide(song, chordView));
+    renderKeyOptions(elements.originalKey, song.originalKey, song.originalKey.mode);
+    renderKeyOptions(elements.playingKey, song.playingKey, song.originalKey.mode);
+    renderGuitarConfigurations(song);
+    elements.returnOriginalKey.disabled = sameKey(song.originalKey, song.playingKey);
+    elements.keyShapesStatus.textContent = t('guitar.configurationHelp');
+  }
+
+  function renderKeyOptions(select, selectedKey, mode) {
+    const options = [];
+    for (let pitchClass = 0; pitchClass < 12; pitchClass += 1) {
+      const key = harmony.keyFromPitchClass(pitchClass, mode);
+      const option = document.createElement('option');
+      option.value = key.canonicalText;
+      option.textContent = displayMusicText(key.canonicalText);
+      option.selected = key.pitchClass === selectedKey.pitchClass;
+      options.push(option);
+    }
+    select.replaceChildren(...options);
+  }
+
+  function renderGuitarConfigurations(song) {
+    const numberChords = [];
+    const seen = new Set();
+    for (const bar of song.chordBars) {
+      for (const change of bar) {
+        if (!change.numberChord || seen.has(change.numberChord.normalized)) continue;
+        seen.add(change.numberChord.normalized);
+        numberChords.push(change.numberChord);
+      }
+    }
+    const configurations = harmony.listCapoConfigurations(numberChords, song.playingKey, catalog);
+    const options = configurations.map((configuration) => {
+      const option = document.createElement('option');
+      option.value = String(configuration.capoFret);
+      const parameters = {
+        shapeKey: displayMusicText(configuration.shapeKey.canonicalTonic),
+        fret: configuration.capoFret,
+        shapes: configuration.progression.map(displayMusicText).join(' '),
+        missing: configuration.missingShapes.map(displayMusicText).join(', '),
+      };
+      option.textContent = configuration.available
+        ? t(configuration.capoFret === 0
+          ? 'guitar.configurationNoCapo'
+          : 'guitar.configurationCapo', parameters)
+        : t('guitar.configurationUnavailable', parameters);
+      option.disabled = !configuration.available;
+      option.selected = configuration.capoFret === song.capoFret;
+      return option;
+    });
+    elements.guitarConfiguration.replaceChildren(...options);
+  }
+
+  function sameKey(left, right) {
+    return left.pitchClass === right.pitchClass && left.mode === right.mode;
+  }
+
+  function displayMusicText(value) {
+    return String(value).replaceAll('bb', '♭♭').replaceAll('##', '♯♯')
+      .replaceAll('b', '♭').replaceAll('#', '♯');
   }
 
   function updateControls() {
     const playbackAvailable = Boolean(parsedTimeline) && audioSupported;
     const rampEnabled = Boolean(parsedSong && parsedSong.tempoRamp.enabled);
+    const numberSong = currentNumberSong();
     elements.playPause.disabled = !playbackAvailable || playbackState === 'starting';
     elements.restart.disabled = !playbackAvailable || playbackState === 'starting';
     elements.playPause.textContent = playbackState === 'playing'
@@ -1273,6 +1462,12 @@
     elements.copySource.disabled = false;
     elements.tempoRampMode.disabled = !parsedSong || playbackState === 'starting';
     elements.capoFret.disabled = !parsedSong || playbackState === 'starting';
+    elements.originalKey.disabled = !numberSong || playbackState === 'starting';
+    elements.playingKey.disabled = !numberSong || playbackState === 'starting';
+    elements.guitarConfiguration.disabled = !numberSong || playbackState === 'starting';
+    elements.returnOriginalKey.disabled = !numberSong
+      || sameKey(numberSong.originalKey, numberSong.playingKey)
+      || playbackState === 'starting';
     elements.swingFeel.disabled = !parsedSong || playbackState === 'starting';
     for (const rampField of [
       elements.tempoRampStep,

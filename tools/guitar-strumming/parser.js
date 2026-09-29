@@ -1,12 +1,15 @@
 (function initializeParser(root, factory) {
-  const api = factory();
+  const harmony = typeof module === 'object' && module.exports
+    ? require('./harmony.js')
+    : root && root.GuitarHarmony;
+  const api = factory(harmony);
   if (typeof module === 'object' && module.exports) {
     module.exports = api;
   }
   if (root) {
     root.GuitarStrummingParser = api;
   }
-}(typeof globalThis !== 'undefined' ? globalThis : this, function createParser() {
+}(typeof globalThis !== 'undefined' ? globalThis : this, function createParser(harmony) {
   'use strict';
 
   const VALID_GRID_SIZES = new Set([8, 16, 24]);
@@ -66,81 +69,168 @@
     }
     const tempoRamp = parseTempoRamp(tempoRampEntry, bpm, errors);
 
-    const capoEntry = lines[4];
+    const firstChordLabelIndex = lines.findIndex((entry) => entry.text === 'chords:');
+    const numberDirectivePattern = /^(?:original-key|key|notation)\s*:/;
+    const hasNumberDirectives = lines
+      .slice(4, firstChordLabelIndex === -1 ? undefined : firstChordLabelIndex)
+      .some((entry) => numberDirectivePattern.test(entry.text));
+    let directiveIndex = 4;
+    let originalKey = null;
+    let playingKey = null;
+    let notation = 'shapes';
+
+    if (hasNumberDirectives) {
+      const originalKeyEntry = lines[directiveIndex];
+      if (!originalKeyEntry || !/^original-key\s*:/.test(originalKeyEntry.text)) {
+        addError(
+          errors,
+          'original_key_missing',
+          originalKeyEntry ? originalKeyEntry.line : null,
+          null,
+          null,
+          null,
+          'original-key',
+          'Expected original-key: followed by a key such as Bb major after tempo-ramp.',
+        );
+        return makeResult(null, errors);
+      }
+      originalKey = parseKeyDirective(originalKeyEntry, 'original-key', errors);
+      directiveIndex += 1;
+
+      const keyEntry = lines[directiveIndex];
+      if (!keyEntry || !/^key\s*:/.test(keyEntry.text)) {
+        const duplicate = findDuplicateDirective(keyEntry, new Set(['original-key']));
+        addError(
+          errors,
+          duplicate ? duplicate.code : 'key_missing',
+          keyEntry ? keyEntry.line : null,
+          null,
+          null,
+          null,
+          duplicate ? duplicate.field : 'key',
+          duplicate ? duplicate.message : 'Expected key: followed by the playing key after original-key.',
+        );
+        return makeResult(null, errors);
+      }
+      playingKey = parseKeyDirective(keyEntry, 'key', errors);
+      directiveIndex += 1;
+
+      const notationEntry = lines[directiveIndex];
+      if (!notationEntry || !/^notation\s*:/.test(notationEntry.text)) {
+        const duplicate = findDuplicateDirective(
+          notationEntry,
+          new Set(['original-key', 'key']),
+        );
+        addError(
+          errors,
+          duplicate ? duplicate.code : 'notation_missing',
+          notationEntry ? notationEntry.line : null,
+          null,
+          null,
+          null,
+          duplicate ? duplicate.field : 'notation',
+          duplicate ? duplicate.message : 'Expected notation: numbers after the playing key.',
+        );
+        return makeResult(null, errors);
+      }
+      notation = parseNotation(notationEntry, errors);
+      directiveIndex += 1;
+
+      if (originalKey && playingKey && originalKey.mode !== playingKey.mode) {
+        addError(
+          errors,
+          'key_mode_mismatch',
+          keyEntry.line,
+          null,
+          null,
+          null,
+          'key',
+          'Original key and playing key must use the same mode.',
+          { originalMode: originalKey.mode, playingMode: playingKey.mode },
+        );
+      }
+    }
+
+    const capoEntry = lines[directiveIndex];
     if (!capoEntry || !/^capo\s*:/.test(capoEntry.text)) {
+      const seenDirectives = new Set(['count-in', 'tempo-ramp']);
+      if (hasNumberDirectives) {
+        seenDirectives.add('original-key');
+        seenDirectives.add('key');
+        seenDirectives.add('notation');
+      }
+      const duplicate = findDuplicateDirective(capoEntry, seenDirectives);
       addError(
         errors,
-        !capoEntry || capoEntry.text === 'chords:' || /^swing\s*:/.test(capoEntry.text)
-          ? 'capo_missing'
-          : directiveCode(capoEntry && capoEntry.text),
+        duplicate
+          ? duplicate.code
+          : (!capoEntry || capoEntry.text === 'chords:' || /^swing\s*:/.test(capoEntry.text)
+            ? 'capo_missing'
+            : directiveCode(capoEntry && capoEntry.text)),
         capoEntry ? capoEntry.line : null,
         null,
         null,
         null,
-        'capo',
-        'Expected capo: followed by a whole number from 0 through 12 after tempo-ramp.',
+        duplicate ? duplicate.field : 'capo',
+        duplicate
+          ? duplicate.message
+          : (hasNumberDirectives
+            ? 'Expected capo: followed by a whole number from 0 through 12 after notation.'
+            : 'Expected capo: followed by a whole number from 0 through 12 after tempo-ramp.'),
       );
       return makeResult(null, errors);
     }
     const capoFret = parseCapo(capoEntry, errors);
+    directiveIndex += 1;
 
-    const swingEntry = lines[5];
+    const swingEntry = lines[directiveIndex];
     if (!swingEntry || !/^swing\s*:/.test(swingEntry.text)) {
+      const duplicate = findDuplicateDirective(swingEntry, new Set([
+        'count-in',
+        'tempo-ramp',
+        ...(hasNumberDirectives ? ['original-key', 'key', 'notation'] : []),
+        'capo',
+      ]));
       addError(
         errors,
-        !swingEntry || swingEntry.text === 'chords:'
-          ? 'swing_missing'
-          : directiveCode(swingEntry && swingEntry.text),
+        duplicate
+          ? duplicate.code
+          : (!swingEntry || swingEntry.text === 'chords:'
+            ? 'swing_missing'
+            : directiveCode(swingEntry && swingEntry.text)),
         swingEntry ? swingEntry.line : null,
         null,
         null,
         null,
-        'swing',
-        'Expected swing: off or a whole number from 50 through 75 after capo.',
+        duplicate ? duplicate.field : 'swing',
+        duplicate
+          ? duplicate.message
+          : 'Expected swing: off or a whole number from 50 through 75 after capo.',
       );
       return makeResult(null, errors);
     }
     const swingPercent = parseSwing(swingEntry, errors);
+    directiveIndex += 1;
 
-    if (!lines[6] || lines[6].text !== 'chords:') {
-      const entry = lines[6] || lines.at(-1);
-      const isDuplicateCountIn = entry && /^count-in\s*:/.test(entry.text);
-      const isDuplicateTempoRamp = entry && /^tempo-ramp\s*:/.test(entry.text);
-      const isDuplicateCapo = entry && /^capo\s*:/.test(entry.text);
-      const isDuplicateSwing = entry && /^swing\s*:/.test(entry.text);
+    const chordLabelIndex = directiveIndex;
+    if (!lines[chordLabelIndex] || lines[chordLabelIndex].text !== 'chords:') {
+      const entry = lines[chordLabelIndex] || lines.at(-1);
+      const duplicate = findDuplicateDirective(entry);
       addError(
         errors,
-        isDuplicateCountIn
-          ? 'count_in_duplicate'
-          : (isDuplicateTempoRamp
-            ? 'tempo_ramp_duplicate'
-            : (isDuplicateCapo
-              ? 'capo_duplicate'
-              : (isDuplicateSwing ? 'swing_duplicate' : directiveCode(entry && entry.text)))),
+        duplicate ? duplicate.code : directiveCode(entry && entry.text),
         entry ? entry.line : sourceLines.length,
         null,
         null,
         null,
-        isDuplicateCountIn
-          ? 'count-in'
-          : (isDuplicateTempoRamp
-            ? 'tempo-ramp'
-            : (isDuplicateCapo ? 'capo' : (isDuplicateSwing ? 'swing' : 'document'))),
-        isDuplicateCountIn
-          ? 'The count-in: directive can occur only once.'
-          : (isDuplicateTempoRamp
-            ? 'The tempo-ramp: directive can occur only once.'
-            : (isDuplicateCapo
-              ? 'The capo: directive can occur only once.'
-              : (isDuplicateSwing
-                ? 'The swing: directive can occur only once.'
-                : 'Expected chords: after the swing directive.'))),
+        duplicate ? duplicate.field : 'document',
+        duplicate ? duplicate.message : 'Expected chords: after the swing directive.',
       );
       return makeResult(null, errors);
     }
 
     const strumLabelIndex = lines.findIndex((entry, index) => (
-      index > 6 && entry.text === 'strum:'
+      index > chordLabelIndex && entry.text === 'strum:'
     ));
     if (strumLabelIndex === -1) {
       addError(
@@ -156,7 +246,9 @@
       return makeResult(null, errors);
     }
 
-    const duplicateChordLabel = lines.find((entry, index) => index > 6 && entry.text === 'chords:');
+    const duplicateChordLabel = lines.find((entry, index) => (
+      index > chordLabelIndex && entry.text === 'chords:'
+    ));
     if (duplicateChordLabel) {
       addError(
         errors,
@@ -185,13 +277,13 @@
       );
     }
 
-    const chordLines = lines.slice(7, strumLabelIndex);
+    const chordLines = lines.slice(chordLabelIndex + 1, strumLabelIndex);
     const strumLines = lines.slice(strumLabelIndex + 1);
     if (chordLines.length === 0) {
       addError(
         errors,
         'chords_section_empty',
-        lines[6].line,
+        lines[chordLabelIndex].line,
         'chords',
         null,
         null,
@@ -217,6 +309,9 @@
       section: 'chords',
       gridSize,
       catalog,
+      notation,
+      playingKey,
+      capoFret,
       errors,
     });
     const strumBars = parseSectionBars({
@@ -242,11 +337,11 @@
     }
 
     if (
-      errors.length > 0
-      || gridSize === null
+      gridSize === null
       || bpm === null
       || countInBars === null
       || tempoRamp === null
+      || notation === null
       || capoFret === null
       || swingPercent === undefined
     ) {
@@ -257,12 +352,21 @@
       bpm,
       countInBars,
       tempoRamp,
+      notation,
+      originalKey,
+      playingKey,
       capoFret,
       swingPercent,
       gridSize,
       chordBars: Object.freeze(chordBars.map((bar) => Object.freeze(bar.changes))),
       strumBars: Object.freeze(strumBars.map((bar) => Object.freeze(bar.tokens))),
     });
+    if (errors.length > 0) {
+      const candidateSong = errors.every((error) => error.code === 'number_shape_unsupported')
+        ? song
+        : null;
+      return makeResult(null, errors, candidateSong);
+    }
     return makeResult(song, errors);
   }
 
@@ -557,6 +661,59 @@
     return value;
   }
 
+  function parseKeyDirective(entry, directiveName, errors) {
+    const escapedName = directiveName.replace('-', '\\-');
+    const match = entry.text.match(new RegExp(`^${escapedName}\\s*:\\s*(.+)$`));
+    const errorCode = directiveName === 'original-key' ? 'original_key_format' : 'key_format';
+    if (!match || !harmony) {
+      addError(
+        errors,
+        errorCode,
+        entry.line,
+        null,
+        null,
+        null,
+        directiveName,
+        `Use ${directiveName}: followed by a key such as Bb major.`,
+      );
+      return null;
+    }
+    const parsed = harmony.parseKey(match[1]);
+    if (!parsed.ok) {
+      addError(
+        errors,
+        errorCode,
+        entry.line,
+        null,
+        null,
+        null,
+        directiveName,
+        `Use ${directiveName}: followed by a key such as Bb major.`,
+        { value: match[1] },
+      );
+      return null;
+    }
+    return parsed.key;
+  }
+
+  function parseNotation(entry, errors) {
+    const match = entry.text.match(/^notation\s*:\s*(\S+)$/);
+    if (!match || match[1] !== 'numbers') {
+      addError(
+        errors,
+        'notation_format',
+        entry.line,
+        null,
+        null,
+        null,
+        'notation',
+        'Use notation: numbers.',
+      );
+      return null;
+    }
+    return 'numbers';
+  }
+
   function parseCapo(entry, errors) {
     const match = entry.text.match(/^capo\s*:\s*(\S+)$/);
     if (!match || !/^\d+$/.test(match[1])) {
@@ -636,15 +793,45 @@
   }
 
   function parseSectionBars(options) {
-    const { lines, section, gridSize, catalog, errors } = options;
+    const {
+      lines,
+      section,
+      gridSize,
+      catalog,
+      notation,
+      playingKey,
+      capoFret,
+      errors,
+    } = options;
     const bars = [];
     for (const entry of lines) {
-      parseBarLine(entry, section, gridSize, catalog, bars, errors);
+      parseBarLine({
+        entry,
+        section,
+        gridSize,
+        catalog,
+        notation,
+        playingKey,
+        capoFret,
+        bars,
+        errors,
+      });
     }
     return bars;
   }
 
-  function parseBarLine(entry, section, gridSize, catalog, bars, errors) {
+  function parseBarLine(options) {
+    const {
+      entry,
+      section,
+      gridSize,
+      catalog,
+      notation,
+      playingKey,
+      capoFret,
+      bars,
+      errors,
+    } = options;
     const text = entry.text;
     let cursor = 0;
     while (cursor < text.length) {
@@ -654,43 +841,20 @@
       if (text[cursor] !== '|') {
         const isComment = text[cursor] === '#';
         const looksLikeDirective = /^[a-z][a-z-]*\s*:/i.test(text.slice(cursor));
-        const isDuplicateCountIn = /^count-in\s*:/.test(text.slice(cursor));
-        const isDuplicateTempoRamp = /^tempo-ramp\s*:/.test(text.slice(cursor));
-        const isDuplicateCapo = /^capo\s*:/.test(text.slice(cursor));
-        const isDuplicateSwing = /^swing\s*:/.test(text.slice(cursor));
+        const duplicate = findDuplicateDirective({ text: text.slice(cursor) });
         addError(
           errors,
           isComment
             ? 'comments_not_supported'
-            : (isDuplicateCountIn
-              ? 'count_in_duplicate'
-              : (isDuplicateTempoRamp
-                ? 'tempo_ramp_duplicate'
-                : (isDuplicateCapo
-                  ? 'capo_duplicate'
-                  : (isDuplicateSwing
-                    ? 'swing_duplicate'
-                    : (looksLikeDirective ? 'unknown_directive' : 'bar_syntax'))))),
+            : (duplicate ? duplicate.code : (looksLikeDirective ? 'unknown_directive' : 'bar_syntax')),
           entry.line,
           section,
           bars.length + 1,
           null,
-          isDuplicateCountIn
-            ? 'count-in'
-            : (isDuplicateTempoRamp
-              ? 'tempo-ramp'
-              : (isDuplicateCapo ? 'capo' : (isDuplicateSwing ? 'swing' : 'bar'))),
+          duplicate ? duplicate.field : 'bar',
           isComment
             ? 'Comments are not supported.'
-            : (isDuplicateCountIn
-              ? 'The count-in: directive can occur only once.'
-              : (isDuplicateTempoRamp
-                ? 'The tempo-ramp: directive can occur only once.'
-                : (isDuplicateCapo
-                  ? 'The capo: directive can occur only once.'
-                  : (isDuplicateSwing
-                    ? 'The swing: directive can occur only once.'
-                    : 'Each section line must contain one or more | ... | bars.')))),
+            : (duplicate ? duplicate.message : 'Each section line must contain one or more | ... | bars.'),
         );
         return;
       }
@@ -713,7 +877,17 @@
       const content = text.slice(cursor + 1, closeIndex).trim();
       const firstBarNumber = bars.length + 1;
       const parsedBar = section === 'chords'
-        ? parseChordBar(content, entry.line, firstBarNumber, gridSize, catalog, errors)
+        ? parseChordBar({
+          content,
+          line: entry.line,
+          bar: firstBarNumber,
+          gridSize,
+          catalog,
+          notation,
+          playingKey,
+          capoFret,
+          errors,
+        })
         : parseStrumBar(content, entry.line, firstBarNumber, gridSize, errors);
       const sharedBoundaryIndex = closeIndex;
       cursor = skipSpaces(text, closeIndex + 1);
@@ -792,7 +966,18 @@
     }
   }
 
-  function parseChordBar(content, line, bar, gridSize, catalog, errors) {
+  function parseChordBar(options) {
+    const {
+      content,
+      line,
+      bar,
+      gridSize,
+      catalog,
+      notation,
+      playingKey,
+      capoFret,
+      errors,
+    } = options;
     const tokens = splitTokens(content);
     const changes = [];
     if (tokens.length === 0) {
@@ -812,7 +997,10 @@
     let previousSlot = 0;
     tokens.forEach((token, tokenIndex) => {
       const atParts = token.split('@');
-      let identifier = atParts[0];
+      const sourceIdentifier = atParts[0];
+      let identifier = sourceIdentifier;
+      let numberChord = null;
+      let soundingChord = null;
       let slot = tokenIndex === 0 ? 1 : null;
 
       if (tokenIndex === 0 && atParts.length > 1) {
@@ -849,8 +1037,8 @@
             bar,
             null,
             'slot',
-            `Use a whole-number slot for ${identifier}.`,
-            { chord: identifier },
+            `Use a whole-number slot for ${sourceIdentifier}.`,
+            { chord: sourceIdentifier },
           );
         } else {
           slot = Number(slotText);
@@ -881,7 +1069,7 @@
         }
       }
 
-      if (atParts.length > 2 || identifier === '') {
+      if (atParts.length > 2 || sourceIdentifier === '') {
         addError(
           errors,
           'chord_token_format',
@@ -893,10 +1081,43 @@
           `Invalid chord token: ${token}.`,
           { token },
         );
-        identifier = identifier || token;
+        identifier = sourceIdentifier || token;
       }
 
-      if (catalog && !catalog.getChord(identifier)) {
+      if (notation === 'numbers' && sourceIdentifier !== '' && atParts.length <= 2) {
+        const parsedNumberChord = harmony && harmony.parseNumberChord(sourceIdentifier);
+        if (!parsedNumberChord || !parsedNumberChord.ok) {
+          addError(
+            errors,
+            'number_chord_format',
+            line,
+            'chords',
+            bar,
+            slot,
+            'chord',
+            `Invalid number chord: ${sourceIdentifier}.`,
+            { token: sourceIdentifier },
+          );
+        } else if (playingKey && capoFret !== null) {
+          numberChord = parsedNumberChord.chord;
+          const resolved = harmony.resolveNumberChord(numberChord, playingKey, capoFret);
+          identifier = resolved.shapeChord;
+          soundingChord = resolved.soundingChord;
+          if (catalog && !catalog.getChord(identifier)) {
+            addError(
+              errors,
+              'number_shape_unsupported',
+              line,
+              'chords',
+              bar,
+              slot,
+              'chord',
+              `${sourceIdentifier} resolves to sounding chord ${soundingChord} and shape ${identifier}. The ${identifier} shape is not supported.`,
+              { token: sourceIdentifier, soundingChord, shapeChord: identifier },
+            );
+          }
+        }
+      } else if (catalog && !catalog.getChord(identifier)) {
         addError(
           errors,
           'chord_unsupported',
@@ -911,7 +1132,15 @@
       }
 
       if (slot !== null) {
-        changes.push(Object.freeze({ chord: identifier, slot }));
+        changes.push(Object.freeze(notation === 'numbers'
+          ? {
+            chord: identifier,
+            slot,
+            sourceChord: sourceIdentifier,
+            numberChord,
+            soundingChord,
+          }
+          : { chord: identifier, slot }));
         previousSlot = slot;
       }
     });
@@ -1005,6 +1234,14 @@
     return replaceDirectiveValue(source, 'tempo-ramp', replacementValue);
   }
 
+  function replaceOriginalKeyDirective(source, replacementValue) {
+    return replaceDirectiveValue(source, 'original-key', replacementValue);
+  }
+
+  function replaceKeyDirective(source, replacementValue) {
+    return replaceDirectiveValue(source, 'key', replacementValue);
+  }
+
   function replaceCapoDirective(source, replacementValue) {
     return replaceDirectiveValue(source, 'capo', replacementValue);
   }
@@ -1066,19 +1303,44 @@
     }));
   }
 
-  function makeResult(song, errors) {
+  function makeResult(song, errors, candidateSong = null) {
     const orderedErrors = [...errors].sort((left, right) => (
       (left.line ?? Number.MAX_SAFE_INTEGER) - (right.line ?? Number.MAX_SAFE_INTEGER)
     ));
     return Object.freeze({
       ok: orderedErrors.length === 0,
       song,
+      candidateSong,
       errors: Object.freeze(orderedErrors),
     });
   }
 
   function directiveCode(text) {
     return text && /^[a-z][a-z-]*\s*:/i.test(text) ? 'unknown_directive' : 'document_order';
+  }
+
+  function findDuplicateDirective(entry, seenFields = null) {
+    if (!entry) return null;
+    const directives = [
+      ['count-in', 'count_in_duplicate'],
+      ['tempo-ramp', 'tempo_ramp_duplicate'],
+      ['original-key', 'original_key_duplicate'],
+      ['key', 'key_duplicate'],
+      ['notation', 'notation_duplicate'],
+      ['capo', 'capo_duplicate'],
+      ['swing', 'swing_duplicate'],
+    ];
+    for (const [field, code] of directives) {
+      if (seenFields && !seenFields.has(field)) continue;
+      if (new RegExp(`^${field}\\s*:`).test(entry.text)) {
+        return Object.freeze({
+          code,
+          field,
+          message: `The ${field}: directive can occur only once.`,
+        });
+      }
+    }
+    return null;
   }
 
   function splitTokens(content) {
@@ -1109,6 +1371,8 @@
     replaceBpmDirective,
     replaceCapoDirective,
     replaceCountInDirective,
+    replaceKeyDirective,
+    replaceOriginalKeyDirective,
     replaceSwingDirective,
     replaceTempoRampDirective,
   });

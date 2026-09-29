@@ -7,6 +7,7 @@ const test = require('node:test');
 
 const catalog = require('../tools/guitar-strumming/catalog.js');
 const core = require('../tools/guitar-strumming/core.js');
+const harmony = require('../tools/guitar-strumming/harmony.js');
 const parser = require('../tools/guitar-strumming/parser.js');
 const siteI18n = require('../assets/i18n.js');
 const guitarI18n = require('../tools/guitar-strumming/i18n.js');
@@ -167,6 +168,302 @@ chords:
 
 strum:
 | D - D U - U D U | x4`;
+
+const validNumberSource = `4/4#8
+bpm: 100
+count-in: 1
+tempo-ramp: off
+original-key: Bb major
+key: Bb major
+notation: numbers
+capo: 3
+swing: off
+
+chords:
+| 1/3 | 4:add9 | 5:7 | 6:m |
+
+strum:
+| D - D U - U D U | x4`;
+
+const transposableNumberSource = `4/4#8
+bpm: 100
+count-in: 1
+tempo-ramp: off
+original-key: G major
+key: D major
+notation: numbers
+capo: 0
+swing: off
+
+chords:
+| 1 | 4 | 5 | 6:m |
+
+strum:
+| D - D U - U D U | x4`;
+
+test('key parsing uses canonical major and natural-minor spellings', () => {
+  const aSharp = harmony.parseKey('A# major');
+  const bFlatUnicode = harmony.parseKey('B♭ major');
+  const aMinor = harmony.parseKey('A minor');
+
+  assert.equal(aSharp.ok, true);
+  assert.equal(aSharp.key.canonicalText, 'Bb major');
+  assert.deepEqual(aSharp.key.scale, ['Bb', 'C', 'D', 'Eb', 'F', 'G', 'A']);
+  assert.equal(bFlatUnicode.key.canonicalText, 'Bb major');
+  assert.deepEqual(aMinor.key.scale, ['A', 'B', 'C', 'D', 'E', 'F', 'G']);
+  assert.equal(harmony.parseKey('H major').code, 'key_format');
+});
+
+test('number chords use explicit qualities, accidentals, bass degrees, and capo shapes', () => {
+  const playingKey = harmony.parseKey('Bb major').key;
+  const examples = [
+    ['1/3', 'Bb/D', 'G/B'],
+    ['4:add9', 'Ebadd9', 'Cadd9'],
+    ['5:7', 'F7', 'D7'],
+    ['6:m', 'Gm', 'Em'],
+  ];
+
+  for (const [token, soundingChord, shapeChord] of examples) {
+    const parsed = harmony.parseNumberChord(token);
+    const resolved = harmony.resolveNumberChord(parsed.chord, playingKey, 3);
+    assert.equal(parsed.ok, true);
+    assert.equal(resolved.soundingChord, soundingChord);
+    assert.equal(resolved.shapeChord, shapeChord);
+    assert.equal(resolved.shapeKey.canonicalText, 'G major');
+  }
+
+  const altered = harmony.parseNumberChord('#4:m7');
+  assert.equal(altered.chord.degree, 4);
+  assert.equal(altered.chord.rootAccidental, 1);
+  assert.equal(altered.chord.quality, 'm7');
+  assert.equal(harmony.parseNumberChord('6m').code, 'number_chord_format');
+});
+
+test('minor number roots are mode-relative and chord quality stays explicit', () => {
+  const key = harmony.parseKey('A minor').key;
+  const tokens = ['1:m', '6', '3', '7'];
+  const identifiers = tokens.map((token) => harmony.resolveNumberChord(
+    harmony.parseNumberChord(token).chord,
+    key,
+    0,
+  ).soundingChord);
+  assert.deepEqual(identifiers, ['Am', 'F', 'C', 'G']);
+  assert.equal(
+    harmony.resolveNumberChord(harmony.parseNumberChord('1').chord, key, 0).soundingChord,
+    'A',
+  );
+  assert.equal(
+    harmony.resolveNumberChord(harmony.parseNumberChord('#7').chord, key, 0).soundingChord,
+    'G#',
+  );
+  assert.equal(
+    harmony.resolveNumberChord(harmony.parseNumberChord('6').chord, key, 0).soundingChord,
+    'F',
+  );
+  assert.equal(
+    harmony.resolveNumberChord(harmony.parseNumberChord('6:m').chord, key, 0).soundingChord,
+    'Fm',
+  );
+});
+
+test('capo configurations report supported and missing shape chords', () => {
+  const key = harmony.parseKey('Bb major').key;
+  const chords = ['1/3', '4:add9', '5:7', '6:m']
+    .map((token) => harmony.parseNumberChord(token).chord);
+  const configurations = harmony.listCapoConfigurations(chords, key, catalog);
+  const capoThree = configurations.find((configuration) => configuration.capoFret === 3);
+  const noCapo = configurations.find((configuration) => configuration.capoFret === 0);
+
+  assert.equal(configurations.length, 13);
+  assert.equal(capoThree.shapeKey.canonicalText, 'G major');
+  assert.deepEqual(capoThree.progression, ['G/B', 'Cadd9', 'D7', 'Em']);
+  assert.deepEqual(capoThree.shapes, ['G/B', 'Cadd9', 'D7', 'Em']);
+  assert.equal(capoThree.available, true);
+  assert.equal(noCapo.available, false);
+  assert.ok(noCapo.missingShapes.includes('Bb/D'));
+});
+
+test('the parser resolves a number arrangement into playable shape chords', () => {
+  const result = parser.parseSongSource(validNumberSource, { catalog });
+  assert.equal(result.ok, true);
+  assert.equal(result.song.notation, 'numbers');
+  assert.equal(result.song.originalKey.canonicalText, 'Bb major');
+  assert.equal(result.song.playingKey.canonicalText, 'Bb major');
+  assert.equal(result.song.capoFret, 3);
+  assert.deepEqual(
+    result.song.chordBars.map((bar) => bar[0].chord),
+    ['G/B', 'Cadd9', 'D7', 'Em'],
+  );
+  assert.deepEqual(
+    result.song.chordBars.map((bar) => bar[0].soundingChord),
+    ['Bb/D', 'Ebadd9', 'F7', 'Gm'],
+  );
+  assert.deepEqual(
+    core.normalizeSong(result.song).events.filter((event) => event.slotIndex === 1)
+      .map((event) => event.activeChord),
+    ['G/B', 'Cadd9', 'D7', 'Em'],
+  );
+});
+
+test('playing-key changes preserve the original key, number tokens, and capo', () => {
+  const changedSource = parser.replaceKeyDirective(transposableNumberSource, 'G major');
+  const result = parser.parseSongSource(changedSource, { catalog });
+
+  assert.equal(result.ok, true);
+  assert.equal(result.song.originalKey.canonicalText, 'G major');
+  assert.equal(result.song.playingKey.canonicalText, 'G major');
+  assert.equal(result.song.capoFret, 0);
+  assert.deepEqual(
+    result.song.chordBars.map((bar) => bar[0].sourceChord),
+    ['1', '4', '5', '6:m'],
+  );
+  assert.deepEqual(
+    result.song.chordBars.map((bar) => bar[0].soundingChord),
+    ['G', 'C', 'D', 'Em'],
+  );
+});
+
+test('an original B-flat arrangement can sound in G with no capo', () => {
+  const source = validNumberSource
+    .replace('\nkey: Bb major', '\nkey: G major')
+    .replace('capo: 3', 'capo: 0')
+    .replace('| 1/3 | 4:add9 | 5:7 | 6:m |', '| 1 | 5 | 6:m | 4 |');
+  const result = parser.parseSongSource(source, { catalog });
+
+  assert.equal(result.ok, true);
+  assert.equal(result.song.originalKey.canonicalText, 'Bb major');
+  assert.equal(result.song.playingKey.canonicalText, 'G major');
+  assert.deepEqual(
+    result.song.chordBars.map((bar) => bar[0].soundingChord),
+    ['G', 'D', 'Em', 'C'],
+  );
+});
+
+test('capo changes preserve the playing key and sounding chords', () => {
+  const withoutCapo = parser.parseSongSource(transposableNumberSource, { catalog });
+  const withCapo = parser.parseSongSource(
+    parser.replaceCapoDirective(transposableNumberSource, '2'),
+    { catalog },
+  );
+
+  assert.equal(withoutCapo.ok, true);
+  assert.equal(withCapo.ok, true);
+  assert.equal(withCapo.song.playingKey.canonicalText, 'D major');
+  assert.deepEqual(
+    withCapo.song.chordBars.map((bar) => bar[0].soundingChord),
+    withoutCapo.song.chordBars.map((bar) => bar[0].soundingChord),
+  );
+  assert.deepEqual(
+    withoutCapo.song.chordBars.map((bar) => bar[0].chord),
+    ['D', 'G', 'A', 'Bm'],
+  );
+  assert.deepEqual(
+    withCapo.song.chordBars.map((bar) => bar[0].chord),
+    ['C', 'F', 'G', 'Am'],
+  );
+});
+
+test('returning to the original key changes only the playing key and derived chords', () => {
+  const returnedSource = parser.replaceKeyDirective(transposableNumberSource, 'G major');
+  assert.equal(
+    returnedSource,
+    transposableNumberSource.replace('key: D major', 'key: G major'),
+  );
+  const result = parser.parseSongSource(returnedSource, { catalog });
+  assert.equal(result.ok, true);
+  assert.equal(result.song.originalKey.canonicalText, 'G major');
+  assert.deepEqual(
+    result.song.chordBars.map((bar) => bar[0].sourceChord),
+    ['1', '4', '5', '6:m'],
+  );
+  assert.deepEqual(
+    result.song.chordBars.map((bar) => bar[0].chord),
+    ['G', 'C', 'D', 'Em'],
+  );
+});
+
+test('equivalent number and shape arrangements produce equivalent audio events', () => {
+  const numberSong = parser.parseSongSource(validNumberSource, { catalog });
+  const shapeSource = validNumberSource
+    .replace('original-key: Bb major\nkey: Bb major\nnotation: numbers\n', '')
+    .replace('| 1/3 | 4:add9 | 5:7 | 6:m |', '| G/B | Cadd9 | D7 | Em |');
+  const shapeSong = parser.parseSongSource(shapeSource, { catalog });
+
+  assert.equal(numberSong.ok, true);
+  assert.equal(shapeSong.ok, true);
+  assert.deepEqual(core.normalizeSong(numberSong.song), core.normalizeSong(shapeSong.song));
+});
+
+test('chord-guide views are read-only projections of the source', () => {
+  const result = parser.parseSongSource(validNumberSource, { catalog });
+  const before = JSON.stringify(result.song);
+
+  assert.equal(
+    harmony.formatChordGuide(result.song, 'shapes'),
+    '| G/B | | Cadd9 | | D7 | | Em |',
+  );
+  assert.equal(
+    harmony.formatChordGuide(result.song, 'numbers'),
+    '| 1/3 | | 4:add9 | | 5:7 | | 6:m |',
+  );
+  assert.equal(
+    harmony.formatChordGuide(result.song, 'sounding'),
+    '| Bb/D | | Ebadd9 | | F7 | | Gm |',
+  );
+  assert.equal(JSON.stringify(result.song), before);
+});
+
+test('number arrangements require ordered keys with matching modes', () => {
+  const cases = [
+    [validNumberSource.replace('original-key: Bb major\n', ''), 'original_key_missing'],
+    [validNumberSource.replace('key: Bb major\n', ''), 'key_missing'],
+    [validNumberSource.replace('notation: numbers\n', ''), 'notation_missing'],
+    [validNumberSource.replace('notation: numbers', 'notation: nashville'), 'notation_format'],
+    [validNumberSource.replace('key: Bb major', 'key: G minor'), 'key_mode_mismatch'],
+    [validNumberSource.replace('original-key: Bb major', 'original-key: unknown'), 'original_key_format'],
+  ];
+  for (const [source, code] of cases) {
+    const result = parser.parseSongSource(source, { catalog });
+    assert.equal(result.ok, false, code);
+    assert.ok(result.errors.some((error) => error.code === code), code);
+  }
+});
+
+test('number arrangements report duplicated number directives', () => {
+  const cases = [
+    [validNumberSource.replace(
+      'original-key: Bb major\nkey: Bb major',
+      'original-key: Bb major\noriginal-key: Bb major\nkey: Bb major',
+    ), 'original_key_duplicate'],
+    [validNumberSource.replace(
+      'key: Bb major\nnotation: numbers',
+      'key: Bb major\nkey: Bb major\nnotation: numbers',
+    ), 'key_duplicate'],
+    [validNumberSource.replace(
+      'notation: numbers\ncapo: 3',
+      'notation: numbers\nnotation: numbers\ncapo: 3',
+    ), 'notation_duplicate'],
+  ];
+  for (const [source, code] of cases) {
+    const result = parser.parseSongSource(source, { catalog });
+    assert.equal(result.ok, false);
+    assert.equal(result.errors[0].code, code);
+    assert.ok(Number.isInteger(result.errors[0].line));
+  }
+});
+
+test('number arrangements reject named tokens and unsupported resolved shapes', () => {
+  const named = parser.parseSongSource(validNumberSource.replace('1/3', 'G/B'), { catalog });
+  const unsupported = parser.parseSongSource(validNumberSource.replace('1/3', '3:7'), { catalog });
+
+  assert.ok(named.errors.some((error) => error.code === 'number_chord_format'));
+  const error = unsupported.errors.find((item) => item.code === 'number_shape_unsupported');
+  assert.equal(error.parameters.token, '3:7');
+  assert.equal(error.parameters.soundingChord, 'D7');
+  assert.equal(error.parameters.shapeChord, 'B7');
+  assert.equal(unsupported.candidateSong.notation, 'numbers');
+  assert.equal(unsupported.candidateSong.chordBars[0][0].numberChord.normalized, '3:7');
+});
 
 test('the initial catalog contains the 24 required chord identifiers', () => {
   assert.deepEqual(catalog.listCanonicalIdentifiers(), expectedChordIdentifiers);
@@ -803,6 +1100,30 @@ test('count-in replacement changes only its value and preserves line ends', () =
   );
 });
 
+test('key replacements change one directive and preserve CRLF line ends', () => {
+  const crlfSource = validNumberSource.replace(/\n/g, '\r\n');
+  assert.equal(
+    parser.replaceOriginalKeyDirective(crlfSource, 'A# major'),
+    crlfSource.replace('original-key: Bb major', 'original-key: A# major'),
+  );
+  assert.equal(
+    parser.replaceKeyDirective(crlfSource, 'G major'),
+    crlfSource.replace('\r\nkey: Bb major', '\r\nkey: G major'),
+  );
+  assert.equal(parser.replaceKeyDirective('key: G major\nkey: D major', 'C major'), null);
+});
+
+test('the original key is reference metadata and does not change musical content', () => {
+  const original = parser.parseSongSource(transposableNumberSource, { catalog });
+  const changed = parser.parseSongSource(
+    parser.replaceOriginalKeyDirective(transposableNumberSource, 'Bb major'),
+    { catalog },
+  );
+  assert.equal(original.ok, true);
+  assert.equal(changed.ok, true);
+  assert.equal(parser.musicalContentKey(original.song), parser.musicalContentKey(changed.song));
+});
+
 test('tempo-ramp replacement supports compact and spaced directive values', () => {
   const compact = parser.replaceTempoRampDirective(validSource, '+5/3/135');
   assert.equal(compact, validSource.replace('tempo-ramp: off', 'tempo-ramp: +5/3/135'));
@@ -1071,6 +1392,16 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(html, /for="tempo-ramp-target"/);
   assert.match(html, /id="capo-fret"/);
   assert.match(html, /for="capo-fret"/);
+  assert.match(html, /id="number-chord-panel"[^>]*hidden/);
+  assert.match(html, /data-chord-view="shapes"[^>]*aria-pressed="true"/);
+  assert.match(html, /data-chord-view="numbers"/);
+  assert.match(html, /data-chord-view="sounding"/);
+  assert.match(html, /<details id="key-shapes"/);
+  assert.match(html, /id="original-key"/);
+  assert.match(html, /id="playing-key"/);
+  assert.match(html, /id="guitar-configuration"/);
+  assert.match(html, /id="return-original-key"/);
+  assert.ok(html.indexOf('src="./harmony.js') < html.indexOf('src="./parser.js'));
   assert.match(html, /id="swing-feel"/);
   assert.match(html, /for="swing-feel"/);
   assert.match(html, /Use swing: off for straight timing/);
@@ -1098,6 +1429,9 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(css, /\.practice-grid\s*\{[^}]*grid-template-columns:\s*repeat\(2/s);
   assert.match(css, /#play-pause\[aria-pressed="true"\]/);
   assert.match(css, /\.language-switcher button\[aria-pressed="true"\]/);
+  assert.match(css, /\.chord-guide-scroll\s*\{[^}]*overflow-x:\s*auto/s);
+  assert.match(css, /\.chord-view-switcher button\[aria-pressed="false"\]:hover/);
+  assert.match(css, /\.key-shapes-content\s*\{[^}]*grid-template-columns/s);
   assert.match(css, /\.setting-field select\s*\{[^}]*width:/s);
   assert.match(css, /@media \(max-width: 38rem\)/);
 
@@ -1108,6 +1442,8 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(app, /replaceSwingDirective\(elements\.source\.value, rawValue\)/);
   assert.match(app, /guitar\.swingCustom/);
   assert.match(app, /data-custom-swing/);
+  assert.match(app, /localStorage\.setItem\('guitar-strumming-chord-view'/);
+  assert.match(app, /harmony\.formatChordGuide\(song, chordView\)/);
   assert.match(app, /elements\.editor\.open = true/);
   assert.match(app, /\.join\(' · '\)/);
 });
@@ -1132,6 +1468,13 @@ test('guitar translations have matching keys and format dynamic validation error
   const result = parser.parseSongSource(validSource.replace('G/B@8', 'G/B@99'), { catalog });
   const error = result.errors.find((item) => item.code === 'chord_change_slot_range');
   assert.deepEqual(error.parameters, { gridSize: 8 });
+  const numberResult = parser.parseSongSource(
+    validNumberSource.replace('1/3', '3:7'),
+    { catalog },
+  );
+  const numberError = numberResult.errors.find(
+    (item) => item.code === 'number_shape_unsupported',
+  );
 
   siteI18n.setLanguage('zh-Hans');
   try {
@@ -1139,6 +1482,10 @@ test('guitar translations have matching keys and format dynamic validation error
     assert.equal(
       guitarI18n.formatValidationError(error),
       '第 9 行 — 和弦、第 1 小节、第 99 格：和弦更换格位必须为 2 至 8。',
+    );
+    assert.match(
+      guitarI18n.formatValidationError(numberError),
+      /3:7.*D7.*B7/,
     );
   } finally {
     siteI18n.setLanguage('en-AU');

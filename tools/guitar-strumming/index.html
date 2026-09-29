@@ -5,16 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Create looping guitar strumming backing tracks from plain text." data-i18n-content="guitar.description" />
   <title>Guitar Strum Machine</title>
-  <link rel="stylesheet" href="./styles.css?v=35932517761b" />
+  <link rel="stylesheet" href="./styles.css?v=a59fe155a338" />
   <script src="../../assets/i18n.js?v=1a4c0e39165a" defer></script>
-  <script src="./i18n.js?v=6899b699caee" defer></script>
+  <script src="./i18n.js?v=7ae1f44aff7d" defer></script>
   <script src="./catalog.js?v=ae75bf58483e" defer></script>
-  <script src="./parser.js?v=450f0cce876d" defer></script>
+  <script src="./harmony.js?v=954aa42a57b9" defer></script>
+  <script src="./parser.js?v=34c5a2512b98" defer></script>
   <script src="./core.js?v=147cce1158a5" defer></script>
   <script src="./audio-engine.js?v=cfce77a8155a" defer></script>
   <script src="./share.js?v=3dbf293aff76" defer></script>
   <script src="./preset-catalog.js?v=710845721561" defer></script>
-  <script src="./app.js?v=f9ad724d4679" defer></script>
+  <script src="./app.js?v=987b877aae48" defer></script>
   </head>
 <body>
   <main>
@@ -48,6 +49,41 @@
 
       <p id="song-summary" class="song-summary" data-i18n="guitar.summary.none">No playable song is available.</p>
 
+      <div id="number-chord-panel" class="number-chord-panel" hidden>
+        <p id="key-summary" class="key-summary"></p>
+
+        <div class="chord-view-switcher" role="group" data-i18n-aria-label="guitar.chordView">
+          <button type="button" data-chord-view="shapes" aria-pressed="true" data-i18n="guitar.shapes">Shapes</button>
+          <button type="button" data-chord-view="numbers" aria-pressed="false" data-i18n="guitar.numbers">Numbers</button>
+          <button type="button" data-chord-view="sounding" aria-pressed="false" data-i18n="guitar.sounding">Sounding</button>
+        </div>
+
+        <div class="chord-guide-scroll" tabindex="0" aria-labelledby="chord-guide-heading">
+          <h3 id="chord-guide-heading" class="visually-hidden" data-i18n="guitar.chordGuide">Chord guide</h3>
+          <pre id="chord-guide" class="chord-guide"></pre>
+        </div>
+
+        <details id="key-shapes" class="key-shapes">
+          <summary data-i18n="guitar.keyAndShapes">Key and shapes</summary>
+          <div class="key-shapes-content">
+            <div class="setting-field">
+              <label for="original-key" data-i18n="guitar.originalKey">Original key</label>
+              <select id="original-key"></select>
+            </div>
+            <div class="setting-field">
+              <label for="playing-key" data-i18n="guitar.playIn">Play in</label>
+              <select id="playing-key"></select>
+            </div>
+            <div class="setting-field">
+              <label for="guitar-configuration" data-i18n="guitar.playWith">Play with</label>
+              <select id="guitar-configuration"></select>
+            </div>
+            <button id="return-original-key" class="secondary-button" type="button" data-i18n="guitar.returnOriginalKey">Return to original key</button>
+            <p id="key-shapes-status" class="context-status" role="status" aria-live="polite"></p>
+          </div>
+        </details>
+      </div>
+
       <div class="tempo-control">
         <div class="tempo-heading">
           <label id="bpm-number-label" for="bpm-number" data-i18n="guitar.tempo">Tempo</label>
@@ -70,7 +106,7 @@
           </select>
         </div>
 
-        <div class="setting-field capo-control">
+        <div id="legacy-capo-control" class="setting-field capo-control">
           <label for="capo-fret" data-i18n="guitar.capo">Capo</label>
           <select id="capo-fret">
             <option value="0" data-i18n="guitar.off">Off</option>
@@ -177,6 +213,19 @@
         <p data-i18n="guitar.helpTokenOrder">Write tokens in this order: direction, string count, articulation, accent. Example: D3P!.</p>
         <p data-i18n="guitar.helpChordChange">Use Chord@N for a chord change at slot N. The change occurs before a strum at the same slot.</p>
         <p data-i18n="guitar.helpRepeat">Use xN after one bar to repeat that bar N times in total.</p>
+
+        <h2 data-i18n="guitar.helpNumbersHeading">Number notation</h2>
+        <p data-i18n="guitar.helpNumbersKeys">A number arrangement requires original-key:, key:, and notation: numbers before capo:. The original key is a reference. The key directive sets the sounding key.</p>
+        <p data-i18n="guitar.helpNumbersQuality">Use mode-relative degrees from 1 through 7. Add a colon and quality when required, such as 6:m or 5:7. Use 1/3 for a numbered bass note.</p>
+        <p data-i18n="guitar.helpNumbersCapo">In number notation, changing Play with changes the guitar shapes. It does not change the sounding key.</p>
+        <pre class="format-example"><code>original-key: Bb major
+key: Bb major
+notation: numbers
+capo: 3
+
+chords:
+| 1 | 5:7 | 6:m | 4:add9 |</code></pre>
+
         <p data-i18n="guitar.supportedChords">Supported chords:</p>
         <p class="chord-list"><code>A Am Bb Bm C Cm D Dm Em F F#m G Am7 C7 Cmaj7 D7 G7 Cadd9 Dsus4 G5 Am/G C/E D/F# G/B</code></p>
 

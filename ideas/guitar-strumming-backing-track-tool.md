@@ -1179,6 +1179,333 @@ Automated evidence: The repository check passed on 2026-09-29. It covered matchi
 
 Manual evidence: The user confirmed the compact language control and translated interface on desktop and iPhone. The user also confirmed the corrected iOS selected colour and double-tap behaviour.
 
+## 11.13 Number Chords, Keys, and Guitar Shapes
+
+Status: Implemented and verified on 2026-09-29.
+
+### Purpose
+
+Let a teacher keep one harmonic progression while the student plays it in another sounding key or with another set of guitar shapes.
+
+Keep the arrangement text as the single source of truth.
+
+Keep the number progression independent of the sounding key and guitar capo. This follows the central number-chart principle that one progression can be used in different keys. The guitar capo is a performance setting for this tool. It is not part of the harmonic progression.
+
+References:
+
+- [The Nashville Number System introduction](https://nashvillenumbersystem.com/introduction/)
+- [The Nashville Number System teaching paper](https://www.midside.com/publications/declercq_2019_jmtp.pdf)
+
+### Terms
+
+Use these terms consistently:
+
+- **Original key** means the reference key of the song or authored exercise.
+- **Playing key** means the current sounding key.
+- **Shape key** means the key represented by the guitar shapes below the capo.
+- **Number chord** means a mode-relative scale degree with an explicit chord quality.
+- **Shape chord** means the chord identifier that selects a guitar fingering from the chord catalog.
+- **Sounding chord** means the pitch result after the capo is applied to a shape chord.
+
+The shape key is the playing key transposed down by the capo fret. Do not store the shape key as another directive.
+
+### Source Form
+
+Use this form for a number arrangement:
+
+```text
+4/4#8
+bpm: 100
+count-in: 1
+tempo-ramp: off
+original-key: Bb major
+key: G major
+notation: numbers
+capo: 0
+swing: off
+
+chords:
+| 1 | 5 | 6:m | 4 |
+
+strum:
+| D - D U - U D U | x4
+```
+
+Require `original-key:`, `key:`, and `notation: numbers` together.
+
+Put `original-key:`, `key:`, and `notation:` after `tempo-ramp:` and before `capo:`.
+
+Require the original key and playing key to use the same mode. A major-to-minor or minor-to-major change is reharmonisation, not transposition.
+
+For an original exercise, use its authored key as the original key.
+
+If `notation:` is absent, treat chord tokens as shape identifiers. This rule preserves existing arrangements and share links.
+
+Do not infer the notation from chord tokens. Do not mix number chords and shape chords in one arrangement.
+
+### Key Grammar and Spelling
+
+Use this key grammar:
+
+```text
+<letter><optional accidental> <mode>
+```
+
+Use a letter from `A` through `G`. Use optional `b` or `#`. Use `major` or `minor` as the mode.
+
+Use ASCII `b` and `#` in formatted source. Accept pasted Unicode `♭` and `♯` characters.
+
+Accept enharmonic aliases. Resolve an alias to a conventional beginner-friendly spelling for derived chord displays. Do not silently rewrite source during parsing.
+
+Use these canonical major-key tonics:
+
+```text
+C Db D Eb E F F# G Ab A Bb B
+```
+
+Use these canonical minor-key tonics:
+
+```text
+C C# D Eb E F F# G G# A Bb B
+```
+
+For example, accept `A# major`, but show B-flat-major spelling in derived chord views. A future Format action can replace the alias after it shows a non-blocking notice.
+
+### Number-Chord Grammar
+
+Use this conceptual grammar:
+
+```text
+<root degree><optional quality><optional bass degree><optional slot>
+```
+
+Use these parts:
+
+- Root degree: one optional `b` or `#`, followed by a number from 1 through 7.
+- Quality: a colon followed by `m`, `7`, `maj7`, `m7`, `sus2`, `sus4`, `add9`, or `5`.
+- Bass degree: `/`, followed by one optional `b` or `#` and a number from 1 through 7.
+- Slot: the existing `@N` chord-change suffix.
+
+Examples:
+
+```text
+1
+2:m
+5:7
+1:maj7
+6:m7
+4:add9
+5:sus4
+1:5
+b7
+#4:m
+1/3
+5:7/7
+5:7/7@8
+```
+
+A bare number chord is major. Always write minor quality explicitly.
+
+The mode selects the pitch of each degree. The token selects the chord quality on that pitch.
+
+For `key: A minor`, use the A natural-minor degrees:
+
+```text
+1=A 2=B 3=C 4=D 5=E 6=F 7=G
+```
+
+Thus `1:m 6 3 7` resolves to `Am F C G`. Use `#7` for a G-sharp root in A minor.
+
+Describe this format as **mode-relative number notation**. It is inspired by Nashville number charts, but it is not a strict Nashville Number System format. Reserve `notation: nashville` for possible strict compatibility later.
+
+### Chord Resolution
+
+Resolve each number chord in this order:
+
+1. Parse the degree, quality, bass degree, and slot.
+2. Resolve the sounding chord in the playing key.
+3. Transpose the sounding chord down by the capo interval.
+4. Resolve the resulting shape identifier in the chord catalog.
+5. Give the resolved shape voicing and capo fret to the audio engine.
+
+For this source:
+
+```text
+original-key: Bb major
+key: Bb major
+notation: numbers
+capo: 3
+```
+
+resolve these chords:
+
+| Number | Sounding chord | Shape chord |
+| --- | --- | --- |
+| `1/3` | `Bb/D` | `G/B` |
+| `4:add9` | `Ebadd9` | `Cadd9` |
+| `5:7` | `F7` | `D7` |
+| `6:m` | `Gm` | `Em` |
+
+Do not silently substitute a chord quality, bass note, shape, or voicing.
+
+### Key and Capo Behaviour
+
+The original key is reference metadata. It does not affect chord resolution, playback, or capo options.
+
+Changing the playing key keeps the original key, number progression, and capo unchanged. It changes the sounding chords and derived shapes.
+
+Changing the capo in a number arrangement keeps the original key, playing key, and number progression unchanged. It changes the derived shape key and shape chords. It does not change the sounding chords.
+
+Keep the current capo behaviour for a legacy shape arrangement. In a shape arrangement, changing the capo keeps the named shapes and changes the sounding pitch.
+
+Provide a **Return to original key** action. This action copies `original-key:` to `key:`. It does not change the number progression or capo.
+
+### Guitar Configurations
+
+For a number arrangement, calculate each capo option in the supported fret range.
+
+For each option, show:
+
+- capo fret;
+- derived shape key;
+- resolved shape progression; and
+- missing catalog shapes, if applicable.
+
+Do not automatically declare one option to be the best option.
+
+Do not silently change the selected capo after a key or progression edit.
+
+Keep an unsupported option visible and identify its missing shapes. Let the teacher or student select a supported option.
+
+Do not add difficulty-based recommendations until the chord catalog has reviewed difficulty metadata.
+
+### Practice Interface
+
+Keep this summary visible in the practice panel when the original and playing keys differ:
+
+```text
+Original B♭ → Play in G · G shapes · No capo
+```
+
+Use this form when the keys are the same:
+
+```text
+Key B♭ · G shapes · Capo 3
+```
+
+Add a read-only chord guide with these views:
+
+- **Shapes** shows the chords that the student plays.
+- **Numbers** shows the exact number progression.
+- **Sounding** shows the chords that the listener hears.
+
+Use Shapes as the first-use default. Remember the selected view on the device. Changing the view must not change the source, playback, selected preset, or share URL.
+
+Keep long progressions in a labelled, horizontally scrollable region. Do not add editing or playback highlighting to the chord guide in the first implementation.
+
+Put key controls in a compact **Key and shapes** disclosure. Keep it closed during normal practice. Include these controls:
+
+- **Original key** edits `original-key:`.
+- **Play in** edits `key:`.
+- **Play with** edits `capo:` and shows the derived shape key.
+- **Return to original key** copies the original key to the playing key.
+
+Label a guitar option in this form:
+
+```text
+G shapes · Capo 3
+```
+
+Do not use a standalone Capo label in number mode. The combined label makes it clear that the control selects a guitar configuration without changing the sounding key.
+
+Keep the chord guide and key controls as derived views and editors of the text source. Do not add a WYSIWYG arrangement editor.
+
+### Validation and Failure Behaviour
+
+Report a line-specific error when a required number-arrangement directive is missing, duplicated, malformed, or out of order.
+
+Report an error when the original key and playing key use different modes.
+
+Report an error when a number chord is malformed, out of range, or mixed with a shape identifier.
+
+When a resolved shape is not in the chord catalog, identify:
+
+- source bar;
+- number token;
+- sounding chord; and
+- required shape chord.
+
+Use a message in this form:
+
+> Bar 2: `3:7` resolves to sounding chord D7 and shape B7. The B7 shape is not supported.
+
+If one or more required shapes are unavailable, stop playback and disable unavailable controls. Open **Key and shapes** and show the available guitar configurations.
+
+Do not change the key, capo, number progression, or source text to recover from an error.
+
+### Compatibility
+
+Keep every existing shape arrangement, preset source, and share link valid without modification.
+
+Keep the current parser and audio result for a source that has no `notation:` directive.
+
+Do not insert `original-key:`, `key:`, or `notation:` when Format processes a legacy shape arrangement.
+
+Keep number syntax language-neutral. Translate interface labels, help text, status messages, and validation messages into English and Simplified Chinese.
+
+### Initial Scope
+
+Include:
+
+- mandatory original and playing keys for number arrangements;
+- major and natural-minor keys;
+- mode-relative degrees 1 through 7;
+- one optional root accidental;
+- explicit supported chord qualities;
+- one optional numbered bass degree;
+- existing bar, repeat, slot, strum, swing, capo, tempo, and sharing behaviour;
+- explicit guitar-configuration selection;
+- Shapes, Numbers, and Sounding views; and
+- conventional enharmonic display spelling.
+
+Defer:
+
+- Roman-numeral input;
+- strict Nashville import or export;
+- automatic best-capo recommendations;
+- mixed number and shape tokens;
+- diminished and augmented chords;
+- modes other than major and natural minor;
+- key changes inside a song;
+- capo changes inside a song;
+- automatic conversion of existing arrangements; and
+- automatic generation of unsupported guitar voicings.
+
+### Acceptance Tests
+
+Add automated tests for these cases:
+
+1. B-flat major with capo 3 resolves to G-family shapes.
+2. Original B-flat major played in G major with no capo sounds in G major.
+3. A-minor degrees use the natural-minor scale.
+4. Chord quality remains explicit in major and minor keys.
+5. Slash chords preserve the sounding and shape bass notes.
+6. Changing the playing key preserves the original key and numbers.
+7. Changing the capo preserves the playing key and sounding chords.
+8. Returning to the original key changes only the playing key and derived chords.
+9. Equivalent number and shape arrangements produce equivalent audio events.
+10. Enharmonic aliases resolve to the canonical display spelling.
+11. An unavailable shape identifies the token, sounding chord, and required shape.
+12. Existing arrangements, presets, and shared URLs behave as before.
+13. The three chord-guide views do not change the text source or playback state.
+14. English and Simplified Chinese translation key sets remain identical.
+
+Verify the interface on the current iPhone Safari and desktop Chrome targets. Test keyboard use, visible focus, narrow screens, horizontal chord-guide scrolling, and 200 percent zoom.
+
+Automated evidence: The repository check passed on 2026-09-29. It covered key parsing, natural-minor degrees, explicit qualities, slash chords, playing-key changes, capo changes, return to the original key, audio-event equivalence, unavailable shapes, read-only chord-guide views, translations, local assets, and legacy regressions.
+
+Manual evidence: The user confirmed that the number-notation workflow works well on 2026-09-29.
+
 ---
 
 # 12. MVP Acceptance Criteria
