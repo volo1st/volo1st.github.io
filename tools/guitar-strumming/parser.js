@@ -237,6 +237,7 @@
         null,
         'section',
         `The chord section has ${chordBars.length} bars. The strum section has ${strumBars.length} bars.`,
+        { chordCount: chordBars.length, strumCount: strumBars.length },
       );
     }
 
@@ -534,6 +535,7 @@
         null,
         field,
         `${label} must be a whole number from ${minimum} through ${maximum}.`,
+        { minimum, maximum },
       );
       return null;
     }
@@ -548,6 +550,7 @@
         null,
         field,
         `${label} must be from ${minimum} through ${maximum}.`,
+        { minimum, maximum },
       );
       return null;
     }
@@ -833,6 +836,7 @@
           null,
           'chord',
           `Add @N to the ${token} chord change.`,
+          { token },
         );
       } else if (tokenIndex > 0) {
         const slotText = atParts.length === 2 ? atParts[1] : '';
@@ -846,6 +850,7 @@
             null,
             'slot',
             `Use a whole-number slot for ${identifier}.`,
+            { chord: identifier },
           );
         } else {
           slot = Number(slotText);
@@ -859,6 +864,7 @@
               slot,
               'slot',
               `Chord-change slot must be from 2 through ${gridSize}.`,
+              { gridSize },
             );
           } else if (slot <= previousSlot) {
             addError(
@@ -885,6 +891,7 @@
           slot,
           'chord',
           `Invalid chord token: ${token}.`,
+          { token },
         );
         identifier = identifier || token;
       }
@@ -899,6 +906,7 @@
           slot,
           'chord',
           `Unsupported chord: ${identifier}.`,
+          { chord: identifier },
         );
       }
 
@@ -931,6 +939,7 @@
         null,
         'bar',
         `Expected ${gridSize} strum slots. Found ${tokens.length}.`,
+        { gridSize, actual: tokens.length },
       );
     }
 
@@ -953,6 +962,7 @@
         slot,
         'strum',
         `Invalid strum token: ${token}. Use D or U. Add optional modifiers in this order: string count, articulation, accent.`,
+        { token },
       );
       return makeStrum(null, null, 'normal', false);
     }
@@ -1043,8 +1053,17 @@
     return `${linePrefix}${locationText}: ${error.message}`;
   }
 
-  function addError(errors, code, line, section, bar, slot, field, message) {
-    errors.push(Object.freeze({ code, line, section, bar, slot, field, message }));
+  function addError(errors, code, line, section, bar, slot, field, message, parameters = {}) {
+    errors.push(Object.freeze({
+      code,
+      line,
+      section,
+      bar,
+      slot,
+      field,
+      message,
+      parameters: Object.freeze({ ...parameters }),
+    }));
   }
 
   function makeResult(song, errors) {

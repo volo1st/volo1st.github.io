@@ -1,12 +1,14 @@
 'use strict';
 
 const assert = require('node:assert/strict');
+const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const test = require('node:test');
 
 const repositoryRoot = path.join(__dirname, '..');
 const i18n = require('../assets/i18n.js');
+require('../tools/guitar-strumming/i18n.js');
 
 function findHtmlFiles(directory) {
   const files = [];
@@ -74,13 +76,75 @@ test('HTML IDs are unique and label references resolve', () => {
   }
 });
 
-test('the home page links to the current converter and the v2 trial', () => {
+test('the home page links to each available tool', () => {
   const html = fs.readFileSync(path.join(repositoryRoot, 'index.html'), 'utf8');
 
   assert.match(html, /href="\.\/tools\/csv2aba\/"/);
   assert.match(html, /href="\.\/tools\/csv2aba-v2\/"/);
+  assert.match(html, /href="\.\/tools\/guitar-strumming\/"/);
+  assert.match(html, /href="\.\/tools\/song_order\/"/);
   assert.match(html, />Trial</);
-  assert.match(html, /href="\.\/assets\/site\.css"/);
+  assert.match(html, /href="\.\/assets\/site\.css\?v=[a-f0-9]{12}"/);
+});
+
+test('versioned interface assets use their current content hash', () => {
+  const pages = [
+    {
+      file: path.join(repositoryRoot, 'index.html'),
+      references: ['./assets/site.css', './assets/i18n.js'],
+    },
+    {
+      file: path.join(repositoryRoot, 'tools', 'csv2aba-v2', 'index.html'),
+      references: ['../../assets/site.css', '../../assets/i18n.js'],
+    },
+    {
+      file: path.join(repositoryRoot, 'tools', 'guitar-strumming', 'index.html'),
+      references: [
+        './styles.css',
+        '../../assets/i18n.js',
+        './i18n.js',
+        './catalog.js',
+        './parser.js',
+        './core.js',
+        './audio-engine.js',
+        './share.js',
+        './preset-catalog.js',
+        './app.js',
+      ],
+    },
+  ];
+
+  for (const page of pages) {
+    const html = fs.readFileSync(page.file, 'utf8');
+    for (const reference of page.references) {
+      const assetPath = path.resolve(path.dirname(page.file), reference);
+      const contentHash = crypto
+        .createHash('sha256')
+        .update(fs.readFileSync(assetPath))
+        .digest('hex')
+        .slice(0, 12);
+      assert.ok(
+        html.includes(`${reference}?v=${contentHash}`),
+        `${path.relative(repositoryRoot, page.file)} has a stale hash for ${reference}`,
+      );
+    }
+  }
+});
+
+test('bilingual pages use the compact title-row language control', () => {
+  const pages = [
+    path.join(repositoryRoot, 'index.html'),
+    path.join(repositoryRoot, 'tools', 'csv2aba-v2', 'index.html'),
+    path.join(repositoryRoot, 'tools', 'guitar-strumming', 'index.html'),
+  ];
+  for (const htmlFile of pages) {
+    const html = fs.readFileSync(htmlFile, 'utf8');
+    assert.match(html, /class="page-title-row"/);
+    assert.match(html, /data-language="en-AU"[^>]*>EN<\/button>/);
+    assert.match(html, /data-language="zh-Hans"[^>]*>中文<\/button>/);
+    assert.match(html, /data-i18n-aria-label="common\.useEnglish"/);
+    assert.match(html, /data-i18n-aria-label="common\.useChinese"/);
+  }
 });
 
 test('English and Simplified Chinese translation keys match', () => {

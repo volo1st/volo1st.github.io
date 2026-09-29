@@ -13,16 +13,21 @@
   const catalogs = {
     'en-AU': {
       'common.language': 'Language',
+      'common.useEnglish': 'Use English',
+      'common.useChinese': 'Use Simplified Chinese',
       'common.allTools': '← All tools',
       'common.trial': 'Trial',
       'home.title': 'Useful Browser Tools',
-      'home.description': 'Small browser tools for payment-file conversion and text sorting.',
+      'home.description': 'Small browser tools for payment-file conversion, guitar practice, and text sorting.',
       'home.subtitle': 'Simple tools that run in your browser',
       'home.toolsLabel': 'Available tools',
       'home.converterTitle': 'CSV to ABA Converter',
       'home.converterDescription': "Convert the music school's teacher payment CSV file to an ABA file for CBA.",
       'home.openCurrent': 'Open current version',
       'home.tryV2': 'Try version 2',
+      'home.guitarTitle': 'Guitar Strum Machine',
+      'home.guitarDescription': 'Practise chord changes and strumming patterns with a looping guitar track.',
+      'home.openGuitar': 'Open guitar tool',
       'home.sorterTitle': 'Chinese-English String Sorter',
       'home.sorterDescription': 'Sort Chinese and English text into a numbered list.',
       'home.openSorter': 'Open sorter',
@@ -106,11 +111,14 @@
       'error.amount_display_invalid': 'Amount display value must be a non-negative integer.',
     },
     'zh-Hans': {
-      'common.language': '语言', 'common.allTools': '← 所有工具', 'common.trial': '试用',
-      'home.title': '实用浏览器工具', 'home.description': '用于转换付款文件和排序文本的浏览器工具。',
+      'common.language': '语言', 'common.useEnglish': '使用英语', 'common.useChinese': '使用简体中文',
+      'common.allTools': '← 所有工具', 'common.trial': '试用',
+      'home.title': '实用浏览器工具', 'home.description': '用于转换付款文件、吉他练习和文本排序的浏览器工具。',
       'home.subtitle': '在浏览器中运行的简单工具', 'home.toolsLabel': '可用工具',
       'home.converterTitle': 'CSV 转 ABA 工具', 'home.converterDescription': '将音乐学校的教师付款 CSV 文件转换为 CBA 所需的 ABA 文件。',
       'home.openCurrent': '打开当前版本', 'home.tryV2': '试用版本 2',
+      'home.guitarTitle': '吉他扫弦练习机', 'home.guitarDescription': '使用循环吉他伴奏练习和弦转换和扫弦节奏。',
+      'home.openGuitar': '打开吉他工具',
       'home.sorterTitle': '中英文字符串排序工具', 'home.sorterDescription': '将中英文文本排序为编号列表。',
       'home.openSorter': '打开排序工具', 'home.footer': '这些工具在您的浏览器中运行。',
       'v2.title': 'CSV 转 ABA 工具版本 2 试用', 'v2.description': '将音乐学校的教师付款 CSV 文件转换为 CBA ABA 格式。',
@@ -174,6 +182,20 @@
     return translate(`error.${error.code}`, parameters, selectedLanguage);
   }
 
+  function registerCatalogs(additionalCatalogs) {
+    const english = additionalCatalogs && additionalCatalogs[DEFAULT_LANGUAGE];
+    const chinese = additionalCatalogs && additionalCatalogs[CHINESE_LANGUAGE];
+    if (!english || !chinese) throw new TypeError('English and Simplified Chinese catalogs are required.');
+
+    const englishKeys = Object.keys(english).sort();
+    const chineseKeys = Object.keys(chinese).sort();
+    if (JSON.stringify(englishKeys) !== JSON.stringify(chineseKeys)) {
+      throw new Error('English and Simplified Chinese translation keys must match.');
+    }
+    Object.assign(catalogs[DEFAULT_LANGUAGE], english);
+    Object.assign(catalogs[CHINESE_LANGUAGE], chinese);
+  }
+
   function applyDocument(document) {
     document.documentElement.lang = language;
     for (const element of document.querySelectorAll('[data-i18n]')) {
@@ -221,5 +243,14 @@
     root.document.addEventListener('DOMContentLoaded', () => initialize(root.document, root));
   }
 
-  return { catalogs, getLanguage: () => language, initialize, normalizeLanguage, setLanguage, translate, translateError };
+  return {
+    catalogs,
+    getLanguage: () => language,
+    initialize,
+    normalizeLanguage,
+    registerCatalogs,
+    setLanguage,
+    translate,
+    translateError,
+  };
 }));

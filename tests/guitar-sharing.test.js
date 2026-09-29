@@ -147,7 +147,7 @@ test('source that cannot round-trip through UTF-8 is rejected', async () => {
 test('the page loads sharing before the application', () => {
   const htmlPath = path.join(__dirname, '..', 'tools', 'guitar-strumming', 'index.html');
   const html = fs.readFileSync(htmlPath, 'utf8');
-  assert.ok(html.indexOf('src="./share.js"') < html.indexOf('src="./app.js"'));
+  assert.ok(html.indexOf('src="./share.js?') < html.indexOf('src="./app.js?'));
   assert.match(html, /id="copy-share-link"/);
   assert.match(html, /id="copy-source"/);
 });

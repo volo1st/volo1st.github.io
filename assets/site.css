@@ -59,8 +59,22 @@ textarea:focus-visible,
   justify-content: flex-end;
 }
 
+.page-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.page-title-row h1 {
+  min-width: 0;
+  margin-bottom: 0;
+}
+
 .language-switcher {
   display: inline-flex;
+  flex: 0 0 auto;
   border: 1px solid #8796a5;
   border-radius: 6px;
   padding: 2px;
@@ -68,9 +82,10 @@ textarea:focus-visible,
 }
 
 .language-switcher button {
+  min-height: 34px;
   border: 0;
   border-radius: 4px;
-  padding: 6px 10px;
+  padding: 4px 8px;
   color: #334452;
   background: transparent;
   font: inherit;
@@ -214,5 +229,9 @@ h3 {
   .primary-action,
   .button-link {
     width: 100%;
+  }
+
+  .page-title-row h1 {
+    font-size: 1.75rem;
   }
 }

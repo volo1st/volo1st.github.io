@@ -15,6 +15,13 @@ body {
   margin: 0;
 }
 
+button,
+select,
+summary,
+a {
+  touch-action: manipulation;
+}
+
 main {
   width: min(100% - 1.5rem, 46rem);
   margin: 0 auto;
@@ -40,6 +47,46 @@ h2 {
 h3 {
   margin: 0;
   font-size: 1rem;
+}
+
+.page-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.page-title-row h1 {
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.language-switcher {
+  display: inline-flex;
+  flex: 0 0 auto;
+  padding: 2px;
+  border: 1px solid #777263;
+  border-radius: 0.4rem;
+  background: #fff;
+}
+
+.language-switcher button {
+  min-width: 0;
+  min-height: 2rem;
+  padding: 0.25rem 0.5rem;
+  border: 0;
+  color: #3e443d;
+  background: transparent;
+}
+
+.language-switcher button[aria-pressed="false"]:hover {
+  background: #e9e5da;
+}
+
+.language-switcher button[aria-pressed="true"] {
+  color: #fff;
+  background: #27644e;
 }
 
 .visually-hidden {
@@ -437,6 +484,12 @@ code {
 
   .tempo-ramp-fields {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 30rem) {
+  .page-title-row h1 {
+    font-size: 1.75rem;
   }
 }
 

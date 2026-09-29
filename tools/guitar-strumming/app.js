@@ -7,6 +7,7 @@
   const audioApi = root.GuitarStrummingAudio;
   const shareApi = root.GuitarStrummingShare;
   const presetApi = root.GuitarStrummingPresets;
+  const i18n = root.GuitarStrummingI18n;
   const START_LEAD_SECONDS = 0.05;
   const SCHEDULE_AHEAD_SECONDS = 0.2;
   const SCHEDULER_INTERVAL_MILLISECONDS = 25;
@@ -65,14 +66,18 @@
   let sharePreparationGeneration = 0;
   let copyRequestGeneration = 0;
   let sourceReplacementBaseline = null;
+  let currentPlaybackStatus = { key: 'guitar.status.preparing', parameters: {} };
+  let currentShareStatus = { key: 'guitar.share.preparing', parameters: {} };
+  let currentValidationErrors = [];
+  let fatalValidationStatus = null;
 
   async function initialize() {
-    if (!core || !parser || !catalog || !audioApi || !shareApi || !presetApi) {
-      showFatalError('The tool scripts did not load. Reload the page.');
+    if (!core || !parser || !catalog || !audioApi || !shareApi || !presetApi || !i18n) {
+      showFatalError('guitar.status.scriptsFailed');
       return;
     }
 
-    populatePresetOptions();
+    renderPresetOptions();
     elements.source.addEventListener('input', () => {
       clearSourceParametersAfterSourceChange();
       validateSource('text');
@@ -109,13 +114,15 @@
     elements.copySource.addEventListener('click', handleCopySource);
     elements.preset.addEventListener('change', handlePresetChange);
     document.addEventListener('visibilitychange', handleVisibilityChange);
+    root.addEventListener('site-language-change', renderLocalizedContent);
+    document.addEventListener('DOMContentLoaded', renderLocalizedContent, { once: true });
 
     audioSupported = audioApi.isSupported();
     const sourceOrigin = await loadInitialSource();
     if (sourceOrigin === null) return;
     validateSource(sourceOrigin);
     if (!audioSupported) {
-      setPlaybackStatus('Audio is unavailable in this browser. You can still edit and validate the song.');
+      setPlaybackStatus('guitar.status.audioUnavailable');
     }
     updateControls();
   }
@@ -127,7 +134,7 @@
         elements.source.value = presetResult.preset.source;
         sourceReplacementBaseline = presetResult.preset.source;
         synchronizePresetSelection(presetResult.preset.source);
-        setShareStatus(`Loaded preset: ${presetResult.preset.title}.`);
+        setShareStatus('guitar.share.loadedPreset', { presetSlug: presetResult.preset.slug });
         return 'preset';
       }
 
@@ -136,7 +143,7 @@
         elements.source.value = decoded.source;
         sourceReplacementBaseline = decoded.source;
         synchronizePresetSelection(decoded.source);
-        setShareStatus(`Loaded a ${decoded.codec} share link.`);
+        setShareStatus('guitar.share.loadedLink', { codec: decoded.codec });
         return 'shared';
       }
 
@@ -144,7 +151,7 @@
       elements.source.value = defaultPreset.source;
       sourceReplacementBaseline = defaultPreset.source;
       synchronizePresetSelection(defaultPreset.source);
-      setShareStatus(`Loaded preset: ${defaultPreset.title}.`);
+      setShareStatus('guitar.share.loadedPreset', { presetSlug: defaultPreset.slug });
       return 'initial';
     } catch (error) {
       elements.source.value = '';
@@ -161,9 +168,9 @@
       synchronizeSwingControl(undefined);
       synchronizeBpmControls(null);
       synchronizeTempoRampControls(null);
-      invalidatePreparedShare('The requested source did not load.');
+      invalidatePreparedShare('guitar.share.requestFailed');
       renderValidationErrors([{
-        code: `transport_${error.code || 'decode_failed'}`,
+        code: 'transport_load_failed',
         line: null,
         section: null,
         bar: null,
@@ -172,7 +179,7 @@
         message: error.message || 'The requested source did not load.',
       }]);
       renderSongSummary();
-      setPlaybackStatus('Playback is unavailable because the requested source did not load.');
+      setPlaybackStatus('guitar.status.sourceUnavailable');
       updateControls();
       return null;
     }
@@ -198,13 +205,12 @@
       synchronizeSwingControl(undefined);
       synchronizeBpmControls(null);
       synchronizeTempoRampControls(null);
-      invalidatePreparedShare('Fix the source before you create a share link.');
+      invalidatePreparedShare('guitar.share.fixSource');
       renderValidationErrors(result.errors);
       renderSongSummary();
       setPlaybackStatus(
-        result.errors.length === 1
-          ? 'Playback is unavailable until you fix the error.'
-          : `Playback is unavailable until you fix ${result.errors.length} errors.`,
+        result.errors.length === 1 ? 'guitar.status.fixOne' : 'guitar.status.fixMany',
+        { count: result.errors.length },
       );
       updateControls();
       return;
@@ -225,7 +231,7 @@
       synchronizeSwingControl(undefined);
       synchronizeBpmControls(null);
       synchronizeTempoRampControls(null);
-      invalidatePreparedShare('Fix the timeline before you create a share link.');
+      invalidatePreparedShare('guitar.share.fixTimeline');
       renderValidationErrors([{
         code: 'timeline_error',
         line: null,
@@ -235,7 +241,7 @@
         message: `The normalized timeline is invalid. ${error.message}`,
       }]);
       renderSongSummary();
-      setPlaybackStatus('Playback is unavailable because timeline creation failed.');
+      setPlaybackStatus('guitar.status.timelineUnavailable');
       updateControls();
       return;
     }
@@ -284,51 +290,64 @@
         if (countInEndTime !== null) {
           haltPlayback({ resetPosition: true });
           countInRequired = parsedSong.countInBars > 0;
-          setPlaybackStatus('Tempo changed. Press Play to restart the count-in.');
+          setPlaybackStatus('guitar.status.tempoCountIn');
         } else {
           requestTempoChange(nextTimeline);
         }
       } else {
-        setPlaybackStatus(`Ready at ${result.song.bpm} BPM.`);
+        setPlaybackStatus('guitar.status.readyBpm', { bpm: result.song.bpm });
       }
     } else if (sourceChanged) {
       haltPlayback({ resetPosition: true });
       countInRequired = parsedSong.countInBars > 0;
       setPlaybackStatus(activeRampSettingChanged
-        ? 'Speed-up settings changed. Ready at bar 1.'
-        : 'Arrangement changed. Ready at bar 1.');
+        ? 'guitar.status.speedChanged'
+        : 'guitar.status.arrangementChanged');
     } else if (origin === 'initial') {
       resetTempoRampState();
       countInRequired = parsedSong.countInBars > 0;
-      setPlaybackStatus('Ready.');
+      setPlaybackStatus('guitar.status.ready');
     } else if (!previousSong) {
       haltPlayback({ resetPosition: true });
       countInRequired = parsedSong.countInBars > 0;
-      setPlaybackStatus('Ready at bar 1.');
+      setPlaybackStatus('guitar.status.readyBar');
     } else if (origin === 'bpm-control') {
-      setPlaybackStatus(`Ready at ${result.song.bpm} BPM.`);
+      setPlaybackStatus('guitar.status.readyBpm', { bpm: result.song.bpm });
     }
 
     updateControls();
   }
 
-  function populatePresetOptions() {
+  function renderPresetOptions() {
+    const selectedValue = elements.preset.value;
+    const customOption = document.createElement('option');
+    customOption.value = '';
+    customOption.textContent = t('guitar.customArrangement');
+    elements.preset.replaceChildren(customOption);
     for (const preset of presetApi.listPresets()) {
       const option = document.createElement('option');
       option.value = preset.slug;
-      option.textContent = preset.presetType === 'Exercise'
-        ? `${preset.teachingLevel}: ${preset.title}`
-        : `${preset.presetType}: ${preset.title}`;
+      const category = preset.presetType === 'Exercise'
+        ? translatedPresetLevel(preset)
+        : translatedPresetType(preset);
+      option.textContent = t('guitar.preset.label', {
+        category,
+        title: translatedPresetTitle(preset),
+      });
       elements.preset.append(option);
     }
+    elements.preset.value = selectedValue;
   }
 
   function synchronizePresetSelection(source) {
     const preset = presetApi.findPresetBySource(source);
     elements.preset.value = preset ? preset.slug : '';
     elements.presetGoal.textContent = preset
-      ? `${preset.teachingLevel}. ${preset.teachingGoal}`
-      : 'Custom arrangement. Select a preset to start again.';
+      ? t('guitar.preset.goal', {
+        level: translatedPresetLevel(preset),
+        goal: translatedPresetGoal(preset),
+      })
+      : t('guitar.presetPrompt');
   }
 
   function handlePresetChange() {
@@ -342,10 +361,10 @@
       && elements.source.value !== sourceReplacementBaseline;
     if (
       hasSessionEdits
-      && !root.confirm('Replace the current arrangement with this preset? Your current edits will be lost.')
+      && !root.confirm(t('guitar.confirmPreset'))
     ) {
       synchronizePresetSelection(elements.source.value);
-      setShareStatus('Preset loading was cancelled. The current source is unchanged.');
+      setShareStatus('guitar.share.cancelled');
       return;
     }
 
@@ -353,7 +372,7 @@
       const presetLink = presetApi.createPresetUrl(preset.slug, root.location.href);
       root.history.replaceState(null, '', presetLink.url);
     } catch (error) {
-      setShareStatus('The preset loaded, but the browser could not update the current URL.');
+      setShareStatus('guitar.share.urlUpdateFailed');
     }
 
     elements.source.value = preset.source;
@@ -368,12 +387,12 @@
       : 300;
     if (!/^\d+$/.test(rawValue) || Number(rawValue) < 30 || Number(rawValue) > maximum) {
       if (parsedSong) synchronizeBpmControls(parsedSong);
-      setPlaybackStatus(`BPM must be a whole number from 30 through ${maximum}.`);
+      setPlaybackStatus('guitar.status.bpmRange', { maximum });
       return;
     }
     const updatedSource = parser.replaceBpmDirective(elements.source.value, rawValue);
     if (updatedSource === null) {
-      setPlaybackStatus('Fix the bpm: directive before you use the BPM controls.');
+      setPlaybackStatus('guitar.status.fixBpm');
       return;
     }
     clearSourceParametersAfterSourceChange();
@@ -383,19 +402,19 @@
 
   function synchronizeBpmControls(song) {
     if (!song) {
-      elements.bpmNumberLabel.textContent = 'Tempo';
-      elements.bpmRangeLabel.textContent = 'Tempo slider';
+      elements.bpmNumberLabel.textContent = t('guitar.tempo');
+      elements.bpmRangeLabel.textContent = t('guitar.tempoSlider');
       elements.bpmNumber.max = '300';
       elements.bpmRange.max = '300';
       return;
     }
     const maximum = song.tempoRamp.enabled ? song.tempoRamp.targetBpm - 1 : 300;
     elements.bpmNumberLabel.textContent = song.tempoRamp.enabled
-      ? 'Starting tempo'
-      : 'Tempo';
+      ? t('guitar.startingTempo')
+      : t('guitar.tempo');
     elements.bpmRangeLabel.textContent = song.tempoRamp.enabled
-      ? 'Starting tempo slider'
-      : 'Tempo slider';
+      ? t('guitar.startingTempoSlider')
+      : t('guitar.tempoSlider');
     elements.bpmNumber.max = String(maximum);
     elements.bpmRange.max = String(maximum);
     elements.bpmNumber.value = String(song.bpm);
@@ -407,7 +426,7 @@
     const updatedSource = parser.replaceCountInDirective(elements.source.value, rawValue);
     if (updatedSource === null) {
       elements.countIn.value = previousValue;
-      setPlaybackStatus('Fix the count-in: directive before you use the Count-in control.');
+      setPlaybackStatus('guitar.status.fixCountIn');
       return;
     }
     clearSourceParametersAfterSourceChange();
@@ -423,13 +442,13 @@
     const previousValue = parsedSong ? String(parsedSong.capoFret) : '';
     if (!/^\d+$/.test(rawValue) || Number(rawValue) < 0 || Number(rawValue) > 12) {
       elements.capoFret.value = previousValue;
-      setPlaybackStatus('Capo fret must be a whole number from 0 through 12.');
+      setPlaybackStatus('guitar.status.capoRange');
       return;
     }
     const updatedSource = parser.replaceCapoDirective(elements.source.value, rawValue);
     if (updatedSource === null) {
       elements.capoFret.value = previousValue;
-      setPlaybackStatus('Fix the capo: directive before you use the Capo control.');
+      setPlaybackStatus('guitar.status.fixCapo');
       return;
     }
     applyControlSource(updatedSource, 'capo-control');
@@ -448,13 +467,13 @@
       && (!/^\d+$/.test(rawValue) || Number(rawValue) < 50 || Number(rawValue) > 75)
     ) {
       synchronizeSwingControl(parsedSong ? parsedSong.swingPercent : undefined);
-      setPlaybackStatus('Swing must be off or a whole number from 50 through 75.');
+      setPlaybackStatus('guitar.status.swingRange');
       return;
     }
     const updatedSource = parser.replaceSwingDirective(elements.source.value, rawValue);
     if (updatedSource === null) {
       elements.swingFeel.value = previousValue;
-      setPlaybackStatus('Fix the swing: directive before you use the Swing control.');
+      setPlaybackStatus('guitar.status.fixSwing');
       return;
     }
     applyControlSource(updatedSource, 'swing-control');
@@ -474,7 +493,7 @@
     if (!hasStandardOption) {
       const customOption = document.createElement('option');
       customOption.value = value;
-      customOption.textContent = `Custom (${value}%)`;
+      customOption.textContent = t('guitar.swingCustom', { value });
       customOption.dataset.customSwing = 'true';
       elements.swingFeel.append(customOption);
     }
@@ -484,7 +503,7 @@
   function updateTempoRampMode(mode) {
     if (!parsedSong) {
       synchronizeTempoRampControls(null);
-      setPlaybackStatus('Fix the arrangement before you use the Speed up control.');
+      setPlaybackStatus('guitar.status.fixArrangementSpeed');
       return;
     }
 
@@ -494,7 +513,7 @@
         ramp = core.defaultTempoRampForTarget(parsedSong.bpm);
       } catch (error) {
         synchronizeTempoRampControls(parsedSong);
-        setPlaybackStatus(error.message);
+        setPlaybackStatus('guitar.status.speedTargetLow');
         return;
       }
       applyTempoRampSourceChange(
@@ -515,26 +534,26 @@
   function updateTempoRampFromControls() {
     if (!parsedSong || !parsedSong.tempoRamp.enabled) {
       synchronizeTempoRampControls(parsedSong);
-      setPlaybackStatus('Turn on Speed up before you edit its settings.');
+      setPlaybackStatus('guitar.status.enableSpeed');
       return;
     }
 
     const fields = [
       {
         element: elements.tempoRampStep,
-        label: 'Tempo-ramp step',
+        labelKey: 'guitar.status.fieldStep',
         minimum: 1,
         maximum: 20,
       },
       {
         element: elements.tempoRampLoops,
-        label: 'Loops per step',
+        labelKey: 'guitar.status.fieldLoops',
         minimum: 1,
         maximum: 99,
       },
       {
         element: elements.tempoRampTarget,
-        label: 'Target BPM',
+        labelKey: 'guitar.status.fieldTarget',
         minimum: parsedSong.bpm + 1,
         maximum: 300,
       },
@@ -549,9 +568,11 @@
         || value > field.maximum
       ) {
         synchronizeTempoRampControls(parsedSong);
-        setPlaybackStatus(
-          `${field.label} must be a whole number from ${field.minimum} through ${field.maximum}.`,
-        );
+        setPlaybackStatus('guitar.status.fieldRange', {
+          fieldKey: field.labelKey,
+          minimum: field.minimum,
+          maximum: field.maximum,
+        });
         return;
       }
       values.push(value);
@@ -563,7 +584,7 @@
     );
     if (updatedSource === null) {
       synchronizeTempoRampControls(parsedSong);
-      setPlaybackStatus('Fix the tempo-ramp: directive before you use the Speed up controls.');
+      setPlaybackStatus('guitar.status.fixRamp');
       return;
     }
     applyControlSource(updatedSource, 'tempo-ramp-control');
@@ -576,7 +597,7 @@
       : parser.replaceTempoRampDirective(bpmSource, tempoRampValue);
     if (updatedSource === null) {
       synchronizeTempoRampControls(parsedSong);
-      setPlaybackStatus('Fix the bpm: and tempo-ramp: directives before you use this control.');
+      setPlaybackStatus('guitar.status.fixBpmRamp');
       return;
     }
     applyControlSource(updatedSource, 'tempo-ramp-control');
@@ -608,7 +629,7 @@
     sharePreparationGeneration += 1;
     const generation = sharePreparationGeneration;
     preparedShare = null;
-    setShareStatus('Preparing the share link.');
+    setShareStatus('guitar.share.preparing');
     updateControls();
 
     try {
@@ -621,21 +642,24 @@
       const codecName = result.codec === 'preset'
         ? 'preset'
         : (result.codec === 'gzip' ? 'gzip' : 'raw');
-      setShareStatus(`Share link is ready. Format: ${codecName}. Length: ${result.urlLength} characters.`);
+      setShareStatus('guitar.share.ready', {
+        format: codecName,
+        length: result.urlLength,
+      });
     } catch (error) {
       if (generation !== sharePreparationGeneration || elements.source.value !== source) return;
       preparedShare = null;
-      setShareStatus(error.message || 'The share link is unavailable.');
+      setShareStatus('guitar.share.unavailable', { detail: error.message || '' });
     }
     updateControls();
   }
 
-  function invalidatePreparedShare(message) {
+  function invalidatePreparedShare(key, parameters = {}) {
     sharePreparationGeneration += 1;
     copyRequestGeneration += 1;
     preparedShare = null;
     hideManualShareLink();
-    setShareStatus(message);
+    setShareStatus(key, parameters);
     updateControls();
   }
 
@@ -653,7 +677,7 @@
         root.history.replaceState(null, '', url.href);
       }
     } catch (error) {
-      setShareStatus('The browser could not remove the old source parameter.');
+      setShareStatus('guitar.share.removeOldFailed');
     }
   }
 
@@ -666,18 +690,21 @@
     try {
       root.history.replaceState(null, '', share.url);
     } catch (error) {
-      setShareStatus('The browser could not put the share link in the current URL.');
+      setShareStatus('guitar.share.putUrlFailed');
       return;
     }
 
     writeClipboard(share.url).then(() => {
       if (requestId !== copyRequestGeneration) return;
       hideManualShareLink();
-      setShareStatus(`Copied the ${share.codec} share link. Length: ${share.urlLength} characters.`);
+      setShareStatus('guitar.share.copiedLink', {
+        codec: share.codec,
+        length: share.urlLength,
+      });
     }, () => {
       if (requestId !== copyRequestGeneration) return;
       showManualShareLink(share.url);
-      setShareStatus('Automatic copy failed. Copy the selected share link manually.');
+      setShareStatus('guitar.share.copyLinkFailed');
     });
   }
 
@@ -687,12 +714,12 @@
     const requestId = copyRequestGeneration;
     writeClipboard(source).then(() => {
       if (requestId !== copyRequestGeneration) return;
-      setShareStatus('Copied the exact source text.');
+      setShareStatus('guitar.share.copiedSource');
     }, () => {
       if (requestId !== copyRequestGeneration) return;
       elements.source.focus();
       elements.source.select();
-      setShareStatus('Automatic copy failed. Copy the selected source text manually.');
+      setShareStatus('guitar.share.copySourceFailed');
     });
   }
 
@@ -719,8 +746,9 @@
     elements.manualShareLink.value = '';
   }
 
-  function setShareStatus(message) {
-    elements.shareStatus.textContent = message;
+  function setShareStatus(key, parameters = {}) {
+    currentShareStatus = { key, parameters };
+    renderShareStatus();
   }
 
   async function handleSoundTestClick(event) {
@@ -730,17 +758,17 @@
     const token = button.dataset.strumToken;
     const parsedToken = parser.parseStrumTokenValue(token);
     if (!parsedToken.ok) {
-      setPlaybackStatus(`The sound-test token ${token} is invalid.`);
+      setPlaybackStatus('guitar.status.soundToken', { token });
       return;
     }
 
     if (playbackState === 'playing') {
-      pausePlayback('Song playback paused for the sound test.');
+      pausePlayback('guitar.status.soundPaused');
     } else {
       haltPlayback({ resetPosition: false });
     }
     const requestId = requestGeneration;
-    setPlaybackStatus(`Starting the ${token} sound test.`);
+    setPlaybackStatus('guitar.status.soundStarting', { token });
 
     try {
       const engine = getAudioEngine();
@@ -755,16 +783,16 @@
         parsedToken.strum,
         context.currentTime + START_LEAD_SECONDS,
       );
-      setPlaybackStatus(`Sound test played ${token} on a G chord.`);
+      setPlaybackStatus('guitar.status.soundPlayed', { token });
     } catch (error) {
       haltPlayback({ resetPosition: false });
-      setPlaybackStatus(`The sound test did not start. ${error.message}`);
+      setPlaybackStatus('guitar.status.soundFailed', { detail: error.message });
     }
   }
 
   async function handlePlayPause() {
     if (playbackState === 'playing') {
-      pausePlayback('Playback paused.');
+      pausePlayback('guitar.status.paused');
       return;
     }
     if (playbackState === 'starting' || !parsedTimeline || !audioSupported) return;
@@ -773,7 +801,7 @@
     requestGeneration += 1;
     const requestId = requestGeneration;
     updateControls();
-    setPlaybackStatus('Starting audio.');
+    setPlaybackStatus('guitar.status.audioStarting');
 
     try {
       const engine = getAudioEngine();
@@ -784,7 +812,7 @@
       setPlaybackStartStatus(countInBars);
     } catch (error) {
       haltPlayback({ resetPosition: false });
-      setPlaybackStatus(`Audio did not start. ${error.message}`);
+      setPlaybackStatus('guitar.status.audioFailed', { detail: error.message });
     } finally {
       if (requestId === requestGeneration && playbackState === 'starting') {
         playbackState = 'paused';
@@ -839,7 +867,7 @@
     return countInBars;
   }
 
-  function pausePlayback(message) {
+  function pausePlayback(statusKey, parameters = {}) {
     requestGeneration += 1;
     if (activeSegment && audioEngine && audioEngine.context) {
       promoteTempoTransition(audioEngine.context.currentTime);
@@ -856,7 +884,7 @@
     pendingTransition = null;
     countInEndTime = null;
     playbackState = 'paused';
-    setPlaybackStatus(message);
+    setPlaybackStatus(statusKey, parameters);
     updateControls();
   }
 
@@ -888,7 +916,7 @@
       setPlaybackStartStatus(countInBars);
     } else {
       activeSegment = null;
-      setPlaybackStatus('Ready at bar 1.');
+      setPlaybackStatus('guitar.status.readyBar');
       updateControls();
     }
   }
@@ -912,7 +940,10 @@
     };
     pumpScheduler();
     const barNumber = (transition.boundary.sourceSlot / nextTimeline.gridSize) + 1;
-    setPlaybackStatus(`BPM will change to ${nextTimeline.bpm} at bar ${barNumber}.`);
+    setPlaybackStatus('guitar.status.bpmChange', {
+      bpm: nextTimeline.bpm,
+      bar: barNumber,
+    });
   }
 
   function pumpScheduler() {
@@ -927,7 +958,7 @@
       const now = audioEngine.context.currentTime;
       if (countInEndTime !== null && now >= countInEndTime - BOUNDARY_EPSILON_SECONDS) {
         countInEndTime = null;
-        setPlaybackStatus('Playing.');
+        setPlaybackStatus('guitar.status.playing');
       }
       promoteTempoTransition(now);
       const horizonTime = now + SCHEDULE_AHEAD_SECONDS;
@@ -943,7 +974,7 @@
         scheduleSegment(activeSegment, now, horizonTime);
       }
     } catch (error) {
-      pausePlayback(`Playback stopped. ${error.message}`);
+      pausePlayback('guitar.status.stopped', { detail: error.message });
     }
   }
 
@@ -978,9 +1009,7 @@
     segment.cursor = batch.cursor;
     if (batch.skipped.length > 0) {
       skippedLateStrums += batch.skipped.length;
-      setPlaybackStatus(
-        `Playback recovered after a delay. Skipped late strums: ${skippedLateStrums}.`,
-      );
+      setPlaybackStatus('guitar.status.recovered', { count: skippedLateStrums });
     }
   }
 
@@ -1002,7 +1031,8 @@
     }
     synchronizeTempoRampProgress(now);
     if (tempoChanged && playbackState === 'playing') {
-      setPlaybackStatus(tempoRampPlaybackStatus());
+      const status = tempoRampPlaybackStatus();
+      setPlaybackStatus(status.key, status.parameters);
     }
   }
 
@@ -1060,12 +1090,21 @@
 
   function tempoRampPlaybackStatus() {
     if (!parsedSong || !parsedSong.tempoRamp.enabled) {
-      return `Playing at ${activeSegment.timeline.bpm} beats per minute.`;
+      return {
+        key: 'guitar.status.playingBpm',
+        parameters: { bpm: activeSegment.timeline.bpm },
+      };
     }
     if (rampCurrentBpm >= parsedSong.tempoRamp.targetBpm) {
-      return `Playing at the target tempo of ${rampCurrentBpm} beats per minute.`;
+      return {
+        key: 'guitar.status.playingTarget',
+        parameters: { bpm: rampCurrentBpm },
+      };
     }
-    return `Playing at ${rampCurrentBpm} beats per minute. Completed loops: ${rampCompletedLoops}.`;
+    return {
+      key: 'guitar.status.playingRamp',
+      parameters: { bpm: rampCurrentBpm, loops: rampCompletedLoops },
+    };
   }
 
   function getAudioEngine() {
@@ -1079,7 +1118,7 @@
 
   function handleVisibilityChange() {
     if (document.hidden && (playbackState === 'playing' || playbackState === 'starting')) {
-      pausePlayback('Playback paused because the page became hidden. Press Play to continue.');
+      pausePlayback('guitar.status.hiddenPause');
     }
   }
 
@@ -1090,9 +1129,7 @@
       && audioEngine.context
       && audioEngine.context.state !== 'running'
     ) {
-      pausePlayback(
-        `Playback paused because the audio context is ${audioEngine.context.state}. Press Play to continue.`,
-      );
+      pausePlayback('guitar.status.contextPause', { state: audioEngine.context.state });
     }
   }
 
@@ -1103,43 +1140,122 @@
     }
   }
 
-  function renderValidationErrors(errors) {
+  function t(key, parameters = {}) {
+    return i18n ? i18n.translate(key, parameters) : key;
+  }
+
+  function translatedPresetTitle(preset) {
+    const key = `guitar.preset.${preset.slug}.title`;
+    const value = t(key);
+    return value === key ? preset.title : value;
+  }
+
+  function translatedPresetGoal(preset) {
+    const key = `guitar.preset.${preset.slug}.goal`;
+    const value = t(key);
+    return value === key ? preset.teachingGoal : value;
+  }
+
+  function translatedPresetLevel(preset) {
+    const key = preset.teachingLevel === 'Beginner'
+      ? 'guitar.preset.level.beginner'
+      : 'guitar.preset.level.intermediate';
+    return t(key);
+  }
+
+  function translatedPresetType(preset) {
+    const keyByType = {
+      Exercise: 'guitar.preset.type.exercise',
+      'Feature demo': 'guitar.preset.type.feature',
+      'Song exercise': 'guitar.preset.type.song',
+    };
+    const key = keyByType[preset.presetType];
+    return key ? t(key) : preset.presetType;
+  }
+
+  function renderPlaybackStatus() {
+    const parameters = { ...currentPlaybackStatus.parameters };
+    if (parameters.fieldKey) {
+      parameters.field = t(parameters.fieldKey);
+      delete parameters.fieldKey;
+    }
+    elements.status.textContent = t(currentPlaybackStatus.key, parameters);
+  }
+
+  function renderShareStatus() {
+    const parameters = { ...currentShareStatus.parameters };
+    if (parameters.presetSlug) {
+      const preset = presetApi.getPreset(parameters.presetSlug);
+      parameters.title = preset ? translatedPresetTitle(preset) : parameters.presetSlug;
+      delete parameters.presetSlug;
+    }
+    elements.shareStatus.textContent = t(currentShareStatus.key, parameters);
+  }
+
+  function renderLocalizedContent() {
+    if (!i18n || !presetApi) return;
+    renderPresetOptions();
+    synchronizePresetSelection(elements.source.value);
+    synchronizeBpmControls(parsedSong);
+    synchronizeSwingControl(parsedSong ? parsedSong.swingPercent : undefined);
+    renderSongSummary();
+    if (fatalValidationStatus) {
+      elements.validationSummary.textContent = t(
+        fatalValidationStatus.key,
+        fatalValidationStatus.parameters,
+      );
+    } else {
+      renderValidationErrors(currentValidationErrors, false);
+    }
+    renderPlaybackStatus();
+    renderShareStatus();
+    updateControls();
+  }
+
+  function renderValidationErrors(errors, openEditor = true) {
+    currentValidationErrors = [...errors];
+    fatalValidationStatus = null;
     elements.validationErrors.replaceChildren();
     if (errors.length === 0) {
       elements.validationErrors.hidden = true;
-      elements.validationSummary.textContent = 'Input is valid.';
+      elements.validationSummary.textContent = t('guitar.validation.valid');
       elements.validationSummary.className = 'validation-summary valid';
       return;
     }
 
-    elements.editor.open = true;
+    if (openEditor) elements.editor.open = true;
     for (const error of errors) {
       const listItem = document.createElement('li');
-      listItem.textContent = parser.formatValidationError(error);
+      listItem.textContent = i18n.formatValidationError(error);
       elements.validationErrors.append(listItem);
     }
     elements.validationErrors.hidden = false;
     elements.validationSummary.textContent = errors.length === 1
-      ? 'Input has 1 error.'
-      : `Input has ${errors.length} errors.`;
+      ? t('guitar.validation.one')
+      : t('guitar.validation.many', { count: errors.length });
     elements.validationSummary.className = 'validation-summary invalid';
   }
 
   function renderSongSummary() {
     if (!parsedSong) {
-      elements.songSummary.textContent = 'No playable song is available.';
+      elements.songSummary.textContent = t('guitar.summary.none');
       return;
     }
     const barCount = parsedSong.chordBars.length;
     elements.songSummary.textContent = [
-      `${barCount} ${barCount === 1 ? 'bar' : 'bars'}`,
+      t(barCount === 1 ? 'guitar.summary.bar' : 'guitar.summary.bars', { count: barCount }),
       parsedSong.tempoRamp.enabled
-        ? `${parsedSong.bpm}–${parsedSong.tempoRamp.targetBpm} BPM`
-        : `${parsedSong.bpm} BPM`,
-      parsedSong.capoFret === 0 ? 'Capo off' : `Capo ${parsedSong.capoFret}`,
+        ? t('guitar.summary.rampTempo', {
+          start: parsedSong.bpm,
+          target: parsedSong.tempoRamp.targetBpm,
+        })
+        : t('guitar.summary.fixedTempo', { bpm: parsedSong.bpm }),
+      parsedSong.capoFret === 0
+        ? t('guitar.summary.capoOff')
+        : t('guitar.summary.capo', { fret: parsedSong.capoFret }),
       parsedSong.swingPercent === null
-        ? 'Swing off'
-        : `Swing ${parsedSong.swingPercent}%`,
+        ? t('guitar.summary.swingOff')
+        : t('guitar.summary.swing', { percent: parsedSong.swingPercent }),
     ].join(' · ');
   }
 
@@ -1148,7 +1264,9 @@
     const rampEnabled = Boolean(parsedSong && parsedSong.tempoRamp.enabled);
     elements.playPause.disabled = !playbackAvailable || playbackState === 'starting';
     elements.restart.disabled = !playbackAvailable || playbackState === 'starting';
-    elements.playPause.textContent = playbackState === 'playing' ? 'Pause' : 'Play';
+    elements.playPause.textContent = playbackState === 'playing'
+      ? t('guitar.pause')
+      : t('guitar.play');
     elements.playPause.setAttribute('aria-pressed', String(playbackState === 'playing'));
     elements.copyShareLink.disabled = !preparedShare
       || preparedShare.source !== elements.source.value;
@@ -1168,9 +1286,10 @@
     }
   }
 
-  function showFatalError(message) {
+  function showFatalError(key, parameters = {}) {
+    fatalValidationStatus = { key, parameters };
     elements.editor.open = true;
-    elements.validationSummary.textContent = message;
+    elements.validationSummary.textContent = t(key, parameters);
     elements.validationSummary.className = 'validation-summary invalid';
     elements.playPause.disabled = true;
     elements.restart.disabled = true;
@@ -1187,23 +1306,26 @@
     elements.copyShareLink.disabled = true;
     elements.copySource.disabled = true;
     for (const button of elements.soundTestButtons) button.disabled = true;
-    setPlaybackStatus(message);
+    setPlaybackStatus(key, parameters);
   }
 
-  function setPlaybackStatus(message) {
-    elements.status.textContent = message;
+  function setPlaybackStatus(key, parameters = {}) {
+    currentPlaybackStatus = { key, parameters };
+    renderPlaybackStatus();
   }
 
   function setPlaybackStartStatus(countInBars) {
     if (countInBars === 0) {
-      setPlaybackStatus('Playing.');
+      setPlaybackStatus('guitar.status.playing');
       return;
     }
-    const unit = countInBars === 1 ? 'bar' : 'bars';
-    setPlaybackStatus(`Counting in for ${countInBars} ${unit}.`);
+    setPlaybackStatus(
+      countInBars === 1 ? 'guitar.status.countInOne' : 'guitar.status.countInMany',
+      { count: countInBars },
+    );
   }
 
   initialize().catch((error) => {
-    showFatalError(`The tool did not start. ${error.message}`);
+    showFatalError('guitar.status.toolFailed', { detail: error.message });
   });
 }(typeof globalThis !== 'undefined' ? globalThis : this));

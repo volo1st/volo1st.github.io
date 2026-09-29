@@ -11,7 +11,11 @@ See [`website-roadmap.md`](website-roadmap.md) for the product direction and del
 - [CSV to ABA Converter version 1](tools/csv2aba/) is the current fallback.
 - [CSV to ABA Converter version 2](tools/csv2aba-v2/) is ready for an operator trial.
 - [Chinese-English String Sorter](tools/song_order/) sorts text into a numbered list.
-- [Guitar Strumming Backing Track](tools/guitar-strumming/) makes a looping guitar backing track from plain-text input. The home page does not link to this tool yet.
+- [Guitar Strum Machine](tools/guitar-strumming/) makes a looping guitar backing track from plain-text input. The home page links to this tool.
+
+The home page, version 2 converter, and Guitar Strum Machine support English and Simplified Chinese. The site stores the selected language code in browser local storage. A language change does not change guitar arrangement text, playback state, or share-link data.
+
+HTML references browser assets with a short SHA-256 content hash. Update the hash when a CSS or JavaScript file changes. The repository check rejects a stale hash.
 
 The guitar tool can put the complete source in a share URL. Anyone who receives the URL can read the source. A browser sends the URL query to the website host when it opens the link. A URL-shortener service also receives the URL. A generated share URL must not exceed 750 characters. Decoded source must not exceed 65,536 UTF-8 bytes.
 

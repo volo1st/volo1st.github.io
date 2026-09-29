@@ -1135,6 +1135,8 @@ Keep validation errors next to the arrangement text. Keep exceptional status mes
 
 Use native controls and details elements. Preserve keyboard operation, visible focus, narrow-screen support, and use at 200 percent zoom.
 
+Prevent double-tap zoom on tappable controls. Keep pinch zoom available on the page.
+
 Do not change the text format, parser, audio behavior, preset content, or share-link format in this package.
 
 Accepted risk: A user must open Edit arrangement to copy or share custom source. This keeps the normal practice view compact.
@@ -1144,6 +1146,38 @@ Failure behavior: If the source or timeline is invalid, stop playback, disable u
 Automated evidence: The repository check passed on 2026-09-28. It covered the compact practice layout, collapsed sections, state-dependent Play and Pause styling, responsive settings, accessible references, compact summary, and automatic editor opening for errors.
 
 Manual evidence: The user confirmed that the redesigned interface worked well in the browser preview.
+
+## 11.12 English and Simplified Chinese Interface
+
+Status: Implemented and verified on 2026-09-29.
+
+Add the shared English and Simplified Chinese language switcher to Guitar Strum Machine.
+
+Place the compact `EN / 中文` control at the right side of the page-title row. Treat language as page-level state, not a practice setting.
+
+Translate all normal controls, help text, status messages, share messages, preset teaching information, and validation messages.
+
+Keep arrangement directives, chord identifiers, strum tokens, preset names derived from song titles, and share-link data language-neutral.
+
+Use the saved website language when the page opens. Apply a language change without reloading the page.
+
+Keep the arrangement text as the single source of truth. A language change must not change the text, playback position, selected preset, practice settings, or share URL.
+
+Use stable translation keys. Use parser error codes for validation translations.
+
+If a translation key is unavailable, show the existing English message. Do not hide an error or replace it with an untranslated key.
+
+Keep the English and Simplified Chinese translation key sets identical.
+
+Do not translate music syntax examples. Translate the instructions around each example.
+
+Accepted risk: Preset song titles remain in their published form. This prevents a language change from changing the identity of a shared preset.
+
+Failure behavior: If saved-language storage is unavailable, use the browser language or English. If language selection cannot be saved, apply the selected language for the current page session.
+
+Automated evidence: The repository check passed on 2026-09-29. It covered matching translation keys, translated validation messages, content-hash references, title-row controls, and touch behaviour that preserves pinch zoom.
+
+Manual evidence: The user confirmed the compact language control and translated interface on desktop and iPhone. The user also confirmed the corrected iOS selected colour and double-tap behaviour.
 
 ---
 

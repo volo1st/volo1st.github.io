@@ -156,7 +156,7 @@ test('the page loads the preset catalog before the application', () => {
     path.join(__dirname, '..', 'tools', 'guitar-strumming', 'index.html'),
     'utf8',
   );
-  assert.ok(html.indexOf('src="./preset-catalog.js"') < html.indexOf('src="./app.js"'));
+  assert.ok(html.indexOf('src="./preset-catalog.js?') < html.indexOf('src="./app.js?'));
   assert.match(html, /id="song-preset"/);
   assert.match(html, /id="preset-notice-heading"/);
   assert.ok(html.indexOf('id="preset-notice-heading"') > html.indexOf('id="strum-sound-test"'));

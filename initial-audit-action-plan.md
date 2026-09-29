@@ -262,6 +262,9 @@ Use this table when the team changes or rejects an action.
 | 14 September 2026 | Use a local check script. Do not add Git hooks or GitHub Actions at this time. | Repository owner | A one-person static website does not need the additional setup and maintenance at this time. |
 | 14 September 2026 | Add English and Simplified Chinese to the home page and version 2 trial. Keep version 1 unchanged. | Repository owner | The current operator is more comfortable with Chinese. English-only workflow text has caused operating problems. The GUI is part of the version 2 trial. |
 | 17 September 2026 | Defer the text sorter correction and accessibility work. | Repository owner | The text sorter has low current use. The public website foundation has higher current value. Review this decision when regular sorter use resumes or a defect blocks a user. |
+| 28 September 2026 | Add Guitar Strum Machine to the home page in English and Simplified Chinese. | Repository owner | The practice interface is implemented and verified. The tool is ready for direct discovery from the tools home page. |
+| 29 September 2026 | Use a compact `EN / 中文` control at the right side of the title row on bilingual pages. | Repository owner | Language is page-level state. A shared title-row pattern keeps the control visible without using a separate mobile row. |
+| 29 September 2026 | Add a SHA-256 content-hash query to browser assets. | Repository owner | A browser can combine new HTML with cached CSS or JavaScript. A content hash refreshes each changed file and lets the repository check detect a stale reference. |
 
 ## Completion record
 

@@ -8,6 +8,8 @@ const test = require('node:test');
 const catalog = require('../tools/guitar-strumming/catalog.js');
 const core = require('../tools/guitar-strumming/core.js');
 const parser = require('../tools/guitar-strumming/parser.js');
+const siteI18n = require('../assets/i18n.js');
+const guitarI18n = require('../tools/guitar-strumming/i18n.js');
 require('../tools/guitar-strumming/audio-engine.js');
 
 const audioApi = globalThis.GuitarStrummingAudio;
@@ -1057,7 +1059,7 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(html, /<title>Guitar Strum Machine<\/title>/);
   assert.match(html, /<section class="practice-workspace"/);
   assert.match(html, /<details id="arrangement-editor">/);
-  assert.match(html, /<summary>Edit arrangement<\/summary>/);
+  assert.match(html, /<summary[^>]*>Edit arrangement<\/summary>/);
   assert.match(html, /<details id="help">/);
   assert.doesNotMatch(html, /<details id="(?:arrangement-editor|help|strum-sound-test)" open/);
   assert.ok(html.indexOf('class="practice-workspace"') < html.indexOf('id="arrangement-editor"'));
@@ -1071,12 +1073,16 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(html, /for="capo-fret"/);
   assert.match(html, /id="swing-feel"/);
   assert.match(html, /for="swing-feel"/);
-  assert.match(html, /<code>swing: off<\/code>/);
+  assert.match(html, /Use swing: off for straight timing/);
+  assert.match(html, /src="\.\.\/\.\.\/assets\/i18n\.js\?v=[a-f0-9]{12}"/);
+  assert.match(html, /src="\.\/i18n\.js\?v=[a-f0-9]{12}"/);
+  assert.match(html, /data-language="en-AU"/);
+  assert.match(html, /data-language="zh-Hans"/);
   const capoOptions = html.match(/<select id="capo-fret"[^>]*>([\s\S]*?)<\/select>/)[1];
   assert.equal([...capoOptions.matchAll(/<option /g)].length, 13);
   const swingOptions = html.match(/<select id="swing-feel"[^>]*>([\s\S]*?)<\/select>/)[1];
   assert.deepEqual(
-    [...swingOptions.matchAll(/<option value="([^"]+)">/g)].map((match) => match[1]),
+    [...swingOptions.matchAll(/<option value="([^"]+)"[^>]*>/g)].map((match) => match[1]),
     ['off', '55', '60', '67', '75'],
   );
 
@@ -1084,9 +1090,14 @@ test('the page contains the mobile practice interface and valid sound-test token
     path.join(__dirname, '..', 'tools', 'guitar-strumming', 'styles.css'),
     'utf8',
   );
+  assert.match(css, /\.language-switcher button\[aria-pressed="false"\]:hover/);
+  assert.doesNotMatch(css, /\.language-switcher button:hover:not\(:disabled\)/);
+  assert.match(css, /button,\s*select,\s*summary,\s*a\s*\{[^}]*touch-action:\s*manipulation/s);
+  assert.doesNotMatch(html, /user-scalable\s*=\s*no|maximum-scale\s*=\s*1/i);
   assert.match(css, /\.tempo-ramp-fields\s*\{[^}]*grid-template-columns/s);
   assert.match(css, /\.practice-grid\s*\{[^}]*grid-template-columns:\s*repeat\(2/s);
   assert.match(css, /#play-pause\[aria-pressed="true"\]/);
+  assert.match(css, /\.language-switcher button\[aria-pressed="true"\]/);
   assert.match(css, /\.setting-field select\s*\{[^}]*width:/s);
   assert.match(css, /@media \(max-width: 38rem\)/);
 
@@ -1095,8 +1106,41 @@ test('the page contains the mobile practice interface and valid sound-test token
     'utf8',
   );
   assert.match(app, /replaceSwingDirective\(elements\.source\.value, rawValue\)/);
-  assert.match(app, /Custom \(\$\{value\}%\)/);
+  assert.match(app, /guitar\.swingCustom/);
   assert.match(app, /data-custom-swing/);
   assert.match(app, /elements\.editor\.open = true/);
   assert.match(app, /\.join\(' · '\)/);
+});
+
+test('guitar translations have matching keys and format dynamic validation errors', () => {
+  assert.deepEqual(
+    Object.keys(guitarI18n.catalogs['en-AU']).sort(),
+    Object.keys(guitarI18n.catalogs['zh-Hans']).sort(),
+  );
+
+  const appSource = fs.readFileSync(
+    path.join(__dirname, '..', 'tools', 'guitar-strumming', 'app.js'),
+    'utf8',
+  );
+  const usedKeys = [...appSource.matchAll(/'((?:guitar\.)[A-Za-z0-9_.]+)'/g)]
+    .map((match) => match[1]);
+  for (const key of usedKeys) {
+    assert.ok(Object.hasOwn(guitarI18n.catalogs['en-AU'], key), key);
+    assert.ok(Object.hasOwn(guitarI18n.catalogs['zh-Hans'], key), key);
+  }
+
+  const result = parser.parseSongSource(validSource.replace('G/B@8', 'G/B@99'), { catalog });
+  const error = result.errors.find((item) => item.code === 'chord_change_slot_range');
+  assert.deepEqual(error.parameters, { gridSize: 8 });
+
+  siteI18n.setLanguage('zh-Hans');
+  try {
+    assert.equal(guitarI18n.translate('guitar.play'), '播放');
+    assert.equal(
+      guitarI18n.formatValidationError(error),
+      '第 9 行 — 和弦、第 1 小节、第 99 格：和弦更换格位必须为 2 至 8。',
+    );
+  } finally {
+    siteI18n.setLanguage('en-AU');
+  }
 });
