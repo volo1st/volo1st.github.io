@@ -6,6 +6,7 @@
   const catalog = root.GuitarChordCatalog;
   const harmony = root.GuitarHarmony;
   const presentation = root.GuitarStrummingPresentation;
+  const notifications = root.GuitarStrummingNotifications;
   const audioApi = root.GuitarStrummingAudio;
   const shareApi = root.GuitarStrummingShare;
   const presetApi = root.GuitarStrummingPresets;
@@ -48,6 +49,8 @@
     playPause: document.getElementById('play-pause'),
     restart: document.getElementById('restart'),
     status: document.getElementById('playback-status'),
+    playbackToast: document.getElementById('playback-toast'),
+    dismissPlaybackToast: document.getElementById('dismiss-playback-toast'),
     soundTest: document.getElementById('strum-sound-test'),
     soundTestButtons: [...document.querySelectorAll('[data-strum-token]')],
     copyShareLink: document.getElementById('copy-share-link'),
@@ -73,7 +76,9 @@
   let schedulerTimer = null;
   let requestGeneration = 0;
   let skippedLateStrums = 0;
+  let countInStartTime = null;
   let countInEndTime = null;
+  let countInDisplayedBeats = null;
   let countInRequired = false;
   let rampCurrentBpm = null;
   let rampCompletedLoops = 0;
@@ -89,6 +94,7 @@
   let copyRequestGeneration = 0;
   let sourceReplacementBaseline = null;
   let currentPlaybackStatus = { key: 'guitar.status.preparing', parameters: {} };
+  let playbackNotifier = null;
   let currentShareStatus = { key: 'guitar.share.preparing', parameters: {} };
   let currentValidationErrors = [];
   let fatalValidationStatus = null;
@@ -101,6 +107,7 @@
       || !catalog
       || !harmony
       || !presentation
+      || !notifications
       || !audioApi
       || !shareApi
       || !presetApi
@@ -110,6 +117,12 @@
       return;
     }
 
+    playbackNotifier = notifications.createNotifier({
+      setTimeout: (callback, delay) => root.setTimeout(callback, delay),
+      clearTimeout: (timer) => root.clearTimeout(timer),
+      onChange: renderPlaybackNotification,
+    });
+    playbackNotifier.show(currentPlaybackStatus);
     renderPresetOptions();
     elements.source.addEventListener('input', () => {
       clearSourceParametersAfterSourceChange();
@@ -156,6 +169,7 @@
     }
     elements.playPause.addEventListener('click', handlePlayPause);
     elements.restart.addEventListener('click', restartPlayback);
+    elements.dismissPlaybackToast.addEventListener('click', () => playbackNotifier.dismiss());
     elements.chordGuideScroll.addEventListener('pointerdown', suspendChordTimelineFollowing, {
       passive: true,
     });
@@ -961,16 +975,16 @@
     const normalizedSourceSlot = sourceSlot % playbackTimeline.durationSlots;
     const events = core.playableEvents(playbackTimeline);
     const countInBars = useCountIn ? parsedSong.countInBars : 0;
-    const countInStartTime = context.currentTime + START_LEAD_SECONDS;
+    const scheduledCountInStartTime = context.currentTime + START_LEAD_SECONDS;
     const countInEvents = core.createCountInEvents(
       playbackTimeline.bpm,
       countInBars,
-      countInStartTime,
+      scheduledCountInStartTime,
     );
     for (const event of countInEvents) {
       audioEngine.playCountInClick(event.eventTime, event.accented);
     }
-    const startTime = countInStartTime + core.countInDurationSeconds(
+    const startTime = scheduledCountInStartTime + core.countInDurationSeconds(
       playbackTimeline.bpm,
       countInBars,
     );
@@ -987,7 +1001,9 @@
       completedLoopsAtOrigin: rampCompletedLoops,
     };
     pendingTransition = null;
+    countInStartTime = countInBars > 0 ? scheduledCountInStartTime : null;
     countInEndTime = countInBars > 0 ? startTime : null;
+    countInDisplayedBeats = countInBars > 0 ? countInBars * 4 : null;
     playbackPresentationStartTime = startTime;
     countInRequired = false;
     playheadSlot = normalizedSourceSlot;
@@ -1021,7 +1037,9 @@
     if (audioEngine) audioEngine.stopAll();
     activeSegment = null;
     pendingTransition = null;
+    countInStartTime = null;
     countInEndTime = null;
+    countInDisplayedBeats = null;
     playbackPresentationStartTime = null;
     playbackState = 'paused';
     setPlaybackStatus(statusKey, parameters);
@@ -1035,7 +1053,9 @@
     if (audioEngine) audioEngine.stopAll();
     activeSegment = null;
     pendingTransition = null;
+    countInStartTime = null;
     countInEndTime = null;
+    countInDisplayedBeats = null;
     playbackPresentationStartTime = null;
     playbackState = 'paused';
     if (options.resetPosition) {
@@ -1103,7 +1123,10 @@
     try {
       const now = audioEngine.context.currentTime;
       if (countInEndTime !== null && now >= countInEndTime - BOUNDARY_EPSILON_SECONDS) {
+        countInStartTime = null;
         countInEndTime = null;
+        countInDisplayedBeats = null;
+        updateControls();
         setPlaybackStatus('guitar.status.playing');
       }
       promoteTempoTransition(now);
@@ -1321,12 +1344,26 @@
   }
 
   function renderPlaybackStatus() {
-    const parameters = { ...currentPlaybackStatus.parameters };
+    if (playbackNotifier) {
+      playbackNotifier.refresh();
+      return;
+    }
+    renderPlaybackNotification({
+      ...currentPlaybackStatus,
+      visible: true,
+      tone: 'error',
+    });
+  }
+
+  function renderPlaybackNotification(notification) {
+    const parameters = { ...notification.parameters };
     if (parameters.fieldKey) {
       parameters.field = t(parameters.fieldKey);
       delete parameters.fieldKey;
     }
-    elements.status.textContent = t(currentPlaybackStatus.key, parameters);
+    elements.status.textContent = t(notification.key, parameters);
+    elements.playbackToast.dataset.tone = notification.tone;
+    elements.playbackToast.hidden = !notification.visible;
   }
 
   function renderShareStatus() {
@@ -1453,12 +1490,6 @@
       barNumber.textContent = t('guitar.barNumber', { number: bar.number });
       card.append(barNumber);
 
-      const readyMarker = document.createElement('span');
-      readyMarker.className = 'chord-ready-marker';
-      readyMarker.textContent = t('guitar.chordReady');
-      readyMarker.hidden = true;
-      card.append(readyMarker);
-
       const labelLanes = document.createElement('div');
       labelLanes.className = 'chord-label-lanes';
       labelLanes.style.setProperty('--label-lane-count', String(bar.labelLaneCount));
@@ -1500,7 +1531,7 @@
       }
       card.append(durationBand);
       fragment.append(card);
-      renderedChordTimeline.push({ card, readyMarker, changes: renderedChanges });
+      renderedChordTimeline.push({ card, changes: renderedChanges });
     }
     elements.chordGuide.append(fragment);
   }
@@ -1530,8 +1561,6 @@
     if (!force && stateKey === JSON.stringify(playbackPresentationState)) return;
 
     for (const bar of renderedChordTimeline) {
-      bar.card.classList.remove('is-ready');
-      bar.readyMarker.hidden = true;
       for (const change of bar.changes) {
         change.label.classList.remove('is-current');
         change.label.removeAttribute('aria-current');
@@ -1540,10 +1569,6 @@
     }
 
     playbackPresentationState = state;
-    if (state.mode === 'ready' && renderedChordTimeline[0]) {
-      renderedChordTimeline[0].card.classList.add('is-ready');
-      renderedChordTimeline[0].readyMarker.hidden = false;
-    }
     if (state.current) {
       const currentBar = renderedChordTimeline[state.current.barIndex];
       const currentChange = currentBar.changes[state.current.changeIndex];
@@ -1592,6 +1617,9 @@
 
     function updateFrame() {
       playbackPresentationFrame = null;
+      if (playbackState === 'playing' && audioEngine && audioEngine.context) {
+        updateCountInButtonAtTime(audioEngine.context.currentTime);
+      }
       if (
         playbackState !== 'playing'
         || !audioEngine
@@ -1610,6 +1638,19 @@
       root.cancelAnimationFrame(playbackPresentationFrame);
     }
     playbackPresentationFrame = null;
+  }
+
+  function updateCountInButtonAtTime(audioTime) {
+    if (countInStartTime === null || !activeSegment || !parsedSong) return;
+    const remainingBeats = core.countInRemainingBeats(
+      activeSegment.timeline.bpm,
+      parsedSong.countInBars,
+      countInStartTime,
+      audioTime,
+    );
+    if (remainingBeats === countInDisplayedBeats) return;
+    countInDisplayedBeats = remainingBeats;
+    updateControls();
   }
 
   function failPlaybackPresentation() {
@@ -1733,7 +1774,9 @@
     elements.playPause.disabled = !playbackAvailable || playbackState === 'starting';
     elements.restart.disabled = !playbackAvailable || playbackState === 'starting';
     elements.playPause.textContent = playbackState === 'playing'
-      ? t('guitar.pause')
+      ? countInDisplayedBeats === null
+        ? t('guitar.pause')
+        : t('guitar.pauseCountIn', { count: countInDisplayedBeats })
       : t('guitar.play');
     elements.playPause.setAttribute('aria-pressed', String(playbackState === 'playing'));
     elements.copyShareLink.disabled = !preparedShare
@@ -1785,7 +1828,11 @@
 
   function setPlaybackStatus(key, parameters = {}) {
     currentPlaybackStatus = { key, parameters };
-    renderPlaybackStatus();
+    if (playbackNotifier) {
+      playbackNotifier.show(currentPlaybackStatus);
+    } else {
+      renderPlaybackStatus();
+    }
   }
 
   function setPlaybackStartStatus(countInBars) {

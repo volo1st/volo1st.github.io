@@ -1980,7 +1980,7 @@ Follow the active bar during playback. Do not let visual updates affect audio-cl
 
 Status: Implemented with browser verification on 2026-09-30.
 
-Show bar 1 as ready during the count-in. Do not show an active chord during the count-in.
+Do not show an active chord during the count-in. Do not add a ready marker or ready outline.
 
 Activate the first chord when the song starts on the audio clock.
 
@@ -1990,11 +1990,11 @@ Give the active chord label and duration region a strong highlight. Do not add a
 
 Do not add a next-chord label, outline, duration marker, or other next-chord cue. Automatic bar following keeps upcoming chords visible without another visual state.
 
-On initial load, after an exercise change, and after Start over, show bar 1 as ready. Do not show an active chord.
+On initial load, after an exercise change, and after Start over, do not show an active chord.
 
 When playback is paused, freeze the active-chord cue at the exact paused position.
 
-If playback is paused during the count-in, keep bar 1 ready.
+If playback is paused during the count-in, do not show an active chord.
 
 After a source-validation error or an unrecoverable playback error, remove all playback cues. Keep the applicable error visible.
 
@@ -2025,7 +2025,7 @@ This rule replaces the initial decision to defer automatic following. Browser ve
 Stage 2A acceptance tests must confirm these cases:
 
 1. Exact chord-change boundaries select the new chord region.
-2. The ready state has no active chord.
+2. The ready state has no visible marker, outline, or active chord.
 3. Count-in and playback cues change at the song origin on the audio clock.
 4. Pause freezes the cue at the paused position.
 5. A delayed visual frame selects the current audio-clock position directly.
@@ -2034,7 +2034,7 @@ Stage 2A acceptance tests must confirm these cases:
 8. A presentation failure clears playback cues without changing source text or audio scheduling.
 9. English and Simplified Chinese presentation text has matching translation keys.
 10. Manual scrolling suspends automatic following until the next Play action or Start over.
-11. No next-chord cue or current-bar outline is present.
+11. No ready cue, next-chord cue, or current-bar outline is present.
 
 Manually verify Stage 2A on iPhone Safari and desktop Chrome. Verify count-in, Pause, resume, Start over, a loop boundary, a tempo-ramp boundary, swing timing, manual scrolling, and an exercise change from a later visible bar.
 
@@ -2043,6 +2043,67 @@ Automated evidence: The repository check passed on 2026-09-30. It covered exact 
 Manual evidence: The user confirmed the simplified current-chord highlight and automatic bar following in the browser preview on 2026-09-30. The user also identified that highlighting without bar following was difficult to use and that the next-chord cues were distracting. The final design includes bar following and removes all next-chord cues and the current-bar outline.
 
 This pass did not separately record iPhone Safari, 200 percent zoom, keyboard scrolling, a tempo-ramp boundary, or custom swing timing. Keep these cases in the future regression checklist.
+
+## 11.17 Compact Practice Notifications
+
+Status: Implemented with browser-preview approval on 2026-09-30.
+
+Remove the green panel style from the exercise goal. Show the goal as compact, muted text below the exercise selector.
+
+Do not reserve layout space for playback status. Use one fixed toast below the top safe area.
+
+Place the toast at the top. This decision replaces the initial bottom position after preview feedback.
+
+Use a light-green panel with a strong green border for information. Use light yellow with a strong amber border for warnings. Use light red with a strong red border for errors.
+
+Use toast notifications only for warnings and errors. Do not show routine information, successful actions, or normal playback progress in a toast.
+
+Do not show the short Starting audio state. The disabled Play control already shows that the request is in progress, and the state is normally replaced too quickly for a useful notification.
+
+Do not show a count-in toast.
+
+During the count-in, add the remaining beat count to the Pause button. Use `Pause (4)` through `Pause (1)` for one bar. Use `Pause (8)` through `Pause (1)` for two bars.
+
+Keep the button action accurate. Use Pause rather than Play because pressing the button pauses the count-in.
+
+Derive the remaining beat count from the audio clock. If a visual frame is delayed, jump directly to the correct remaining count.
+
+Remove the count when the song starts. Show the normal Pause label during song playback.
+
+A recovered-delay warning can disappear automatically after four seconds.
+
+Except for the recovered-delay warning, keep a warning or error visible until its state changes or the user dismisses it.
+
+Replace the current toast when a new playback message occurs. Do not stack notifications.
+
+Give the toast a clear dismiss button. Do not move keyboard focus to the toast.
+
+Do not let notification timing change audio scheduling, source text, or playback position.
+
+If a notification timer is delayed, hide only the notification that created that timer. Do not hide a newer notification.
+
+Keep English and Simplified Chinese notification text and dismiss labels in sync.
+
+Acceptance tests must confirm these cases:
+
+1. Routine and informational playback states do not show a toast.
+2. Count-in does not show a toast.
+3. One-bar count-in shows button counts from 4 through 1.
+4. Two-bar count-in shows button counts from 8 through 1.
+5. A new message replaces the current toast.
+6. An old timeout cannot hide a newer toast.
+7. Manual dismissal hides the current toast until a new playback message occurs.
+8. The toast is fixed below the top safe area and does not change document layout.
+9. The exercise goal has no panel background, border, or padding.
+10. The chord timeline has no ready marker or ready outline.
+11. English and Simplified Chinese keys remain identical.
+12. A recovered-delay warning disappears after four seconds.
+
+Automated evidence: The repository check passed on 2026-09-30. It covered notification classification, replacement, dismissal, stale-timer protection, one-bar and two-bar audio-clock countdown values, translation parity, current asset hashes, and existing playback regressions.
+
+Manual evidence: The user accepted the final browser preview on 2026-09-30. Preview feedback removed the Ready cue, routine status panels, information toasts, count-in toast, and ongoing BPM toast. The final count-in feedback is part of the Pause button, and warning and error toasts use the top safe area.
+
+This pass did not separately record iPhone Safari, 200 percent zoom, or keyboard verification. Keep these cases in the future regression checklist.
 
 #### Stage 3: Teaching Enhancements
 

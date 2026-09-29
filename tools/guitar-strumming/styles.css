@@ -198,10 +198,10 @@ button:focus-visible {
 }
 
 .preset-goal {
-  margin: 0.45rem 0 0;
-  padding: 0.55rem 0.7rem;
-  border-left: 0.3rem solid #27644e;
-  background: #edf5f1;
+  margin: 0.3rem 0 0;
+  color: #5c594e;
+  font-size: 0.85rem;
+  line-height: 1.35;
 }
 
 .transport-row {
@@ -216,15 +216,57 @@ button:focus-visible {
   gap: 0.5rem;
 }
 
-#playback-status {
+.playback-toast {
+  position: fixed;
+  z-index: 20;
+  top: calc(0.75rem + env(safe-area-inset-top));
+  right: auto;
+  bottom: auto;
+  left: 50%;
   display: flex;
-  flex: 1;
   align-items: center;
-  min-height: 2.75rem;
+  gap: 0.6rem;
+  width: min(calc(100% - 1rem), 32rem);
   margin: 0;
-  padding: 0.55rem 0.7rem;
-  border-left: 0.3rem solid #8b6508;
-  background: #fff7dc;
+  padding: 0.65rem 0.7rem;
+  transform: translateX(-50%);
+  border: 2px solid #27644e;
+  border-left-width: 0.4rem;
+  border-radius: 0.45rem;
+  background: #e5f2eb;
+  box-shadow: 0 0.5rem 1.4rem rgb(31 42 36 / 32%);
+}
+
+.playback-toast[hidden] {
+  display: none;
+}
+
+.playback-toast[data-tone="warning"] {
+  border-color: #8b6508;
+  background: #fff1c2;
+}
+
+.playback-toast[data-tone="error"] {
+  border-color: #972e2e;
+  background: #fde3e3;
+}
+
+#playback-status {
+  flex: 1;
+  margin: 0;
+  line-height: 1.35;
+}
+
+.toast-dismiss {
+  flex: 0 0 auto;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  padding: 0.25rem;
+  border-color: currentcolor;
+  color: #3e443d;
+  background: transparent;
+  font-size: 1.25rem;
+  line-height: 1;
 }
 
 .practice-chord-guide {
@@ -302,34 +344,11 @@ button:focus-visible {
   scroll-snap-align: start;
 }
 
-.chord-bar-card.is-ready {
-  outline: 2px dashed #27644e;
-  outline-offset: -3px;
-}
-
 .chord-bar-number {
   display: block;
   color: #4a4a43;
   font-size: 0.8rem;
   font-weight: 700;
-}
-
-.chord-ready-marker {
-  position: absolute;
-  top: 0.42rem;
-  right: 0.55rem;
-  padding: 0.08rem 0.35rem;
-  border-radius: 999px;
-  color: #fff;
-  background: #27644e;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-}
-
-.chord-ready-marker[hidden] {
-  display: none;
 }
 
 .chord-label-lanes {

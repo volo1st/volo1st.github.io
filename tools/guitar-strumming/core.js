@@ -39,6 +39,21 @@
     return countInBars * 4 * (60 / bpm);
   }
 
+  function countInRemainingBeats(bpm, countInBars, startTime, audioTime) {
+    requireValidBpm(bpm);
+    requireValidCountInBars(countInBars);
+    if (!Number.isFinite(startTime) || startTime < 0) {
+      throw new RangeError('Count-in start time must be a non-negative number.');
+    }
+    if (!Number.isFinite(audioTime) || audioTime < 0) {
+      throw new RangeError('Audio time must be a non-negative number.');
+    }
+    const totalBeats = countInBars * 4;
+    if (totalBeats === 0) return null;
+    const elapsedBeats = Math.floor(Math.max(0, audioTime - startTime) / (60 / bpm));
+    return elapsedBeats >= totalBeats ? null : totalBeats - elapsedBeats;
+  }
+
   function createCountInEvents(bpm, countInBars, startTime) {
     requireValidBpm(bpm);
     requireValidCountInBars(countInBars);
@@ -531,6 +546,7 @@
     collectScheduleBatch,
     completedLoopsAtTime,
     countInDurationSeconds,
+    countInRemainingBeats,
     createCountInEvents,
     createScheduleCursor,
     createScheduleCursorAtPosition,

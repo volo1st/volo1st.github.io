@@ -10,6 +10,7 @@ const core = require('../tools/guitar-strumming/core.js');
 const harmony = require('../tools/guitar-strumming/harmony.js');
 const parser = require('../tools/guitar-strumming/parser.js');
 const presentation = require('../tools/guitar-strumming/presentation.js');
+const notifications = require('../tools/guitar-strumming/notifications.js');
 const siteI18n = require('../assets/i18n.js');
 const guitarI18n = require('../tools/guitar-strumming/i18n.js');
 require('../tools/guitar-strumming/audio-engine.js');
@@ -556,6 +557,91 @@ test('playback presentation has a ready state without an active chord', () => {
     mode: 'position',
     current: { barIndex: 1, changeIndex: 0 },
   });
+});
+
+test('playback notification policies hide routine states and retain important states', () => {
+  assert.deepEqual(notifications.policyForStatus('guitar.status.playing'), {
+    visible: false,
+    tone: 'information',
+    timeoutMilliseconds: null,
+  });
+  assert.deepEqual(notifications.policyForStatus('guitar.status.audioStarting'), {
+    visible: false,
+    tone: 'information',
+    timeoutMilliseconds: null,
+  });
+  for (const key of [
+    'guitar.status.playingBpm',
+    'guitar.status.playingTarget',
+    'guitar.status.playingRamp',
+  ]) {
+    assert.equal(notifications.policyForStatus(key).visible, false, key);
+  }
+  assert.deepEqual(notifications.policyForStatus('guitar.status.countInOne'), {
+    visible: false,
+    tone: 'information',
+    timeoutMilliseconds: null,
+  });
+  assert.deepEqual(notifications.policyForStatus('guitar.status.originalKeyChanged'), {
+    visible: false,
+    tone: 'information',
+    timeoutMilliseconds: null,
+  });
+  assert.deepEqual(notifications.policyForStatus('guitar.status.recovered'), {
+    visible: true,
+    tone: 'warning',
+    timeoutMilliseconds: 4000,
+  });
+  assert.deepEqual(notifications.policyForStatus('guitar.status.hiddenPause'), {
+    visible: true,
+    tone: 'warning',
+    timeoutMilliseconds: null,
+  });
+  assert.deepEqual(notifications.policyForStatus('guitar.status.audioFailed'), {
+    visible: true,
+    tone: 'error',
+    timeoutMilliseconds: null,
+  });
+});
+
+test('playback notifications replace, expire, and dismiss without stale timer changes', () => {
+  const timers = [];
+  const cleared = [];
+  const changes = [];
+  const notifier = notifications.createNotifier({
+    setTimeout(callback, delay) {
+      const timer = { callback, delay, id: timers.length + 1 };
+      timers.push(timer);
+      return timer.id;
+    },
+    clearTimeout(timerId) {
+      cleared.push(timerId);
+    },
+    onChange(notification) {
+      changes.push(notification);
+    },
+  });
+
+  notifier.show({ key: 'guitar.status.recovered' });
+  assert.equal(changes.at(-1).visible, true);
+  assert.equal(timers[0].delay, 4000);
+
+  notifier.show({ key: 'guitar.status.hiddenPause' });
+  assert.deepEqual(cleared, [1]);
+  assert.equal(changes.at(-1).key, 'guitar.status.hiddenPause');
+  timers[0].callback();
+  assert.equal(changes.at(-1).key, 'guitar.status.hiddenPause');
+  assert.equal(changes.at(-1).visible, true);
+
+  notifier.dismiss();
+  assert.equal(changes.at(-1).visible, false);
+  notifier.refresh();
+  assert.equal(changes.at(-1).visible, false);
+
+  notifier.show({ key: 'guitar.status.countInOne' });
+  assert.equal(changes.at(-1).visible, false);
+  notifier.show({ key: 'guitar.status.playing' });
+  assert.equal(changes.at(-1).visible, false);
 });
 
 test('the chord presentation preserves 1,000 expanded bars without source notation', () => {
@@ -1374,6 +1460,22 @@ test('count-in events use exact quarter-note timing and accent beat 1', () => {
   assert.equal(10 + core.countInDurationSeconds(120, 2), 14);
 });
 
+test('count-in button feedback derives remaining beats from the audio clock', () => {
+  assert.deepEqual(
+    [10, 10.5, 11, 11.5, 12]
+      .map((audioTime) => core.countInRemainingBeats(120, 1, 10, audioTime)),
+    [4, 3, 2, 1, null],
+  );
+  const expected = [8, 8, 7, 6, 5, 4, 3, 2, 1, null];
+  const audioTimes = [9.9, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14];
+  assert.deepEqual(
+    audioTimes.map((audioTime) => core.countInRemainingBeats(120, 2, 10, audioTime)),
+    expected,
+  );
+  assert.equal(core.countInRemainingBeats(120, 0, 10, 10), null);
+  assert.throws(() => core.countInRemainingBeats(120, 1, -1, 0), /non-negative/);
+});
+
 test('count-in timing supports its full BPM and bar ranges', () => {
   assert.equal(core.createCountInEvents(30, 0, 0).length, 0);
   assert.equal(core.countInDurationSeconds(30, 2), 16);
@@ -1561,6 +1663,8 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(html, /<section class="practice-workspace"/);
   assert.match(html, /data-i18n="guitar\.preset">Exercise<\/label>/);
   assert.match(html, /data-i18n="guitar\.startOver">Start over<\/button>/);
+  assert.match(html, /id="playback-toast"[^>]*hidden/);
+  assert.match(html, /id="dismiss-playback-toast"/);
   assert.doesNotMatch(html, /id="song-summary"/);
   assert.match(html, /id="practice-chord-guide-region"[^>]*hidden/);
   assert.match(html, /<ol id="chord-guide" class="chord-timeline"><\/ol>/);
@@ -1596,6 +1700,7 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(html, /id="return-original-key"/);
   assert.ok(html.indexOf('src="./harmony.js') < html.indexOf('src="./parser.js'));
   assert.ok(html.indexOf('src="./presentation.js') < html.indexOf('src="./app.js'));
+  assert.ok(html.indexOf('src="./notifications.js') < html.indexOf('src="./app.js'));
   assert.match(html, /id="swing-feel"/);
   assert.match(html, /for="swing-feel"/);
   assert.match(html, /Use swing: off for straight timing/);
@@ -1628,7 +1733,11 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(css, /\.chord-bar-card\s*\{[^}]*scroll-snap-align:\s*start/s);
   assert.match(css, /\.chord-duration-region\.is-current\s*\{[^}]*background:/s);
   assert.doesNotMatch(css, /\.chord-bar-card\.is-current/);
+  assert.doesNotMatch(css, /\.chord-bar-card\.is-ready/);
   assert.doesNotMatch(css, /\.is-next/);
+  assert.match(css, /\.playback-toast\s*\{[^}]*position:\s*fixed/s);
+  assert.match(css, /\.playback-toast\s*\{[^}]*env\(safe-area-inset-top\)/s);
+  assert.doesNotMatch(css, /\.preset-goal\s*\{[^}]*(?:background|border|padding):/s);
   assert.match(css, /\.chord-duration-band\s*\{[^}]*repeating-linear-gradient/s);
   assert.match(
     css,
@@ -1649,6 +1758,8 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(app, /data-custom-swing/);
   assert.match(app, /localStorage\.setItem\('guitar-strumming-chord-view'/);
   assert.match(app, /presentation\.createChordTimeline\(/);
+  assert.match(app, /notifications\.createNotifier\(/);
+  assert.match(app, /playbackNotifier\.show\(currentPlaybackStatus\)/);
   assert.match(app, /elements\.chordGuide\.replaceChildren\(\)/);
   assert.match(app, /function renderChordTimeline\(timeline\)/);
   assert.match(app, /function startPlaybackPresentationLoop\(\)/);

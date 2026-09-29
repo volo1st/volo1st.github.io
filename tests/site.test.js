@@ -105,6 +105,8 @@ test('versioned interface assets use their current content hash', () => {
         './i18n.js',
         './catalog.js',
         './harmony.js',
+        './presentation.js',
+        './notifications.js',
         './parser.js',
         './core.js',
         './audio-engine.js',
