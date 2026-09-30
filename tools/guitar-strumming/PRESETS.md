@@ -10,7 +10,29 @@ Keep the textarea as the single source of truth after a preset loads.
 
 ## Catalog Design
 
-Store the catalog in `preset-catalog.js`.
+Store declarative catalog input in `preset-data.js`.
+
+Keep parsing, validation, materialisation, indexing, identity matching, and URL behavior in `preset-catalog.js`.
+
+Load `preset-data.js` before `preset-catalog.js`.
+
+Use this dependency direction:
+
+```text
+preset-data.js
+       ↓
+preset-catalog.js ← parser, chord catalog, core
+       ↓
+     app.js
+```
+
+`preset-data.js` must not parse songs, validate entries, create URLs, use browser state, or expose catalog query functions.
+
+`preset-catalog.js` must copy, validate, and freeze the data before it exposes the catalog.
+
+`app.js` must use only the catalog API. It must not access the raw preset data.
+
+Keep all current catalog input in one data file. Do not add one browser script per song.
 
 Do not use a database, WebAssembly, a network request, or a build step.
 
@@ -35,13 +57,14 @@ After that declaration, do not change the source of a published slug. Add a new 
 
 ## Initial Catalog
 
-The initial catalog contains four original entries and two short user transcriptions:
+The initial catalog contains four original entries and three exercises from two short user transcriptions:
 
 - an expressive strumming feature demo;
 - an intermediate C, G, Am, and full-F-barre chord-change exercise;
 - a beginner G, C, D, and Em chord-change exercise;
 - a seventh-chord turnaround exercise;
-- a Get Lucky palm-muted strumming exercise; and
+- a Get Lucky palm-muted strumming exercise;
+- a Viva La Vida melody-backing exercise; and
 - a Viva La Vida syncopated strumming exercise.
 
 The expressive feature demo is the former page example and the default preset.
@@ -60,11 +83,11 @@ They use common chord progressions and generic strumming patterns.
 
 They do not use a commercial song title, lyrics, melody, or song-specific arrangement.
 
-The Get Lucky and Viva La Vida entries are short user transcriptions for teaching.
+The Get Lucky and Viva La Vida exercises use short user transcriptions for teaching.
 
 They contain chord and rhythm data. They do not contain lyrics, melody notation, audio, artwork, or a claim of approval.
 
-Label both entries as unofficial user transcriptions in the bottom-page notice.
+Label these exercises as unofficial user transcriptions in the bottom-page notice.
 
 Accepted risk: An exact rhythm can be identifiable even when it uses common musical elements. Remove or revise an entry if a rights holder objects.
 
@@ -114,6 +137,8 @@ If preset transport fails, clear the default source and show the transport error
 
 If a catalog source fails parser or timeline validation, keep playback and sharing unavailable.
 
+If the preset data script is missing or malformed, do not create a partial catalog. Keep playback and sharing unavailable and show the existing script-load failure.
+
 Do not guess an unknown slug.
 
 Do not silently replace edited source.
@@ -130,7 +155,10 @@ Automated checks must verify:
 - exact source lookup;
 - successful preset URL resolution;
 - duplicate, unknown, and conflicting parameter rejection; and
-- preset link creation.
+- preset link creation;
+- data-script loading order;
+- raw-data and catalog-module separation; and
+- failure for malformed raw preset data.
 
 Manually test:
 
@@ -147,7 +175,12 @@ Manually test:
 
 ## Completion Status
 
-Status: Implementation and representative-client verification are complete.
+Status: Data separation is implemented and verified.
+
+- [x] Raw preset data is separate from catalog logic.
+  Evidence: `preset-data.js` contains immutable declarative input. `preset-catalog.js` copies, validates, materialises, freezes, and indexes that input. The full repository check passed on 2026-09-30.
+- [x] Preset browser behavior is unchanged after data separation.
+  Evidence: The NAS preview loaded the separated data and catalog scripts, created the catalog, and started playback on 2026-09-30. Automated tests covered all preset sources, exercise identity after practice-setting changes, and short and complete share-link selection. Detailed multi-preset and manual link-parameter checks were not separately recorded.
 
 - [x] Automated checks pass.
   Evidence: `./scripts/check.sh` passed on 2026-09-28. Every preset passed the normal parser and timeline checks.

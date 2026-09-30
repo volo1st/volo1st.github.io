@@ -112,6 +112,7 @@ test('versioned interface assets use their current content hash', () => {
         './core.js',
         './audio-engine.js',
         './share.js',
+        './preset-data.js',
         './preset-catalog.js',
         './app.js',
       ],

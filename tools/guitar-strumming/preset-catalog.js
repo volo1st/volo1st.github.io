@@ -1,4 +1,7 @@
 (function initializePresetCatalog(root, factory) {
+  const presetData = typeof module === 'object' && module.exports
+    ? require('./preset-data.js')
+    : root && root.GuitarStrummingPresetData;
   const parser = typeof module === 'object' && module.exports
     ? require('./parser.js')
     : root && root.GuitarStrummingParser;
@@ -8,7 +11,7 @@
   const core = typeof module === 'object' && module.exports
     ? require('./core.js')
     : root && root.GuitarStrummingCore;
-  const api = factory(root, parser, chordCatalog, core);
+  const api = factory(root, presetData, parser, chordCatalog, core);
   if (typeof module === 'object' && module.exports) {
     module.exports = api;
   }
@@ -17,6 +20,7 @@
   }
 }(typeof globalThis !== 'undefined' ? globalThis : this, function createPresetCatalog(
   root,
+  presetData,
   parser,
   chordCatalog,
   core,
@@ -25,7 +29,7 @@
 
   const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*-v[1-9]\d*$/;
   const TAG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-  const DEFAULT_PRESET_SLUG = 'expressive-strumming-demo-v1';
+  const DEFAULT_PRESET_SLUG = presetData && presetData.defaultPresetSlug;
   const APPROVED_RIGHTS_BASES = Object.freeze(['Original exercise', 'Short user transcription']);
 
   class PresetError extends Error {
@@ -36,170 +40,43 @@
     }
   }
 
-  const sharedArrangements = Object.freeze([
-    makeArrangement({
-      id: 'viva-la-vida-v1',
-      title: 'Viva La Vida',
-      gridHeader: '4/4#8',
-      originalKey: 'Ab major',
-      notation: 'numbers',
-      chordSource: '| 4 5@8 | 5 | 1 6:m@8 | 6:m |',
-      strumSource: `| D - D - D - D U |
-| - U - U D - D U3p |
-| D - D - D - D U |
-| - U - U D - D U3p |`,
-      rightsBasis: 'Short user transcription',
-      rightsNotice: 'Unofficial user transcription for teaching. No lyrics, melody notation, audio, or artwork.',
-    }),
-  ]);
+  if (
+    !presetData
+    || !Array.isArray(presetData.sharedArrangements)
+    || !Array.isArray(presetData.exerciseProfiles)
+    || !Array.isArray(presetData.standalonePresets)
+  ) {
+    throw new PresetError(
+      'preset_data_unavailable',
+      'The preset data script is unavailable or malformed.',
+    );
+  }
 
-  const exerciseProfiles = Object.freeze([
-    makeExerciseProfile({
-      slug: 'viva-la-vida-melody-backing-c-v1',
-      arrangementId: 'viva-la-vida-v1',
-      title: 'Viva La Vida — melody backing in C',
-      presetType: 'Song exercise',
-      teachingLevel: 'Beginner',
-      teachingGoal: 'Use a C-major backing track for melody practice.',
-      tags: ['song-exercise', 'melody-backing', 'c-major', 'eighth-notes'],
-      playingKey: 'C major',
-      bpm: 135,
-      countIn: 1,
-      tempoRamp: 'off',
-      capo: 0,
-      swing: 'off',
-    }),
-    makeExerciseProfile({
-      slug: 'viva-la-vida-syncopated-strumming-g-v1',
-      arrangementId: 'viva-la-vida-v1',
-      title: 'Viva La Vida — syncopated strumming in G',
-      presetType: 'Song exercise',
-      teachingLevel: 'Intermediate',
-      teachingGoal: 'Practise syncopated eighth-note strumming and mid-bar chord changes in G major.',
-      tags: ['song-exercise', 'syncopation', 'mid-bar-changes', 'g-major'],
-      playingKey: 'G major',
-      bpm: 135,
-      countIn: 1,
-      tempoRamp: 'off',
-      capo: 0,
-      swing: 'off',
-    }),
-  ]);
+  validateArrangementEntries(presetData.sharedArrangements);
+  validateExerciseProfiles(presetData.exerciseProfiles, presetData.sharedArrangements);
+  validatePresetEntries(presetData.standalonePresets);
 
-  const standalonePresets = Object.freeze([
-    makePreset({
-      slug: 'expressive-strumming-demo-v1',
-      title: 'Expressive strumming',
-      presetType: 'Feature demo',
-      teachingLevel: 'Intermediate',
-      teachingGoal: 'Hear mid-bar chord changes, string ranges, palm mute, dead strum, and accents.',
-      tags: ['c-family', 'expressive-strums', 'slash-chords'],
-      rightsBasis: 'Original exercise',
-      source: `4/4#8
-bpm: 100
-count-in: 1
-tempo-ramp: off
-capo: 0
-swing: off
-
-chords:
-| C G/B@8 | G/B | Am F@8 | F |
-
-strum:
-| D - D4 U! - U3P D2X U | x4`,
-    }),
-    makePreset({
-      slug: 'intermediate-c-g-am-f-v1',
-      title: 'C, G, Am, and F changes',
-      presetType: 'Exercise',
-      teachingLevel: 'Intermediate',
-      teachingGoal: 'Practice steady changes between C, G, Am, and the full F barre chord.',
-      tags: ['c-family', 'chord-changes', 'quarter-notes'],
-      rightsBasis: 'Original exercise',
-      source: `4/4#8
-bpm: 80
-count-in: 1
-tempo-ramp: off
-capo: 0
-swing: off
-
-chords:
-| C | G | Am | F |
-
-strum:
-| D - D - D - D - | x4`,
-    }),
-    makePreset({
-      slug: 'beginner-g-c-d-em-v1',
-      title: 'G, C, D, and Em changes',
-      presetType: 'Exercise',
-      teachingLevel: 'Beginner',
-      teachingGoal: 'Practice four common open chords with an eighth-note strumming pattern.',
-      tags: ['g-family', 'chord-changes', 'eighth-notes'],
-      rightsBasis: 'Original exercise',
-      source: `4/4#8
-bpm: 88
-count-in: 1
-tempo-ramp: off
-capo: 0
-swing: off
-
-chords:
-| G | C | D | Em |
-
-strum:
-| D - D U - U D U | x4`,
-    }),
-    makePreset({
-      slug: 'seventh-chord-turnaround-v1',
-      title: 'Seventh-chord turnaround',
-      presetType: 'Exercise',
-      teachingLevel: 'Intermediate',
-      teachingGoal: 'Practice changes between major seventh, minor seventh, and dominant seventh chords.',
-      tags: ['seventh-chords', 'c-family', 'g-family'],
-      rightsBasis: 'Original exercise',
-      source: `4/4#8
-bpm: 92
-count-in: 1
-tempo-ramp: off
-capo: 0
-swing: off
-
-chords:
-| Cmaj7 | Am7 | D7 | G7 |
-
-strum:
-| D - D U - U D U | x4`,
-    }),
-    makePreset({
-      slug: 'get-lucky-palm-muted-strumming-v1',
-      title: 'Get Lucky — palm-muted strumming',
-      presetType: 'Song exercise',
-      teachingLevel: 'Intermediate',
-      teachingGoal: 'Practice a 16-slot groove with palm-muted partial strums and changing string ranges.',
-      tags: ['song-exercise', 'palm-mute', 'sixteenth-notes', 'partial-strums'],
-      rightsBasis: 'Short user transcription',
-      rightsNotice: 'Unofficial user transcription for teaching. No lyrics, melody notation, audio, or artwork.',
-      source: `4/4#16
-bpm: 120
-count-in: 1
-tempo-ramp: off
-capo: 0
-swing: off
-
-chords:
-| Am | C | G | D7 |
-
-strum:
-| D U2P D2P U2P D - D3P - D - D4 U4 - U4 D4 - | x4`,
-    }),
-  ]);
+  const sharedArrangements = Object.freeze(
+    presetData.sharedArrangements.map(makeArrangement),
+  );
+  const exerciseProfiles = Object.freeze(
+    presetData.exerciseProfiles.map(makeExerciseProfile),
+  );
+  const standalonePresets = Object.freeze(
+    presetData.standalonePresets.map(makePreset),
+  );
 
   const composedPresets = createExercisePresets(sharedArrangements, exerciseProfiles);
   const presets = Object.freeze([...standalonePresets, ...composedPresets]);
 
   validatePresetEntries(presets);
   validatePresetExerciseIdentities(presets);
+  if (!presets.some((preset) => preset.slug === DEFAULT_PRESET_SLUG)) {
+    throw new PresetError(
+      'preset_default_unknown',
+      'The default preset does not identify a catalog entry.',
+    );
+  }
 
   const presetsBySlug = new Map(presets.map((preset) => [preset.slug, preset]));
   const presetsBySource = new Map(presets.map((preset) => [preset.source, preset]));
