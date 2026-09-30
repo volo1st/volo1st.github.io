@@ -2107,7 +2107,7 @@ This pass did not separately record iPhone Safari, 200 percent zoom, or keyboard
 
 ## 11.18 Keep the Screen Awake During Playback
 
-Status: Implemented with automated verification on 2026-09-30. iPhone Safari verification is pending.
+Status: Implemented and verified on 2026-09-30.
 
 ### Purpose
 
@@ -2165,7 +2165,7 @@ Manually verify continuous playback past the normal screen timeout on iPhone Saf
 
 Automated evidence: The repository check passed on 2026-09-30. It covered lock acquisition, duplicate-request prevention, release after Pause or stop, a late request after stop, unsupported and rejected requests, unexpected release, visibility-based reacquisition, warning classification, translation parity, current asset hashes, and existing playback regressions.
 
-Manual evidence is pending. The Screen Wake Lock API requires a secure context. The plain-HTTP NAS preview cannot verify the lock. Use the deployed HTTPS page for the iPhone Safari screen-timeout test.
+Manual evidence: The user confirmed on iPhone Safari that the deployed HTTPS page kept the screen on during playback. The plain-HTTP NAS preview cannot verify this function because the Screen Wake Lock API requires a secure context.
 
 #### Stage 3: Teaching Enhancements
 
