@@ -10,7 +10,6 @@ This repository contains Vincent's public website and static browser tools. GitH
 
 - `index.html` is the current tools home page. The roadmap will replace it with a personal home page.
 - `tools/csv2aba/` contains the CSV-to-ABA converter.
-- `tools/song_order/` contains the Chinese-English text sorter.
 - `website-roadmap.md` is the source of truth for long-term website development.
 
 Keep the site usable without a build step unless the task requires a build system.

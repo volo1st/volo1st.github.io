@@ -237,7 +237,7 @@ The CSV-to-ABA trial can continue in parallel because its external operator step
 
 | Item | Status | Reason | Review trigger |
 | --- | --- | --- | --- |
-| Chinese-English text sorter redesign | Deferred | The tool has low current use. | Review when regular use resumes or a defect blocks a user. |
+| Chinese-English text sorter | Removed | The tool does not have enough current value to justify redesign and maintenance. | Restore it from Git history only if a new requirement justifies it. |
 | Site framework or static-site generator | Deferred | The current site does not have enough repeated content to justify one. | Review when manual page maintenance causes repeated errors or material delay. |
 | Authentication for school tools | Not selected | Current tools can operate without stored server data. Public access is still possible. | Review before a tool needs confidential configuration, stored data, or restricted access. |
 
@@ -250,6 +250,7 @@ The CSV-to-ABA trial can continue in parallel because its external operator step
 | 17 September 2026 | Keep static delivery as the default. | The planned pages and most tools do not require a server or application framework. |
 | 17 September 2026 | Do not treat an unlisted GitHub Pages address as private. | GitHub Pages content is publicly accessible without real access control. |
 | 17 September 2026 | Defer the text sorter redesign. | The text sorter has low current use. Higher-value website foundation work takes priority. |
+| 30 September 2026 | Remove the text sorter. | The tool does not have enough current value to justify redesign and maintenance. Git history keeps the former source recoverable. |
 | 21 September 2026 | Do not plan a general technology blog. | A recurring blog does not have enough expected value for the intended audience or the owner's current goals. Publish only specific material with a clear audience and purpose. |
 
 ## 11. Current next package
@@ -266,7 +267,7 @@ The package must produce approved source text and links. It must not publish pla
 - No website implementation package is active.
 - The current tools remain deployed and available.
 - The CSV-to-ABA version 2 trial waits for operator use and CBA evidence.
-- The text sorter redesign is deferred because the tool has low current use.
+- The text sorter was removed because it has low current value.
 - The next website package is Phase 1 content preparation.
 - On 21 September 2026, the external task map was synchronized with Todoist.
   The next package is the only actionable website task. Later phases are
@@ -293,7 +294,7 @@ Use these tasks to represent the current roadmap:
 
 Track the CSV-to-ABA operator trial as a separate waiting task. Do not make it a dependency of the public-homepage work.
 
-Keep the text sorter redesign deferred. Create an active task only when regular use resumes or a defect blocks a user.
+Do not create a text sorter task unless a new requirement justifies restoring the tool from Git history.
 
 Keep only the next website package actionable. Keep later phases ordered and
 undated. Do not assign a due date or a higher priority unless an external

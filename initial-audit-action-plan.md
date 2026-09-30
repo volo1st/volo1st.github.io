@@ -17,8 +17,8 @@ This file is the single source of truth for audit work.
   use and CBA evidence.
 - An unchecked item records remaining audit scope. It is not automatically an
   immediate action.
-- Keep the text sorter work deferred until the decision-log review trigger
-  occurs.
+- The repository owner removed the text sorter on 30 September 2026.
+- Do not restore the text sorter unless a new requirement justifies it.
 - Keep an item clear until its completion test passes.
 - Add the commit, test, or decision below the item.
 - If you do not do an item, keep it clear. Record the owner, date, and reason in the decision log.
@@ -189,28 +189,11 @@ This file is the single source of truth for audit work.
 
 ### Text sorter
 
-- [ ] Add a clear label for the input and output.
-- [ ] Make output changes available to assistive software.
-- [ ] Test the mobile layout, keyboard order, and focus.
+Status: Removed from the repository on 30 September 2026.
 
 ## Phase 5: Correct the text sorter
 
-### Sort rules
-
-- [ ] Define the order for Chinese, English, numbers, punctuation, blank lines, and other scripts.
-- [ ] Keep each nonblank input line. If the tool excludes a line, show the reason.
-- [ ] Define how the tool handles duplicates, spaces, letter case, tone, mixed text, and Chinese characters with more than one pronunciation.
-- [ ] Add tests for all defined rules.
-
-### Source and dependency
-
-- [ ] Calculate one pinyin sort key for each line before the sort.
-- [ ] Replace the inline `onclick` code with a JavaScript event listener.
-- [ ] Show clear messages for empty input and pinyin dependency failure.
-- [ ] Store `tiny-pinyin` in the repository, or add Subresource Integrity (SRI) to the external file.
-- [ ] Record third-party requests and their privacy effect.
-- [ ] Add a local backup or tell the user when pinyin conversion is not available.
-- [ ] Add a Content Security Policy that permits only required sources.
+Status: Removed from scope. The tool and its third-party dependency are no longer published.
 
 ## Phase 6: Complete documents and deployment checks
 
@@ -262,6 +245,7 @@ Use this table when the team changes or rejects an action.
 | 14 September 2026 | Use a local check script. Do not add Git hooks or GitHub Actions at this time. | Repository owner | A one-person static website does not need the additional setup and maintenance at this time. |
 | 14 September 2026 | Add English and Simplified Chinese to the home page and version 2 trial. Keep version 1 unchanged. | Repository owner | The current operator is more comfortable with Chinese. English-only workflow text has caused operating problems. The GUI is part of the version 2 trial. |
 | 17 September 2026 | Defer the text sorter correction and accessibility work. | Repository owner | The text sorter has low current use. The public website foundation has higher current value. Review this decision when regular sorter use resumes or a defect blocks a user. |
+| 30 September 2026 | Remove the text sorter. | Repository owner | The tool does not have enough current value to justify redesign and maintenance. Git history keeps the former source recoverable. |
 | 28 September 2026 | Add Guitar Strum Machine to the home page in English and Simplified Chinese. | Repository owner | The practice interface is implemented and verified. The tool is ready for direct discovery from the tools home page. |
 | 29 September 2026 | Use a compact `EN / 中文` control at the right side of the title row on bilingual pages. | Repository owner | Language is page-level state. A shared title-row pattern keeps the control visible without using a separate mobile row. |
 | 29 September 2026 | Add a SHA-256 content-hash query to browser assets. | Repository owner | A browser can combine new HTML with cached CSS or JavaScript. A content hash refreshes each changed file and lets the repository check detect a stale reference. |

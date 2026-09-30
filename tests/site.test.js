@@ -82,7 +82,7 @@ test('the home page links to each available tool', () => {
   assert.match(html, /href="\.\/tools\/csv2aba\/"/);
   assert.match(html, /href="\.\/tools\/csv2aba-v2\/"/);
   assert.match(html, /href="\.\/tools\/guitar-strumming\/"/);
-  assert.match(html, /href="\.\/tools\/song_order\/"/);
+  assert.doesNotMatch(html, /tools\/song_order/);
   assert.match(html, />Trial</);
   assert.match(html, /href="\.\/assets\/site\.css\?v=[a-f0-9]{12}"/);
 });

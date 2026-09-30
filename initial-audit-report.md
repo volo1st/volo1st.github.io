@@ -9,6 +9,8 @@
 | Audit method | Source review and local tests |
 | Action plan | [`initial-audit-action-plan.md`](initial-audit-action-plan.md) |
 
+Current status: The repository owner removed the text sorter on 30 September 2026. References to its source below record the repository condition on the audit date.
+
 ## 2. Purpose and scope
 
 This report records the condition of the repository on the audit date.
