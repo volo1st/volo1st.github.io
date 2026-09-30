@@ -266,8 +266,8 @@ The CSV-to-ABA trial can continue in parallel because its external operator step
 - On 1 October 2026, the owner approved the retro pixel preview image in the local preview.
 - The automated check verifies the metadata, image hash, Portable Network Graphics format, and 1200 by 630 pixel dimensions.
 - The public image and metadata were available after deployment.
-- Safari sharing produced a WeChat card with the Open Graph title and description. WeChat cropped the landscape image to a square.
-- WhatsApp displayed the landscape card correctly.
+- Safari sharing produced a WeChat card with the Open Graph title, description, and image. The square-safe layout displayed correctly after WeChat cropped the landscape image.
+- WhatsApp displayed the full landscape card correctly.
 - Sharing from the WeChat browser produced a plain link. This fallback is accepted because the site does not use the WeChat software development kit.
 
 ## 11. Current next package
