@@ -9,11 +9,7 @@
 }(typeof globalThis !== 'undefined' ? globalThis : this, function createScreenWakeLockApi() {
   'use strict';
 
-  function createController(options) {
-    if (!options || typeof options.onUnavailable !== 'function') {
-      throw new TypeError('A wake-lock warning function is required.');
-    }
-
+  function createController(options = {}) {
     const navigatorObject = options.navigator;
     const documentObject = options.document;
     const wakeLock = navigatorObject && navigatorObject.wakeLock;
@@ -22,16 +18,9 @@
     let sentinel = null;
     let pendingRequest = null;
     let generation = 0;
-    let warningReported = false;
 
     function documentIsHidden() {
       return Boolean(documentObject && documentObject.hidden);
-    }
-
-    function reportUnavailable() {
-      if (warningReported || !requested) return;
-      warningReported = true;
-      options.onUnavailable();
     }
 
     function releaseSentinel(lock) {
@@ -46,24 +35,19 @@
     function handleRelease(lock) {
       if (sentinel !== lock) return;
       sentinel = null;
-      if (requested && !documentIsHidden()) reportUnavailable();
     }
 
     function acquire() {
       if (!requested || documentIsHidden()) return Promise.resolve(false);
       if (sentinel && !sentinel.released) return Promise.resolve(true);
       if (pendingRequest) return pendingRequest;
-      if (!supported) {
-        reportUnavailable();
-        return Promise.resolve(false);
-      }
+      if (!supported) return Promise.resolve(false);
 
       const requestGeneration = generation;
       let result;
       try {
         result = wakeLock.request('screen');
       } catch (error) {
-        reportUnavailable();
         return Promise.resolve(false);
       }
 
@@ -80,7 +64,6 @@
         return !lock.released;
       }, () => {
         if (pendingRequest === request) pendingRequest = null;
-        if (requested && generation === requestGeneration) reportUnavailable();
         return false;
       });
       pendingRequest = request;
@@ -90,7 +73,6 @@
     function start() {
       if (!requested) {
         requested = true;
-        warningReported = false;
         generation += 1;
       }
       return acquire();
@@ -98,7 +80,6 @@
 
     function stop() {
       requested = false;
-      warningReported = false;
       generation += 1;
       const lock = sentinel;
       sentinel = null;

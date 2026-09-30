@@ -598,11 +598,6 @@ test('playback notification policies hide routine states and retain important st
     tone: 'warning',
     timeoutMilliseconds: null,
   });
-  assert.deepEqual(notifications.policyForStatus('guitar.status.screenWakeUnavailable'), {
-    visible: true,
-    tone: 'warning',
-    timeoutMilliseconds: null,
-  });
   assert.deepEqual(notifications.policyForStatus('guitar.status.audioFailed'), {
     visible: true,
     tone: 'error',
@@ -668,7 +663,6 @@ function makeWakeLockSentinel() {
 
 test('screen wake lock follows playback start and stop without duplicate requests', async () => {
   const requests = [];
-  const warnings = [];
   const documentObject = { hidden: false };
   const controller = screenWakeLock.createController({
     navigator: {
@@ -680,9 +674,6 @@ test('screen wake lock follows playback start and stop without duplicate request
       },
     },
     document: documentObject,
-    onUnavailable() {
-      warnings.push('unavailable');
-    },
   });
 
   assert.equal(await controller.start(), true);
@@ -691,7 +682,6 @@ test('screen wake lock follows playback start and stop without duplicate request
   assert.equal(controller.isHeld(), true);
   controller.stop();
   assert.equal(controller.isHeld(), false);
-  assert.deepEqual(warnings, []);
 });
 
 test('screen wake lock releases a late request after playback stops', async () => {
@@ -708,7 +698,6 @@ test('screen wake lock releases a late request after playback stops', async () =
       },
     },
     document: { hidden: false },
-    onUnavailable() {},
   });
 
   const request = controller.start();
@@ -718,24 +707,18 @@ test('screen wake lock releases a late request after playback stops', async () =
   assert.equal(sentinel.released, true);
 });
 
-test('screen wake lock failure warns without rejecting playback work', async () => {
-  const warnings = [];
+test('screen wake lock failure is silent and does not reject playback work', async () => {
   const unsupported = screenWakeLock.createController({
     navigator: {},
     document: { hidden: false },
-    onUnavailable() {
-      warnings.push('unsupported');
-    },
   });
 
   assert.equal(unsupported.isSupported(), false);
   assert.equal(await unsupported.start(), false);
   assert.equal(await unsupported.start(), false);
-  assert.deepEqual(warnings, ['unsupported']);
 
   unsupported.stop();
   assert.equal(await unsupported.start(), false);
-  assert.deepEqual(warnings, ['unsupported', 'unsupported']);
 
   const rejected = screenWakeLock.createController({
     navigator: {
@@ -746,20 +729,15 @@ test('screen wake lock failure warns without rejecting playback work', async () 
       },
     },
     document: { hidden: false },
-    onUnavailable() {
-      warnings.push('rejected');
-    },
   });
   assert.equal(await rejected.start(), false);
-  assert.deepEqual(warnings, ['unsupported', 'unsupported', 'rejected']);
 });
 
-test('screen wake lock warns after release and reacquires after visibility returns', async () => {
+test('screen wake lock silently reacquires after visibility returns', async () => {
   const firstSentinel = makeWakeLockSentinel();
   const secondSentinel = makeWakeLockSentinel();
   const thirdSentinel = makeWakeLockSentinel();
   const sentinels = [firstSentinel, secondSentinel, thirdSentinel];
-  const warnings = [];
   const documentObject = { hidden: false };
   const controller = screenWakeLock.createController({
     navigator: {
@@ -770,23 +748,34 @@ test('screen wake lock warns after release and reacquires after visibility retur
       },
     },
     document: documentObject,
-    onUnavailable() {
-      warnings.push('released');
-    },
   });
 
   await controller.start();
   documentObject.hidden = true;
   await firstSentinel.release();
-  assert.deepEqual(warnings, []);
   documentObject.hidden = false;
   assert.equal(await controller.handleVisibilityChange(), true);
   assert.equal(controller.isHeld(), true);
   await secondSentinel.release();
-  assert.deepEqual(warnings, ['released']);
   assert.equal(await controller.handleVisibilityChange(), true);
   assert.equal(controller.isHeld(), true);
   assert.equal(sentinels.length, 0);
+});
+
+test('wake-lock fallback has no notification or translation', () => {
+  const appSource = fs.readFileSync(
+    path.join(__dirname, '..', 'tools', 'guitar-strumming', 'app.js'),
+    'utf8',
+  );
+  assert.doesNotMatch(appSource, /screenWakeUnavailable|\bonUnavailable\s*\(/);
+  assert.equal(
+    Object.hasOwn(guitarI18n.catalogs['en-AU'], 'guitar.status.screenWakeUnavailable'),
+    false,
+  );
+  assert.equal(
+    Object.hasOwn(guitarI18n.catalogs['zh-Hans'], 'guitar.status.screenWakeUnavailable'),
+    false,
+  );
 });
 
 test('the chord presentation preserves 1,000 expanded bars without source notation', () => {

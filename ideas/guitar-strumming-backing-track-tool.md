@@ -2133,9 +2133,11 @@ Do not change audio scheduling, the arrangement source, playback position, or sh
 
 ### Failure Behavior
 
-If the API is unavailable or the browser denies the request, continue playback and show a warning. Tell the student that the screen can turn off.
+If the API is unavailable or the browser denies the request, continue playback without a notification. Normal screen-timeout behavior requires no student action.
 
-The browser can release a wake lock because of a low battery, a power-saving mode, or another system rule. If this occurs while the page is visible and playback is active, continue playback and show the same warning.
+The browser can release a wake lock because of a low battery, a power-saving mode, or another system rule. If this occurs while the page is visible and playback is active, continue playback without a notification.
+
+This decision replaces the initial warning. Browser-preview feedback showed that the message was intrusive and did not provide an actionable instruction.
 
 Do not repeatedly request a lock after the browser releases it while the page stays visible. Request it again after the next Play action or applicable visibility change.
 
@@ -2156,16 +2158,18 @@ References:
 4. A stop or playback error releases the active lock.
 5. A lock that arrives after playback stops is released immediately.
 6. An unsupported or rejected request does not stop playback.
-7. An unsupported, rejected, or unexpectedly released lock shows a warning.
+7. An unsupported, rejected, or unexpectedly released lock does not show a notification.
 8. A visible page can request a new lock when playback is still active.
-9. English and Simplified Chinese warning keys remain identical.
+9. No unused wake-lock warning translation remains.
 10. Existing playback timing and visibility-pause tests continue to pass.
 
 Manually verify continuous playback past the normal screen timeout on iPhone Safari. Also verify Pause, tab switching, return to the page, low-power behavior when practical, narrow screens, and 200 percent zoom.
 
-Automated evidence: The repository check passed on 2026-09-30. It covered lock acquisition, duplicate-request prevention, release after Pause or stop, a late request after stop, unsupported and rejected requests, unexpected release, visibility-based reacquisition, warning classification, translation parity, current asset hashes, and existing playback regressions.
+Automated evidence: The repository check passed on 2026-09-30. It covered lock acquisition, duplicate-request prevention, release after Pause or stop, a late request after stop, silent unsupported and rejected requests, silent unexpected release, visibility-based reacquisition, removal of the unused warning translations, current asset hashes, and existing playback regressions.
 
 Manual evidence: The user confirmed on iPhone Safari that the deployed HTTPS page kept the screen on during playback. The plain-HTTP NAS preview cannot verify this function because the Screen Wake Lock API requires a secure context.
+
+Preview evidence: The user requested removal of the non-actionable wake-lock warning and confirmed that HTTP preview playback continued without the warning on 2026-09-30.
 
 ## 11.19 Exercise Identity and Practice Settings
 

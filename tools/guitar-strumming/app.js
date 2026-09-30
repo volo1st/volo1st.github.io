@@ -128,11 +128,6 @@
     screenWakeLock = screenWakeLockApi.createController({
       navigator: root.navigator,
       document,
-      onUnavailable() {
-        if (playbackState === 'playing' || playbackState === 'starting') {
-          setPlaybackStatus('guitar.status.screenWakeUnavailable');
-        }
-      },
     });
     playbackNotifier.show(currentPlaybackStatus);
     renderPresetOptions();
