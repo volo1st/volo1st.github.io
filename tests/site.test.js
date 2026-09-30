@@ -149,6 +149,37 @@ test('versioned interface assets use their current content hash', () => {
   }
 });
 
+test('the guitar page provides a generic Open Graph preview without replacing arrangement URLs', () => {
+  const html = fs.readFileSync(
+    path.join(repositoryRoot, 'tools', 'guitar-strumming', 'index.html'),
+    'utf8',
+  );
+  const imagePath = path.join(
+    repositoryRoot,
+    'assets',
+    'share',
+    'guitar-strum-machine.png',
+  );
+  const image = fs.readFileSync(imagePath);
+  const imageHash = crypto.createHash('sha256').update(image).digest('hex').slice(0, 12);
+
+  assert.match(html, /<meta property="og:type" content="website" \/>/);
+  assert.match(html, /<meta property="og:title" content="Guitar Strum Machine" \/>/);
+  assert.match(html, /<meta property="og:description" content="[^"]+" \/>/);
+  assert.match(
+    html,
+    new RegExp(`https://volo1st\\.com/assets/share/guitar-strum-machine\\.png\\?v=${imageHash}`),
+  );
+  assert.match(html, /<meta property="og:image:type" content="image\/png" \/>/);
+  assert.match(html, /<meta property="og:image:width" content="1200" \/>/);
+  assert.match(html, /<meta property="og:image:height" content="630" \/>/);
+  assert.match(html, /<meta property="og:image:alt" content="[^"]+" \/>/);
+  assert.doesNotMatch(html, /<meta property="og:url"/);
+  assert.deepEqual([...image.subarray(0, 8)], [137, 80, 78, 71, 13, 10, 26, 10]);
+  assert.equal(image.readUInt32BE(16), 1200);
+  assert.equal(image.readUInt32BE(20), 630);
+});
+
 test('maintained bilingual pages use the shared site shell', () => {
   const pages = [
     path.join(repositoryRoot, 'index.html'),

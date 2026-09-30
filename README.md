@@ -20,6 +20,8 @@ HTML references browser assets with a short SHA-256 content hash. Update the has
 
 The guitar tool can put the complete source in a share URL. Anyone who receives the URL can read the source. A browser sends the URL query to the website host when it opens the link. A URL-shortener service also receives the URL. A generated share URL must not exceed 750 characters. Decoded source must not exceed 65,536 UTF-8 bytes.
 
+The guitar page has a generic Open Graph preview. The preview does not include a fixed Open Graph URL, so an arrangement query remains in the shared link. Static metadata cannot show a different preview for each arrangement. Run `node scripts/generate-share-card.js` to regenerate the preview image.
+
 The guitar tool includes a local catalog of reviewed practice exercises. The catalog can include a short user transcription when it contains only chord and rhythm teaching data and has a clear unofficial notice. It does not include lyrics, melody notation, audio, or artwork. A preset does not make a network request. A preset URL uses a stable versioned slug. Published preset source does not change. A source revision uses a new slug.
 
 The catalog can use one versioned arrangement for multiple exercise profiles. Each profile has its own teaching goal, playing key, and practice defaults. The catalog materializes a complete plain-text source when the preset loads. The text remains the runtime source of truth. The Viva La Vida arrangement provides separate C-major melody-backing and G-major strumming profiles without duplicating its chord and strum transcription.
