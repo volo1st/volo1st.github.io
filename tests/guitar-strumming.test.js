@@ -1909,6 +1909,7 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(app, /screenWakeLock\.start\(\)/);
   assert.ok([...app.matchAll(/screenWakeLock\.stop\(\)/g)].length >= 2);
   assert.match(app, /screenWakeLock\.handleVisibilityChange\(\)/);
+  assert.match(app, /presetApi\.findPresetByExerciseIdentity\(source\)/);
   assert.match(app, /playbackNotifier\.show\(currentPlaybackStatus\)/);
   assert.match(app, /elements\.chordGuide\.replaceChildren\(\)/);
   assert.match(app, /function renderChordTimeline\(timeline\)/);

@@ -252,6 +252,65 @@ test('exact source lookup selects only catalog source', () => {
   assert.equal(presets.findPresetBySource(`${preset.source}\n`), null);
 });
 
+test('exercise identity ignores practice settings but keeps musical settings', () => {
+  const preset = presets.getPreset('intermediate-c-g-am-f-v1');
+  const bpmChanged = parser.replaceBpmDirective(preset.source, '105');
+  const countInChanged = parser.replaceCountInDirective(preset.source, '2');
+  const rampChanged = parser.replaceTempoRampDirective(preset.source, '+5/3/120');
+  const speedUpChanged = parser.replaceTempoRampDirective(
+    parser.replaceBpmDirective(preset.source, '40'),
+    '+5/3/80',
+  );
+
+  for (const source of [preset.source, bpmChanged, countInChanged, rampChanged, speedUpChanged]) {
+    assert.equal(presets.findPresetByExerciseIdentity(source), preset);
+  }
+
+  assert.equal(
+    presets.findPresetByExerciseIdentity(preset.source.replace('| C | G | Am | F |', '| C | D | Am | F |')),
+    null,
+  );
+  assert.equal(
+    presets.findPresetByExerciseIdentity(parser.replaceCapoDirective(preset.source, '2')),
+    null,
+  );
+  assert.equal(
+    presets.findPresetByExerciseIdentity(parser.replaceSwingDirective(preset.source, '60')),
+    null,
+  );
+  assert.equal(presets.findPresetByExerciseIdentity('not an arrangement'), null);
+});
+
+test('exercise identity can select another matching exercise profile', () => {
+  const melody = presets.getPreset('viva-la-vida-melody-backing-c-v1');
+  const strumming = presets.getPreset('viva-la-vida-syncopated-strumming-g-v1');
+  const changedKey = parser.replaceKeyDirective(melody.source, 'G major');
+  assert.equal(presets.findPresetByExerciseIdentity(changedKey), strumming);
+  assert.equal(
+    presets.findPresetByExerciseIdentity(
+      parser.replaceOriginalKeyDirective(melody.source, 'Bb major'),
+    ),
+    null,
+  );
+});
+
+test('catalog exercise identities reject practice-setting ambiguity', () => {
+  const first = presets.getPreset('intermediate-c-g-am-f-v1');
+  const second = {
+    ...first,
+    slug: 'same-exercise-v1',
+    source: parser.replaceBpmDirective(first.source, '105'),
+  };
+  assert.throws(
+    () => presets.validatePresetExerciseIdentities([first, second]),
+    expectCode('preset_exercise_identity_duplicate'),
+  );
+  assert.throws(
+    () => presets.validatePresetExerciseIdentities([{ ...second, source: 'invalid' }]),
+    expectCode('preset_exercise_identity_invalid'),
+  );
+});
+
 test('materialized preset source uses a preset URL and edited source uses a full URL', async () => {
   const preset = presets.getPreset('viva-la-vida-melody-backing-c-v1');
   const editedSource = preset.source.replace('bpm: 135', 'bpm: 100');

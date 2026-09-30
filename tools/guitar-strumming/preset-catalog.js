@@ -199,9 +199,14 @@ strum:
   const presets = Object.freeze([...standalonePresets, ...composedPresets]);
 
   validatePresetEntries(presets);
+  validatePresetExerciseIdentities(presets);
 
   const presetsBySlug = new Map(presets.map((preset) => [preset.slug, preset]));
   const presetsBySource = new Map(presets.map((preset) => [preset.source, preset]));
+  const presetsByExerciseIdentity = new Map(presets.map((preset) => [
+    exerciseIdentityKeyFromSource(preset.source),
+    preset,
+  ]));
 
   function makeArrangement(entry) {
     return Object.freeze({
@@ -251,6 +256,7 @@ strum:
       });
     });
     validatePresetEntries(entries);
+    validatePresetExerciseIdentities(entries);
     return Object.freeze(entries);
   }
 
@@ -556,6 +562,50 @@ ${arrangement.strumSource}`;
     return true;
   }
 
+  function validatePresetExerciseIdentities(entries) {
+    if (!Array.isArray(entries) || entries.length === 0) {
+      throw new PresetError(
+        'preset_catalog_empty',
+        'The preset catalog must contain at least one preset.',
+      );
+    }
+
+    const identities = new Map();
+    for (const entry of entries) {
+      const identity = exerciseIdentityKeyFromSource(entry && entry.source);
+      if (identity === null) {
+        throw new PresetError(
+          'preset_exercise_identity_invalid',
+          `Preset ${(entry && entry.slug) || '(unknown)'} has invalid musical content.`,
+        );
+      }
+      if (identities.has(identity)) {
+        throw new PresetError(
+          'preset_exercise_identity_duplicate',
+          `Preset ${entry.slug} has the same exercise identity as ${identities.get(identity)}.`,
+        );
+      }
+      identities.set(identity, entry.slug);
+    }
+    return true;
+  }
+
+  function exerciseIdentityKeyFromSource(source) {
+    const result = parser.parseSongSource(String(source || ''), { catalog: chordCatalog });
+    if (!result.ok) return null;
+    return exerciseIdentityKeyFromSong(result.song);
+  }
+
+  function exerciseIdentityKeyFromSong(song) {
+    if (!song || typeof song !== 'object') return null;
+    return JSON.stringify({
+      notation: song.notation,
+      originalKey: song.originalKey ? song.originalKey.canonicalText : null,
+      playingKey: song.playingKey ? song.playingKey.canonicalText : null,
+      musicalContent: parser.musicalContentKey(song),
+    });
+  }
+
   function validateRights(entry, label) {
     if (!APPROVED_RIGHTS_BASES.includes(entry.rightsBasis)) {
       throw new PresetError('preset_rights_invalid', `${label} has no approved rights basis.`);
@@ -590,6 +640,16 @@ ${arrangement.strumSource}`;
 
   function findPresetBySource(source) {
     return presetsBySource.get(String(source)) || null;
+  }
+
+  function findPresetByExerciseIdentity(source) {
+    const identity = exerciseIdentityKeyFromSource(source);
+    return identity === null ? null : presetsByExerciseIdentity.get(identity) || null;
+  }
+
+  function findPresetByExerciseSong(song) {
+    const identity = exerciseIdentityKeyFromSong(song);
+    return identity === null ? null : presetsByExerciseIdentity.get(identity) || null;
   }
 
   function resolvePresetFromUrl(urlValue) {
@@ -655,6 +715,10 @@ ${arrangement.strumSource}`;
     SLUG_PATTERN,
     createExercisePresets,
     createPresetUrl,
+    exerciseIdentityKeyFromSong,
+    exerciseIdentityKeyFromSource,
+    findPresetByExerciseIdentity,
+    findPresetByExerciseSong,
     findPresetBySource,
     getDefaultPreset,
     getPreset,
@@ -666,5 +730,6 @@ ${arrangement.strumSource}`;
     validateArrangementEntries,
     validateExerciseProfiles,
     validatePresetEntries,
+    validatePresetExerciseIdentities,
   });
 }));

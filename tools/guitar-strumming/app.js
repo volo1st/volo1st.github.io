@@ -213,7 +213,6 @@
       if (presetResult.found) {
         elements.source.value = presetResult.preset.source;
         sourceReplacementBaseline = presetResult.preset.source;
-        synchronizePresetSelection(presetResult.preset.source);
         setShareStatus('guitar.share.loadedPreset', { presetSlug: presetResult.preset.slug });
         return 'preset';
       }
@@ -222,7 +221,6 @@
       if (decoded.found) {
         elements.source.value = decoded.source;
         sourceReplacementBaseline = decoded.source;
-        synchronizePresetSelection(decoded.source);
         setShareStatus('guitar.share.loadedLink', { codec: decoded.codec });
         return 'shared';
       }
@@ -230,13 +228,12 @@
       const defaultPreset = presetApi.getDefaultPreset();
       elements.source.value = defaultPreset.source;
       sourceReplacementBaseline = defaultPreset.source;
-      synchronizePresetSelection(defaultPreset.source);
       setShareStatus('guitar.share.loadedPreset', { presetSlug: defaultPreset.slug });
       return 'initial';
     } catch (error) {
       elements.source.value = '';
       sourceReplacementBaseline = null;
-      synchronizePresetSelection('');
+      synchronizePresetSelection('', null);
       parsedSong = null;
       numberDraftSong = null;
       parsedTimeline = null;
@@ -268,13 +265,13 @@
 
   function validateSource(origin) {
     const source = elements.source.value;
-    synchronizePresetSelection(source);
     const previousSong = parsedSong;
     const previousContentKey = musicalContentKey;
     const previousSource = lastValidSource;
     const result = parser.parseSongSource(source, { catalog });
 
     if (!result.ok) {
+      synchronizePresetSelection(source, null);
       parsedSong = null;
       numberDraftSong = result.candidateSong || null;
       parsedTimeline = null;
@@ -302,6 +299,7 @@
     try {
       nextTimeline = core.normalizeSong(result.song);
     } catch (error) {
+      synchronizePresetSelection(source, result.song);
       parsedSong = null;
       parsedTimeline = null;
       musicalContentKey = null;
@@ -328,6 +326,7 @@
       return;
     }
 
+    synchronizePresetSelection(source, result.song);
     const nextContentKey = parser.musicalContentKey(result.song);
     const sourceChanged = previousSource !== null && source !== previousSource;
     const neutralPreviousSource = previousSource === null
@@ -439,8 +438,10 @@
     elements.preset.value = selectedValue;
   }
 
-  function synchronizePresetSelection(source) {
-    const preset = presetApi.findPresetBySource(source);
+  function synchronizePresetSelection(source, song) {
+    const preset = arguments.length > 1
+      ? presetApi.findPresetByExerciseSong(song)
+      : presetApi.findPresetByExerciseIdentity(source);
     elements.preset.value = preset ? preset.slug : '';
     elements.presetGoal.textContent = preset
       ? t('guitar.preset.goal', {
@@ -477,7 +478,6 @@
 
     elements.source.value = preset.source;
     sourceReplacementBaseline = preset.source;
-    synchronizePresetSelection(preset.source);
     validateSource('preset');
   }
 
@@ -1398,7 +1398,7 @@
   function renderLocalizedContent() {
     if (!i18n || !presetApi) return;
     renderPresetOptions();
-    synchronizePresetSelection(elements.source.value);
+    synchronizePresetSelection(elements.source.value, parsedSong);
     synchronizeBpmControls(parsedSong);
     synchronizeSwingControl(parsedSong ? parsedSong.swingPercent : undefined);
     renderPracticeDisplay();

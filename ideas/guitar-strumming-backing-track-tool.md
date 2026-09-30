@@ -2167,6 +2167,63 @@ Automated evidence: The repository check passed on 2026-09-30. It covered lock a
 
 Manual evidence: The user confirmed on iPhone Safari that the deployed HTTPS page kept the screen on during playback. The plain-HTTP NAS preview cannot verify this function because the Screen Wake Lock API requires a secure context.
 
+## 11.19 Exercise Identity and Practice Settings
+
+Status: Implemented and verified on 2026-09-30.
+
+### Purpose
+
+Keep the selected exercise stable when a student changes a practice setting.
+
+The Exercise control describes the musical exercise. It must not describe whether all practice settings still equal their catalog defaults.
+
+### Requirements
+
+Derive exercise identity from the parsed arrangement text. Do not add a second live musical state.
+
+Ignore these directives when exercise identity is compared:
+
+- `bpm:`
+- `count-in:`
+- `tempo-ramp:`
+
+Keep all other parsed musical data in the exercise identity. This data includes the grid, notation, original key, playing key, capo, swing, chord events, and strum events.
+
+Changing an ignored practice directive must keep the current exercise selected. This rule applies to a practice control and to a direct text edit.
+
+If the remaining parsed musical data matches another catalog exercise, select that exercise.
+
+If the text is invalid or does not match one catalog exercise, select Custom arrangement.
+
+Reject a catalog that contains two exercises with the same exercise identity. Do not select an arbitrary exercise.
+
+Keep exact-source rules for sharing. Use a short preset URL only when the complete text exactly matches the catalog source. Use a complete source URL after any practice-setting change.
+
+Keep the arrangement text as the single source of truth for playback and sharing.
+
+### Failure Behavior
+
+If identity creation fails for edited text, show Custom arrangement. Keep normal validation behavior.
+
+If two catalog entries have the same identity, stop catalog creation with a stable error code.
+
+### Acceptance Tests
+
+1. A BPM control change keeps the selected exercise.
+2. Sliding BPM away from and back to its default does not change exercise selection.
+3. Enabling, editing, or disabling speed-up keeps the selected exercise.
+4. A Count-in change keeps the selected exercise.
+5. The same directive edits made in the text keep the selected exercise.
+6. A chord, strum, grid, notation, key, capo, or swing change selects Custom arrangement unless it matches another exercise.
+7. Invalid text selects Custom arrangement.
+8. Two catalog sources that differ only in ignored practice settings are rejected as ambiguous.
+9. A modified exercise uses a complete source share URL.
+10. An exact catalog source still uses its short preset URL.
+
+Automated evidence: The repository check passed on 2026-09-30. It covered BPM, count-in, tempo-ramp, key, original-key, capo, swing, chord, invalid-source, ambiguous-identity, exact-share, complete-share, translation, asset-hash, and existing playback regressions.
+
+Manual evidence: The user confirmed in the browser preview that exercise selection now remains stable during practice-setting changes. The user accepted the result for the release candidate. Capo remains part of exercise identity until its product behavior is reviewed separately.
+
 #### Stage 3: Teaching Enhancements
 
 Evaluate chord diagrams, strumming visualization, section labels, and repeat presentation as separate additions.
