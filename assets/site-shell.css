@@ -1,0 +1,224 @@
+:root {
+  color-scheme: light;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 100%;
+  line-height: 1.5;
+  color: var(--site-text);
+  background: var(--site-background);
+  --site-content-width: 960px;
+  --site-gutter: 32px;
+  --site-text: #17202a;
+  --site-muted: #4a4a43;
+  --site-muted-soft: #5c594e;
+  --site-background: #f4f1e8;
+  --site-surface: #ffffff;
+  --site-panel-background: #fffdf7;
+  --site-subtle-surface: #f8f6ef;
+  --site-inset-surface: #f2f0e9;
+  --site-hover: #e9e5da;
+  --site-control-text: #3e443d;
+  --site-control-border: #777263;
+  --site-panel-border: #a9a38f;
+  --site-divider: #d2cdbd;
+  --site-focus: #d78300;
+  --site-panel-shadow: 0 0.2rem 0.8rem rgb(63 53 30 / 10%);
+  --tool-accent: #075a9c;
+  --tool-accent-hover: #064978;
+  --tool-accent-strong: #04395f;
+  --tool-accent-soft: #e8f3fb;
+  --tool-accent-notice: #e4f0f8;
+  --tool-accent-border: #064978;
+  --tool-accent-rgb: 7 90 156;
+  --tool-accent-light-rgb: 39 121 178;
+  --tool-on-accent: #ffffff;
+}
+
+[data-domain="guitar"] {
+  --tool-accent: #27644e;
+  --tool-accent-hover: #194b38;
+  --tool-accent-strong: #173e30;
+  --tool-accent-soft: #edf5f1;
+  --tool-accent-notice: #e5f2eb;
+  --tool-accent-border: #244c3d;
+  --tool-accent-rgb: 39 100 78;
+  --tool-accent-light-rgb: 58 134 102;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+button,
+select,
+summary,
+a {
+  touch-action: manipulation;
+}
+
+a {
+  color: var(--tool-accent);
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible,
+textarea:focus-visible,
+[tabindex="0"]:focus-visible {
+  outline: 3px solid var(--site-focus);
+  outline-offset: 3px;
+}
+
+.site-header,
+.site-main,
+.site-footer {
+  width: min(100% - var(--site-gutter), var(--site-content-width));
+  margin-inline: auto;
+}
+
+.site-header {
+  padding-block: 1rem 0.75rem;
+}
+
+.page-title-row,
+.page-title-group {
+  display: flex;
+  align-items: center;
+}
+
+.page-title-row {
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.page-title-group {
+  min-width: 0;
+  gap: 10px;
+}
+
+.site-mark {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+}
+
+.site-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.site-header h1 {
+  min-width: 0;
+  margin: 0;
+  font-size: clamp(2rem, 7vw, 3rem);
+  line-height: 1.2;
+}
+
+.language-switcher {
+  display: inline-flex;
+  flex: 0 0 auto;
+  border: 1px solid var(--site-control-border);
+  border-radius: 0.4rem;
+  padding: 2px;
+  background: var(--site-surface);
+}
+
+.language-switcher button {
+  min-width: 0;
+  min-height: 2rem;
+  border: 0;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  color: var(--site-control-text);
+  background: transparent;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.language-switcher button[aria-pressed="false"]:hover {
+  background: var(--site-hover);
+}
+
+.language-switcher button[aria-pressed="true"] {
+  color: var(--tool-on-accent);
+  background: var(--tool-accent);
+  font-weight: 700;
+}
+
+.site-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  border-top: 1px solid var(--site-divider);
+  padding-block: 16px 32px;
+  color: var(--site-muted);
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+.site-footer-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 700;
+}
+
+.site-footer-home img {
+  width: 24px;
+  height: 24px;
+}
+
+@media (max-width: 480px) {
+  :root {
+    --site-gutter: 20px;
+  }
+
+  .site-header {
+    padding-block: 1rem 0.75rem;
+  }
+
+  .site-header h1 {
+    font-size: clamp(1.25rem, 6vw, 1.75rem);
+  }
+
+  .site-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 360px) {
+  .page-title-row {
+    gap: 8px;
+  }
+
+  .page-title-group {
+    gap: 6px;
+  }
+
+  .site-mark {
+    width: 26px;
+    height: 26px;
+  }
+
+  .language-switcher button {
+    min-height: 32px;
+    padding-inline: 6px;
+  }
+}

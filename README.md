@@ -14,6 +14,8 @@ See [`website-roadmap.md`](website-roadmap.md) for the product direction and del
 
 The home page, version 2 converter, and Guitar Strum Machine support English and Simplified Chinese. The site stores the selected language code in browser local storage. A language change does not change guitar arrangement text, playback state, or share-link data.
 
+The maintained pages use `assets/site-shell.css` for the shared header, footer, language control, and design tokens. Each tool uses the same semantic shell classes. The shared shell maps a semantic `data-domain` value to each domain accent. A home-page tool card uses the accent of its destination. The original pixel-art `V` block is the shared site icon. CSV-to-ABA version 1 remains unchanged.
+
 HTML references browser assets with a short SHA-256 content hash. Update the hash when a CSS or JavaScript file changes. The repository check rejects a stale hash.
 
 The guitar tool can put the complete source in a share URL. Anyone who receives the URL can read the source. A browser sends the URL query to the website host when it opens the link. A URL-shortener service also receives the URL. A generated share URL must not exceed 750 characters. Decoded source must not exceed 65,536 UTF-8 bytes.

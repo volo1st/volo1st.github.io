@@ -1,42 +1,20 @@
 :root {
-  color-scheme: light;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 100%;
-  line-height: 1.5;
-  color: #17202a;
-  background: #f4f1e8;
+  --site-content-width: 46rem;
+  --site-gutter: 1.5rem;
 }
 
-* {
-  box-sizing: border-box;
+.site-main {
+  padding-bottom: 3rem;
 }
 
-body {
-  margin: 0;
-}
-
-button,
-select,
-summary,
-a {
-  touch-action: manipulation;
-}
-
-main {
-  width: min(100% - 1.5rem, 46rem);
-  margin: 0 auto;
-  padding: 1rem 0 3rem;
+.site-header h1 {
+  white-space: nowrap;
 }
 
 h1,
 h2,
 h3 {
   line-height: 1.2;
-}
-
-h1 {
-  margin: 0 0 0.75rem;
-  font-size: clamp(2rem, 7vw, 3rem);
 }
 
 h2 {
@@ -47,46 +25,6 @@ h2 {
 h3 {
   margin: 0;
   font-size: 1rem;
-}
-
-.page-title-row {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
-}
-
-.page-title-row h1 {
-  min-width: 0;
-  margin-bottom: 0;
-}
-
-.language-switcher {
-  display: inline-flex;
-  flex: 0 0 auto;
-  padding: 2px;
-  border: 1px solid #777263;
-  border-radius: 0.4rem;
-  background: #fff;
-}
-
-.language-switcher button {
-  min-width: 0;
-  min-height: 2rem;
-  padding: 0.25rem 0.5rem;
-  border: 0;
-  color: #3e443d;
-  background: transparent;
-}
-
-.language-switcher button[aria-pressed="false"]:hover {
-  background: #e9e5da;
-}
-
-.language-switcher button[aria-pressed="true"] {
-  color: #fff;
-  background: #27644e;
 }
 
 .visually-hidden {
@@ -103,14 +41,14 @@ h3 {
 
 section,
 details {
-  border: 1px solid #a9a38f;
+  border: 1px solid var(--site-panel-border);
   border-radius: 0.65rem;
-  background: #fffdf7;
+  background: var(--site-panel-background);
 }
 
 .practice-workspace {
   padding: 1rem;
-  box-shadow: 0 0.2rem 0.8rem rgb(63 53 30 / 10%);
+  box-shadow: var(--site-panel-shadow);
 }
 
 details {
@@ -130,7 +68,7 @@ summary {
 }
 
 details[open] > summary {
-  border-bottom: 1px solid #d2cdbd;
+  border-bottom: 1px solid var(--site-divider);
 }
 
 .details-content {
@@ -144,29 +82,29 @@ textarea {
   margin-top: 0.35rem;
   resize: vertical;
   padding: 0.9rem;
-  border: 2px solid #777263;
+  border: 2px solid var(--site-control-border);
   border-radius: 0.4rem;
   font: 1rem/1.55 ui-monospace, SFMono-Regular, Consolas, monospace;
-  color: #17202a;
-  background: #fff;
+  color: var(--site-text);
+  background: var(--site-surface);
 }
 
 input[type="number"],
 select {
   min-height: 2.75rem;
   padding: 0.5rem;
-  border: 2px solid #777263;
+  border: 2px solid var(--site-control-border);
   border-radius: 0.4rem;
   font: inherit;
-  color: #17202a;
-  background: #fff;
+  color: var(--site-text);
+  background: var(--site-surface);
 }
 
 input[type="text"] {
   width: 100%;
   min-height: 2.75rem;
   padding: 0.5rem;
-  border: 2px solid #777263;
+  border: 2px solid var(--site-control-border);
   border-radius: 0.4rem;
   font: 1rem/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
 }
@@ -175,15 +113,6 @@ input[type="range"] {
   width: 100%;
   min-height: 2.75rem;
   margin: 0;
-}
-
-textarea:focus-visible,
-input:focus-visible,
-select:focus-visible,
-summary:focus-visible,
-button:focus-visible {
-  outline: 3px solid #d78300;
-  outline-offset: 3px;
 }
 
 .preset-control label,
@@ -199,7 +128,7 @@ button:focus-visible {
 
 .preset-goal {
   margin: 0.3rem 0 0;
-  color: #5c594e;
+  color: var(--site-muted-soft);
   font-size: 0.85rem;
   line-height: 1.35;
 }
@@ -230,10 +159,10 @@ button:focus-visible {
   margin: 0;
   padding: 0.65rem 0.7rem;
   transform: translateX(-50%);
-  border: 2px solid #27644e;
+  border: 2px solid var(--tool-accent);
   border-left-width: 0.4rem;
   border-radius: 0.45rem;
-  background: #e5f2eb;
+  background: var(--tool-accent-notice);
   box-shadow: 0 0.5rem 1.4rem rgb(31 42 36 / 32%);
 }
 
@@ -263,7 +192,7 @@ button:focus-visible {
   min-height: 2.5rem;
   padding: 0.25rem;
   border-color: currentcolor;
-  color: #3e443d;
+  color: var(--site-control-text);
   background: transparent;
   font-size: 1.25rem;
   line-height: 1;
@@ -288,9 +217,9 @@ button:focus-visible {
   grid-template-columns: repeat(3, auto);
   gap: 0.2rem;
   padding: 0.2rem;
-  border: 1px solid #777263;
+  border: 1px solid var(--site-control-border);
   border-radius: 0.45rem;
-  background: #fff;
+  background: var(--site-surface);
 }
 
 .chord-view-switcher button {
@@ -298,25 +227,25 @@ button:focus-visible {
   min-height: 2rem;
   padding: 0.25rem 0.55rem;
   border: 0;
-  color: #3e443d;
+  color: var(--site-control-text);
   background: transparent;
 }
 
 .chord-view-switcher button[aria-pressed="true"] {
-  color: #fff;
-  background: #27644e;
+  color: var(--tool-on-accent);
+  background: var(--tool-accent);
 }
 
 .chord-view-switcher button[aria-pressed="false"]:hover {
-  background: #e9e5da;
+  background: var(--site-hover);
 }
 
 .chord-guide-scroll {
   margin-top: 0.5rem;
   overflow-x: auto;
-  border: 1px solid #a9a38f;
+  border: 1px solid var(--site-panel-border);
   border-radius: 0.4rem;
-  background: #fff;
+  background: var(--site-surface);
   scroll-padding-left: 0.65rem;
   scroll-snap-type: x mandatory;
   overscroll-behavior-inline: contain;
@@ -338,15 +267,15 @@ button:focus-visible {
   flex: 0 0 max(clamp(15rem, 78vw, 18rem), calc(var(--bar-min-width) + 1.1rem));
   width: max(clamp(15rem, 78vw, 18rem), calc(var(--bar-min-width) + 1.1rem));
   padding: 0.55rem;
-  border: 1px solid #a9a38f;
+  border: 1px solid var(--site-panel-border);
   border-radius: 0.45rem;
-  background: #fffdf7;
+  background: var(--site-panel-background);
   scroll-snap-align: start;
 }
 
 .chord-bar-number {
   display: block;
-  color: #4a4a43;
+  color: var(--site-muted);
   font-size: 0.8rem;
   font-weight: 700;
 }
@@ -367,17 +296,17 @@ button:focus-visible {
   padding: 0.2rem 0.4rem;
   border-radius: 0.3rem;
   white-space: nowrap;
-  background: #edf5f1;
+  background: var(--tool-accent-soft);
 }
 
 .chord-change-label.is-current {
-  color: #fff;
-  background: #27644e;
-  box-shadow: 0 0 0 2px #173e30;
+  color: var(--tool-on-accent);
+  background: var(--tool-accent);
+  box-shadow: 0 0 0 2px var(--tool-accent-strong);
 }
 
 .chord-change-label.is-current .chord-timing-cue {
-  color: #fff;
+  color: var(--tool-on-accent);
 }
 
 .chord-change-label.align-center {
@@ -393,7 +322,7 @@ button:focus-visible {
 }
 
 .chord-timing-cue {
-  color: #5c594e;
+  color: var(--site-muted-soft);
   font-size: 0.75rem;
   font-weight: 700;
 }
@@ -402,14 +331,14 @@ button:focus-visible {
   position: relative;
   height: 1rem;
   overflow: hidden;
-  border: 1px solid #777263;
+  border: 1px solid var(--site-control-border);
   border-radius: 0.25rem;
   background-image: repeating-linear-gradient(
     to right,
     transparent 0,
     transparent calc(25% - 1px),
-    #777263 calc(25% - 1px),
-    #777263 25%
+    var(--site-control-border) calc(25% - 1px),
+    var(--site-control-border) 25%
   );
 }
 
@@ -417,15 +346,15 @@ button:focus-visible {
   position: absolute;
   top: 0;
   bottom: 0;
-  background: rgb(58 134 102 / 35%);
+  background: rgb(var(--tool-accent-light-rgb) / 35%);
 }
 
 .chord-duration-region.is-current {
-  background: rgb(39 100 78 / 78%);
+  background: rgb(var(--tool-accent-rgb) / 78%);
 }
 
 .chord-duration-region + .chord-duration-region {
-  border-left: 2px solid #27644e;
+  border-left: 2px solid var(--tool-accent);
 }
 
 .chord-duration-region.alternate {
@@ -435,7 +364,7 @@ button:focus-visible {
 .number-chord-controls {
   margin-bottom: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #d2cdbd;
+  border-bottom: 1px solid var(--site-divider);
 }
 
 .key-controls-grid {
@@ -462,7 +391,7 @@ button:focus-visible {
   margin-top: 0.8rem;
   padding: 0.7rem 0.8rem 0.35rem;
   border-radius: 0.5rem;
-  background: #f2f0e9;
+  background: var(--site-inset-surface);
 }
 
 .tempo-heading {
@@ -475,9 +404,9 @@ button:focus-visible {
 .bpm-value {
   display: flex;
   align-items: center;
-  border: 2px solid #777263;
+  border: 2px solid var(--site-control-border);
   border-radius: 999px;
-  background: #fff;
+  background: var(--site-surface);
 }
 
 .bpm-value input[type="number"] {
@@ -492,13 +421,13 @@ button:focus-visible {
 
 .bpm-value span {
   padding: 0 0.65rem 0 0.25rem;
-  color: #4a4a43;
+  color: var(--site-muted);
   font-size: 0.85rem;
   font-weight: 700;
 }
 
 .practice-options {
-  background: #f8f6ef;
+  background: var(--site-subtle-surface);
 }
 
 .practice-options-grid,
@@ -526,7 +455,7 @@ button:focus-visible {
   gap: 0.75rem;
   margin: 0.8rem 0 0;
   padding: 0.75rem;
-  border: 1px solid #a9a38f;
+  border: 1px solid var(--site-panel-border);
   border-radius: 0.5rem;
 }
 
@@ -550,13 +479,13 @@ button:focus-visible {
 .validation-summary {
   margin: 0;
   padding: 0.6rem 0.7rem;
-  border-left: 0.3rem solid #777263;
-  background: #f2f0e9;
+  border-left: 0.3rem solid var(--site-control-border);
+  background: var(--site-inset-surface);
 }
 
 .validation-summary.valid {
-  border-color: #27644e;
-  background: #edf5f1;
+  border-color: var(--tool-accent);
+  background: var(--tool-accent-soft);
 }
 
 .validation-summary.invalid {
@@ -592,7 +521,7 @@ button:focus-visible {
 
 .context-status {
   margin: 0.65rem 0 0;
-  color: #4a4a43;
+  color: var(--site-muted);
 }
 
 .button-group {
@@ -606,17 +535,17 @@ button {
   min-width: 7rem;
   min-height: 2.75rem;
   padding: 0.6rem 0.9rem;
-  border: 2px solid #244c3d;
+  border: 2px solid var(--tool-accent-border);
   border-radius: 0.4rem;
   font: inherit;
   font-weight: 700;
-  color: #fff;
-  background: #27644e;
+  color: var(--tool-on-accent);
+  background: var(--tool-accent);
   cursor: pointer;
 }
 
 button:hover:not(:disabled) {
-  background: #194b38;
+  background: var(--tool-accent-hover);
 }
 
 #play-pause[aria-pressed="true"] {
@@ -631,11 +560,11 @@ button:hover:not(:disabled) {
 button.secondary-button {
   border-color: #565347;
   color: #252822;
-  background: #fff;
+  background: var(--site-surface);
 }
 
 button.secondary-button:hover:not(:disabled) {
-  background: #e9e5da;
+  background: var(--site-hover);
 }
 
 button:disabled,
@@ -666,9 +595,9 @@ button.secondary-button:disabled {
 .format-example {
   overflow-x: auto;
   padding: 0.75rem;
-  border: 1px solid #d2cdbd;
+  border: 1px solid var(--site-divider);
   border-radius: 0.4rem;
-  background: #f8f6ef;
+  background: var(--site-subtle-surface);
 }
 
 .sound-test-group + .sound-test-group {
@@ -692,8 +621,8 @@ button.secondary-button:disabled {
 .preset-notice {
   margin-top: 1.25rem;
   padding: 1rem;
-  border-top: 1px solid #a9a38f;
-  color: #4a4a43;
+  border-top: 1px solid var(--site-panel-border);
+  color: var(--site-muted);
 }
 
 .preset-notice h2 {
@@ -737,16 +666,9 @@ code {
   }
 }
 
-@media (max-width: 30rem) {
-  .page-title-row h1 {
-    font-size: clamp(1.25rem, 6vw, 1.75rem);
-    white-space: nowrap;
-  }
-}
-
 @media (max-width: 22rem) {
-  main {
-    width: min(100% - 1rem, 46rem);
+  :root {
+    --site-gutter: 1rem;
   }
 
   .practice-options-grid {

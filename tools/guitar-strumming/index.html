@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="en-AU" data-i18n-title="guitar.title">
+<html lang="en-AU" data-domain="guitar" data-i18n-title="guitar.title">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Create looping guitar strumming backing tracks from plain text." data-i18n-content="guitar.description" />
   <title>Guitar Strum Machine</title>
-  <link rel="stylesheet" href="./styles.css?v=e60628ffb7b9" />
-  <script src="../../assets/i18n.js?v=65442fcfa811" defer></script>
+  <link rel="icon" href="../../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../assets/site-shell.css?v=1f9de388ed2d" />
+  <link rel="stylesheet" href="./styles.css?v=8b8d16700dec" />
+  <script src="../../assets/i18n.js?v=e6ae9c003e77" defer></script>
   <script src="./i18n.js?v=134a7e7f2f8f" defer></script>
   <script src="./domain/chord-catalog.js?v=ae75bf58483e" defer></script>
   <script src="./domain/harmony.js?v=954aa42a57b9" defer></script>
@@ -22,15 +24,22 @@
   <script src="./app.js?v=1dee9e8a2be6" defer></script>
   </head>
 <body>
-  <main>
+  <header class="site-header">
     <div class="page-title-row">
-      <h1 data-i18n="guitar.title">Guitar Strum Machine</h1>
+      <div class="page-title-group">
+        <a class="site-mark" href="../../" data-i18n-aria-label="common.toolsHome">
+          <img src="../../assets/favicon.svg?v=fd8de8ff0d96" alt="" />
+        </a>
+        <h1 data-i18n="guitar.title">Guitar Strum Machine</h1>
+      </div>
       <div class="language-switcher" role="group" data-i18n-aria-label="common.language">
         <button type="button" data-language="en-AU" data-i18n-aria-label="common.useEnglish">EN</button>
         <button type="button" data-language="zh-Hans" data-i18n-aria-label="common.useChinese">中文</button>
       </div>
     </div>
+  </header>
 
+  <main class="site-main">
     <section class="practice-workspace" aria-labelledby="practice-heading">
       <h2 id="practice-heading" class="visually-hidden" data-i18n="guitar.practice">Practice</h2>
       <div class="preset-control">
@@ -299,14 +308,22 @@ chords:
       </div>
     </details>
 
-    <footer class="preset-notice" aria-labelledby="preset-notice-heading">
+    <aside class="preset-notice" aria-labelledby="preset-notice-heading">
       <h2 id="preset-notice-heading" data-i18n="guitar.noticeHeading">Song exercise notice</h2>
       <p data-i18n="guitar.noticeText">
         Song exercises are unofficial user transcriptions for teaching.
         They contain chord and rhythm data. They do not include lyrics, melody notation, audio, or artwork.
         The catalog does not claim approval by or affiliation with a rights holder.
       </p>
-    </footer>
+    </aside>
   </main>
+
+  <footer class="site-footer">
+    <a class="site-footer-home" href="../../">
+      <img src="../../assets/favicon.svg?v=fd8de8ff0d96" alt="" />
+      <span data-i18n="common.toolsHome">Tools home</span>
+    </a>
+    <p data-i18n="common.browserLocal">These tools run in your browser.</p>
+  </footer>
 </body>
 </html>

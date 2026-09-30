@@ -91,15 +91,28 @@ test('versioned interface assets use their current content hash', () => {
   const pages = [
     {
       file: path.join(repositoryRoot, 'index.html'),
-      references: ['./assets/site.css', './assets/i18n.js'],
+      references: [
+        './assets/favicon.svg',
+        './assets/site-shell.css',
+        './assets/site.css',
+        './assets/i18n.js',
+      ],
     },
     {
       file: path.join(repositoryRoot, 'tools', 'csv2aba-v2', 'index.html'),
-      references: ['../../assets/site.css', '../../assets/i18n.js'],
+      references: [
+        '../../assets/favicon.svg',
+        '../../assets/site-shell.css',
+        '../../assets/site.css',
+        '../../assets/i18n.js',
+        './styles.css',
+      ],
     },
     {
       file: path.join(repositoryRoot, 'tools', 'guitar-strumming', 'index.html'),
       references: [
+        '../../assets/favicon.svg',
+        '../../assets/site-shell.css',
         './styles.css',
         '../../assets/i18n.js',
         './i18n.js',
@@ -136,7 +149,7 @@ test('versioned interface assets use their current content hash', () => {
   }
 });
 
-test('bilingual pages use the compact title-row language control', () => {
+test('maintained bilingual pages use the shared site shell', () => {
   const pages = [
     path.join(repositoryRoot, 'index.html'),
     path.join(repositoryRoot, 'tools', 'csv2aba-v2', 'index.html'),
@@ -144,12 +157,52 @@ test('bilingual pages use the compact title-row language control', () => {
   ];
   for (const htmlFile of pages) {
     const html = fs.readFileSync(htmlFile, 'utf8');
+    assert.match(html, /<header class="site-header">/);
+    assert.match(html, /<main class="site-main">/);
+    assert.match(html, /<footer class="site-footer">/);
     assert.match(html, /class="page-title-row"/);
+    assert.match(html, /class="page-title-group"/);
+    assert.match(html, /class="site-mark"/);
+    assert.match(html, /class="site-footer-home"/);
+    assert.match(html, /data-i18n="common\.browserLocal"/);
+    assert.match(html, /assets\/site-shell\.css\?v=[a-f0-9]{12}/);
+    assert.match(html, /assets\/favicon\.svg\?v=[a-f0-9]{12}/);
     assert.match(html, /data-language="en-AU"[^>]*>EN<\/button>/);
     assert.match(html, /data-language="zh-Hans"[^>]*>中文<\/button>/);
     assert.match(html, /data-i18n-aria-label="common\.useEnglish"/);
     assert.match(html, /data-i18n-aria-label="common\.useChinese"/);
   }
+});
+
+test('the shared shell uses warm neutral tokens and domain accent tokens', () => {
+  const shellCss = fs.readFileSync(path.join(repositoryRoot, 'assets', 'site-shell.css'), 'utf8');
+  const homeHtml = fs.readFileSync(path.join(repositoryRoot, 'index.html'), 'utf8');
+  const guitarHtml = fs.readFileSync(
+    path.join(repositoryRoot, 'tools', 'guitar-strumming', 'index.html'),
+    'utf8',
+  );
+  const guitarCss = fs.readFileSync(
+    path.join(repositoryRoot, 'tools', 'guitar-strumming', 'styles.css'),
+    'utf8',
+  );
+
+  assert.match(shellCss, /--site-background:\s*#f4f1e8/);
+  assert.match(shellCss, /--site-panel-background:\s*#fffdf7/);
+  assert.match(shellCss, /--site-inset-surface:\s*#f2f0e9/);
+  assert.match(shellCss, /--site-subtle-surface:\s*#f8f6ef/);
+  assert.match(
+    shellCss,
+    /\.language-switcher button\s*\{[^}]*font-weight:\s*700/s,
+  );
+  assert.match(shellCss, /--tool-accent:\s*#075a9c/);
+  assert.match(
+    shellCss,
+    /\[data-domain="guitar"\]\s*\{[^}]*--tool-accent:\s*#27644e/s,
+  );
+  assert.match(homeHtml, /class="panel tool-card" data-domain="guitar"/);
+  assert.match(guitarHtml, /<html[^>]*data-domain="guitar"/);
+  assert.doesNotMatch(guitarCss, /--tool-accent:/);
+  assert.doesNotMatch(guitarCss, /--site-background:/);
 });
 
 test('English and Simplified Chinese translation keys match', () => {

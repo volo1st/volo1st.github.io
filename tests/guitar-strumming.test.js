@@ -1855,14 +1855,18 @@ test('the page contains the mobile practice interface and valid sound-test token
     path.join(__dirname, '..', 'tools', 'guitar-strumming', 'styles.css'),
     'utf8',
   );
-  assert.match(css, /\.language-switcher button\[aria-pressed="false"\]:hover/);
-  assert.doesNotMatch(css, /\.language-switcher button:hover:not\(:disabled\)/);
-  assert.match(css, /button,\s*select,\s*summary,\s*a\s*\{[^}]*touch-action:\s*manipulation/s);
+  const shellCss = fs.readFileSync(
+    path.join(__dirname, '..', 'assets', 'site-shell.css'),
+    'utf8',
+  );
+  assert.match(shellCss, /\.language-switcher button\[aria-pressed="false"\]:hover/);
+  assert.doesNotMatch(`${shellCss}\n${css}`, /\.language-switcher button:hover:not\(:disabled\)/);
+  assert.match(shellCss, /button,\s*select,\s*summary,\s*a\s*\{[^}]*touch-action:\s*manipulation/s);
   assert.doesNotMatch(html, /user-scalable\s*=\s*no|maximum-scale\s*=\s*1/i);
   assert.match(css, /\.tempo-ramp-fields\s*\{[^}]*grid-template-columns/s);
   assert.match(css, /\.practice-options-grid,[\s\S]*grid-template-columns:\s*repeat\(2/);
   assert.match(css, /#play-pause\[aria-pressed="true"\]/);
-  assert.match(css, /\.language-switcher button\[aria-pressed="true"\]/);
+  assert.match(shellCss, /\.language-switcher button\[aria-pressed="true"\]/);
   assert.match(css, /\.chord-guide-scroll\s*\{[^}]*overflow-x:\s*auto/s);
   assert.match(css, /\.chord-guide-scroll\s*\{[^}]*scroll-snap-type:\s*x mandatory/s);
   assert.match(css, /\.chord-bar-card\s*\{[^}]*scroll-snap-align:\s*start/s);

@@ -33,7 +33,7 @@ details {
 summary {
   width: fit-content;
   cursor: pointer;
-  color: #075a9c;
+  color: var(--tool-accent);
   font-weight: 700;
 }
 
@@ -56,13 +56,13 @@ caption {
 
 th,
 td {
-  border: 1px solid #c8d1d9;
+  border: 1px solid var(--site-panel-border);
   padding: 8px 10px;
   text-align: left;
 }
 
 th {
-  background: #edf2f5;
+  background: var(--site-hover);
 }
 
 .step-heading,
@@ -88,8 +88,8 @@ th {
   height: 34px;
   place-items: center;
   border-radius: 50%;
-  color: #ffffff;
-  background: #075a9c;
+  color: var(--tool-on-accent);
+  background: var(--tool-accent);
   font-weight: 800;
 }
 
@@ -113,7 +113,7 @@ textarea {
   width: 100%;
   min-height: 180px;
   resize: vertical;
-  border: 1px solid #8796a5;
+  border: 2px solid var(--site-control-border);
   border-radius: 6px;
   padding: 12px;
   font-family:
@@ -124,12 +124,12 @@ textarea {
 }
 
 textarea[readonly] {
-  background: #f7f9fa;
+  background: var(--site-subtle-surface);
 }
 
 .field-help {
   margin: 7px 0 0;
-  color: #536270;
+  color: var(--site-muted-soft);
   font-size: 0.92rem;
 }
 
@@ -138,7 +138,7 @@ textarea[readonly] {
   align-items: center;
   gap: 12px;
   margin-block: 18px;
-  color: #536270;
+  color: var(--site-muted-soft);
   font-weight: 700;
 }
 
@@ -146,7 +146,7 @@ textarea[readonly] {
 .choice-divider::after {
   content: "";
   flex: 1;
-  border-top: 1px solid #c8d1d9;
+  border-top: 1px solid var(--site-divider);
 }
 
 .primary-action {
@@ -217,7 +217,7 @@ textarea[readonly] {
 
 .download-step {
   margin-top: 28px;
-  border-top: 1px solid #d4dce2;
+  border-top: 1px solid var(--site-divider);
   padding-top: 24px;
 }
 

@@ -252,6 +252,13 @@ The CSV-to-ABA trial can continue in parallel because its external operator step
 | 17 September 2026 | Defer the text sorter redesign. | The text sorter has low current use. Higher-value website foundation work takes priority. |
 | 30 September 2026 | Remove the text sorter. | The tool does not have enough current value to justify redesign and maintenance. Git history keeps the former source recoverable. |
 | 21 September 2026 | Do not plan a general technology blog. | A recurring blog does not have enough expected value for the intended audience or the owner's current goals. Publish only specific material with a clear audience and purpose. |
+| 30 September 2026 | Use one semantic site shell with per-tool accent token sets. | Shared HTML structure and class names make maintained pages identifiable as one site. A tool card uses the accent of its destination. Separate accent tokens preserve each tool's subject identity and permit later theme work. CSV-to-ABA version 1 remains unchanged. |
+| 30 September 2026 | Use an original pixel-art `V` block as the site icon. | The icon gives the site a playful identity without copying Nintendo artwork. |
+
+### Site identity verification
+
+- On 1 October 2026, the owner approved the shared warm theme, site shell, icon, and domain accents in the local preview.
+- `./scripts/check.sh` passed after the final review. The checks include asset hashes, translation keys, shared shell structure, focus styles, and narrow-screen rules.
 
 ## 11. Current next package
 
