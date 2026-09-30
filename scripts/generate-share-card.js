@@ -147,23 +147,44 @@ fillRect(0, 0, width, height, '#f4f1e8');
 fillRect(65, 58, 1080, 530, '#d2cdbd');
 fillRect(55, 48, 1080, 530, '#fffdf7');
 fillRect(55, 48, 14, 530, '#27644e');
-drawLogo(86, 80, 5);
-drawText('GUITAR STRUM MACHINE', 290, 103, 7, '#173e30');
-fillRect(290, 174, 700, 10, '#27644e');
-drawText('PRACTISE CHORD CHANGES AND', 290, 207, 4, '#4a4a43');
-drawText('STRUMMING PATTERNS.', 290, 246, 4, '#4a4a43');
+
+fillRect(282, 65, 636, 493, '#244c3d');
+fillRect(288, 71, 624, 481, '#fffdf7');
+
+drawText('D', 130, 120, 10, '#3f86a6');
+fillRect(115, 224, 130, 12, '#27644e');
+fillRect(140, 252, 105, 12, '#3f86a6');
+fillRect(165, 280, 80, 12, '#27644e');
+drawText('U', 155, 332, 10, '#3f86a6');
+fillRect(115, 436, 130, 12, '#27644e');
+fillRect(140, 464, 105, 12, '#3f86a6');
+
+drawText('U', 980, 120, 10, '#3f86a6');
+fillRect(955, 224, 130, 12, '#27644e');
+fillRect(955, 252, 105, 12, '#3f86a6');
+fillRect(955, 280, 80, 12, '#27644e');
+drawText('D', 1005, 332, 10, '#3f86a6');
+fillRect(955, 436, 130, 12, '#27644e');
+fillRect(955, 464, 105, 12, '#3f86a6');
+
+drawLogo(320, 78, 3);
+drawText('GUITAR STRUM', 440, 85, 6, '#173e30');
+drawText('MACHINE', 477, 145, 6, '#173e30');
+fillRect(320, 202, 560, 8, '#27644e');
+drawText('PRACTISE CHORD CHANGES', 404, 230, 3, '#4a4a43');
+drawText('AND STRUMMING PATTERNS.', 395, 263, 3, '#4a4a43');
 
 const chordLabels = ['C', 'G', 'AM', 'F'];
 for (let index = 0; index < chordLabels.length; index += 1) {
-  const x = 92 + index * 250;
-  fillRect(x, 322, 220, 104, '#244c3d');
-  fillRect(x + 4, 326, 212, 96, '#edf5f1');
+  const x = 320 + index * 142;
+  fillRect(x, 320, 130, 82, '#244c3d');
+  fillRect(x + 4, 324, 122, 74, '#edf5f1');
   const label = chordLabels[index];
-  drawText(label, x + (220 - label.length * 42 + 7) / 2, 349, 7, '#173e30');
+  drawText(label, x + (130 - label.length * 36 + 6) / 2, 340, 6, '#173e30');
 }
 
-drawText('D - D U - U D U', 92, 463, 6, '#27644e');
-drawText('VOLO1ST.COM', 92, 526, 5, '#5c594e');
+drawText('D - D U - U D U', 348, 432, 5, '#27644e');
+drawText('VOLO1ST.COM', 470, 502, 4, '#5c594e');
 
 const header = Buffer.alloc(13);
 header.writeUInt32BE(width, 0);

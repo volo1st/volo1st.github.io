@@ -254,7 +254,7 @@ The CSV-to-ABA trial can continue in parallel because its external operator step
 | 21 September 2026 | Do not plan a general technology blog. | A recurring blog does not have enough expected value for the intended audience or the owner's current goals. Publish only specific material with a clear audience and purpose. |
 | 30 September 2026 | Use one semantic site shell with per-tool accent token sets. | Shared HTML structure and class names make maintained pages identifiable as one site. A tool card uses the accent of its destination. Separate accent tokens preserve each tool's subject identity and permit later theme work. CSV-to-ABA version 1 remains unchanged. |
 | 30 September 2026 | Use an original pixel-art `V` block as the site icon. | The icon gives the site a playful identity without copying Nintendo artwork. |
-| 1 October 2026 | Add a generic Open Graph preview to Guitar Strum Machine without a fixed Open Graph URL. | A static preview can improve link presentation without a proprietary SDK or server. Omitting a fixed URL prevents the metadata from replacing an arrangement query. Clients can ignore the metadata without changing current sharing behavior. |
+| 1 October 2026 | Add a generic Open Graph preview to Guitar Strum Machine without a fixed Open Graph URL. Keep essential image content inside the central square-safe area. | A static preview can improve link presentation without a proprietary SDK or server. A landscape image works in WhatsApp, while the central safe area supports WeChat's square crop. Omitting a fixed URL prevents the metadata from replacing an arrangement query. Clients can ignore the metadata without changing current sharing behavior. |
 
 ### Site identity verification
 
@@ -265,7 +265,10 @@ The CSV-to-ABA trial can continue in parallel because its external operator step
 
 - On 1 October 2026, the owner approved the retro pixel preview image in the local preview.
 - The automated check verifies the metadata, image hash, Portable Network Graphics format, and 1200 by 630 pixel dimensions.
-- WeChat verification needs the public deployment. The local network address is not available to an external preview service.
+- The public image and metadata were available after deployment.
+- Safari sharing produced a WeChat card with the Open Graph title and description. WeChat cropped the landscape image to a square.
+- WhatsApp displayed the landscape card correctly.
+- Sharing from the WeChat browser produced a plain link. This fallback is accepted because the site does not use the WeChat software development kit.
 
 ## 11. Current next package
 
