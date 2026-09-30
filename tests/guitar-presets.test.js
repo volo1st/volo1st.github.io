@@ -6,13 +6,13 @@ const path = require('node:path');
 const test = require('node:test');
 const vm = require('node:vm');
 
-const chordCatalog = require('../tools/guitar-strumming/catalog.js');
-const core = require('../tools/guitar-strumming/core.js');
+const chordCatalog = require('../tools/guitar-strumming/domain/chord-catalog.js');
+const core = require('../tools/guitar-strumming/domain/core.js');
 const guitarI18n = require('../tools/guitar-strumming/i18n.js');
-const parser = require('../tools/guitar-strumming/parser.js');
-const presetData = require('../tools/guitar-strumming/preset-data.js');
-const presets = require('../tools/guitar-strumming/preset-catalog.js');
-const share = require('../tools/guitar-strumming/share.js');
+const parser = require('../tools/guitar-strumming/domain/parser.js');
+const presetData = require('../tools/guitar-strumming/presets/data.js');
+const presets = require('../tools/guitar-strumming/presets/catalog.js');
+const share = require('../tools/guitar-strumming/browser/share.js');
 
 function expectCode(code) {
   return (error) => {
@@ -33,21 +33,21 @@ test('preset data is immutable and separate from catalog logic', () => {
   assert.notEqual(presetData.exerciseProfiles[0], presets.listExerciseProfiles()[0]);
 
   const dataSource = fs.readFileSync(
-    path.join(__dirname, '..', 'tools', 'guitar-strumming', 'preset-data.js'),
+    path.join(__dirname, '..', 'tools', 'guitar-strumming', 'presets', 'data.js'),
     'utf8',
   );
   const catalogSource = fs.readFileSync(
-    path.join(__dirname, '..', 'tools', 'guitar-strumming', 'preset-catalog.js'),
+    path.join(__dirname, '..', 'tools', 'guitar-strumming', 'presets', 'catalog.js'),
     'utf8',
   );
   assert.doesNotMatch(dataSource, /parseSongSource|normalizeSong|createPresetUrl|searchParams/);
-  assert.match(catalogSource, /require\('\.\/preset-data\.js'\)/);
+  assert.match(catalogSource, /require\('\.\/data\.js'\)/);
   assert.doesNotMatch(catalogSource, /Get Lucky|Viva La Vida|\| C \| G \| Am \| F \|/);
 });
 
 test('preset catalog fails clearly when raw data is missing or malformed', () => {
   const catalogSource = fs.readFileSync(
-    path.join(__dirname, '..', 'tools', 'guitar-strumming', 'preset-catalog.js'),
+    path.join(__dirname, '..', 'tools', 'guitar-strumming', 'presets', 'catalog.js'),
     'utf8',
   );
   assert.throws(
@@ -377,8 +377,8 @@ test('the page loads the preset catalog before the application', () => {
     path.join(__dirname, '..', 'tools', 'guitar-strumming', 'index.html'),
     'utf8',
   );
-  assert.ok(html.indexOf('src="./preset-data.js?') < html.indexOf('src="./preset-catalog.js?'));
-  assert.ok(html.indexOf('src="./preset-catalog.js?') < html.indexOf('src="./app.js?'));
+  assert.ok(html.indexOf('src="./presets/data.js?') < html.indexOf('src="./presets/catalog.js?'));
+  assert.ok(html.indexOf('src="./presets/catalog.js?') < html.indexOf('src="./app.js?'));
   assert.match(html, /id="song-preset"/);
   assert.match(html, /id="preset-notice-heading"/);
   assert.ok(html.indexOf('id="preset-notice-heading"') > html.indexOf('id="strum-sound-test"'));

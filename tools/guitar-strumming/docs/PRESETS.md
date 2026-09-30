@@ -10,25 +10,25 @@ Keep the textarea as the single source of truth after a preset loads.
 
 ## Catalog Design
 
-Store declarative catalog input in `preset-data.js`.
+Store declarative catalog input in `presets/data.js`.
 
-Keep parsing, validation, materialisation, indexing, identity matching, and URL behavior in `preset-catalog.js`.
+Keep parsing, validation, materialisation, indexing, identity matching, and URL behavior in `presets/catalog.js`.
 
-Load `preset-data.js` before `preset-catalog.js`.
+Load `presets/data.js` before `presets/catalog.js`.
 
 Use this dependency direction:
 
 ```text
-preset-data.js
+presets/data.js
        ↓
-preset-catalog.js ← parser, chord catalog, core
+presets/catalog.js ← domain/parser.js, domain/chord-catalog.js, domain/core.js
        ↓
      app.js
 ```
 
-`preset-data.js` must not parse songs, validate entries, create URLs, use browser state, or expose catalog query functions.
+`presets/data.js` must not parse songs, validate entries, create URLs, use browser state, or expose catalog query functions.
 
-`preset-catalog.js` must copy, validate, and freeze the data before it exposes the catalog.
+`presets/catalog.js` must copy, validate, and freeze the data before it exposes the catalog.
 
 `app.js` must use only the catalog API. It must not access the raw preset data.
 
@@ -178,7 +178,7 @@ Manually test:
 Status: Data separation is implemented and verified.
 
 - [x] Raw preset data is separate from catalog logic.
-  Evidence: `preset-data.js` contains immutable declarative input. `preset-catalog.js` copies, validates, materialises, freezes, and indexes that input. The full repository check passed on 2026-09-30.
+  Evidence: `presets/data.js` contains immutable declarative input. `presets/catalog.js` copies, validates, materialises, freezes, and indexes that input. The full repository check passed on 2026-09-30.
 - [x] Preset browser behavior is unchanged after data separation.
   Evidence: The NAS preview loaded the separated data and catalog scripts, created the catalog, and started playback on 2026-09-30. Automated tests covered all preset sources, exercise identity after practice-setting changes, and short and complete share-link selection. Detailed multi-preset and manual link-parameter checks were not separately recorded.
 

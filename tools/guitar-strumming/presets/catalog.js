@@ -1,15 +1,15 @@
 (function initializePresetCatalog(root, factory) {
   const presetData = typeof module === 'object' && module.exports
-    ? require('./preset-data.js')
+    ? require('./data.js')
     : root && root.GuitarStrummingPresetData;
   const parser = typeof module === 'object' && module.exports
-    ? require('./parser.js')
+    ? require('../domain/parser.js')
     : root && root.GuitarStrummingParser;
   const chordCatalog = typeof module === 'object' && module.exports
-    ? require('./catalog.js')
+    ? require('../domain/chord-catalog.js')
     : root && root.GuitarChordCatalog;
   const core = typeof module === 'object' && module.exports
-    ? require('./core.js')
+    ? require('../domain/core.js')
     : root && root.GuitarStrummingCore;
   const api = factory(root, presetData, parser, chordCatalog, core);
   if (typeof module === 'object' && module.exports) {

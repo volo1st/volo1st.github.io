@@ -5,16 +5,16 @@ const fs = require('node:fs');
 const path = require('node:path');
 const test = require('node:test');
 
-const catalog = require('../tools/guitar-strumming/catalog.js');
-const core = require('../tools/guitar-strumming/core.js');
-const harmony = require('../tools/guitar-strumming/harmony.js');
-const parser = require('../tools/guitar-strumming/parser.js');
-const presentation = require('../tools/guitar-strumming/presentation.js');
-const notifications = require('../tools/guitar-strumming/notifications.js');
-const screenWakeLock = require('../tools/guitar-strumming/screen-wake-lock.js');
+const catalog = require('../tools/guitar-strumming/domain/chord-catalog.js');
+const core = require('../tools/guitar-strumming/domain/core.js');
+const harmony = require('../tools/guitar-strumming/domain/harmony.js');
+const parser = require('../tools/guitar-strumming/domain/parser.js');
+const presentation = require('../tools/guitar-strumming/ui/presentation.js');
+const notifications = require('../tools/guitar-strumming/ui/notifications.js');
+const screenWakeLock = require('../tools/guitar-strumming/browser/screen-wake-lock.js');
 const siteI18n = require('../assets/i18n.js');
 const guitarI18n = require('../tools/guitar-strumming/i18n.js');
-require('../tools/guitar-strumming/audio-engine.js');
+require('../tools/guitar-strumming/browser/audio-engine.js');
 
 const audioApi = globalThis.GuitarStrummingAudio;
 
@@ -1832,10 +1832,10 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(html, /id="playing-key"/);
   assert.match(html, /id="guitar-configuration"/);
   assert.match(html, /id="return-original-key"/);
-  assert.ok(html.indexOf('src="./harmony.js') < html.indexOf('src="./parser.js'));
-  assert.ok(html.indexOf('src="./presentation.js') < html.indexOf('src="./app.js'));
-  assert.ok(html.indexOf('src="./notifications.js') < html.indexOf('src="./app.js'));
-  assert.ok(html.indexOf('src="./screen-wake-lock.js') < html.indexOf('src="./app.js'));
+  assert.ok(html.indexOf('src="./domain/harmony.js') < html.indexOf('src="./domain/parser.js'));
+  assert.ok(html.indexOf('src="./ui/presentation.js') < html.indexOf('src="./app.js'));
+  assert.ok(html.indexOf('src="./ui/notifications.js') < html.indexOf('src="./app.js'));
+  assert.ok(html.indexOf('src="./browser/screen-wake-lock.js') < html.indexOf('src="./app.js'));
   assert.match(html, /id="swing-feel"/);
   assert.match(html, /for="swing-feel"/);
   assert.match(html, /Use swing: off for straight timing/);
