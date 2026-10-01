@@ -162,7 +162,8 @@ test('the public section indexes provide useful destinations', () => {
     );
     assert.doesNotMatch(html, /<h1\b/);
     assert.match(html, new RegExp(`<span aria-current="page">${section.heading}<\\/span>`));
-    assert.match(html, /class="section-summary">[^<]+<\/span>/);
+    assert.match(html, /class="breadcrumb-summary">[^<]+<\/span>/);
+    assert.match(html, /class="site-breadcrumb"/);
     assert.match(html, /<p class="section-status">More when there’s something worth showing\.<\/p>/);
     assert.doesNotMatch(html, /class="section-intro"/);
     assert.match(html, /href="\.\.\/">volo1st<\/a>/);
@@ -382,11 +383,14 @@ test('maintained bilingual pages use the shared site shell', () => {
     const html = fs.readFileSync(htmlFile, 'utf8');
     assert.match(html, /<header class="site-header">/);
     assert.match(html, /<main class="site-main(?: [^"]*)?">/);
-    assert.match(html, /<footer class="site-footer">/);
-    assert.match(html, /class="page-title-row"/);
-    assert.match(html, /class="page-title-group"/);
-    assert.match(html, /class="site-mark"/);
-    assert.match(html, /class="site-footer-home"/);
+    assert.match(html, /class="site-context-row"/);
+    assert.match(html, /class="site-breadcrumb"/);
+    assert.match(html, /class="site-breadcrumb" aria-label="Breadcrumb"/);
+    assert.doesNotMatch(html.match(/<nav class="site-breadcrumb"[\s\S]*?<\/nav>/)[0], /data-i18n/);
+    assert.match(html, /href="(?:\.\.\/)+">volo1st<\/a>/);
+    assert.doesNotMatch(html, /<footer\b/);
+    assert.doesNotMatch(html, /class="(?:page-title|site-mark|site-footer)/);
+    assert.doesNotMatch(html, /<h1\b/);
     assert.doesNotMatch(html, /common\.browserLocal|home\.subtitle/);
     assert.match(html, /assets\/site-shell\.css\?v=[a-f0-9]{12}/);
     assert.match(html, /assets\/favicon\.svg\?v=[a-f0-9]{12}/);
@@ -417,7 +421,15 @@ test('the shared shell uses warm neutral tokens and domain accent tokens', () =>
   assert.match(shellCss, /--site-focus:\s*#9b5c00/);
   assert.match(
     shellCss,
-    /\.language-switcher button\s*\{[^}]*font-weight:\s*700/s,
+    /\.language-switcher button\s*\{[^}]*font-weight:\s*600/s,
+  );
+  assert.match(
+    shellCss,
+    /\.language-switcher button\[aria-pressed="true"\]\s*\{[^}]*text-decoration:\s*underline/s,
+  );
+  assert.match(
+    shellCss,
+    /\.language-switcher button:focus-visible\s*\{[^}]*background:\s*var\(--site-text\)/s,
   );
   assert.match(shellCss, /--tool-accent:\s*#075a9c/);
   assert.match(

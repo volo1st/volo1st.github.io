@@ -1,35 +1,13 @@
 :root {
-  --section-display-font: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
   --section-link: #3f3a31;
   --section-link-hover: #171512;
 }
 
-.section-header {
-  padding-top: clamp(1.5rem, 6vw, 3rem);
-}
-
-.section-breadcrumb {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  align-items: baseline;
-  color: var(--site-muted);
-  font-family: var(--section-display-font);
-  font-size: 1rem;
-}
-
-.section-summary {
-  color: var(--site-muted-soft);
-  font-size: 0.95rem;
-}
-
-.section-breadcrumb a,
 .section-links a {
   color: var(--section-link);
   text-underline-offset: 0.18em;
 }
 
-.section-breadcrumb a:hover,
 .section-links a:hover {
   color: var(--section-link-hover);
 }
@@ -54,7 +32,7 @@
   gap: 0.65rem 1.4rem;
   margin: 0;
   padding: 0;
-  font-family: var(--section-display-font);
+  font-family: var(--site-display-font);
   font-size: 1.15rem;
   list-style: none;
 }
@@ -62,22 +40,7 @@
 .section-status {
   margin: 1.5rem 0 0;
   color: var(--site-muted-soft);
-  font-family: var(--section-display-font);
+  font-family: var(--site-display-font);
   font-size: 0.85rem;
   line-height: 1.4;
-}
-
-@media (max-width: 560px) {
-  .section-breadcrumb {
-    row-gap: 0.2rem;
-  }
-
-  .section-summary-separator {
-    display: none;
-  }
-
-  .section-summary {
-    flex-basis: 100%;
-    line-height: 1.4;
-  }
 }

@@ -32,7 +32,7 @@ Status verified on 2 October 2026.
 - The public-homepage source content and privacy boundary are approved.
 - The owner approved the public homepage and section indexes for release.
 - The CSV-to-ABA workflow validation waits for one normal Commonwealth Bank of Australia (CBA) payment run.
-- No implementation package is active after the public-homepage build.
+- No implementation package is active after the shared tool-header refinement.
 
 ## 4. Product direction and boundaries
 
@@ -212,7 +212,7 @@ Use this content order:
 
 Replace the tools-only root page with the personal homepage. Move the current directory purpose to `/tools/`. Keep all existing tool addresses unchanged.
 
-The homepage uses English only. Humorous and personal text does not translate literally with the intended voice. The tools directory and maintained tools use English and Simplified Chinese. Keep the tool translation key sets identical. Keep the compact language control on bilingual tool pages.
+The homepage uses English only. Humorous and personal text does not translate literally with the intended voice. The tools directory and maintained tools use English and Simplified Chinese. Keep the tool translation key sets identical. Put the compact language control at the right side of the shared breadcrumb on bilingual tool pages.
 
 The homepage does not link to itself, the complete tools directory, or an individual tool. It links to the Code, Sound, and Music section indexes. External profile links open in a new tab.
 
@@ -246,6 +246,12 @@ Completion gate: Approved source content exists for the first public homepage. T
 - [x] Add automated internal-link and translation-key checks.
 - [x] Check maintained tool layouts on narrow screens and at 200 percent zoom.
 - [x] Add short descriptions and links for each current tool.
+
+Use one quiet breadcrumb header on public section indexes and maintained tool pages. On the tools index, include the short summary in the breadcrumb. Put the summary on its own line on a narrow screen. On an individual tool page, link both `volo1st` and `Tools` in the breadcrumb. Do not repeat the site icon, a large page title, or footer navigation on these pages. Keep each tool's main interface and domain accent unchanged.
+
+Keep breadcrumb text in English. Do not translate it with the tool interface.
+
+Show `EN` and `中文` as plain text controls at the right side of the breadcrumb. Use a subtle underline and darker text for the selected language. Use reversed colors for keyboard focus. Do not put the language control in a bordered container.
 
 ### 8.2 Public-site design
 
@@ -496,9 +502,11 @@ Waiting work is not a blocker for unrelated tool maintenance.
 | 1 October 2026 | Use the introduction as navigation to Code, Sound, and Music. | Linked words avoid another navigation row and give the introduction a second function. Games remain a design influence until they have useful public content. |
 | 2 October 2026 | Replace homepage social text with one monochrome icon strip. | The icons reduce visual density. One separator preserves the personal and studio grouping without visible labels. Precise link names distinguish repeated services. |
 | 2 October 2026 | Mark sparse section indexes with “More when there’s something worth showing.” | The line sets expectations without an under-construction notice or placeholder content. |
+| 2 October 2026 | Name the directory “Tools” and use the shared breadcrumb shell on maintained tool pages. | The shorter name fits the public-site voice. Breadcrumb links provide sufficient navigation, so a repeated logo, large title, and footer add unnecessary visual weight. |
 
 ## 16. Verified completion evidence
 
+- On 2 October 2026, the owner approved the shared breadcrumb, English-only breadcrumb text, simplified language control, and footer removal on the maintained tool pages.
 - On 1 October 2026, the privacy review checked all 58 tracked files. It found no email address. It replaced realistic payment-like test identifiers and one person-like parser example with explicit invented values. The regenerated ABA fixture contains four 120-character records and approved invented labels only.
 - On 14 September 2026, the owner verified the current converter in Chrome on a MacBook Air and Safari on an iPhone 16 Pro. The owner also verified the page at 200 percent zoom.
 - On 29 September 2026, Guitar Strum Machine playback, sharing, presets, practice controls, responsive layout, and language behavior passed owner testing on the supported clients.
