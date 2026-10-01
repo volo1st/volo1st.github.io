@@ -78,13 +78,48 @@ test('HTML IDs are unique and label references resolve', () => {
 
 test('the home page links to each available tool', () => {
   const html = fs.readFileSync(path.join(repositoryRoot, 'index.html'), 'utf8');
+  const converterCard = html.match(
+    /<article class="panel tool-card">([\s\S]*?home\.converterTitle[\s\S]*?)<\/article>/,
+  )[1];
 
-  assert.match(html, /href="\.\/tools\/csv2aba\/"/);
   assert.match(html, /href="\.\/tools\/csv2aba-v2\/"/);
   assert.match(html, /href="\.\/tools\/guitar-strumming\/"/);
+  assert.doesNotMatch(html, /href="\.\/tools\/csv2aba\/"/);
   assert.doesNotMatch(html, /tools\/song_order/);
-  assert.match(html, />Trial</);
+  assert.doesNotMatch(html, />Trial</);
+  assert.equal([...converterCard.matchAll(/class="button-link"/g)].length, 1);
+  assert.doesNotMatch(converterCard, /trial-link|badge/);
   assert.match(html, /href="\.\/assets\/site\.css\?v=[a-f0-9]{12}"/);
+});
+
+test('the former converter address redirects to version 2 and preserves the legacy fallback', () => {
+  const redirectHtml = fs.readFileSync(
+    path.join(repositoryRoot, 'tools', 'csv2aba', 'index.html'),
+    'utf8',
+  );
+  const currentHtml = fs.readFileSync(
+    path.join(repositoryRoot, 'tools', 'csv2aba-v2', 'index.html'),
+    'utf8',
+  );
+  const legacyHashes = {
+    'index.html': '3e5018629ea7f5790cda743200aca51d0bb7dcfd02fe8ffe04e4b1387c587222',
+    'scripts.js': '867cc50dfaca36e8d5e61d894e63ce1045901e04e698decc3daa0b48c903cc32',
+    'styles.css': 'f63735c377e63f1819197fdb9fd6db34f96b73fd50b7e32888aafc27dfd50964',
+  };
+
+  assert.match(redirectHtml, /http-equiv="refresh" content="0; url=\.\.\/csv2aba-v2\/"/);
+  assert.match(redirectHtml, /href="\.\.\/csv2aba-v2\/"/);
+  assert.match(currentHtml, /href="\.\.\/csv2aba-legacy\/"/);
+  assert.match(currentHtml, /data-i18n="v2\.safetyHeading"/);
+  assert.doesNotMatch(currentHtml, /[Tt]rial|v2\.version/);
+
+  for (const [filename, expectedHash] of Object.entries(legacyHashes)) {
+    const content = fs.readFileSync(
+      path.join(repositoryRoot, 'tools', 'csv2aba-legacy', filename),
+    );
+    const actualHash = crypto.createHash('sha256').update(content).digest('hex');
+    assert.equal(actualHash, expectedHash, `${filename} changed during the legacy move`);
+  }
 });
 
 test('versioned interface assets use their current content hash', () => {

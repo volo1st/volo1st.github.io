@@ -1,20 +1,20 @@
-.trial-notice,
+.safety-notice,
 .intro,
 .step-card {
   margin-bottom: 24px;
 }
 
-.trial-notice {
+.safety-notice {
   border-left: 6px solid #996c00;
   background: #fff8df;
 }
 
-.trial-notice h2 {
+.safety-notice h2 {
   margin-bottom: 8px;
   font-size: 1.15rem;
 }
 
-.trial-notice p,
+.safety-notice p,
 .privacy-note,
 .step-heading p,
 .download-step p {

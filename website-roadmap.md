@@ -255,6 +255,7 @@ The CSV-to-ABA trial can continue in parallel because its external operator step
 | 30 September 2026 | Use one semantic site shell with per-tool accent token sets. | Shared HTML structure and class names make maintained pages identifiable as one site. A tool card uses the accent of its destination. Separate accent tokens preserve each tool's subject identity and permit later theme work. CSV-to-ABA version 1 remains unchanged. |
 | 30 September 2026 | Use an original pixel-art `V` block as the site icon. | The icon gives the site a playful identity without copying Nintendo artwork. |
 | 1 October 2026 | Add a generic Open Graph preview to Guitar Strum Machine without a fixed Open Graph URL. Keep essential image content inside the central square-safe area. | A static preview can improve link presentation without a proprietary SDK or server. A landscape image works in WhatsApp, while the central safe area supports WeChat's square crop. Omitting a fixed URL prevents the metadata from replacing an arrangement query. Clients can ignore the metadata without changing current sharing behavior. |
+| 1 October 2026 | Make CSV-to-ABA version 2 the default as a controlled forced trial. Keep the unchanged former version 1 at `/tools/csv2aba-legacy/`. | Default use will provide operator evidence. CBA file validation and the operator's entry, count, and total review are required controls. A valid file can still contain incorrect payment data, so the legacy converter remains available as a rollback path. |
 
 ### Site identity verification
 
@@ -283,12 +284,12 @@ The package must produce approved source text and links. It must not publish pla
 - The long-term roadmap is documented. Website implementation is paused.
 - No website implementation package is active.
 - The current tools remain deployed and available.
-- The CSV-to-ABA version 2 trial waits for operator use and CBA evidence.
+- The current CSV-to-ABA converter is in a controlled forced trial. It waits for operator use and CBA evidence.
 - The text sorter was removed because it has low current value.
 - The next website package is Phase 1 content preparation.
 - On 21 September 2026, the external task map was synchronized with Todoist.
   The next package is the only actionable website task. Later phases are
-  undated backlog tasks. The CSV-to-ABA operator trial is a separate blocked
+  undated backlog tasks. The CSV-to-ABA controlled trial is a separate blocked
   task. Three superseded planning tasks were closed after their comments and
   completion evidence were reviewed.
 

@@ -8,8 +8,8 @@ See [`website-roadmap.md`](website-roadmap.md) for the product direction and del
 
 ## Tools
 
-- [CSV to ABA Converter version 1](tools/csv2aba/) is the current fallback.
-- [CSV to ABA Converter version 2](tools/csv2aba-v2/) is ready for an operator trial.
+- [CSV to ABA Converter](tools/csv2aba-v2/) is the current converter. The former address redirects to it for a controlled operator trial.
+- [Legacy CSV to ABA Converter](tools/csv2aba-legacy/) is the unchanged fallback.
 - [Guitar Strum Machine](tools/guitar-strumming/) makes a looping guitar backing track from plain-text input. The home page links to this tool.
 
 The home page, version 2 converter, and Guitar Strum Machine support English and Simplified Chinese. The site stores the selected language code in browser local storage. A language change does not change guitar arrangement text, playback state, or share-link data.

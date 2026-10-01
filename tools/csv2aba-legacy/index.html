@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>CSV 2 ABA</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <h1>CSV 2 ABA converter</h1>
+  <hr />
+  <h2>Example csv format</h2>
+<table class="table-centered">
+<thead><tr><th title="Field #1">BSB</th>
+<th title="Field #2">Account</th>
+<th title="Field #3">Name</th>
+<th title="Field #4">Amount</th>
+<th title="Field #5">Reference</th>
+</tr></thead>
+<tbody><tr>
+<td>062-010</td>
+<td align="right">10894862</td>
+<td>XUECHAN SUI</td>
+<td>$63.00 </td>
+<td>teacher fee</td>
+</tr>
+<tr>
+<td>062-443</td>
+<td align="right">13741935</td>
+<td>Jingchong Zhang</td>
+<td>$25.00 </td>
+<td>teacher fee</td>
+</tr>
+<tr>
+<td> </td>
+<td align="right"></td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td> </td>
+<td align="right"></td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+</tbody></table>
+
+  <hr />
+
+  <h2>Convert</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">CSV</th>
+      <th scope="col"></th>
+      <th scope="col">ABA</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+	  <p>
+	      paste content below or upload
+              <input type="file" id="csvFileInput" accept=".csv">
+          </p>
+          <p id="statusMessage"></p>
+          <p id="errorMessage"></p>
+      </td>
+      <td></td>
+      <td>
+          <p>
+	      generated aba content will be displayed below
+	      <button id="downloadAba" disabled="true">Download</button>
+	  </p>
+      </td>
+    </tr>
+    <tr>
+      <td><textarea id="csv" rows="36", cols="60"></textarea></td>
+      <td><button id="convert">Convert</button></td>
+      <td><textarea id="aba" rows="36", cols="120"></textarea></td>
+    </tr>
+  </tbody>
+</table>
+  <script src="./scripts.js"></script>
+</body>
+</html>

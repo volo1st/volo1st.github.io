@@ -42,7 +42,7 @@ The ABA converter has worked with CBA for nearly one year in one monthly payment
 
 The converter always uses `CBA`, `Meya`, and user ID `000000`. It also uses the recipient BSB and account as the trace BSB and account. Trace data usually identifies the source account. The source bank must confirm this rule.
 
-See `generate_descriptive_record()` and `generate_detail_record()` in [`tools/csv2aba/scripts.js`](tools/csv2aba/scripts.js).
+See `generate_descriptive_record()` and `generate_detail_record()` in [`tools/csv2aba-legacy/scripts.js`](tools/csv2aba-legacy/scripts.js).
 
 **Effect:** The fixed data limits the converter to its current process. A change to the source account or bank can make the file incorrect.
 
@@ -60,7 +60,7 @@ Local tests gave these results:
 | `-1.00` | `000000-100` | A minus sign is in an unsigned field. |
 | `1.005` | `0000000100` | The calculation changes the value to 100 cents. |
 
-See `generate_detail_record()` in [`tools/csv2aba/scripts.js`](tools/csv2aba/scripts.js).
+See `generate_detail_record()` in [`tools/csv2aba-legacy/scripts.js`](tools/csv2aba-legacy/scripts.js).
 
 **Effect:** A payment value can be incorrect or invalid.
 
@@ -70,7 +70,7 @@ See `generate_detail_record()` in [`tools/csv2aba/scripts.js`](tools/csv2aba/scr
 
 The reader divides data at each comma and new line. It does not correctly read quoted commas, quoted new lines, or escaped quotation marks. For example, `"Smith, Jane"` moves the remaining values into the wrong columns.
 
-See `parseCsv()` in [`tools/csv2aba/scripts.js`](tools/csv2aba/scripts.js).
+See `parseCsv()` in [`tools/csv2aba-legacy/scripts.js`](tools/csv2aba-legacy/scripts.js).
 
 **Effect:** Valid CSV data can make incorrect payment data.
 
@@ -90,7 +90,7 @@ The converter silently ignores an incomplete row. A long field causes a general 
 
 The Convert button handler does not catch conversion errors. It creates an undeclared `abaContent` variable. It can enable Download after a failure. The missing-column code refers to `statusMessage` outside its valid scope.
 
-See `csv2aba()` and the event handlers in [`tools/csv2aba/scripts.js`](tools/csv2aba/scripts.js).
+See `csv2aba()` and the event handlers in [`tools/csv2aba-legacy/scripts.js`](tools/csv2aba-legacy/scripts.js).
 
 **Effect:** The user can download empty, old, or invalid data.
 
@@ -116,7 +116,7 @@ The repository has no unit tests, browser tests, accessibility tests, or continu
 
 The page uses a wide table and fixed textarea sizes. It does not have viewport metadata. Controls do not have complete labels. Status messages are not live regions. Red and green are the main status signals. The ABA output can be changed before download. The textarea markup also contains an unwanted comma between attributes.
 
-See [`tools/csv2aba/index.html`](tools/csv2aba/index.html) and [`tools/csv2aba/styles.css`](tools/csv2aba/styles.css).
+See [`tools/csv2aba-legacy/index.html`](tools/csv2aba-legacy/index.html) and [`tools/csv2aba-legacy/styles.css`](tools/csv2aba-legacy/styles.css).
 
 **Effect:** The page can be difficult to use on a small screen, with a keyboard, or with assistive software.
 

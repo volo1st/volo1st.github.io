@@ -2,9 +2,9 @@
 
 ## Status
 
-This directory is the trial location for version 2.
+This directory contains the current converter. It is the default during a controlled operator trial.
 
-Version 1 stays at `/tools/csv2aba/`. Do not change version 1 during version 2 development unless a critical fix is necessary.
+The former address at `/tools/csv2aba/` redirects here. The unchanged former version 1 stays at `/tools/csv2aba-legacy/` as a fallback.
 
 Version 2 has independent conversion and interface files. Characterization tests compare its valid output with version 1.
 
@@ -14,22 +14,21 @@ For known valid input, version 2 must make the same payment data as version 1.
 
 Version 2 can change the result for invalid or ambiguous input. It must stop conversion and show a clear error for that input.
 
-## Trial rule
+## Controlled trial rule
 
-Do not add version 2 to the main tools page during the first trial. Give the direct URL to the current operator.
+Use the current converter for the normal payment process.
 
-Before a CBA upload, compare these items with version 1:
+Before a CBA upload, compare these items with the source payment report:
 
 - payment count;
-- total amount;
-- ABA detail records; and
-- file total record.
+- total amount; and
+- payment entries.
 
-Keep version 1 available as the fallback.
+If a result is unexpected, stop the payment process and use the legacy converter for comparison.
 
 The current workflow creates monthly teacher payments for a Sydney music school. CBA has accepted version 1 files from this workflow for nearly one year. This history applies only to this workflow.
 
-Use [`TRIAL-CHECKLIST.md`](TRIAL-CHECKLIST.md) for each version 2 trial.
+Use [`TRIAL-CHECKLIST.md`](TRIAL-CHECKLIST.md) for each controlled trial.
 
 After a successful conversion, version 2 shows the payment count and total amount. Review this summary before download. The summary and download become unavailable after an input change or an error.
 
@@ -45,7 +44,7 @@ Use the language control to change the language. A language change does not clea
 
 The site stores only the selected language code in local browser storage. It does not store CSV or payment data.
 
-Version 1 stays in English during the version 2 trial.
+The legacy converter stays in English during the controlled trial.
 
 The page uses one vertical workflow on large and small screens. Add payment data first. Then check and convert it. Review the payment summary and ABA data before download. After conversion, keyboard focus moves to the result or the error report.
 
@@ -102,4 +101,4 @@ Run this command from the repository root:
 node --test tests/csv2aba-v2.test.js
 ```
 
-The test suite includes an exact golden ABA fixture. The fixture uses invented source and payment data. It also uses a fixed processing date. The ABA content is stored as Base64 to preserve fixed-width spaces and line ends. A separate characterization test checks version 1 compatibility. The fixture is not evidence of CBA approval.
+The test suite includes an exact golden ABA fixture. The fixture uses invented source and payment data. It also uses a fixed processing date. The ABA content is stored as Base64 to preserve fixed-width spaces and line ends. A separate characterization test checks legacy compatibility. The fixture is not evidence of CBA approval.

@@ -9,7 +9,8 @@ These instructions apply to all files in this repository.
 This repository contains Vincent's public website and static browser tools. GitHub Pages hosts the site.
 
 - `index.html` is the current tools home page. The roadmap will replace it with a personal home page.
-- `tools/csv2aba/` contains the CSV-to-ABA converter.
+- `tools/csv2aba/` redirects to the current CSV-to-ABA converter.
+- `tools/csv2aba-legacy/` contains the legacy CSV-to-ABA converter.
 - `website-roadmap.md` is the source of truth for long-term website development.
 
 Keep the site usable without a build step unless the task requires a build system.
@@ -42,7 +43,7 @@ Treat the CSV-to-ABA converter as financial-file software.
 - Use integer arithmetic for money. Do not use binary floating-point arithmetic.
 - Do not enable download until validation and conversion are successful.
 - Keep old output unavailable after an input change or an error.
-- Keep version 1 at `tools/csv2aba/` unchanged unless a critical fix is necessary.
+- Keep the legacy converter at `tools/csv2aba-legacy/` unchanged unless a critical fix is necessary.
 - Develop the safer converter at `tools/csv2aba-v2/`.
 - For known valid input, version 2 must make the same payment data as version 1.
 - Version 2 must reject invalid or ambiguous input with a clear error.

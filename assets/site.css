@@ -85,22 +85,6 @@ h3 {
   gap: 12px 16px;
 }
 
-.trial-link {
-  font-weight: 700;
-}
-
-.badge {
-  display: inline-block;
-  margin-left: 5px;
-  border-radius: 999px;
-  padding: 2px 8px;
-  color: #644700;
-  background: #fff0b8;
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-}
-
 @media (max-width: 480px) {
   .primary-action,
   .button-link {

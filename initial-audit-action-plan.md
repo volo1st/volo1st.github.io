@@ -22,19 +22,21 @@ This file is the single source of truth for audit work.
 - Keep an item clear until its completion test passes.
 - Add the commit, test, or decision below the item.
 - If you do not do an item, keep it clear. Record the owner, date, and reason in the decision log.
-- Keep version 1 available while you develop and trial version 2.
+- Keep the unchanged legacy converter available during the controlled trial.
 
 ## Phase 0: Record the baseline and control the rollout
 
 ### Current support
 
-- [x] Record the current use of version 1 for monthly teacher payments through CBA.
+- [x] Record the former version 1 use for monthly teacher payments through CBA.
   - Evidence: The version 2 README states the supported process, its history, and its limits.
-- [x] Keep version 1 at `/tools/csv2aba/` as the fallback.
+- [x] Keep the unchanged former version 1 at `/tools/csv2aba-legacy/` as the fallback.
 - [x] Build version 2 at `/tools/csv2aba-v2/`.
   - Evidence: Version 2 has independent conversion and interface files. Characterization tests compare valid version 2 output with version 1.
 - [x] Keep version 2 out of the main tools list until trial readiness is complete. Then add a clearly labelled trial link.
-  - Evidence: Version 2 stayed unlisted during development. The home page now identifies v1 as current and v2 as a trial.
+  - Evidence: Version 2 stayed unlisted during development. The home page added a trial link on 14 September 2026.
+- [x] Make version 2 the default as a controlled forced trial. Redirect the former address to version 2.
+  - Evidence: The home page has one converter action. Route and translation tests passed on 1 October 2026. The legacy file hashes match the former version 1 files.
 
 ### Bank rules
 
@@ -156,12 +158,14 @@ This file is the single source of truth for audit work.
 
 ### Trial and release gate
 
-- [ ] Ask the current operator to compare version 1 and version 2 payment counts, totals, records, and CBA upload results.
+- [ ] Ask the current operator to compare the current converter's payment entries, count, total, and CBA upload result with the source report.
 - [ ] Run the comparison for multiple monthly payment cycles.
 - [ ] Record the date, result, and limits. Do not store confidential payment data.
 - [ ] Get an independent review of amount calculations and fixed-width records.
-- [ ] Make version 2 the default only after the trial is successful.
-- [ ] Keep version 1 for an agreed fallback period after version 2 becomes the default.
+- [x] Make version 2 the default as a controlled forced trial before bank evidence is complete.
+  - Evidence: The repository owner accepted the residual risk on 1 October 2026. The decision log records the required controls and rollback path.
+- [x] Keep the unchanged legacy converter as a fallback during the controlled trial.
+  - Evidence: `/tools/csv2aba-legacy/` contains the former version 1 files without content changes.
 
 ## Phase 4: Improve accessibility and screen-size support
 
@@ -169,14 +173,14 @@ This file is the single source of truth for audit work.
 
 - [ ] Add viewport metadata.
 - [x] Add shared text, space, focus styles, navigation, and responsive page widths to the home page and version 2.
-  - Evidence: Both pages load `assets/site.css`. Version 1 stays unchanged during the trial. The sorter will adopt shared styles in its own package.
+  - Evidence: Both pages load `assets/site.css`. The legacy converter stays unchanged during the trial.
 - [ ] Check headings, page language, color contrast, zoom, and keyboard focus.
 
 ### ABA converter
 
-- [x] Add English and Simplified Chinese to the home page and version 2 trial.
+- [x] Add English and Simplified Chinese to the home page and current converter.
   - Evidence: The local translation catalog covers static interface text, workflow status, and validation errors. The language control stores only the language code. Automated tests confirm catalog parity and confirm that a language change preserves a completed result and an active error report.
-  - Production evidence: On 14 September 2026, the user confirmed that the deployed language controls, language persistence, conversion-state preservation, and translated validation messages worked. The user also confirmed that version 1 stayed unchanged.
+  - Production evidence: On 14 September 2026, the user confirmed that the deployed language controls, language persistence, conversion-state preservation, and translated validation messages worked. The user also confirmed that the legacy converter stayed unchanged.
 - [x] Replace the layout table with a responsive layout.
   - Evidence: Version 2 uses a mobile-first vertical workflow. It does not use a table for page layout.
 - [x] Add a label and help text to each input and output. Give each button a clear name.
@@ -219,6 +223,7 @@ Status: Removed from scope. The tool and its third-party dependency are no longe
 - [ ] Document the GitHub Pages and custom-domain process.
 - [x] Verify the deployed home page, version 1, and version 2 routes.
   - Evidence: On 14 September 2026, the user confirmed that GitHub Pages deployed the changes and that all three production routes and their links worked.
+- [ ] Verify the deployed default redirect, current converter, and legacy fallback routes.
 - [ ] Check production DNS, TLS, redirects, and the custom domain.
 - [ ] Check production HTTP security headers. Record GitHub Pages limits.
 - [ ] Define how often maintainers review dependencies and browser support.
@@ -249,6 +254,7 @@ Use this table when the team changes or rejects an action.
 | 28 September 2026 | Add Guitar Strum Machine to the home page in English and Simplified Chinese. | Repository owner | The practice interface is implemented and verified. The tool is ready for direct discovery from the tools home page. |
 | 29 September 2026 | Use a compact `EN / 中文` control at the right side of the title row on bilingual pages. | Repository owner | Language is page-level state. A shared title-row pattern keeps the control visible without using a separate mobile row. |
 | 29 September 2026 | Add a SHA-256 content-hash query to browser assets. | Repository owner | A browser can combine new HTML with cached CSS or JavaScript. A content hash refreshes each changed file and lets the repository check detect a stale reference. |
+| 1 October 2026 | Make version 2 the default as a controlled forced trial before CBA trial evidence is complete. Move the unchanged former version 1 to `/tools/csv2aba-legacy/`. | Repository owner | The default route will force operator use. CBA validates the uploaded file, and the operator reviews the parsed entries, payment count, and total before transfer. An incorrect but structurally valid payment remains a residual risk. The legacy converter provides a rollback path. |
 
 ## Completion record
 
