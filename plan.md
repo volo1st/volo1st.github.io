@@ -268,11 +268,135 @@ Completion gate: Approved source content exists for the first public homepage. T
 
 ### 8.2 Public-site design
 
-- [ ] Define the intended character of the public site.
-- [ ] Confirm that the existing tokens support software and music content.
-- [ ] Define image and media rules.
-- [ ] Check text contrast and focus visibility for the public design.
-- [ ] Make homepage wireframes for narrow and wide screens.
+- [x] Define the intended character of the public site.
+- [x] Confirm that the existing tokens support software and music content.
+- [x] Define image and media rules.
+- [x] Check text contrast and focus visibility for the public design.
+- [x] Make homepage wireframes for narrow and wide screens.
+
+Evidence: The following public-site design specification defines the wide layout, narrow layout, semantic color roles, responsive behavior, and media rules. Contrast calculations use the Web Content Accessibility Guidelines (WCAG) 2.2 thresholds for [text contrast](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html) and [non-text contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html).
+
+#### 8.2.1 Character and visual hierarchy
+
+The public site must feel warm, practical, personal, and lightly playful. It must not look like a resume, a corporate portfolio, a terminal, or a game interface.
+
+Keep the existing warm page and panel backgrounds. Use the pixel `V` mark and small block details as the retro elements. Do not add decorative animation. Do not use a pixel font for body text.
+
+Use this visual hierarchy:
+
+1. Make the introduction the largest item.
+2. Show the four areas as compact supporting cards.
+3. Give Guitar Strum Machine the strongest project action.
+4. Give Bits & Beats Studio a separate but balanced highlight.
+5. Keep profile links compact and easy to scan.
+6. Keep the tools-directory link available without making it a homepage feature.
+
+#### 8.2.2 Layout rules
+
+Keep the current 960-pixel maximum content width. Use the existing shared header, language control, page gutter, panels, buttons, and footer.
+
+On wide screens:
+
+- Keep the `V` mark and `volo1st` at the left of the header.
+- Keep the language control at the right of the header.
+- Limit the introduction text width so that each sentence remains easy to scan.
+- Show the four area cards in one row.
+- Show Guitar Strum Machine and Bits & Beats Studio in a two-column highlight row. Give the guitar project more width.
+- Show the Vincent and studio profile groups in two columns.
+
+```text
+┌──────────────────────────────────────────────────────────────┐
+│ [V] volo1st                                      [EN|中文]  │
+├──────────────────────────────────────────────────────────────┤
+│ Hi, I’m Vincent.                                             │
+│ I build software, work with sound, and play music.           │
+│ Online, I’m volo1st.                                         │
+├──────────────┬──────────────┬──────────────┬─────────────────┤
+│ Software     │ Audio        │ Music        │ Games           │
+├─────────────────────────────────────┬────────────────────────┤
+│ Guitar Strum Machine                │ Bits & Beats Studio    │
+│ [Open guitar tool]                  │ Studio links           │
+├──────────────────────────────┬───────────────────────────────┤
+│ Vincent profiles             │ Studio profiles and contact  │
+├──────────────────────────────┴───────────────────────────────┤
+│ [V] volo1st                                      All tools  │
+└──────────────────────────────────────────────────────────────┘
+```
+
+On narrow screens:
+
+- Keep the brand and language control on one header row.
+- Use one content column for the introduction and highlights.
+- Use two columns for the area cards when each card can be at least 10 rem wide.
+- Change the area cards to one column when the available width is smaller.
+- Stack the profile groups.
+- Do not use horizontal page scrolling.
+- Keep each primary action at least 2.75 rem high and full width.
+
+```text
+┌─────────────────────────────┐
+│ [V] volo1st      [EN|中文]  │
+├─────────────────────────────┤
+│ Hi, I’m Vincent.            │
+│ I build software...         │
+│ Online, I’m volo1st.        │
+├──────────────┬──────────────┤
+│ Software     │ Audio        │
+├──────────────┼──────────────┤
+│ Music        │ Games        │
+├──────────────┴──────────────┤
+│ Guitar Strum Machine       │
+│ [Open guitar tool]         │
+├─────────────────────────────┤
+│ Bits & Beats Studio        │
+├─────────────────────────────┤
+│ Vincent profiles           │
+├─────────────────────────────┤
+│ Studio profiles and contact│
+├─────────────────────────────┤
+│ [V] volo1st      All tools │
+└─────────────────────────────┘
+```
+
+At 200 percent zoom, use the narrow layout. Do not hide content or actions.
+
+#### 8.2.3 Color roles and contrast
+
+Keep these shared colors:
+
+| Role | Color |
+| --- | --- |
+| Page background | `#f4f1e8` |
+| Panel background | `#fffdf7` |
+| Main text | `#17202a` |
+| Muted text | `#4a4a43` |
+
+Use semantic accents for the area and highlight cards:
+
+| Role | Accent | Soft background |
+| --- | --- | --- |
+| Software | `#075a9c` | `#e8f3fb` |
+| Audio and studio | `#8a4b12` | `#f8ede3` |
+| Music and guitar | `#27644e` | `#edf5f1` |
+| Games | `#6a3f7a` | `#f2eefa` |
+
+Use color as a supporting cue. Keep a visible heading or label on each card.
+
+The main text has 14.57:1 contrast against the page background. The muted text has 7.91:1. Each accent has at least 6.67:1 contrast against the panel background.
+
+Change the shared focus color from `#d78300` to `#9b5c00` during implementation. The current color has 2.61:1 contrast against the page background. The replacement has 4.74:1. Keep the three-pixel focus outline and three-pixel offset.
+
+#### 8.2.4 Image and media rules
+
+The first homepage release is text-first. Do not add a portrait, game artwork, client media, studio photograph, or social feed.
+
+Use only these visual assets in the first release:
+
+- the existing pixel `V` mark;
+- CSS borders, blocks, and soft accent backgrounds; and
+- the existing Guitar Strum Machine preview only when a later design gives it a clear purpose.
+
+For later media, use only media that Vincent owns or has approval to publish. Add useful alternative text to meaningful media. Use an empty alternative description for decoration. Set image dimensions to prevent layout movement. Do not load a social embed or third-party tracking script.
 
 ### 8.3 Public-site implementation
 
@@ -401,6 +525,8 @@ Waiting work is not a blocker for unrelated tool maintenance.
 | 1 October 2026 | Feature Guitar Strum Machine on the homepage and keep CSV to ABA Converter in the tools directory. | The guitar tool has a broad public audience. The converter serves one narrow operational workflow. |
 | 1 October 2026 | Keep the public homepage bilingual. | English and Simplified Chinese already form the shared site language model. |
 | 1 October 2026 | Group approved public profiles under Vincent and Bits & Beats Studio. | The groups separate personal work from the studio identity without adding a private profile. |
+| 1 October 2026 | Use a text-first homepage with restrained pixel details and semantic accents. | The design stays personal and playful without competing with the content or adding media approval work. |
+| 1 October 2026 | Use a darker shared focus color during homepage implementation. | The current amber does not meet the three-to-one non-text contrast target against the page background. |
 
 ## 16. Verified completion evidence
 
