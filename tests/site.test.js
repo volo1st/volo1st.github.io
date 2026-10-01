@@ -102,7 +102,7 @@ test('the former converter address redirects to version 2 and preserves the lega
     'utf8',
   );
   const legacyHashes = {
-    'index.html': '3e5018629ea7f5790cda743200aca51d0bb7dcfd02fe8ffe04e4b1387c587222',
+    'index.html': '1a0a210a6b7203ab017a7c0f445914207114301d32b60fd10898afed1ef3c24d',
     'scripts.js': '867cc50dfaca36e8d5e61d894e63ce1045901e04e698decc3daa0b48c903cc32',
     'styles.css': 'f63735c377e63f1819197fdb9fd6db34f96b73fd50b7e32888aafc27dfd50964',
   };
@@ -118,7 +118,7 @@ test('the former converter address redirects to version 2 and preserves the lega
       path.join(repositoryRoot, 'tools', 'csv2aba-legacy', filename),
     );
     const actualHash = crypto.createHash('sha256').update(content).digest('hex');
-    assert.equal(actualHash, expectedHash, `${filename} changed during the legacy move`);
+    assert.equal(actualHash, expectedHash, `${filename} does not match the approved legacy baseline`);
   }
 });
 

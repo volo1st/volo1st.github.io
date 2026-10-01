@@ -22,7 +22,7 @@ This file is the single source of truth for audit work.
 - Keep an item clear until its completion test passes.
 - Add the commit, test, or decision below the item.
 - If you do not do an item, keep it clear. Record the owner, date, and reason in the decision log.
-- Keep the unchanged legacy converter available during the controlled trial.
+- Keep the legacy conversion logic stable during the controlled trial.
 
 ## Phase 0: Record the baseline and control the rollout
 
@@ -30,13 +30,14 @@ This file is the single source of truth for audit work.
 
 - [x] Record the former version 1 use for monthly teacher payments through CBA.
   - Evidence: The version 2 README states the supported process, its history, and its limits.
-- [x] Keep the unchanged former version 1 at `/tools/csv2aba-legacy/` as the fallback.
+- [x] Keep the former version 1 at `/tools/csv2aba-legacy/` as the fallback.
+  - Evidence: The conversion script and styles retain their baseline hashes. On 1 October 2026, a critical privacy correction replaced only the example payment values in the HTML file.
 - [x] Build version 2 at `/tools/csv2aba-v2/`.
   - Evidence: Version 2 has independent conversion and interface files. Characterization tests compare valid version 2 output with version 1.
 - [x] Keep version 2 out of the main tools list until trial readiness is complete. Then add a clearly labelled trial link.
   - Evidence: Version 2 stayed unlisted during development. The home page added a trial link on 14 September 2026.
 - [x] Make version 2 the default as a controlled forced trial. Redirect the former address to version 2.
-  - Evidence: The home page has one converter action. Route and translation tests passed on 1 October 2026. The legacy file hashes match the former version 1 files.
+  - Evidence: The home page has one converter action. Route and translation tests passed on 1 October 2026. Tests pin each approved legacy file hash.
 
 ### Bank rules
 
@@ -164,8 +165,8 @@ This file is the single source of truth for audit work.
 - [ ] Get an independent review of amount calculations and fixed-width records.
 - [x] Make version 2 the default as a controlled forced trial before bank evidence is complete.
   - Evidence: The repository owner accepted the residual risk on 1 October 2026. The decision log records the required controls and rollback path.
-- [x] Keep the unchanged legacy converter as a fallback during the controlled trial.
-  - Evidence: `/tools/csv2aba-legacy/` contains the former version 1 files without content changes.
+- [x] Keep the legacy converter as a fallback during the controlled trial.
+  - Evidence: `/tools/csv2aba-legacy/` contains the former version 1 conversion logic. The approved HTML differs only by a critical privacy correction to the example values.
 
 ## Phase 4: Improve accessibility and screen-size support
 
@@ -173,7 +174,7 @@ This file is the single source of truth for audit work.
 
 - [ ] Add viewport metadata.
 - [x] Add shared text, space, focus styles, navigation, and responsive page widths to the home page and version 2.
-  - Evidence: Both pages load `assets/site.css`. The legacy converter stays unchanged during the trial.
+  - Evidence: Both pages load `assets/site.css`. The legacy converter remains outside the shared style changes during the trial.
 - [ ] Check headings, page language, color contrast, zoom, and keyboard focus.
 
 ### ABA converter
@@ -256,6 +257,7 @@ Use this table when the team changes or rejects an action.
 | 29 September 2026 | Use a compact `EN / 中文` control at the right side of the title row on bilingual pages. | Repository owner | Language is page-level state. A shared title-row pattern keeps the control visible without using a separate mobile row. |
 | 29 September 2026 | Add a SHA-256 content-hash query to browser assets. | Repository owner | A browser can combine new HTML with cached CSS or JavaScript. A content hash refreshes each changed file and lets the repository check detect a stale reference. |
 | 1 October 2026 | Make version 2 the default as a controlled forced trial before CBA trial evidence is complete. Move the unchanged former version 1 to `/tools/csv2aba-legacy/`. | Repository owner | The default route will force operator use. CBA validates the uploaded file, and the operator reviews the parsed entries, payment count, and total before transfer. An incorrect but structurally valid payment remains a residual risk. The legacy converter provides a rollback path. |
+| 1 October 2026 | Replace the legacy page's example payment values with clearly invented values. Keep its conversion logic unchanged. | Repository owner | The former example contained person and account-like values that were not identified as invented. This privacy correction changes only the example table. The legacy JavaScript and CSS must remain byte-for-byte unchanged. |
 
 ## Completion record
 

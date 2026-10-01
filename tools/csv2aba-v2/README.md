@@ -4,7 +4,7 @@
 
 This directory contains the current converter. It is the default during a controlled operator trial.
 
-The former address at `/tools/csv2aba/` redirects here. The unchanged former version 1 stays at `/tools/csv2aba-legacy/` as a fallback.
+The former address at `/tools/csv2aba/` redirects here. The former version 1 stays at `/tools/csv2aba-legacy/` as a fallback. Its conversion logic remains unchanged.
 
 Version 2 has independent conversion and interface files. Characterization tests compare its valid output with version 1.
 

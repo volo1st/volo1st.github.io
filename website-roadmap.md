@@ -105,7 +105,7 @@ Complete one work package at a time. Update this file after each package.
 ### Phase 0: Protect the current site
 
 - [x] Keep the current tools available during website planning.
-- [x] Keep the CSV-to-ABA version 1 fallback unchanged.
+- [x] Keep the CSV-to-ABA version 1 fallback and its conversion logic stable.
 - [x] Add local repository checks.
 - [x] Add a safer CSV-to-ABA version 2 trial.
 - [x] Add English and Simplified Chinese to the version 2 workflow.

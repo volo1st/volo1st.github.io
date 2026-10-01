@@ -14,7 +14,7 @@ See [`website-roadmap.md`](website-roadmap.md) for the product direction and del
 
 The home page, version 2 converter, and Guitar Strum Machine support English and Simplified Chinese. The site stores the selected language code in browser local storage. A language change does not change guitar arrangement text, playback state, or share-link data.
 
-The maintained pages use `assets/site-shell.css` for the shared header, footer, language control, and design tokens. Each tool uses the same semantic shell classes. The shared shell maps a semantic `data-domain` value to each domain accent. A home-page tool card uses the accent of its destination. The original pixel-art `V` block is the shared site icon. CSV-to-ABA version 1 remains unchanged.
+The maintained pages use `assets/site-shell.css` for the shared header, footer, language control, and design tokens. Each tool uses the same semantic shell classes. The shared shell maps a semantic `data-domain` value to each domain accent. A home-page tool card uses the accent of its destination. The original pixel-art `V` block is the shared site icon. The legacy CSV-to-ABA conversion logic remains unchanged.
 
 HTML references browser assets with a short SHA-256 content hash. Update the hash when a CSS or JavaScript file changes. The repository check rejects a stale hash.
 
