@@ -121,8 +121,6 @@ Completion gate: Current users can continue their work without exposing confiden
 - [x] Limit the converter to the established CBA payment workflow and its current fixed settings.
   - Evidence: CBA accepted files from the legacy converter for this workflow for nearly one year. Version 2 makes compatible payment data for known valid input.
 - [x] Use invented data for automated converter tests and fixtures.
-- [x] Defer general bank-rule research and configurable source settings.
-  - Resume that work only if CBA rejects a file, the payment process changes, or the converter supports another workflow.
 
 ### 6.3 Normal workflow validation
 
@@ -224,7 +222,6 @@ Completion gate: A new idea has a clear location, status, support model, and rel
 - [x] Add a validation checklist for the current converter workflow.
 - [x] Apply browser-asset versioning to each maintained page asset.
   - Evidence: The home page, current converter, and Guitar Strum Machine register their local interface assets in the SHA-256 stale-hash test. The frozen legacy fallback remains unversioned.
-- [ ] Document supported ABA settings without publishing real account data.
 - [ ] Select a license, or state that the repository has no license.
 - [ ] Document the GitHub Pages deployment process.
 - [ ] Document the custom domain and Domain Name System process.
@@ -254,8 +251,6 @@ Do not add a framework or build system only because the site has multiple pages.
 | Item | Status | Resume condition |
 | --- | --- | --- |
 | CSV-to-ABA workflow validation | Waiting | The operator runs the normal payment process and records non-confidential evidence. |
-| General CBA rule research | Deferred | CBA rejects a file, the payment process changes, or the converter scope expands. |
-| Configurable ABA source settings | Deferred | The current fixed workflow changes or the converter supports another workflow. |
 | Public homepage | Paused | The owner resumes the Phase 2 content package. |
 | Chinese-English text sorter | Removed | A new requirement justifies recovery from Git history. |
 | Authentication for school tools | Deferred | A tool needs confidential configuration, stored data, or restricted access. |
@@ -267,12 +262,12 @@ Waiting work is not a blocker for unrelated tool maintenance.
 
 | Finding | Current state | Remaining action |
 | --- | --- | --- |
-| Fixed bank data | Accepted product limit | Keep the current settings for the established workflow. Revisit them if the workflow changes. |
+| Fixed bank data | Accepted product limit | The current fixed settings define the supported workflow. |
 | Invalid amounts | Implemented in version 2 | Confirm the normal workflow result. |
 | Quoted CSV data | Implemented in version 2 | Confirm the normal workflow result. |
-| Incomplete ABA field checks | Accepted product limit | Use CBA upload validation for the current workflow. Revisit the rules if the workflow changes. |
+| Incomplete ABA field checks | Accepted product limit | Use CBA upload validation for the supported workflow. |
 | Unsafe interface error state | Implemented in version 2 | Confirm the normal workflow result. |
-| Missing bank-specific rules | Deferred | Research the rules only after a rejection, process change, or scope expansion. |
+| Missing bank-specific rules | Accepted product limit | Use CBA upload validation for the supported workflow. |
 | No automated tests | Implemented locally | Reassess continuous integration only when its value justifies maintenance. |
 | Difficult converter layout | Implemented in version 2 | No remaining audit action for the supported workflow. |
 | Text sorter data loss | Removed from scope | Restore only for a new requirement. |
@@ -303,7 +298,8 @@ Waiting work is not a blocker for unrelated tool maintenance.
 | 1 October 2026 | Replace the audit action plan and website roadmap with this plan. | One active plan prevents duplicate actions and conflicting status. The initial audit report remains the dated baseline. |
 | 1 October 2026 | Replace realistic legacy-derived identifiers in converter tests and fixtures. | Test data must be clearly invented. Use structural placeholders and regenerate the golden fixture without changing converter logic. |
 | 1 October 2026 | Keep the current ABA user and remitter name public and unchanged. | The owner confirmed that the value is safe to publish. A replacement would change generated payment files. |
-| 1 October 2026 | Validate the current converter through the normal CBA payment procedure. | The converter supports one established workflow. CBA upload acceptance plus the operator's entry, count, and total review is the applicable completion evidence. Broader bank-rule research is necessary only if the workflow changes, CBA rejects a file, or the product scope expands. |
+| 1 October 2026 | Validate the current converter through the normal CBA payment procedure. | The converter supports one established workflow. CBA upload acceptance plus the operator's entry, count, and total review is the applicable completion evidence. |
+| 1 October 2026 | Remove general CBA rule research and configurable ABA source settings from the plan. | The converter supports only the current fixed workflow. The owner does not plan to make it a general ABA product. |
 
 ## 16. Verified completion evidence
 

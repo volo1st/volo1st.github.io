@@ -89,7 +89,7 @@ Each payment row must contain all five values. A fully blank CSV line is not a p
 - Reference must not exceed 18 characters.
 - A payment field must not contain a line break or control character.
 
-The converter rejects an overlong field. It does not truncate payment data. CBA institution-number rules and the complete ABA character set are not yet confirmed. Version 2 does not enforce those rules at this time.
+The converter rejects an overlong field. It does not truncate payment data. Version 2 does not independently enforce CBA institution-number rules or a complete ABA character set. This is an accepted limit for the supported workflow. Confirm the generated result in CBA before approval.
 
 Version 2 checks all payment rows before it constructs an ABA file. It shows all applicable payment-field errors in one list. Each error identifies the source line and field. A structural CSV error can stop parsing before payment-field checks start.
 
