@@ -230,7 +230,7 @@ test('maintained bilingual pages use the shared site shell', () => {
     assert.match(html, /class="page-title-group"/);
     assert.match(html, /class="site-mark"/);
     assert.match(html, /class="site-footer-home"/);
-    assert.match(html, /data-i18n="common\.browserLocal"/);
+    assert.doesNotMatch(html, /common\.browserLocal|home\.subtitle/);
     assert.match(html, /assets\/site-shell\.css\?v=[a-f0-9]{12}/);
     assert.match(html, /assets\/favicon\.svg\?v=[a-f0-9]{12}/);
     assert.match(html, /data-language="en-AU"[^>]*>EN<\/button>/);

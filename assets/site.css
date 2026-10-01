@@ -14,14 +14,8 @@ h3 {
   font-size: 1rem;
 }
 
-.version-label,
 .muted-text {
   color: var(--site-muted-soft);
-}
-
-.version-label {
-  margin-bottom: 0;
-  font-weight: 700;
 }
 
 .panel {
