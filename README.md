@@ -8,7 +8,7 @@ See [`plan.md`](plan.md) for current actions, product direction, and delivery ph
 
 ## Tools
 
-- [CSV to ABA Converter](tools/csv2aba-v2/) is the current converter. The former address redirects to it for a controlled operator trial.
+- [CSV to ABA Converter](tools/csv2aba-v2/) is the current converter. The former address redirects to it. One normal CBA payment run will complete its workflow validation.
 - [Legacy CSV to ABA Converter](tools/csv2aba-legacy/) is the fallback. Its conversion logic remains unchanged.
 - [Guitar Strum Machine](tools/guitar-strumming/) makes a looping guitar backing track from plain-text input. The home page links to this tool.
 

@@ -29,7 +29,7 @@ Status verified on 1 October 2026.
 - Guitar Strum Machine is available from the tools directory.
 - The Chinese-English text sorter was removed.
 - Public-homepage implementation is paused. Tool maintenance can continue.
-- The CSV-to-ABA controlled trial waits for operator use and Commonwealth Bank of Australia (CBA) evidence.
+- The CSV-to-ABA workflow validation waits for one normal Commonwealth Bank of Australia (CBA) payment run.
 - No feature package is active after this documentation consolidation.
 
 When public-homepage work resumes, create the public-content inventory and privacy boundary first.
@@ -97,7 +97,7 @@ Do not move an existing tool only to match this structure. Preserve its address 
 
 Completion gate: Current users can continue their work without exposing confidential data.
 
-## 6. Phase 1: Complete the CSV-to-ABA safety work
+## 6. Phase 1: Validate the current CSV-to-ABA workflow
 
 ### 6.1 Implemented controls
 
@@ -116,42 +116,32 @@ Completion gate: Current users can continue their work without exposing confiden
 - [x] Keep valid version 2 output compatible with the legacy converter.
   - Evidence: Characterization and golden-fixture tests pass with invented data.
 
-### 6.2 Bank rules and source settings
+### 6.2 Supported scope
 
-- [ ] Get the current CBA rules from an authoritative source.
-  - Confirm source identity, trace data, transaction codes, balancing records, totals, permitted characters, encoding, line ends, file names, and limits.
-- [ ] Ask the payment operator to confirm the documented source process.
-- [ ] Decide whether the supported source settings stay fixed or become configurable.
-- [ ] Validate every supported source setting before record construction.
-- [ ] Use confirmed source-account data for trace fields.
-- [ ] Confirm the institution-number rule and complete permitted ABA character set.
-- [ ] Confirm the required encoding, line ends, balancing rule, transaction code, and total rules.
-- [ ] Test exact record byte lengths with the confirmed character set and encoding.
-- [ ] Add a reviewed test fixture only if it uses wholly invented data.
+- [x] Limit the converter to the established CBA payment workflow and its current fixed settings.
+  - Evidence: CBA accepted files from the legacy converter for this workflow for nearly one year. Version 2 makes compatible payment data for known valid input.
+- [x] Use invented data for automated converter tests and fixtures.
+- [x] Defer general bank-rule research and configurable source settings.
+  - Resume that work only if CBA rejects a file, the payment process changes, or the converter supports another workflow.
 
-Completion gate: Each output field has a confirmed bank rule or a recorded product decision.
+### 6.3 Normal workflow validation
 
-### 6.3 Controlled operator trial
+Use [`tools/csv2aba-v2/TRIAL-CHECKLIST.md`](tools/csv2aba-v2/TRIAL-CHECKLIST.md) during one normal payment run. Do not store payment data in the result record.
 
-Use [`tools/csv2aba-v2/TRIAL-CHECKLIST.md`](tools/csv2aba-v2/TRIAL-CHECKLIST.md) for each trial. Do not store payment data in the result record.
+- [ ] Generate the normal payment file with the current converter.
+- [ ] Compare the payment entries, count, and total with the source report.
+- [ ] Confirm that CBA accepts the upload.
+- [ ] Compare the payment entries, count, and total shown by CBA with the source report.
+- [ ] Record the date and result without confidential data.
 
-- [ ] Compare the entries, payment count, and total with the source report.
-- [ ] Confirm that CBA accepts the file.
-- [ ] Repeat the comparison for multiple normal payment cycles.
-- [ ] Record each date, result, and limit without confidential data.
-- [ ] Get an independent review of amount calculations and fixed-width records.
-- [ ] Test the complete workflow in the operator's browser.
-- [ ] Test keyboard use and applicable assistive-software behavior.
-
-Completion gate: The normal process has repeatable operator and CBA evidence, and all residual risks are recorded.
+Completion gate: The current converter matches the source report, and CBA accepts the file during the normal payment procedure.
 
 ### 6.4 Audit closure
 
-- [ ] Run all invalid-input and boundary tests from the initial audit again.
-- [ ] Review the repository and deployed converter again.
-- [ ] Link every initial finding to completed evidence or an accepted-risk decision.
-- [ ] Record remaining limits and follow-up work.
-- [ ] Record the reviewer, date, deployment, and bank-validation reference.
+- [x] Run the automated invalid-input and boundary tests from the initial audit.
+- [x] Link each initial finding to completed work, removed scope, or an accepted product limit.
+- [x] Record that support is limited to the current CBA workflow.
+- [ ] After the normal payment run, record the reviewer, date, deployment, and CBA result.
 
 ## 7. Phase 2: Define the public identity
 
@@ -231,7 +221,7 @@ Completion gate: A new idea has a clear location, status, support model, and rel
 
 - [x] Add a repository README with purpose, tools, local use, and checks.
 - [x] Add one local command for syntax, tests, references, and whitespace.
-- [x] Add a release checklist for the current converter trial.
+- [x] Add a validation checklist for the current converter workflow.
 - [x] Apply browser-asset versioning to each maintained page asset.
   - Evidence: The home page, current converter, and Guitar Strum Machine register their local interface assets in the SHA-256 stale-hash test. The frozen legacy fallback remains unversioned.
 - [ ] Document supported ABA settings without publishing real account data.
@@ -263,8 +253,9 @@ Do not add a framework or build system only because the site has multiple pages.
 
 | Item | Status | Resume condition |
 | --- | --- | --- |
-| CSV-to-ABA operator trial | Waiting | The operator runs the normal payment process and records non-confidential evidence. |
-| Confirmed CBA rules | Waiting | An authoritative source becomes available. |
+| CSV-to-ABA workflow validation | Waiting | The operator runs the normal payment process and records non-confidential evidence. |
+| General CBA rule research | Deferred | CBA rejects a file, the payment process changes, or the converter scope expands. |
+| Configurable ABA source settings | Deferred | The current fixed workflow changes or the converter supports another workflow. |
 | Public homepage | Paused | The owner resumes the Phase 2 content package. |
 | Chinese-English text sorter | Removed | A new requirement justifies recovery from Git history. |
 | Authentication for school tools | Deferred | A tool needs confidential configuration, stored data, or restricted access. |
@@ -276,14 +267,14 @@ Waiting work is not a blocker for unrelated tool maintenance.
 
 | Finding | Current state | Remaining action |
 | --- | --- | --- |
-| Fixed bank data | Open | Confirm bank rules and decide the supported settings model. |
-| Invalid amounts | Implemented in version 2 | Complete operator and independent review. |
-| Quoted CSV data | Implemented in version 2 | Complete operator trial. |
-| Incomplete ABA field checks | Partly implemented | Confirm bank-specific and character-set rules. |
-| Unsafe interface error state | Implemented in version 2 | Complete operator workflow test. |
-| Missing bank-specific rules | Waiting | Obtain and record authoritative CBA rules. |
+| Fixed bank data | Accepted product limit | Keep the current settings for the established workflow. Revisit them if the workflow changes. |
+| Invalid amounts | Implemented in version 2 | Confirm the normal workflow result. |
+| Quoted CSV data | Implemented in version 2 | Confirm the normal workflow result. |
+| Incomplete ABA field checks | Accepted product limit | Use CBA upload validation for the current workflow. Revisit the rules if the workflow changes. |
+| Unsafe interface error state | Implemented in version 2 | Confirm the normal workflow result. |
+| Missing bank-specific rules | Deferred | Research the rules only after a rejection, process change, or scope expansion. |
 | No automated tests | Implemented locally | Reassess continuous integration only when its value justifies maintenance. |
-| Difficult converter layout | Implemented in version 2 | Complete applicable assistive-software test. |
+| Difficult converter layout | Implemented in version 2 | No remaining audit action for the supported workflow. |
 | Text sorter data loss | Removed from scope | Restore only for a new requirement. |
 | Text sorter external dependency | Removed from scope | Restore only for a new requirement. |
 | Repeated sorter calculations | Removed from scope | Restore only for a new requirement. |
@@ -312,6 +303,7 @@ Waiting work is not a blocker for unrelated tool maintenance.
 | 1 October 2026 | Replace the audit action plan and website roadmap with this plan. | One active plan prevents duplicate actions and conflicting status. The initial audit report remains the dated baseline. |
 | 1 October 2026 | Replace realistic legacy-derived identifiers in converter tests and fixtures. | Test data must be clearly invented. Use structural placeholders and regenerate the golden fixture without changing converter logic. |
 | 1 October 2026 | Keep the current ABA user and remitter name public and unchanged. | The owner confirmed that the value is safe to publish. A replacement would change generated payment files. |
+| 1 October 2026 | Validate the current converter through the normal CBA payment procedure. | The converter supports one established workflow. CBA upload acceptance plus the operator's entry, count, and total review is the applicable completion evidence. Broader bank-rule research is necessary only if the workflow changes, CBA rejects a file, or the product scope expands. |
 
 ## 16. Verified completion evidence
 
@@ -329,7 +321,7 @@ Use the phase headings in this plan when an external task system is necessary.
 
 - Keep only the next public-website package actionable.
 - Keep later phases ordered and without dates.
-- Track the CSV-to-ABA operator trial as a separate waiting task.
+- Track the CSV-to-ABA workflow validation as a separate waiting task.
 - Inspect comments and attachments before moving or closing an existing task.
 - Get confirmation before deleting or substantially restructuring an external task.
 - Do not access the private Todoist project named `.`.

@@ -2,7 +2,7 @@
 
 ## Status
 
-This directory contains the current converter. It is the default during a controlled operator trial.
+This directory contains the current converter. One normal CBA payment run will complete its workflow validation.
 
 The former address at `/tools/csv2aba/` redirects here. The former version 1 stays at `/tools/csv2aba-legacy/` as a fallback. Its conversion logic remains unchanged.
 
@@ -14,7 +14,7 @@ For known valid input, version 2 must make the same payment data as version 1.
 
 Version 2 can change the result for invalid or ambiguous input. It must stop conversion and show a clear error for that input.
 
-## Controlled trial rule
+## Normal workflow validation
 
 Use the current converter for the normal payment process.
 
@@ -28,7 +28,7 @@ If a result is unexpected, stop the payment process and use the legacy converter
 
 The current workflow creates monthly teacher payments for a Sydney music school. CBA has accepted version 1 files from this workflow for nearly one year. This history applies only to this workflow.
 
-Use [`TRIAL-CHECKLIST.md`](TRIAL-CHECKLIST.md) for each controlled trial.
+Use [`TRIAL-CHECKLIST.md`](TRIAL-CHECKLIST.md) during the next normal payment run.
 
 After a successful conversion, version 2 shows the payment count and total amount. Review this summary before download. The summary and download become unavailable after an input change or an error.
 
@@ -44,7 +44,7 @@ Use the language control to change the language. A language change does not clea
 
 The site stores only the selected language code in local browser storage. It does not store CSV or payment data.
 
-The legacy converter stays in English during the controlled trial.
+The legacy converter stays in English.
 
 The page uses one vertical workflow on large and small screens. Add payment data first. Then check and convert it. Review the payment summary and ABA data before download. After conversion, keyboard focus moves to the result or the error report.
 
