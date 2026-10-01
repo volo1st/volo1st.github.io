@@ -92,8 +92,8 @@ Do not move an existing tool only to match this structure. Preserve its address 
   - Evidence: The source was removed on 30 September 2026. Git history keeps it recoverable.
 - [x] Review all tracked examples and fixtures for personal, payment, employer, and client data.
   - Evidence: The review found no email address. It found realistic legacy-derived BSB and account-like values in the converter tests and fixture. The approved correction replaces them with explicit structural placeholders and regenerates the golden ABA bytes.
-- [ ] Confirm that the fixed ABA source-identity values are approved for publication.
-  - Do not change them until the owner confirms the requirement. A change can alter real ABA output.
+- [x] Confirm that the fixed ABA source-identity values are approved for publication.
+  - Evidence: On 1 October 2026, the owner confirmed that the current user and remitter name can remain public. Keep the values unchanged because they affect generated ABA output.
 
 Completion gate: Current users can continue their work without exposing confidential data.
 
@@ -310,6 +310,7 @@ Waiting work is not a blocker for unrelated tool maintenance.
 | 1 October 2026 | Correct only the legacy example payment values. | The old examples were not clearly invented. The conversion logic and styles remain unchanged. |
 | 1 October 2026 | Replace the audit action plan and website roadmap with this plan. | One active plan prevents duplicate actions and conflicting status. The initial audit report remains the dated baseline. |
 | 1 October 2026 | Replace realistic legacy-derived identifiers in converter tests and fixtures. | Test data must be clearly invented. Use structural placeholders and regenerate the golden fixture without changing converter logic. |
+| 1 October 2026 | Keep the current ABA user and remitter name public and unchanged. | The owner confirmed that the value is safe to publish. A replacement would change generated payment files. |
 
 ## 16. Verified completion evidence
 
