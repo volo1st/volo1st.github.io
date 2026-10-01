@@ -107,20 +107,97 @@ test('HTML IDs are unique and label references resolve', () => {
   }
 });
 
-test('the home page links to each available tool', () => {
+test('the home page presents the approved public identity and contact links', () => {
   const html = fs.readFileSync(path.join(repositoryRoot, 'index.html'), 'utf8');
+
+  assert.doesNotMatch(html, /href="\.\/tools\/"/);
+  assert.doesNotMatch(html, /guitar-strumming|Guitar Strum Machine/);
+  assert.doesNotMatch(html, /csv2aba/i);
+  assert.match(html, /href="https:\/\/github\.com\/volo1st"/);
+  assert.match(html, /href="https:\/\/www\.instagram\.com\/bits\.n\.beats\/"/);
+  assert.match(html, /I <a href="\.\/code\/">code<\/a>, shape <a href="\.\/sound\/">sound<\/a>, and make <a href="\.\/music\/">noise<\/a>\./);
+  assert.doesNotMatch(html, /instagram\.com\/volo1st/);
+  assert.doesNotMatch(html, /data-i18n|language-switcher|assets\/i18n\.js/);
+  assert.doesNotMatch(html, /<header\b|class="site-mark"|class="site-name"/);
+  assert.doesNotMatch(html, /<footer\b/);
+  assert.doesNotMatch(html, /What I do|Things I’ve made|area-index/);
+  assert.match(html, /<meta property="og:title" content="volo1st">/);
+  assert.match(html, /<h1 id="home-heading">Hi, I’m Vincent\.<\/h1>/);
+  assert.equal([...html.matchAll(/Vincent/g)].length, 1);
+  assert.match(html, /<link rel="canonical" href="https:\/\/volo1st\.com\/">/);
+  assert.match(html, /href="\.\/assets\/home\.css\?v=[a-f0-9]{12}"/);
+  assert.match(html, /src="\.\/assets\/home\.js\?v=[a-f0-9]{12}"/);
+  assert.match(html, /<figure class="constellation"[^>]*Sagittarius constellation/);
+  assert.match(html, /<canvas id="sagittarius" aria-hidden="true"><\/canvas>/);
+  assert.doesNotMatch(html, /link-signal|data-signal/);
+  assert.doesNotMatch(html, /<h2[^>]*>\s*(?:Find me|Bits &amp; Beats Studio)/);
+  assert.equal([...html.matchAll(/class="social-link"/g)].length, 6);
+  assert.equal([...html.matchAll(/class="social-icon"/g)].length, 6);
+  assert.equal([...html.matchAll(/class="social-separator"/g)].length, 1);
+  assert.match(html, /aria-label="Personal profiles"/);
+  assert.match(html, /aria-label="Bits &amp; Beats Studio profiles"/);
+  assert.match(html, /aria-label="Personal RedNote" title="Personal RedNote"/);
+  assert.match(html, /aria-label="Bits &amp; Beats Studio on RedNote" title="Bits &amp; Beats Studio on RedNote"/);
+
+  const externalLinks = [...html.matchAll(/<a\b[^>]*href="https:[^"]+"[^>]*>/g)]
+    .map((match) => match[0]);
+  assert.equal(externalLinks.length, 6);
+  for (const link of externalLinks) {
+    assert.match(link, /target="_blank"/);
+    assert.match(link, /rel="noopener noreferrer"/);
+  }
+});
+
+test('the public section indexes provide useful destinations', () => {
+  const sections = [
+    { directory: 'code', heading: 'Code' },
+    { directory: 'sound', heading: 'Sound' },
+    { directory: 'music', heading: 'Music' },
+  ];
+
+  for (const section of sections) {
+    const html = fs.readFileSync(
+      path.join(repositoryRoot, section.directory, 'index.html'),
+      'utf8',
+    );
+    assert.doesNotMatch(html, /<h1\b/);
+    assert.match(html, new RegExp(`<span aria-current="page">${section.heading}<\\/span>`));
+    assert.match(html, /class="section-summary">[^<]+<\/span>/);
+    assert.match(html, /<p class="section-status">More when there’s something worth showing\.<\/p>/);
+    assert.doesNotMatch(html, /class="section-intro"/);
+    assert.match(html, /href="\.\.\/">volo1st<\/a>/);
+    assert.doesNotMatch(html, /Vincent/);
+    assert.match(html, /assets\/section-index\.css\?v=[a-f0-9]{12}/);
+    assert.doesNotMatch(html, /data-i18n|language-switcher|assets\/i18n\.js/);
+
+    for (const match of html.matchAll(/<a\b[^>]*href="https:[^"]+"[^>]*>/g)) {
+      assert.match(match[0], /target="_blank"/);
+      assert.match(match[0], /rel="noopener noreferrer"/);
+    }
+  }
+
+  const codeHtml = fs.readFileSync(path.join(repositoryRoot, 'code', 'index.html'), 'utf8');
+  const soundHtml = fs.readFileSync(path.join(repositoryRoot, 'sound', 'index.html'), 'utf8');
+  const musicHtml = fs.readFileSync(path.join(repositoryRoot, 'music', 'index.html'), 'utf8');
+  assert.match(codeHtml, /href="\.\.\/tools\/"/);
+  assert.match(soundHtml, /instagram\.com\/bits\.n\.beats/);
+  assert.match(musicHtml, /href="\.\.\/tools\/guitar-strumming\/"/);
+});
+
+test('the tools directory links to each available tool', () => {
+  const html = fs.readFileSync(path.join(repositoryRoot, 'tools', 'index.html'), 'utf8');
   const converterCard = html.match(
-    /<article class="panel tool-card">([\s\S]*?home\.converterTitle[\s\S]*?)<\/article>/,
+    /<article class="panel tool-card">([\s\S]*?tools\.converterTitle[\s\S]*?)<\/article>/,
   )[1];
 
-  assert.match(html, /href="\.\/tools\/csv2aba-v2\/"/);
-  assert.match(html, /href="\.\/tools\/guitar-strumming\/"/);
-  assert.doesNotMatch(html, /href="\.\/tools\/csv2aba\/"/);
-  assert.doesNotMatch(html, /tools\/song_order/);
+  assert.match(html, /href="\.\/csv2aba-v2\/"/);
+  assert.match(html, /href="\.\/guitar-strumming\/"/);
+  assert.doesNotMatch(html, /href="\.\/csv2aba\/"/);
+  assert.doesNotMatch(html, /song_order/);
   assert.doesNotMatch(html, />Trial</);
   assert.equal([...converterCard.matchAll(/class="button-link"/g)].length, 1);
   assert.doesNotMatch(converterCard, /trial-link|badge/);
-  assert.match(html, /href="\.\/assets\/site\.css\?v=[a-f0-9]{12}"/);
+  assert.match(html, /href="\.\.\/assets\/site\.css\?v=[a-f0-9]{12}"/);
 });
 
 test('the former converter address redirects to version 2 and preserves the legacy fallback', () => {
@@ -176,10 +253,28 @@ test('versioned interface assets use their current content hash', () => {
       references: [
         './assets/favicon.svg',
         './assets/site-shell.css',
-        './assets/site.css',
-        './assets/i18n.js',
+        './assets/home.css',
+        './assets/home.js',
+        './assets/social-icons.svg',
       ],
     },
+    {
+      file: path.join(repositoryRoot, 'tools', 'index.html'),
+      references: [
+        '../assets/favicon.svg',
+        '../assets/site-shell.css',
+        '../assets/site.css',
+        '../assets/i18n.js',
+      ],
+    },
+    ...['code', 'sound', 'music'].map((directory) => ({
+      file: path.join(repositoryRoot, directory, 'index.html'),
+      references: [
+        '../assets/favicon.svg',
+        '../assets/site-shell.css',
+        '../assets/section-index.css',
+      ],
+    })),
     {
       file: path.join(repositoryRoot, 'tools', 'csv2aba-v2', 'index.html'),
       references: [
@@ -233,6 +328,19 @@ test('versioned interface assets use their current content hash', () => {
   }
 });
 
+test('the home constellation is local, optional, and non-interactive', () => {
+  const script = fs.readFileSync(path.join(repositoryRoot, 'assets', 'home.js'), 'utf8');
+
+  assert.match(script, /constellation'\) === 'off'/);
+  assert.match(script, /document\.hidden/);
+  assert.match(script, /ResizeObserver/);
+  assert.match(script, /SIMBAD J2000 ICRS positions/);
+  assert.doesNotMatch(script, /DeviceMotionEvent|devicemotion|requestPermission/);
+  assert.doesNotMatch(script, /prefers-reduced-motion/);
+  assert.doesNotMatch(script, /\bfetch\s*\(|XMLHttpRequest|WebSocket/);
+  assert.doesNotMatch(script, /setInterval|setTimeout/);
+});
+
 test('the guitar page provides a generic Open Graph preview without replacing arrangement URLs', () => {
   const html = fs.readFileSync(
     path.join(repositoryRoot, 'tools', 'guitar-strumming', 'index.html'),
@@ -266,14 +374,14 @@ test('the guitar page provides a generic Open Graph preview without replacing ar
 
 test('maintained bilingual pages use the shared site shell', () => {
   const pages = [
-    path.join(repositoryRoot, 'index.html'),
+    path.join(repositoryRoot, 'tools', 'index.html'),
     path.join(repositoryRoot, 'tools', 'csv2aba-v2', 'index.html'),
     path.join(repositoryRoot, 'tools', 'guitar-strumming', 'index.html'),
   ];
   for (const htmlFile of pages) {
     const html = fs.readFileSync(htmlFile, 'utf8');
     assert.match(html, /<header class="site-header">/);
-    assert.match(html, /<main class="site-main">/);
+    assert.match(html, /<main class="site-main(?: [^"]*)?">/);
     assert.match(html, /<footer class="site-footer">/);
     assert.match(html, /class="page-title-row"/);
     assert.match(html, /class="page-title-group"/);
@@ -292,6 +400,7 @@ test('maintained bilingual pages use the shared site shell', () => {
 test('the shared shell uses warm neutral tokens and domain accent tokens', () => {
   const shellCss = fs.readFileSync(path.join(repositoryRoot, 'assets', 'site-shell.css'), 'utf8');
   const homeHtml = fs.readFileSync(path.join(repositoryRoot, 'index.html'), 'utf8');
+  const homeCss = fs.readFileSync(path.join(repositoryRoot, 'assets', 'home.css'), 'utf8');
   const guitarHtml = fs.readFileSync(
     path.join(repositoryRoot, 'tools', 'guitar-strumming', 'index.html'),
     'utf8',
@@ -305,6 +414,7 @@ test('the shared shell uses warm neutral tokens and domain accent tokens', () =>
   assert.match(shellCss, /--site-panel-background:\s*#fffdf7/);
   assert.match(shellCss, /--site-inset-surface:\s*#f2f0e9/);
   assert.match(shellCss, /--site-subtle-surface:\s*#f8f6ef/);
+  assert.match(shellCss, /--site-focus:\s*#9b5c00/);
   assert.match(
     shellCss,
     /\.language-switcher button\s*\{[^}]*font-weight:\s*700/s,
@@ -314,7 +424,14 @@ test('the shared shell uses warm neutral tokens and domain accent tokens', () =>
     shellCss,
     /\[data-domain="guitar"\]\s*\{[^}]*--tool-accent:\s*#27644e/s,
   );
-  assert.match(homeHtml, /class="panel tool-card" data-domain="guitar"/);
+  assert.match(homeHtml, /class="contact-directory social-directory"/);
+  assert.match(homeCss, /--home-link:\s*#3f3a31/);
+  assert.match(homeCss, /\.social-icon\s*\{[^}]*fill:\s*currentcolor/s);
+  assert.match(homeCss, /\.social-separator\s*\{[^}]*width:\s*1px/s);
+  assert.match(
+    homeCss,
+    /\.social-link:focus-visible\s*\{[^}]*outline:\s*0[^}]*background:\s*var\(--home-link\)/s,
+  );
   assert.match(guitarHtml, /<html[^>]*data-domain="guitar"/);
   assert.doesNotMatch(guitarCss, /--tool-accent:/);
   assert.doesNotMatch(guitarCss, /--site-background:/);

@@ -1,8 +1,8 @@
-# Vincent's Website
+# volo1st's Website
 
-This repository contains Vincent's public website and static browser tools. GitHub Pages hosts the website.
+This repository contains volo1st's public website and static browser tools. GitHub Pages hosts the website.
 
-The current home page is a tools directory. The long-term plan will make the home page a public personal introduction and portfolio.
+The home page is volo1st's public introduction. It links to the [Code](code/), [Sound](sound/), and [Music](music/) sections. The tools directory is available at [`/tools/`](tools/).
 
 See [`plan.md`](plan.md) for current actions, product direction, and delivery phases.
 
@@ -10,11 +10,15 @@ See [`plan.md`](plan.md) for current actions, product direction, and delivery ph
 
 - [CSV to ABA Converter](tools/csv2aba-v2/) is the current converter. The former address redirects to it. One normal CBA payment run will complete its workflow validation.
 - [Legacy CSV to ABA Converter](tools/csv2aba-legacy/) is the fallback. Its conversion logic remains unchanged.
-- [Guitar Strum Machine](tools/guitar-strumming/) makes a looping guitar backing track from plain-text input. The home page links to this tool.
+- [Guitar Strum Machine](tools/guitar-strumming/) makes a looping guitar backing track from plain-text input. The tools directory links to this tool.
 
-The home page, version 2 converter, and Guitar Strum Machine support English and Simplified Chinese. The site stores the selected language code in browser local storage. A language change does not change guitar arrangement text, playback state, or share-link data.
+The home page uses English. The tools directory, version 2 converter, and Guitar Strum Machine support English and Simplified Chinese. The site stores the selected tool language in browser local storage. A language change does not change guitar arrangement text, playback state, or share-link data.
 
-The maintained pages use `assets/site-shell.css` for the shared header, footer, language control, and design tokens. Each tool uses the same semantic shell classes. The shared shell maps a semantic `data-domain` value to each domain accent. A home-page tool card uses the accent of its destination. The original pixel-art `V` block is the shared site icon. The legacy CSV-to-ABA conversion logic remains unchanged.
+The maintained pages use `assets/site-shell.css` for shared identity and design tokens. Bilingual tool pages also use its footer and language control. The home page uses `assets/home.css` for its namecard layout. The public section indexes use `assets/section-index.css`. The shared shell maps a semantic `data-domain` value to each tool accent. The original pixel-art `V` block is the shared site icon. The legacy CSV-to-ABA conversion logic remains unchanged.
+
+The home page draws a small Sagittarius constellation in the space between the introduction and contact links. The principal star positions use normalized J2000 International Celestial Reference System (ICRS) data from SIMBAD. Small circular particles form the stars and dotted connections. The connections are a simplified drawing, not an official constellation boundary. The local canvas effect stops when the page is hidden and hides when the available space is too small. Add `?constellation=off` to disable the effect for comparison.
+
+The home page uses local SVG paths from Simple Icons version 16 for its social links. The paths use the CC0 1.0 Simple Icons collection. Each mark renders in the page text color. The page does not request an icon font, script, or image from a third party.
 
 Maintained HTML pages reference interface assets with a short SHA-256 content hash. Update the hash when a CSS or JavaScript file changes. The repository check rejects a stale hash. Legacy assets remain unversioned because the legacy fallback is frozen except for a critical fix.
 

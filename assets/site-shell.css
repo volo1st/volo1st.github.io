@@ -20,7 +20,7 @@
   --site-control-border: #777263;
   --site-panel-border: #a9a38f;
   --site-divider: #d2cdbd;
-  --site-focus: #d78300;
+  --site-focus: #9b5c00;
   --site-panel-shadow: 0 0.2rem 0.8rem rgb(63 53 30 / 10%);
   --tool-accent: #075a9c;
   --tool-accent-hover: #064978;
@@ -119,6 +119,18 @@ textarea:focus-visible,
   height: 100%;
 }
 
+.site-name {
+  color: var(--site-text);
+  font-size: 1.15rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.site-name:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
 .site-header h1 {
   min-width: 0;
   margin: 0;
@@ -182,6 +194,13 @@ textarea:focus-visible,
 .site-footer-home img {
   width: 24px;
   height: 24px;
+}
+
+.site-footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  font-weight: 700;
 }
 
 @media (max-width: 480px) {

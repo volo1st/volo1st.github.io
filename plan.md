@@ -20,18 +20,19 @@ Tool specifications and operating checklists remain with their tools. They do no
 
 ## 3. Current status
 
-Status verified on 1 October 2026.
+Status verified on 2 October 2026.
 
-- The root page is a tools directory.
+- The root page is volo1st's public introduction.
 - CSV to ABA Converter version 2 is the current converter.
 - The former converter address redirects to version 2.
 - The legacy converter remains available as a rollback path.
+- The tools directory is available at `/tools/`.
 - Guitar Strum Machine is available from the tools directory.
 - The Chinese-English text sorter was removed.
 - The public-homepage source content and privacy boundary are approved.
-- The public-homepage visual design is the next website package.
+- The owner approved the public homepage and section indexes for release.
 - The CSV-to-ABA workflow validation waits for one normal Commonwealth Bank of Australia (CBA) payment run.
-- No feature package is active after this documentation consolidation.
+- No implementation package is active after the public-homepage build.
 
 ## 4. Product direction and boundaries
 
@@ -68,12 +69,12 @@ Use this target structure when the applicable content is ready:
 | Address | Purpose |
 | --- | --- |
 | `/` | Personal introduction and selected highlights |
-| `/about/` | Longer biography and interests |
-| `/work/` | Public software engineering portfolio |
-| `/music/` | Audio, live sound, performance, and music portfolio |
+| `/code/` | Software engineering and public code index |
+| `/sound/` | Audio, live sound, and studio index |
+| `/music/` | Performance, music, and practice index |
+| `/about/` | Longer biography and interests when useful content exists |
 | `/projects/` | Public applications, experiments, and ideas |
 | `/tools/` | Browser-tool directory |
-| `/contact/` | Approved contact methods |
 
 Do not move an existing tool only to match this structure. Preserve its address or add a tested redirect.
 
@@ -153,51 +154,38 @@ Completion gate: The current converter matches the source report, and CBA accept
 - [x] Decide whether public identity pages use English only or two languages.
 - [x] Select the first work and music highlights.
 
-Evidence: The owner approved the source content, profiles, privacy boundary, and homepage hierarchy on 1 October 2026. The approved inventory follows this checklist.
+Evidence: The owner approved the source content, profiles, privacy boundary, English-only homepage, and homepage hierarchy on 1 October 2026. The approved inventory follows this checklist.
 
 ### 7.1 Homepage identity and introduction
 
-Use `Vincent` as the public name. Use `volo1st` as the online identity and site name.
+Use `Vincent` only in the homepage greeting. Use lowercase `volo1st` as the public identity and site name everywhere else in the interface.
 
 Use this English introduction:
 
 > Hi, I’m Vincent.
 >
-> I build software, work with sound, and play music.
+> I code, shape sound, and make noise.
 >
 > Online, I’m `volo1st`.
 
-Use this Simplified Chinese introduction:
-
-> 你好，我是 Vincent。
->
-> 我写软件，也和声音、音乐打交道。
->
-> 在网上，我是 `volo1st`。
+Link `code`, `sound`, and `noise` to `/code/`, `/sound/`, and `/music/`. The sentence is both the introduction and the section navigation.
 
 ### 7.2 Areas of interest
 
-Use four short cards. Keep the order shown here.
+Keep this approved source for future section pages. Do not show these summaries on the homepage until they have useful destination pages.
 
-| Area | English | Simplified Chinese |
-| --- | --- | --- |
-| Software | From serious systems to tiny tools, I like making useful things. | 从严肃的系统到小巧的工具，我喜欢做实用的东西。 |
-| Audio | Recordings, rooms, and live stages. I enjoy making all of them sound better. | 从录音、房间到现场舞台，我喜欢让它们听起来更好。 |
-| Music | Six strings. 88 keys. More enthusiasm than expertise. | 六根弦，88 个键。热情多过专业。 |
-| Games | Hyrule for adventure. Sanctuary for loot. The backlog for later. | 在海拉鲁冒险，在庇护之地刷装备，游戏库以后再说。 |
-
-### 7.3 Selected highlights
-
-Feature Guitar Strum Machine as the primary public project. Reuse its approved name and short description. Link to `/tools/guitar-strumming/`.
-
-Highlight Bits & Beats Studio as the audio and music identity. Use this text:
-
-| Language | Text |
+| Area | Text |
 | --- | --- |
-| English | Making music, sharing ideas, and overthinking details only we can hear. |
-| Simplified Chinese | 做音乐，分享想法，也反复琢磨那些可能只有我们听得见的细节。 |
+| Software | From serious systems to tiny tools, I like making useful things. |
+| Audio | Recordings, rooms, and live stages. I enjoy making all of them sound better. |
+| Music | Six strings. 88 keys. More enthusiasm than expertise. |
+| Games | Hyrule for adventure. Sanctuary for loot. The backlog for later. |
 
-Do not feature CSV to ABA Converter on the homepage. It has a narrow operational audience. Keep it in the tools directory.
+### 7.3 Homepage project visibility
+
+Do not feature Guitar Strum Machine or CSV to ABA Converter on the homepage. Keep both tools in the tools directory. A tool does not become a personal highlight only because it is public.
+
+Do not present Bits & Beats Studio as a separate field of work. It spans audio and music. Use it only as the contact identity for music and audio projects on the homepage.
 
 ### 7.4 Profiles and contact
 
@@ -205,35 +193,28 @@ Show these links in two groups:
 
 | Group | Service | Address |
 | --- | --- | --- |
-| Vincent | GitHub | `https://github.com/volo1st` |
-| Vincent | YouTube | `https://www.youtube.com/channel/UChax0NeR_an7cMygg56mnXg/videos` |
-| Vincent | Bilibili | `https://space.bilibili.com/14769433` |
-| Vincent | RedNote | `https://www.xiaohongshu.com/user/profile/621ad629000000001000c5fb` |
+| volo1st | GitHub | `https://github.com/volo1st` |
+| volo1st | YouTube | `https://www.youtube.com/channel/UChax0NeR_an7cMygg56mnXg/videos` |
+| volo1st | Bilibili | `https://space.bilibili.com/14769433` |
+| volo1st | RedNote | `https://www.xiaohongshu.com/user/profile/621ad629000000001000c5fb` |
 | Bits & Beats Studio | Instagram | `https://www.instagram.com/bits.n.beats/` |
 | Bits & Beats Studio | RedNote | `https://www.xiaohongshu.com/user/profile/5e7818aa0000000001006bf7` |
 
-Use this contact text:
-
-| Language | Text |
-| --- | --- |
-| English | For music, audio, or studio projects, message Bits & Beats Studio on Instagram or RedNote. |
-| Simplified Chinese | 如需合作音乐、音频或录音室项目，请通过 Instagram 或小红书联系 Bits & Beats Studio。 |
+Group the personal and Bits & Beats Studio links separately. Show monochrome service icons without visible group labels. Put one vertical separator between the groups. Give each link a precise accessible name and tooltip. Distinguish the two RedNote destinations in those names.
 
 ### 7.5 Homepage hierarchy and addresses
 
 Use this content order:
 
-1. Shared header and language control.
-2. Introduction.
-3. Areas of interest.
-4. Guitar Strum Machine.
-5. Bits & Beats Studio.
-6. Public profiles and contact.
-7. Shared footer and a link to all tools.
+1. Introduction and section links.
+2. Sagittarius identity signal.
+3. One compact social-link strip with separate personal and studio groups.
 
 Replace the tools-only root page with the personal homepage. Move the current directory purpose to `/tools/`. Keep all existing tool addresses unchanged.
 
-The homepage and tools directory use English and Simplified Chinese. Keep the translation key sets identical. Keep the compact language control in the shared header.
+The homepage uses English only. Humorous and personal text does not translate literally with the intended voice. The tools directory and maintained tools use English and Simplified Chinese. Keep the tool translation key sets identical. Keep the compact language control on bilingual tool pages.
+
+The homepage does not link to itself, the complete tools directory, or an individual tool. It links to the Code, Sound, and Music section indexes. External profile links open in a new tab.
 
 ### 7.6 Privacy and publication boundary
 
@@ -280,81 +261,52 @@ Evidence: The following public-site design specification defines the wide layout
 
 The public site must feel warm, practical, personal, and lightly playful. It must not look like a resume, a corporate portfolio, a terminal, or a game interface.
 
-Keep the existing warm page and panel backgrounds. Use the pixel `V` mark and small block details as the retro elements. Do not add decorative animation. Do not use a pixel font for body text.
+Keep the existing warm page background. Keep the pixel `V` as the browser icon, but do not repeat it as an in-page logo. Do not add an element that exists only as decoration. The Sagittarius signal communicates Vincent's star sign. Do not use a pixel font for body text.
 
 Use this visual hierarchy:
 
 1. Make the introduction the largest item.
-2. Show the four areas as compact supporting cards.
-3. Give Guitar Strum Machine the strongest project action.
-4. Give Bits & Beats Studio a separate but balanced highlight.
-5. Keep profile links compact and easy to scan.
-6. Keep the tools-directory link available without making it a homepage feature.
+2. Keep the social icons compact and easy to scan.
+3. Separate the personal and studio groups with one quiet vertical rule.
 
 #### 8.2.2 Layout rules
 
-Keep the current 960-pixel maximum content width. Use the existing shared header, language control, page gutter, panels, buttons, and footer.
+Keep the current 960-pixel maximum content width. Use the existing page gutter, text colors, and focus style. Do not put the site header, tool language control, panels, buttons, or footer on the homepage unless they have a homepage function.
 
 On wide screens:
 
-- Keep the `V` mark and `volo1st` at the left of the header.
-- Keep the language control at the right of the header.
-- Limit the introduction text width so that each sentence remains easy to scan.
-- Show the four area cards in one row.
-- Show Guitar Strum Machine and Bits & Beats Studio in a two-column highlight row. Give the guitar project more width.
-- Show the Vincent and studio profile groups in two columns.
+- Let the short introduction use the available width.
+- Put the Sagittarius signal in the blank space between the introduction and social strip.
+- Show the personal and studio profiles in one compact icon strip.
+- Use a bounded page region between 30 and 42 rem high. Distribute the introduction and contact directory within that region.
 
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│ [V] volo1st                                      [EN|中文]  │
-├──────────────────────────────────────────────────────────────┤
 │ Hi, I’m Vincent.                                             │
-│ I build software, work with sound, and play music.           │
+│ I code, shape sound, and make noise.                          │
 │ Online, I’m volo1st.                                         │
-├──────────────┬──────────────┬──────────────┬─────────────────┤
-│ Software     │ Audio        │ Music        │ Games           │
-├─────────────────────────────────────┬────────────────────────┤
-│ Guitar Strum Machine                │ Bits & Beats Studio    │
-│ [Open guitar tool]                  │ Studio links           │
-├──────────────────────────────┬───────────────────────────────┤
-│ Vincent profiles             │ Studio profiles and contact  │
-├──────────────────────────────┴───────────────────────────────┤
-│ [V] volo1st                                      All tools  │
+│                     · Sagittarius ·                          │
+├──────────────────────────────────────────────────────────────┤
+│ [GitHub] [YouTube] [Bilibili] [RedNote] | [Instagram] [...] │
 └──────────────────────────────────────────────────────────────┘
 ```
 
 On narrow screens:
 
-- Keep the brand and language control on one header row.
-- Use one content column for the introduction and highlights.
-- Use two columns for the area cards when each card can be at least 10 rem wide.
-- Change the area cards to one column when the available width is smaller.
-- Stack the profile groups.
+- Use one content column for the introduction.
+- Keep the Sagittarius signal clear of the introduction and social strip.
+- Keep the social icon groups on one row when the available width permits it.
+- Use the small viewport height so that the layout fills approximately one visible phone screen.
 - Do not use horizontal page scrolling.
-- Keep each primary action at least 2.75 rem high and full width.
 
 ```text
 ┌─────────────────────────────┐
-│ [V] volo1st      [EN|中文]  │
-├─────────────────────────────┤
 │ Hi, I’m Vincent.            │
-│ I build software...         │
+│ I code, shape sound...      │
 │ Online, I’m volo1st.        │
-├──────────────┬──────────────┤
-│ Software     │ Audio        │
-├──────────────┼──────────────┤
-│ Music        │ Games        │
-├──────────────┴──────────────┤
-│ Guitar Strum Machine       │
-│ [Open guitar tool]         │
+│       · Sagittarius ·       │
 ├─────────────────────────────┤
-│ Bits & Beats Studio        │
-├─────────────────────────────┤
-│ Vincent profiles           │
-├─────────────────────────────┤
-│ Studio profiles and contact│
-├─────────────────────────────┤
-│ [V] volo1st      All tools │
+│ [GH] [YT] [BI] [RN] | [...]│
 └─────────────────────────────┘
 ```
 
@@ -371,18 +323,16 @@ Keep these shared colors:
 | Main text | `#17202a` |
 | Muted text | `#4a4a43` |
 
-Use semantic accents for the area and highlight cards:
+Use these homepage-specific colors:
 
-| Role | Accent | Soft background |
-| --- | --- | --- |
-| Software | `#075a9c` | `#e8f3fb` |
-| Audio and studio | `#8a4b12` | `#f8ede3` |
-| Music and guitar | `#27644e` | `#edf5f1` |
-| Games | `#6a3f7a` | `#f2eefa` |
+| Role | Color |
+| --- | --- |
+| External links | `#3f3a31` |
+| External-link hover | `#171512` |
 
-Use color as a supporting cue. Keep a visible heading or label on each card.
+Render social icons with the external-link color. Keep each service and contact purpose in the link's accessible name and tooltip.
 
-The main text has 14.57:1 contrast against the page background. The muted text has 7.91:1. Each accent has at least 6.67:1 contrast against the panel background.
+The main text has 14.57:1 contrast against the page background. The muted text has 7.91:1. The external-link color has more than 9:1 contrast against the page background.
 
 Change the shared focus color from `#d78300` to `#9b5c00` during implementation. The current color has 2.61:1 contrast against the page background. The replacement has 4.74:1. Keep the three-pixel focus outline and three-pixel offset.
 
@@ -390,25 +340,28 @@ Change the shared focus color from `#d78300` to `#9b5c00` during implementation.
 
 The first homepage release is text-first. Do not add a portrait, game artwork, client media, studio photograph, or social feed.
 
-Use only these visual assets in the first release:
+Use the existing pixel `V` browser icon, local social SVGs, CSS rules, and the local Sagittarius canvas in the first release. Normalize the principal star positions from [SIMBAD](https://simbad.cds.unistra.fr/simbad/) J2000 ICRS coordinates. The dotted connection topology is a simplified visual guide. It is not an official constellation boundary or figure.
 
-- the existing pixel `V` mark;
-- CSS borders, blocks, and soft accent backgrounds; and
-- the existing Guitar Strum Machine preview only when a later design gives it a clear purpose.
+Use version 16 SVG paths from the [Simple Icons](https://github.com/simple-icons/simple-icons) CC0 1.0 collection for GitHub, YouTube, Bilibili, Xiaohongshu, and Instagram. Store the paths locally. Render them with the current text color. Do not load a third-party icon dependency at runtime.
+
+Draw the signal in one neutral color. Use small anti-aliased circular particles. Let it drift and morph smoothly within the available gap. Make the movement clear during a short visit. Let the figure approach the safe horizontal edges. Do not let it overlap text or links. Hide it when the gap is too small. Stop motion when the page is hidden. Do not make a network request. Support `?constellation=off` for visual comparison.
 
 For later media, use only media that Vincent owns or has approval to publish. Add useful alternative text to meaningful media. Use an empty alternative description for decoration. Set image dimensions to prevent layout movement. Do not load a social embed or third-party tracking script.
 
 ### 8.3 Public-site implementation
 
-- [ ] Replace the tools-only root page with the personal homepage.
-- [ ] Add shared site navigation.
-- [ ] Add a tools directory at `/tools/`.
-- [ ] Add the approved biography, highlights, profiles, and contact path.
-- [ ] Add complete page descriptions and social-preview metadata.
+- [x] Replace the tools-only root page with the personal homepage.
+- [x] Add shared site navigation.
+- [x] Add a tools directory at `/tools/`.
+- [x] Add the approved introduction, profiles, and contact path.
+- [x] Add complete page descriptions and social-preview metadata.
+- [x] Add useful Code, Sound, and Music section indexes.
 - [ ] Add a not-found page if GitHub Pages supports the required behavior.
-- [ ] Use the same approved tool names and letter case on all pages.
+- [x] Use the same approved tool names and letter case on all pages.
 - [ ] Decide which prototype and tool pages search engines can index.
 - [ ] Test keyboard use, narrow screens, and 200 percent zoom.
+
+Evidence: The root page contains the approved English source and public profiles. Its linked introduction opens the Code, Sound, and Music section indexes. The Code index links to `/tools/`, the Sound index links to Bits & Beats Studio, and the Music index links to public music profiles and Guitar Strum Machine. Existing tool addresses did not change. Automated tests check the internal links, section destinations, tool translations, metadata, identity boundary, tool selection, semantic accents, external-link behavior, and current asset hashes. Owner browser review remains open.
 
 Completion gate: The deployed root address works as a public namecard, and all existing tools remain available.
 
@@ -521,12 +474,28 @@ Waiting work is not a blocker for unrelated tool maintenance.
 | 1 October 2026 | Keep the current ABA user and remitter name public and unchanged. | The owner confirmed that the value is safe to publish. A replacement would change generated payment files. |
 | 1 October 2026 | Validate the current converter through the normal CBA payment procedure. | The converter supports one established workflow. CBA upload acceptance plus the operator's entry, count, and total review is the applicable completion evidence. |
 | 1 October 2026 | Remove general CBA rule research and configurable ABA source settings from the plan. | The converter supports only the current fixed workflow. The owner does not plan to make it a general ABA product. |
-| 1 October 2026 | Present `Vincent` as the public name and `volo1st` as the online identity. | The public page must feel personal without reading like a resume. |
+| 1 October 2026 | Use `Vincent` in the homepage greeting and lowercase `volo1st` everywhere else in the interface. | The greeting stays personal while the site and section identity remains consistent with the online handle. |
 | 1 October 2026 | Feature Guitar Strum Machine on the homepage and keep CSV to ABA Converter in the tools directory. | The guitar tool has a broad public audience. The converter serves one narrow operational workflow. |
 | 1 October 2026 | Keep the public homepage bilingual. | English and Simplified Chinese already form the shared site language model. |
 | 1 October 2026 | Group approved public profiles under Vincent and Bits & Beats Studio. | The groups separate personal work from the studio identity without adding a private profile. |
 | 1 October 2026 | Use a text-first homepage with restrained pixel details and semantic accents. | The design stays personal and playful without competing with the content or adding media approval work. |
 | 1 October 2026 | Use a darker shared focus color during homepage implementation. | The current amber does not meet the three-to-one non-text contrast target against the page background. |
+| 1 October 2026 | Replace the card-grid homepage with a personal workbench layout. | Open typography, indexed rows, flat highlights, and plain link directories feel authored rather than assembled from framework components. |
+| 1 October 2026 | Make the homepage English-only and keep tools bilingual. | Literal translation weakens the personal voice and humor. Translation remains important for task-focused tool interfaces. |
+| 1 October 2026 | Remove decorative homepage elements and redundant homepage navigation. | Each visible element must communicate information or provide an action. |
+| 1 October 2026 | Open external homepage profile links in a new tab. | Visitors can keep the homepage open while they inspect an external profile. |
+| 1 October 2026 | Use reversed colors for homepage link focus. | The compact contact directory does not need the shared three-pixel focus outline. Color reversal keeps the state visible without changing font weight. |
+| 1 October 2026 | Keep category summaries and browser tools off the first homepage. | The homepage is a public namecard. Category details belong on useful section pages, and tools belong in the tools directory. |
+| 1 October 2026 | Use Bits & Beats Studio only as the homepage contact identity for music and audio projects. | The studio spans both areas and does not need a separate homepage description. |
+| 1 October 2026 | Remove the in-page logo and distribute the namecard within a viewport-aware page region. | The introduction already provides identity. Responsive vertical distribution uses sparse space without adding content or decoration. |
+| 1 October 2026 | Prototype an interaction-driven link signal in the homepage gap. | Each point maps to an external link. The effect stays idle without animation and has a no-signal comparison mode. |
+| 1 October 2026 | Remove the link-signal prototype. | The mapping was too subtle to understand on desktop and depended on hover that did not translate to mobile. |
+| 1 October 2026 | Use a restrained Sagittarius constellation as the homepage identity signal. | The constellation has personal meaning, works without hover, and gives the intentional blank space a function. Its star positions use SIMBAD data, while its dotted connections remain a simplified drawing. |
+| 1 October 2026 | Do not apply the reduced-motion preference to the constellation. | The effect is small, subtle, and not essential to page operation. |
+| 1 October 2026 | Keep the constellation automatic and non-interactive. | Sensor control requires permission and can disturb visitors. The small visual effect does not justify a prompt. |
+| 1 October 2026 | Use the introduction as navigation to Code, Sound, and Music. | Linked words avoid another navigation row and give the introduction a second function. Games remain a design influence until they have useful public content. |
+| 2 October 2026 | Replace homepage social text with one monochrome icon strip. | The icons reduce visual density. One separator preserves the personal and studio grouping without visible labels. Precise link names distinguish repeated services. |
+| 2 October 2026 | Mark sparse section indexes with “More when there’s something worth showing.” | The line sets expectations without an under-construction notice or placeholder content. |
 
 ## 16. Verified completion evidence
 
