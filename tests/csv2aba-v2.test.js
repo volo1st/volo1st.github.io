@@ -12,8 +12,8 @@ const i18n = require('../assets/i18n.js');
 const FIXED_DATE = new Date(2026, 8, 12);
 const VALID_CSV = [
   'BSB,Account,Name,Amount,Reference',
-  '062-010,10894862,Example Teacher,$63.00,teacher fee',
-  '062-443,13741935,Second Teacher,$25.00,teacher fee',
+  '000-000,000000001,Example Teacher,$63.00,teacher fee',
+  '000-001,000000002,Second Teacher,$25.00,teacher fee',
 ].join('\n');
 
 function loadV1WithFixedDate() {
@@ -64,7 +64,7 @@ test('v2 keeps the current total and record count', () => {
 
 test('v2 reports missing columns instead of returning undefined', () => {
   assert.throws(
-    () => v2.convert('BSB,Account\n062-010,10894862', { processDate: '120926' }),
+    () => v2.convert('BSB,Account\n000-000,000000001', { processDate: '120926' }),
     /Missing required CSV columns/,
   );
 });
@@ -72,18 +72,18 @@ test('v2 reports missing columns instead of returning undefined', () => {
 test('the CSV reader supports a quoted comma', () => {
   const csv = [
     'BSB,Account,Name,Amount,Reference',
-    '062-010,10894862,"Smith, Jane",$63.00,teacher fee',
+    '000-000,000000001,"Example, Teacher",$63.00,teacher fee',
   ].join('\n');
   const rows = v2.parseCsv(csv);
 
-  assert.equal(rows[0].Name, 'Smith, Jane');
+  assert.equal(rows[0].Name, 'Example, Teacher');
   assert.equal(rows[0].Amount, '$63.00');
 });
 
 test('the CSV reader supports escaped quotation marks', () => {
   const csv = [
     'BSB,Account,Name,Amount,Reference',
-    '062-010,10894862,"Teacher ""A""",$63.00,teacher fee',
+    '000-000,000000001,"Teacher ""A""",$63.00,teacher fee',
   ].join('\n');
 
   assert.equal(v2.parseCsv(csv)[0].Name, 'Teacher "A"');
@@ -92,7 +92,7 @@ test('the CSV reader supports escaped quotation marks', () => {
 test('the CSV reader supports quoted new lines', () => {
   const csv = [
     'BSB,Account,Name,Amount,Reference',
-    '062-010,10894862,"Example',
+    '000-000,000000001,"Example',
     'Teacher",$63.00,teacher fee',
   ].join('\r\n');
   const row = v2.parseCsv(csv)[0];
@@ -104,7 +104,7 @@ test('the CSV reader supports quoted new lines', () => {
 test('conversion rejects a quoted new line in an ABA field', () => {
   const csv = [
     'BSB,Account,Name,Amount,Reference',
-    '062-010,10894862,"Example',
+    '000-000,000000001,"Example',
     'Teacher",$63.00,teacher fee',
   ].join('\n');
 
@@ -114,11 +114,11 @@ test('conversion rejects a quoted new line in an ABA field', () => {
 test('the CSV reader supports a BOM and CRLF line ends', () => {
   const csv = [
     '\uFEFFBSB,Account,Name,Amount,Reference',
-    '062-010,10894862,Example Teacher,$63.00,teacher fee',
+    '000-000,000000001,Example Teacher,$63.00,teacher fee',
   ].join('\r\n');
   const row = v2.parseCsv(csv)[0];
 
-  assert.equal(row.BSB, '062-010');
+  assert.equal(row.BSB, '000-000');
   assert.equal(row.sourceRow, 2);
 });
 
@@ -126,7 +126,7 @@ test('the CSV reader ignores fully blank lines and keeps source rows', () => {
   const csv = [
     'BSB,Account,Name,Amount,Reference',
     '',
-    '062-010,10894862,Example Teacher,$63.00,teacher fee',
+    '000-000,000000001,Example Teacher,$63.00,teacher fee',
     '   ',
   ].join('\n');
   const rows = v2.parseCsv(csv);
@@ -137,33 +137,33 @@ test('the CSV reader ignores fully blank lines and keeps source rows', () => {
 
 test('the CSV reader rejects malformed quoted fields', () => {
   assert.throws(
-    () => v2.parseCsv('BSB,Account,Name,Amount,Reference\n062-010,10894862,"Example,$63.00,fee'),
+    () => v2.parseCsv('BSB,Account,Name,Amount,Reference\n000-000,000000001,"Example,$63.00,fee'),
     /open quotation mark/,
   );
   assert.throws(
-    () => v2.parseCsv('BSB,Account,Name,Amount,Reference\n062-010,10894862,"Example"x,$63.00,fee'),
+    () => v2.parseCsv('BSB,Account,Name,Amount,Reference\n000-000,000000001,"Example"x,$63.00,fee'),
     /text after a closing quotation mark/,
   );
 });
 
 test('the CSV reader rejects an incorrect field count', () => {
   assert.throws(
-    () => v2.parseCsv('BSB,Account,Name,Amount,Reference\n062-010,10894862,Example,$63.00'),
+    () => v2.parseCsv('BSB,Account,Name,Amount,Reference\n000-000,000000001,Example,$63.00'),
     /CSV line 2 has 4 fields; expected 5/,
   );
 });
 
 test('the CSV reader rejects invalid headers', () => {
   assert.throws(
-    () => v2.parseCsv('BSB,Account,Name,Amount,Name\n062-010,10894862,Example,$63.00,fee'),
+    () => v2.parseCsv('BSB,Account,Name,Amount,Name\n000-000,000000001,Example,$63.00,fee'),
     /duplicate headers: Name/,
   );
   assert.throws(
-    () => v2.parseCsv('BSB,Account,Name,Amount,Reference,Note\n062-010,10894862,Example,$63.00,fee,x'),
+    () => v2.parseCsv('BSB,Account,Name,Amount,Reference,Note\n000-000,000000001,Example,$63.00,fee,x'),
     /unexpected columns: Note/,
   );
   assert.throws(
-    () => v2.parseCsv('BSB,Account,Name,Amount,\n062-010,10894862,Example,$63.00,fee'),
+    () => v2.parseCsv('BSB,Account,Name,Amount,\n000-000,000000001,Example,$63.00,fee'),
     /header 5 is empty/,
   );
 });
@@ -228,7 +228,7 @@ test('amount parsing rejects zero and an excessive value', () => {
 test('conversion supports a correctly quoted thousands separator', () => {
   const csv = [
     'BSB,Account,Name,Amount,Reference',
-    '062-010,10894862,Example Teacher,"$1,234.56",teacher fee',
+    '000-000,000000001,Example Teacher,"$1,234.56",teacher fee',
   ].join('\n');
   const output = v2.convert(csv, { processDate: '120926' });
   const detailRecord = output.split('\n')[1];
@@ -239,7 +239,7 @@ test('conversion supports a correctly quoted thousands separator', () => {
 test('conversion rejects an empty amount with its source line', () => {
   const csv = [
     'BSB,Account,Name,Amount,Reference',
-    '062-010,10894862,Example Teacher,,teacher fee',
+    '000-000,000000001,Example Teacher,,teacher fee',
   ].join('\n');
 
   assert.throws(() => v2.convert(csv), /CSV line 2 field Amount/);
@@ -248,8 +248,8 @@ test('conversion rejects an empty amount with its source line', () => {
 test('conversion rejects an aggregate total overflow', () => {
   const csv = [
     'BSB,Account,Name,Amount,Reference',
-    '062-010,10894862,First Teacher,"$50,000,000.00",teacher fee',
-    '062-443,13741935,Second Teacher,"$50,000,000.00",teacher fee',
+    '000-000,000000001,First Teacher,"$50,000,000.00",teacher fee',
+    '000-001,000000002,Second Teacher,"$50,000,000.00",teacher fee',
   ].join('\n');
 
   assert.throws(() => v2.convert(csv), /CSV line 3 makes the ABA payment total exceed/);
@@ -268,8 +268,8 @@ test('file totals reject amount and record-count overflow', () => {
 
 function makePaymentRow(overrides = {}) {
   const row = {
-    BSB: '062-010',
-    Account: '10894862',
+    BSB: '000-000',
+    Account: '000000001',
     Name: 'Example Teacher',
     Amount: '$63.00',
     Reference: 'teacher fee',
@@ -359,7 +359,7 @@ test('payment validation rejects control characters', () => {
 test('conversion rejects an incomplete row instead of omitting it', () => {
   const csv = [
     'BSB,Account,Name,Amount,Reference',
-    '062-010,10894862,Example Teacher,$63.00,',
+    '000-000,000000001,Example Teacher,$63.00,',
   ].join('\n');
 
   assert.throws(() => v2.convert(csv), /CSV line 2 field Reference is required/);
@@ -368,7 +368,7 @@ test('conversion rejects an incomplete row instead of omitting it', () => {
 const MULTIPLE_ERROR_CSV = [
   'BSB,Account,Name,Amount,Reference',
   `062010,ABC123,${'N'.repeat(33)},abc,${'R'.repeat(19)}`,
-  '062-443,000-000,,0,teacher fee',
+  '000-001,000-000,,0,teacher fee',
 ].join('\n');
 
 test('conversion collects errors from all payment rows and fields', () => {

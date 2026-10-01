@@ -90,7 +90,10 @@ Do not move an existing tool only to match this structure. Preserve its address 
   - Evidence: The correction changed only the example table. Tests pin the approved HTML, JavaScript, and CSS hashes.
 - [x] Remove the text sorter when its maintenance cost exceeded its current value.
   - Evidence: The source was removed on 30 September 2026. Git history keeps it recoverable.
-- [ ] Review all tracked examples and fixtures for personal, payment, employer, and client data.
+- [x] Review all tracked examples and fixtures for personal, payment, employer, and client data.
+  - Evidence: The review found no email address. It found realistic legacy-derived BSB and account-like values in the converter tests and fixture. The approved correction replaces them with explicit structural placeholders and regenerates the golden ABA bytes.
+- [ ] Confirm that the fixed ABA source-identity values are approved for publication.
+  - Do not change them until the owner confirms the requirement. A change can alter real ABA output.
 
 Completion gate: Current users can continue their work without exposing confidential data.
 
@@ -306,9 +309,11 @@ Waiting work is not a blocker for unrelated tool maintenance.
 | 1 October 2026 | Make version 2 the default as a controlled forced trial. | Default use provides operator evidence. Required reviews and the legacy rollback path limit, but do not remove, payment risk. |
 | 1 October 2026 | Correct only the legacy example payment values. | The old examples were not clearly invented. The conversion logic and styles remain unchanged. |
 | 1 October 2026 | Replace the audit action plan and website roadmap with this plan. | One active plan prevents duplicate actions and conflicting status. The initial audit report remains the dated baseline. |
+| 1 October 2026 | Replace realistic legacy-derived identifiers in converter tests and fixtures. | Test data must be clearly invented. Use structural placeholders and regenerate the golden fixture without changing converter logic. |
 
 ## 16. Verified completion evidence
 
+- On 1 October 2026, the privacy review checked all 58 tracked files. It found no email address. It replaced realistic payment-like test identifiers and one person-like parser example with explicit invented values. The regenerated ABA fixture contains four 120-character records and approved invented labels only.
 - On 14 September 2026, the owner verified the current converter in Chrome on a MacBook Air and Safari on an iPhone 16 Pro. The owner also verified the page at 200 percent zoom.
 - On 29 September 2026, Guitar Strum Machine playback, sharing, presets, practice controls, responsive layout, and language behavior passed owner testing on the supported clients.
 - On 1 October 2026, the owner approved the shared warm theme, site shell, icon, and domain accents.

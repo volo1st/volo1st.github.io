@@ -153,6 +153,22 @@ test('the former converter address redirects to version 2 and preserves the lega
   }
 });
 
+test('converter examples use explicit invented identities', () => {
+  const currentHtml = fs.readFileSync(
+    path.join(repositoryRoot, 'tools', 'csv2aba-v2', 'index.html'),
+    'utf8',
+  );
+  const fixture = fs.readFileSync(
+    path.join(repositoryRoot, 'tests', 'fixtures', 'csv2aba-v2', 'basic.csv'),
+    'utf8',
+  );
+
+  assert.match(currentHtml, /<td>000-000<\/td>\s*<td>000000001<\/td>/);
+  assert.match(currentHtml, /data-i18n="v2\.exampleName">Example Teacher<\/td>/);
+  assert.match(fixture, /^000-000,000000001,Example Teacher,/m);
+  assert.match(fixture, /^000-001,000000002,Second Teacher,/m);
+});
+
 test('versioned interface assets use their current content hash', () => {
   const pages = [
     {

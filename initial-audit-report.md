@@ -68,7 +68,7 @@ See `generate_detail_record()` in [`tools/csv2aba-legacy/scripts.js`](tools/csv2
 
 ### 5.3 High: The CSV reader does not support quoted data
 
-The reader divides data at each comma and new line. It does not correctly read quoted commas, quoted new lines, or escaped quotation marks. For example, `"Smith, Jane"` moves the remaining values into the wrong columns.
+The reader divides data at each comma and new line. It does not correctly read quoted commas, quoted new lines, or escaped quotation marks. For example, `"Example, Teacher"` moves the remaining values into the wrong columns.
 
 See `parseCsv()` in [`tools/csv2aba-legacy/scripts.js`](tools/csv2aba-legacy/scripts.js).
 
