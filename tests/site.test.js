@@ -24,6 +24,20 @@ function findHtmlFiles(directory) {
   return files;
 }
 
+function findMarkdownFiles(directory) {
+  const files = [];
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    if (entry.name === '.git') continue;
+    const entryPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...findMarkdownFiles(entryPath));
+    } else if (entry.name.endsWith('.md')) {
+      files.push(entryPath);
+    }
+  }
+  return files;
+}
+
 function resolveLocalReference(htmlFile, reference) {
   const cleanReference = reference.split(/[?#]/, 1)[0];
   if (
@@ -53,6 +67,23 @@ test('all local HTML links and source files exist', () => {
           `${path.relative(repositoryRoot, htmlFile)} has a missing reference: ${reference}`,
         );
       }
+    }
+  }
+});
+
+test('all local Markdown links exist', () => {
+  for (const markdownFile of findMarkdownFiles(repositoryRoot)) {
+    const markdown = fs.readFileSync(markdownFile, 'utf8');
+    const references = [...markdown.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)]
+      .map((match) => match[1].split('#', 1)[0]);
+
+    for (const reference of references) {
+      if (reference === '' || /^(?:[a-z]+:)?\/\//i.test(reference)) continue;
+      const target = path.resolve(path.dirname(markdownFile), reference);
+      assert.ok(
+        fs.existsSync(target),
+        `${path.relative(repositoryRoot, markdownFile)} has a missing reference: ${reference}`,
+      );
     }
   }
 });

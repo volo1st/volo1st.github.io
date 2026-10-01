@@ -8,10 +8,10 @@ These instructions apply to all files in this repository.
 
 This repository contains Vincent's public website and static browser tools. GitHub Pages hosts the site.
 
-- `index.html` is the current tools home page. The roadmap will replace it with a personal home page.
+- `index.html` is the current tools home page. The plan will replace it with a personal home page.
 - `tools/csv2aba/` redirects to the current CSV-to-ABA converter.
 - `tools/csv2aba-legacy/` contains the legacy CSV-to-ABA converter.
-- `website-roadmap.md` is the source of truth for long-term website development.
+- `plan.md` is the source of truth for audit work and long-term website development.
 
 Keep the site usable without a build step unless the task requires a build system.
 
@@ -100,8 +100,8 @@ Add permanent automated tests when a change introduces behavior that can regress
 ## Documentation and work tracking
 
 - Use `initial-audit-report.md` as the record of the initial repository condition.
-- Use `initial-audit-action-plan.md` as the single source of truth for audit work.
-- Use `website-roadmap.md` as the single source of truth for long-term website development.
+- Use `initial-audit-report.md` only as the dated record of the initial repository condition.
+- Use `plan.md` as the single source of truth for audit work and long-term website development.
 - Update a checkbox only after its completion test passes.
 - Add evidence below the applicable checkbox when this is useful.
 - Record a rejected or changed action in the decision log.

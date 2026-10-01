@@ -4,19 +4,19 @@ This repository contains Vincent's public website and static browser tools. GitH
 
 The current home page is a tools directory. The long-term plan will make the home page a public personal introduction and portfolio.
 
-See [`website-roadmap.md`](website-roadmap.md) for the product direction and delivery phases.
+See [`plan.md`](plan.md) for current actions, product direction, and delivery phases.
 
 ## Tools
 
 - [CSV to ABA Converter](tools/csv2aba-v2/) is the current converter. The former address redirects to it for a controlled operator trial.
-- [Legacy CSV to ABA Converter](tools/csv2aba-legacy/) is the unchanged fallback.
+- [Legacy CSV to ABA Converter](tools/csv2aba-legacy/) is the fallback. Its conversion logic remains unchanged.
 - [Guitar Strum Machine](tools/guitar-strumming/) makes a looping guitar backing track from plain-text input. The home page links to this tool.
 
 The home page, version 2 converter, and Guitar Strum Machine support English and Simplified Chinese. The site stores the selected language code in browser local storage. A language change does not change guitar arrangement text, playback state, or share-link data.
 
 The maintained pages use `assets/site-shell.css` for the shared header, footer, language control, and design tokens. Each tool uses the same semantic shell classes. The shared shell maps a semantic `data-domain` value to each domain accent. A home-page tool card uses the accent of its destination. The original pixel-art `V` block is the shared site icon. The legacy CSV-to-ABA conversion logic remains unchanged.
 
-HTML references browser assets with a short SHA-256 content hash. Update the hash when a CSS or JavaScript file changes. The repository check rejects a stale hash.
+Maintained HTML pages reference registered interface assets with a short SHA-256 content hash. Update the hash when a registered CSS or JavaScript file changes. The repository check rejects a stale registered hash. The current converter's `core.js` and `app.js` files are not yet registered for this check. Legacy assets remain unversioned.
 
 The guitar tool can put the complete source in a share URL. Anyone who receives the URL can read the source. A browser sends the URL query to the website host when it opens the link. A URL-shortener service also receives the URL. A generated share URL must not exceed 750 characters. Decoded source must not exceed 65,536 UTF-8 bytes.
 

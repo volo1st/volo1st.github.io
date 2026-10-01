@@ -37,7 +37,7 @@ Do not record teacher names, account details, or other payment data in this file
 
 ## Record the result
 
-- [ ] Record the trial date in `initial-audit-action-plan.md`.
+- [ ] Record the trial date in `plan.md`.
 - [ ] Record whether the converter result matched the source report.
 - [ ] Record whether CBA accepted the file.
 - [ ] Record a problem without confidential payment data.

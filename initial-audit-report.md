@@ -7,7 +7,7 @@
 | Repository | `volo1st.github.io` |
 | Audit date | 12 September 2026 |
 | Audit method | Source review and local tests |
-| Action plan | [`initial-audit-action-plan.md`](initial-audit-action-plan.md) |
+| Current plan | [`plan.md`](plan.md) |
 
 Current status: The repository owner removed the text sorter on 30 September 2026. References to its source below record the repository condition on the audit date.
 
@@ -126,7 +126,7 @@ See [`tools/csv2aba-legacy/index.html`](tools/csv2aba-legacy/index.html) and [`t
 
 The sorter keeps a line only if it finds an English or Chinese character first. It removes some lines that start with a number, punctuation mark, or another script.
 
-See `process()` in [`tools/song_order/index.html`](tools/song_order/index.html).
+See `process()` in `tools/song_order/index.html` in Git history.
 
 **Effect:** The output can lose user data without a warning.
 
@@ -136,7 +136,7 @@ See `process()` in [`tools/song_order/index.html`](tools/song_order/index.html).
 
 The sorter loads `tiny-pinyin` from jsDelivr. The version is fixed, but the link has no Subresource Integrity (SRI) value. SRI lets the browser check the downloaded file. There is no local backup. A failure silently changes the result.
 
-See [`tools/song_order/index.html`](tools/song_order/index.html).
+See `tools/song_order/index.html` in Git history.
 
 **Effect:** A server or network failure can reduce function. The browser also sends a request to a third party.
 
