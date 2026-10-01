@@ -223,7 +223,8 @@ Status: Removed from scope. The tool and its third-party dependency are no longe
 - [ ] Document the GitHub Pages and custom-domain process.
 - [x] Verify the deployed home page, version 1, and version 2 routes.
   - Evidence: On 14 September 2026, the user confirmed that GitHub Pages deployed the changes and that all three production routes and their links worked.
-- [ ] Verify the deployed default redirect, current converter, and legacy fallback routes.
+- [x] Verify the deployed default redirect, current converter, and legacy fallback routes.
+  - Evidence: On 1 October 2026, the public home page linked only to the current converter. The former address served the redirect. The current and legacy routes loaded. The three deployed legacy file hashes matched the preserved local files.
 - [ ] Check production DNS, TLS, redirects, and the custom domain.
 - [ ] Check production HTTP security headers. Record GitHub Pages limits.
 - [ ] Define how often maintainers review dependencies and browser support.
