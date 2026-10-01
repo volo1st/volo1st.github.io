@@ -28,11 +28,10 @@ Status verified on 1 October 2026.
 - The legacy converter remains available as a rollback path.
 - Guitar Strum Machine is available from the tools directory.
 - The Chinese-English text sorter was removed.
-- Public-homepage implementation is paused. Tool maintenance can continue.
+- The public-homepage source content and privacy boundary are approved.
+- The public-homepage visual design is the next website package.
 - The CSV-to-ABA workflow validation waits for one normal Commonwealth Bank of Australia (CBA) payment run.
 - No feature package is active after this documentation consolidation.
-
-When public-homepage work resumes, create the public-content inventory and privacy boundary first.
 
 ## 4. Product direction and boundaries
 
@@ -143,16 +142,115 @@ Completion gate: The current converter matches the source report, and CBA accept
 
 ## 7. Phase 2: Define the public identity
 
-- [ ] Select the public name and primary site heading.
-- [ ] Write a one-sentence introduction.
-- [ ] Write a short biography.
-- [ ] Define the software engineering description.
-- [ ] Define the audio and music description.
-- [ ] List approved public profiles.
-- [ ] Select approved contact methods.
-- [ ] Define employer and confidentiality boundaries.
-- [ ] Decide whether public identity pages use English only or two languages.
-- [ ] Select the first work and music highlights.
+- [x] Select the public name and primary site heading.
+- [x] Write a one-sentence introduction.
+- [x] Write a short biography.
+- [x] Define the software engineering description.
+- [x] Define the audio and music description.
+- [x] List approved public profiles.
+- [x] Select approved contact methods.
+- [x] Define employer and confidentiality boundaries.
+- [x] Decide whether public identity pages use English only or two languages.
+- [x] Select the first work and music highlights.
+
+Evidence: The owner approved the source content, profiles, privacy boundary, and homepage hierarchy on 1 October 2026. The approved inventory follows this checklist.
+
+### 7.1 Homepage identity and introduction
+
+Use `Vincent` as the public name. Use `volo1st` as the online identity and site name.
+
+Use this English introduction:
+
+> Hi, I’m Vincent.
+>
+> I build software, work with sound, and play music.
+>
+> Online, I’m `volo1st`.
+
+Use this Simplified Chinese introduction:
+
+> 你好，我是 Vincent。
+>
+> 我写软件，也和声音、音乐打交道。
+>
+> 在网上，我是 `volo1st`。
+
+### 7.2 Areas of interest
+
+Use four short cards. Keep the order shown here.
+
+| Area | English | Simplified Chinese |
+| --- | --- | --- |
+| Software | From serious systems to tiny tools, I like making useful things. | 从严肃的系统到小巧的工具，我喜欢做实用的东西。 |
+| Audio | Recordings, rooms, and live stages. I enjoy making all of them sound better. | 从录音、房间到现场舞台，我喜欢让它们听起来更好。 |
+| Music | Six strings. 88 keys. More enthusiasm than expertise. | 六根弦，88 个键。热情多过专业。 |
+| Games | Hyrule for adventure. Sanctuary for loot. The backlog for later. | 在海拉鲁冒险，在庇护之地刷装备，游戏库以后再说。 |
+
+### 7.3 Selected highlights
+
+Feature Guitar Strum Machine as the primary public project. Reuse its approved name and short description. Link to `/tools/guitar-strumming/`.
+
+Highlight Bits & Beats Studio as the audio and music identity. Use this text:
+
+| Language | Text |
+| --- | --- |
+| English | Making music, sharing ideas, and overthinking details only we can hear. |
+| Simplified Chinese | 做音乐，分享想法，也反复琢磨那些可能只有我们听得见的细节。 |
+
+Do not feature CSV to ABA Converter on the homepage. It has a narrow operational audience. Keep it in the tools directory.
+
+### 7.4 Profiles and contact
+
+Show these links in two groups:
+
+| Group | Service | Address |
+| --- | --- | --- |
+| Vincent | GitHub | `https://github.com/volo1st` |
+| Vincent | YouTube | `https://www.youtube.com/channel/UChax0NeR_an7cMygg56mnXg/videos` |
+| Vincent | Bilibili | `https://space.bilibili.com/14769433` |
+| Vincent | RedNote | `https://www.xiaohongshu.com/user/profile/621ad629000000001000c5fb` |
+| Bits & Beats Studio | Instagram | `https://www.instagram.com/bits.n.beats/` |
+| Bits & Beats Studio | RedNote | `https://www.xiaohongshu.com/user/profile/5e7818aa0000000001006bf7` |
+
+Use this contact text:
+
+| Language | Text |
+| --- | --- |
+| English | For music, audio, or studio projects, message Bits & Beats Studio on Instagram or RedNote. |
+| Simplified Chinese | 如需合作音乐、音频或录音室项目，请通过 Instagram 或小红书联系 Bits & Beats Studio。 |
+
+### 7.5 Homepage hierarchy and addresses
+
+Use this content order:
+
+1. Shared header and language control.
+2. Introduction.
+3. Areas of interest.
+4. Guitar Strum Machine.
+5. Bits & Beats Studio.
+6. Public profiles and contact.
+7. Shared footer and a link to all tools.
+
+Replace the tools-only root page with the personal homepage. Move the current directory purpose to `/tools/`. Keep all existing tool addresses unchanged.
+
+The homepage and tools directory use English and Simplified Chinese. Keep the translation key sets identical. Keep the compact language control in the shared header.
+
+### 7.6 Privacy and publication boundary
+
+The approved public facts are the content in this inventory and the approved profile addresses.
+
+Do not publish these items without separate approval:
+
+- an employer name;
+- proprietary high-frequency trading information;
+- the private personal Instagram profile;
+- the relationship between CSV to ABA Converter and a family business;
+- private studio history, dimensions, or relocation details;
+- client, performer, or venue names;
+- unapproved photographs, recordings, or project media; or
+- social engagement counts.
+
+The homepage can describe Vincent's work and interests. Do not make it read like a resume. Keep the tone personal, concise, and lightly playful.
 
 Completion gate: Approved source content exists for the first public homepage. The content does not need placeholder claims.
 
@@ -251,7 +349,6 @@ Do not add a framework or build system only because the site has multiple pages.
 | Item | Status | Resume condition |
 | --- | --- | --- |
 | CSV-to-ABA workflow validation | Waiting | The operator runs the normal payment process and records non-confidential evidence. |
-| Public homepage | Paused | The owner resumes the Phase 2 content package. |
 | Chinese-English text sorter | Removed | A new requirement justifies recovery from Git history. |
 | Authentication for school tools | Deferred | A tool needs confidential configuration, stored data, or restricted access. |
 | Static-site generator | Deferred | Manual maintenance causes repeated errors or material delay. |
@@ -300,6 +397,10 @@ Waiting work is not a blocker for unrelated tool maintenance.
 | 1 October 2026 | Keep the current ABA user and remitter name public and unchanged. | The owner confirmed that the value is safe to publish. A replacement would change generated payment files. |
 | 1 October 2026 | Validate the current converter through the normal CBA payment procedure. | The converter supports one established workflow. CBA upload acceptance plus the operator's entry, count, and total review is the applicable completion evidence. |
 | 1 October 2026 | Remove general CBA rule research and configurable ABA source settings from the plan. | The converter supports only the current fixed workflow. The owner does not plan to make it a general ABA product. |
+| 1 October 2026 | Present `Vincent` as the public name and `volo1st` as the online identity. | The public page must feel personal without reading like a resume. |
+| 1 October 2026 | Feature Guitar Strum Machine on the homepage and keep CSV to ABA Converter in the tools directory. | The guitar tool has a broad public audience. The converter serves one narrow operational workflow. |
+| 1 October 2026 | Keep the public homepage bilingual. | English and Simplified Chinese already form the shared site language model. |
+| 1 October 2026 | Group approved public profiles under Vincent and Bits & Beats Studio. | The groups separate personal work from the studio identity without adding a private profile. |
 
 ## 16. Verified completion evidence
 
