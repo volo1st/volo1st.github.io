@@ -232,7 +232,8 @@ Completion gate: A new idea has a clear location, status, support model, and rel
 - [x] Add a repository README with purpose, tools, local use, and checks.
 - [x] Add one local command for syntax, tests, references, and whitespace.
 - [x] Add a release checklist for the current converter trial.
-- [ ] Correct or narrow browser-asset versioning so each documented hash claim is accurate.
+- [x] Apply browser-asset versioning to each maintained page asset.
+  - Evidence: The home page, current converter, and Guitar Strum Machine register their local interface assets in the SHA-256 stale-hash test. The frozen legacy fallback remains unversioned.
 - [ ] Document supported ABA settings without publishing real account data.
 - [ ] Select a license, or state that the repository has no license.
 - [ ] Document the GitHub Pages deployment process.

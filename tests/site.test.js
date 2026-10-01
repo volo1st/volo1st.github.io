@@ -188,6 +188,8 @@ test('versioned interface assets use their current content hash', () => {
         '../../assets/site.css',
         '../../assets/i18n.js',
         './styles.css',
+        './core.js',
+        './app.js',
       ],
     },
     {
