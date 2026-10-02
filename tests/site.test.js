@@ -5,6 +5,7 @@ const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const test = require('node:test');
+const zlib = require('node:zlib');
 
 const repositoryRoot = path.join(__dirname, '..');
 const i18n = require('../assets/i18n.js');
@@ -36,6 +37,46 @@ function findMarkdownFiles(directory) {
     }
   }
   return files;
+}
+
+function readSimpleRgbPng(file) {
+  const image = fs.readFileSync(file);
+  assert.deepEqual([...image.subarray(0, 8)], [137, 80, 78, 71, 13, 10, 26, 10]);
+  let offset = 8;
+  let width;
+  let height;
+  const compressed = [];
+  while (offset < image.length) {
+    const length = image.readUInt32BE(offset);
+    const type = image.toString('ascii', offset + 4, offset + 8);
+    const data = image.subarray(offset + 8, offset + 8 + length);
+    offset += length + 12;
+    if (type === 'IHDR') {
+      width = data.readUInt32BE(0);
+      height = data.readUInt32BE(4);
+      assert.equal(data[8], 8);
+      assert.equal(data[9], 2);
+      assert.equal(data[12], 0);
+    } else if (type === 'IDAT') {
+      compressed.push(data);
+    } else if (type === 'IEND') {
+      break;
+    }
+  }
+  const raw = zlib.inflateSync(Buffer.concat(compressed));
+  const rowLength = width * 3;
+  const colors = new Set();
+  for (let row = 0; row < height; row += 1) {
+    const rowOffset = row * (rowLength + 1);
+    assert.equal(raw[rowOffset], 0, 'The app icon must use an unfiltered RGB scanline.');
+    for (let pixelOffset = 1; pixelOffset <= rowLength; pixelOffset += 3) {
+      const red = raw[rowOffset + pixelOffset];
+      const green = raw[rowOffset + pixelOffset + 1];
+      const blue = raw[rowOffset + pixelOffset + 2];
+      colors.add(`${red},${green},${blue}`);
+    }
+  }
+  return { width, height, colors };
 }
 
 function resolveLocalReference(htmlFile, reference) {
@@ -292,7 +333,9 @@ test('versioned interface assets use their current content hash', () => {
       file: path.join(repositoryRoot, 'tools', 'guitar-strumming', 'index.html'),
       references: [
         '../../assets/favicon.svg',
+        '../../assets/app-icons/guitar-strum-machine-180.png',
         '../../assets/site-shell.css',
+        './manifest.webmanifest',
         './styles.css',
         '../../assets/i18n.js',
         './i18n.js',
@@ -326,6 +369,72 @@ test('versioned interface assets use their current content hash', () => {
         `${path.relative(repositoryRoot, page.file)} has a stale hash for ${reference}`,
       );
     }
+  }
+});
+
+test('the music app icon family uses one exact site palette', () => {
+  const iconDirectory = path.join(repositoryRoot, 'assets', 'app-icons');
+  const files = [
+    ['guitar-strum-machine-180.png', 180],
+    ['guitar-strum-machine-192.png', 192],
+    ['guitar-strum-machine-512.png', 512],
+    ['metronome-512.png', 512],
+    ['tuner-512.png', 512],
+    ['pitch-key-512.png', 512],
+  ];
+  const background = [244, 241, 232];
+  const foreground = [23, 62, 48];
+
+  for (const [filename, expectedSize] of files) {
+    const icon = readSimpleRgbPng(path.join(iconDirectory, filename));
+    assert.equal(icon.width, expectedSize);
+    assert.equal(icon.height, expectedSize);
+    assert.ok(icon.colors.has(background.join(',')));
+    assert.ok(icon.colors.has(foreground.join(',')));
+    for (const color of icon.colors) {
+      const channels = color.split(',').map(Number);
+      const amount = (background[0] - channels[0]) / (background[0] - foreground[0]);
+      for (let channel = 1; channel < 3; channel += 1) {
+        const expected = Math.round(
+          background[channel] * (1 - amount) + foreground[channel] * amount,
+        );
+        assert.ok(
+          Math.abs(channels[channel] - expected) <= 1,
+          `${filename} contains a color outside the approved palette: ${color}`,
+        );
+      }
+    }
+  }
+});
+
+test('the guitar page provides local home-screen metadata', () => {
+  const pagePath = path.join(repositoryRoot, 'tools', 'guitar-strumming', 'index.html');
+  const manifestPath = path.join(repositoryRoot, 'tools', 'guitar-strumming', 'manifest.webmanifest');
+  const html = fs.readFileSync(pagePath, 'utf8');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+
+  assert.match(html, /<meta name="theme-color" content="#f4f1e8" \/>/);
+  assert.match(html, /<link rel="apple-touch-icon" sizes="180x180" href="[^"]+" \/>/);
+  assert.equal(manifest.name, 'Guitar Strum Machine');
+  assert.equal(manifest.short_name, 'Strum Machine');
+  assert.equal(manifest.start_url, './');
+  assert.equal(manifest.scope, './');
+  assert.equal(manifest.display, 'standalone');
+  assert.equal(manifest.background_color, '#f4f1e8');
+  assert.equal(manifest.theme_color, '#f4f1e8');
+  assert.deepEqual(manifest.icons.map((icon) => icon.sizes), ['192x192', '512x512']);
+
+  for (const icon of manifest.icons) {
+    const [reference, declaredHash] = icon.src.split('?v=');
+    const iconPath = path.resolve(path.dirname(manifestPath), reference);
+    const actualHash = crypto
+      .createHash('sha256')
+      .update(fs.readFileSync(iconPath))
+      .digest('hex')
+      .slice(0, 12);
+    assert.equal(declaredHash, actualHash, `${reference} has a stale manifest hash`);
+    assert.equal(icon.type, 'image/png');
+    assert.equal(icon.purpose, 'any');
   }
 });
 

@@ -1,0 +1,24 @@
+{
+  "name": "Guitar Strum Machine",
+  "short_name": "Strum Machine",
+  "description": "Practise chord changes and strumming patterns with a looping guitar track.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f1e8",
+  "theme_color": "#f4f1e8",
+  "icons": [
+    {
+      "src": "../../assets/app-icons/guitar-strum-machine-192.png?v=70f6aa6069fa",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "../../assets/app-icons/guitar-strum-machine-512.png?v=9553c477ff76",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

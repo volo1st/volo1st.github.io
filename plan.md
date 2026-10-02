@@ -450,6 +450,8 @@ These items are unscheduled ideas. They are not approved projects or implementat
 
 Classify each idea under the project and tool model before implementation starts.
 
+The approved icon family uses abstract monoline and bar symbols. Each icon uses the site background `#f4f1e8` and the guitar accent `#173e30`. The Guitar Strum Machine uses its icon for home-screen installation. The other three icons record a visual direction only. They do not change the status of the app ideas.
+
 ## 14. Initial audit closure matrix
 
 | Finding | Current state | Remaining action |
@@ -516,9 +518,11 @@ Classify each idea under the project and tool model before implementation starts
 | 2 October 2026 | Mark sparse section indexes with “More when there’s something worth showing.” | The line sets expectations without an under-construction notice or placeholder content. |
 | 2 October 2026 | Name the directory “Tools” and use the shared breadcrumb shell on maintained tool pages. | The shorter name fits the public-site voice. Breadcrumb links provide sufficient navigation, so a repeated logo, large title, and footer add unnecessary visual weight. |
 | 2 October 2026 | Record the metronome, tuner, and song pitch and key tool as unscheduled ideas. | The concepts need product definitions before they become projects or implementation packages. |
+| 2 October 2026 | Use one abstract music-app icon family and the existing guitar page palette. | Shared colours and related line forms provide subtle ownership without adding a name or monogram to each icon. |
 
 ## 16. Verified completion evidence
 
+- On 2 October 2026, the owner approved the four-icon music-app family. Automated checks confirmed the shared palette, required image dimensions, current asset hashes, local manifest paths, and Guitar Strum Machine installation metadata. Installed appearance still requires a check on a deployed device.
 - On 2 October 2026, the owner approved the shared breadcrumb, English-only breadcrumb text, simplified language control, and footer removal on the maintained tool pages.
 - On 1 October 2026, the privacy review checked all 58 tracked files. It found no email address. It replaced realistic payment-like test identifiers and one person-like parser example with explicit invented values. The regenerated ABA fixture contains four 120-character records and approved invented labels only.
 - On 14 September 2026, the owner verified the current converter in Chrome on a MacBook Air and Safari on an iPhone 16 Pro. The owner also verified the page at 200 percent zoom.
