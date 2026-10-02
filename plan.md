@@ -438,6 +438,18 @@ Do not add a framework or build system only because the site has multiple pages.
 
 Waiting work is not a blocker for unrelated tool maintenance.
 
+### 13.1 App ideas
+
+These items are unscheduled ideas. They are not approved projects or implementation packages.
+
+| Idea | Initial purpose | Question to answer before planning |
+| --- | --- | --- |
+| Metronome | Provide a steady practice pulse. | Define the practice workflow and required rhythm controls. |
+| Tuner | Help a user tune an instrument. | Define the supported instruments, input method, and tuning modes. |
+| Song pitch and key shifter and recogniser | Recognise a song's pitch or key and help a user shift it. | Decide whether recognition and shifting belong in one app. Define the audio source and intended output. |
+
+Classify each idea under the project and tool model before implementation starts.
+
 ## 14. Initial audit closure matrix
 
 | Finding | Current state | Remaining action |
@@ -503,6 +515,7 @@ Waiting work is not a blocker for unrelated tool maintenance.
 | 2 October 2026 | Replace homepage social text with one monochrome icon strip. | The icons reduce visual density. One separator preserves the personal and studio grouping without visible labels. Precise link names distinguish repeated services. |
 | 2 October 2026 | Mark sparse section indexes with “More when there’s something worth showing.” | The line sets expectations without an under-construction notice or placeholder content. |
 | 2 October 2026 | Name the directory “Tools” and use the shared breadcrumb shell on maintained tool pages. | The shorter name fits the public-site voice. Breadcrumb links provide sufficient navigation, so a repeated logo, large title, and footer add unnecessary visual weight. |
+| 2 October 2026 | Record the metronome, tuner, and song pitch and key tool as unscheduled ideas. | The concepts need product definitions before they become projects or implementation packages. |
 
 ## 16. Verified completion evidence
 
