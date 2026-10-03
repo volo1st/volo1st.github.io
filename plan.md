@@ -457,7 +457,7 @@ The Pitch Shifter prototype is complete. Owner listening tests selected the Sign
 - [x] Compare Signalsmith Stretch and SoundTouchJS with full mixes, vocals, bass, drums, and different source formats.
   - Evidence: Owner listening tests found consistently better quality from Signalsmith Stretch. SoundTouchJS produced audible transient damage.
 - [x] Select the production algorithm and performance settings.
-  - Evidence: The owner could not hear a material quality difference between the default and cheaper Signalsmith presets. The cheaper preset processed a 246-second stereo file on an iPhone 16 Pro in 37.5 seconds total.
+  - Evidence: The owner could not hear a material quality difference between the default and cheaper Signalsmith presets. Production HTTPS tests processed the same 246-second, 48 kHz stereo file in approximately 2 seconds on an iPhone 16 Pro and 1.83 seconds on a Mac Studio with an M1 Max.
 - [x] Find the lower acceptable quality boundary.
   - Evidence: An 80/40 millisecond manual configuration was the fastest acceptable test setting, but it produced audible distortion. Faster settings sounded unacceptable across three different sources. Keep the official cheaper preset as the production quality margin.
 - [x] Add the focused bilingual interface, short preview, complete-file processing, and WAV download.
@@ -468,6 +468,8 @@ The Pitch Shifter prototype is complete. Owner listening tests selected the Sign
   - Evidence: The dependency record pins both source commits, Emscripten 6.0.10, both MIT licences, build options, and the three artifact hashes.
 - [x] Add permanent processing, WAV, interface, privacy, and dependency tests.
   - Evidence: Generated-tone tests run both Wasm variants. Additional tests cover exact duration, stereo alignment, pitch ratio, WAV structure, clipping, local-only code, translations, dependency hashes, and installation metadata.
+- [x] Record valid performance-test conditions.
+  - Evidence: The specification and README require HTTPS for iOS and iPadOS measurements. They record that WebKit Enhanced Security can disable just-in-time compilation on a plain HTTP local-area-network origin.
 - [ ] Verify keyboard use, narrow screens, and 200 percent zoom.
 - [x] Run the general repository check and review the complete diff.
   - Evidence: `./scripts/check.sh` passed on 3 October 2026. The final source review found no runtime request that can send audio.
@@ -549,9 +551,12 @@ The approved icon family uses abstract monoline and bar symbols. Each icon uses 
 | 3 October 2026 | Use one Pitch Shifter processing mode with SIMD and scalar Wasm variants. | One mode keeps the interface focused. SIMD gives a material speed improvement on tested Apple devices. The scalar variant keeps compatible browsers usable. |
 | 3 October 2026 | Reserve key recognition and MP3 export for later Pitch Shifter versions. | These features have separate algorithms, dependencies, tests, and failure states. WAV export provides a dependable version 1 result. |
 | 3 October 2026 | Use the official Signalsmith AudioWorklet path for live preview and keep the custom offline worker for export. | Live play, seek, and pitch changes improve the main workflow. The offline SIMD path remains faster than real time and provides the downloadable WAV. |
+| 3 October 2026 | Use HTTPS for iOS and iPadOS performance tests. | WebKit Enhanced Security can disable JavaScript and Wasm just-in-time compilation on a plain HTTP local-area-network origin. This behavior invalidated the absolute timing results from the local iPhone prototype. |
+| 3 October 2026 | Do not add a Pitch Shifter progress bar in version 1. | Production HTTPS tests completed the 246-second reference file in approximately 2 seconds on the tested iPhone and Mac. Keep the working status and cancel control for slower devices. |
 
 ## 16. Verified completion evidence
 
+- On 3 October 2026, the owner verified live preview and shifted WAV export through the deployed HTTPS site. The same 246-second, 48 kHz stereo file completed in approximately 2 seconds on an iPhone 16 Pro and 1.83 seconds on a Mac Studio with an M1 Max.
 - On 3 October 2026, the owner approved the pitch-shifter product boundary, direct semitone control, build-free dependency policy, algorithm comparison, WAV baseline, and staged key-recognition and MP3 extensions.
 - On 2 October 2026, the owner approved the four-icon music-app family. Automated checks confirmed the shared palette, required image dimensions, current asset hashes, local manifest paths, and Guitar Strum Machine installation metadata. The owner confirmed the deployed home-screen icon on an iPhone.
 - On 2 October 2026, the owner approved the shared breadcrumb, English-only breadcrumb text, simplified language control, and footer removal on the maintained tool pages.

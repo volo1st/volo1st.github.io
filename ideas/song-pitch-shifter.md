@@ -183,7 +183,11 @@ Owner listening tests selected Signalsmith Stretch. The tests found that:
 
 Use the official Signalsmith Stretch cheaper preset for version 1. Use the SIMD build when the browser supports it. Fall back to the equivalent scalar build when SIMD module setup fails.
 
-The iPhone 16 Pro processed a 246-second, 48 kHz stereo file in 37.5 seconds total with this preset. This measurement is evidence from one device and file. It is not a performance guarantee.
+Do not use a plain HTTP local-area-network address for performance tests on iOS or iPadOS. WebKit Enhanced Security can disable just-in-time compilation for JavaScript and Wasm on this type of origin. This behavior made the local iPhone prototype measurements much slower than production. It did not change the listening-test results.
+
+Run device performance tests through HTTPS. Record the secure-context state, device, operating system, browser, file duration, sample rate, channel count, pitch shift, engine, total time, and pitch-processing time.
+
+The owner tested the same 246-second, 48 kHz stereo file through the deployed HTTPS site. An iPhone 16 Pro completed the file in approximately 2 seconds. A Mac Studio with an M1 Max completed the file in 1.83 seconds. These measurements are evidence from one file on two devices. They are not performance guarantees.
 
 Automated signal tests do not prove musical quality. Keep the listening-test evidence with this selection.
 
@@ -226,6 +230,8 @@ Reject unsupported channel layouts or files that exceed the agreed processing li
 
 Show progress only when the processing component provides meaningful progress data. Otherwise, show an indeterminate working state.
 
+Do not add a progress bar in version 1. Keep the working status and cancel control for slower devices. Reconsider progress reporting only if representative HTTPS tests show a material wait.
+
 Let the user cancel processing. Remove all output from the cancelled operation.
 
 Keep the selected source file available after a processing error when it is safe to retry.
@@ -261,6 +267,7 @@ Release object addresses and large audio buffers when the user replaces a file o
 
 - [Web Audio API](https://www.w3.org/TR/webaudio/)
 - [WebAssembly Web API](https://www.w3.org/TR/wasm-web-api-1/)
+- [WebKit issue 324968: Enhanced Security on plain HTTP origins](https://bugs.webkit.org/show_bug.cgi?id=324968)
 - [WebCodecs](https://www.w3.org/TR/webcodecs/)
 - [Signalsmith Stretch](https://github.com/Signalsmith-Audio/signalsmith-stretch)
 - [SoundTouchJS](https://github.com/cutterbl/SoundTouchJS)

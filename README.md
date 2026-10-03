@@ -25,6 +25,8 @@ Maintained HTML pages reference interface assets with a short SHA-256 content ha
 
 Pitch Shifter keeps audio on the user's device. It does not upload the file or send audio over the network. It supports files that the browser can decode, mono or stereo audio, sample rates from 8 kHz through 192 kHz, a maximum duration of 30 minutes, and up to 128 MiB of decoded 32-bit PCM. It exports 16-bit PCM WAV files. It does not preserve source metadata. The tool uses pinned local Signalsmith Stretch WebAssembly (Wasm) modules. See its [dependency record](tools/pitch-shifter/docs/DEPENDENCIES.md) for source commits, licences, artifact hashes, and reproduction steps.
 
+Use HTTPS for Pitch Shifter performance tests on iOS and iPadOS. WebKit Enhanced Security can disable just-in-time compilation for JavaScript and Wasm on a plain HTTP local-area-network origin. This restriction can make local tests much slower than the deployed site. Record `window.isSecureContext` with each device measurement. See [WebKit issue 324968](https://bugs.webkit.org/show_bug.cgi?id=324968).
+
 The guitar tool can put the complete source in a share URL. Anyone who receives the URL can read the source. A browser sends the URL query to the website host when it opens the link. A URL-shortener service also receives the URL. A generated share URL must not exceed 750 characters. Decoded source must not exceed 65,536 UTF-8 bytes.
 
 The guitar page has a generic Open Graph preview. The preview does not include a fixed Open Graph URL, so an arrangement query remains in the shared link. Static metadata cannot show a different preview for each arrangement. Run `node scripts/generate-share-card.js` to regenerate the preview image.
