@@ -15,7 +15,7 @@ done
 echo "Check JavaScript syntax."
 while IFS= read -r -d '' javascript_file; do
   node --check "$javascript_file"
-done < <(find . -type f -name '*.js' -not -path './.git/*' -print0)
+done < <(find . -type f \( -name '*.js' -o -name '*.mjs' \) -not -path './.git/*' -print0)
 
 echo "Check shell syntax."
 while IFS= read -r -d '' shell_file; do

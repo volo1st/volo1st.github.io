@@ -2,9 +2,9 @@
 
 ## 1. Status
 
-This document defines the approved product direction and the technical questions that require a prototype.
+This document defines the approved version 1 product and engineering decisions.
 
-It does not approve implementation. Complete the algorithm comparison before implementation starts.
+The prototype is complete. Version 1 implementation is approved.
 
 ## 2. Product definition
 
@@ -81,7 +81,11 @@ Do not use simple resampling as a fallback. Simple resampling changes the pitch 
 
 ## 7. Preview and output
 
-The shifted preview and the downloaded file must use the same processed PCM result.
+Use live pitch-shifted playback as the primary preview. Let the user play, pause, seek, and change the semitone value while the audio plays. Use the same Signalsmith preset and pitch settings as the offline export. The real-time and offline paths do not need to produce identical PCM samples.
+
+Use the eight-second offline preview only when the browser cannot start the live AudioWorklet path. Keep this fallback available on an insecure local origin.
+
+The complete-result player and the download must use the same generated WAV object.
 
 Version 1 must export a 16-bit PCM WAV file. Preserve mono or stereo channel layout. Add the shift to the output file name. For example:
 
@@ -92,7 +96,7 @@ example-shifted-plus-3.wav
 
 Do not overwrite or modify the selected source file.
 
-If processing can cause clipping, measure the rendered peak before export. Do not silently change the gain. Define the clipping response during the technical prototype.
+Measure the rendered peak before export. Do not silently change the gain. If the peak exceeds the WAV range, show a warning that the WAV encoder clips those samples.
 
 ## 8. Processing architecture
 
@@ -113,7 +117,9 @@ Pitch shifter -> shifted PCM
                        +-> MP3 encoder
 ```
 
-Run expensive offline processing in a Web Worker. Do not require an AudioWorklet because the tool does not process live input.
+Run expensive offline processing in a Web Worker. Do not require AudioWorklet for export or basic preview because the rendered fallback must remain available.
+
+Use the official Signalsmith AudioWorklet wrapper for live file preview. Keep it separate from the offline export worker. Release its copied audio buffers before a complete-file export.
 
 Keep the pitch shifter, key analyser, and output encoders behind separate interfaces. A later feature must not require a rewrite of the file loader or player.
 
@@ -135,9 +141,9 @@ For each external component:
 
 Do not add a dependency only to avoid a small, testable local function.
 
-## 10. Pitch-shifter prototype
+## 10. Pitch-shifter selection
 
-Compare these candidates before selection:
+The prototype compared these candidates:
 
 | Candidate | Reason to test | Main concern |
 | --- | --- | --- |
@@ -168,7 +174,18 @@ Check these properties:
 - cancellation leaves no downloadable result; and
 - Chrome and Safari produce an acceptable result.
 
-Use owner listening tests to select the algorithm. Automated signal tests do not prove musical quality.
+Owner listening tests selected Signalsmith Stretch. The tests found that:
+
+- Signalsmith Stretch had better detail and transient quality than SoundTouchJS.
+- The official cheaper preset sounded equivalent to the default preset in the tested music.
+- A manual 80/40 millisecond configuration was the fastest acceptable boundary, but it had audible distortion.
+- Faster manual configurations sounded unacceptable across a detailed MP3 mix, an average MP3 backing track, and a compact-disc-quality WAV source.
+
+Use the official Signalsmith Stretch cheaper preset for version 1. Use the SIMD build when the browser supports it. Fall back to the equivalent scalar build when SIMD module setup fails.
+
+The iPhone 16 Pro processed a 246-second, 48 kHz stereo file in 37.5 seconds total with this preset. This measurement is evidence from one device and file. It is not a performance guarantee.
+
+Automated signal tests do not prove musical quality. Keep the listening-test evidence with this selection.
 
 ## 11. Key recognition extension
 
@@ -223,18 +240,22 @@ Do not add analytics or other network requests.
 
 Release object addresses and large audio buffers when the user replaces a file or leaves the page.
 
-## 15. Open decisions
+## 15. Version 1 decisions
 
-Resolve these items before implementation:
-
-- Select the public app name.
-- Select the pitch-shifting algorithm after the prototype.
-- Define the maximum duration and memory limit.
-- Define supported channel counts and sample-rate limits.
-- Define the clipping response.
-- Define the duration tolerance for automated tests.
-- Decide whether version 1 includes key recognition or reserves it for version 2.
-- Decide when MP3 export becomes required.
+- Use the public name `Pitch Shifter`.
+- Use Signalsmith Stretch with its official cheaper preset.
+- Use a custom SIMD Wasm build and an equivalent scalar fallback.
+- Accept mono or stereo audio only.
+- Accept browser-decoded sample rates from 8 kHz through 192 kHz.
+- Reject decoded audio with more than 33,554,432 total channel samples. This value is 128 MiB of 32-bit PCM.
+- Reject audio longer than 30 minutes.
+- Require output duration to match input duration within one sample frame.
+- Show a clipping warning when the rendered peak exceeds 1.0. Keep the original gain and clip only during 16-bit WAV encoding.
+- Reserve key recognition and MP3 export for later versions.
+- Use one user-facing processing mode. Do not expose algorithm or performance settings.
+- Use only play, pause, seek, and current semitone controls from the official real-time browser interface.
+- Keep offline rendering as the fallback when AudioWorklet is unavailable or cannot start.
+- Put processing measurements and the audio-engine explanation in separate sections that are closed by default.
 
 ## 16. References
 

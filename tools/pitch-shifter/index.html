@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en-AU" data-domain="music" data-i18n-title="pitch.title">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f1e8">
+  <meta name="description" content="Shift the pitch of a local song without changing its speed." data-i18n-content="pitch.description">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Pitch Shifter">
+  <meta property="og:description" content="Shift the pitch of a local song without changing its speed.">
+  <title>Pitch Shifter</title>
+  <link rel="canonical" href="https://volo1st.com/tools/pitch-shifter/">
+  <link rel="icon" href="../../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93">
+  <link rel="manifest" href="./manifest.webmanifest?v=f449d8929a05">
+  <link rel="stylesheet" href="../../assets/site-shell.css?v=b093396d6884">
+  <link rel="stylesheet" href="./styles.css?v=54823aa4a284">
+  <script src="../../assets/i18n.js?v=3bafa7de2d71" defer></script>
+  <script src="./i18n.js?v=64db17be9fd9" defer></script>
+  <script src="./bootstrap.js?v=ec637a1f7994" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-context-row">
+      <nav class="site-breadcrumb" aria-label="Breadcrumb">
+        <a href="../../">volo1st</a>
+        <span aria-hidden="true">/</span>
+        <a href="../">Tools</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Pitch Shifter</span>
+      </nav>
+      <div class="language-switcher" role="group" data-i18n-aria-label="common.language">
+        <button type="button" data-language="en-AU" data-i18n-aria-label="common.useEnglish">EN</button>
+        <button type="button" data-language="zh-Hans" data-i18n-aria-label="common.useChinese">中文</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="site-main pitch-main">
+    <section class="pitch-intro" aria-labelledby="pitch-workspace-heading">
+      <h2 id="pitch-workspace-heading" class="visually-hidden" data-i18n="pitch.workspace">Pitch-shifting workspace</h2>
+      <p class="intro-text" data-i18n="pitch.intro">Shift a local song without changing its speed. Preview the result before you process the complete file.</p>
+      <p class="local-note"><strong data-i18n="pitch.localStrong">Your audio stays in this browser.</strong> <span data-i18n="pitch.localText">This tool does not upload the file or send audio over the network.</span></p>
+    </section>
+
+    <p id="status" class="status" role="status" aria-live="polite" data-tone="normal" data-i18n="pitch.statusSelect">Select an audio file to start.</p>
+
+    <section class="workflow-section" aria-labelledby="source-heading">
+      <h2 id="source-heading" data-i18n="pitch.sourceHeading">1. Select a song</h2>
+      <div class="field">
+        <label for="audio-file" data-i18n="pitch.audioFile">Audio file</label>
+        <input id="audio-file" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.flac,.ogg,.opus" aria-describedby="file-help file-details">
+        <p id="file-help" class="help" data-i18n="pitch.fileHelp">Select one file that this browser can play. Mono and stereo files are supported.</p>
+        <p id="file-details" class="file-details" data-i18n="pitch.noFile">No file selected.</p>
+      </div>
+      <div id="source-player-region" class="player-region" hidden>
+        <label for="source-player" data-i18n="pitch.sourceAudio">Original audio</label>
+        <audio id="source-player" controls preload="metadata"></audio>
+      </div>
+    </section>
+
+    <section class="workflow-section" aria-labelledby="pitch-heading">
+      <h2 id="pitch-heading" data-i18n="pitch.pitchHeading">2. Set the pitch</h2>
+      <div class="pitch-control">
+        <label class="control-label" for="semitones" data-i18n="pitch.pitchShift">Pitch shift</label>
+        <div class="pitch-stepper">
+          <button id="pitch-down" type="button" aria-label="Decrease pitch by one semitone" data-i18n-aria-label="pitch.decrease" disabled>−</button>
+          <input id="semitones" type="number" min="-12" max="12" step="1" value="0" inputmode="numeric" aria-describedby="pitch-value" disabled>
+          <button id="pitch-up" type="button" aria-label="Increase pitch by one semitone" data-i18n-aria-label="pitch.increase" disabled>+</button>
+          <button id="pitch-reset" class="secondary-button" type="button" data-i18n="pitch.reset" disabled>Reset to original pitch</button>
+        </div>
+        <output id="pitch-value" for="semitones" aria-live="polite" data-i18n="pitch.originalPitch">Original pitch</output>
+      </div>
+    </section>
+
+    <section class="workflow-section" aria-labelledby="preview-heading">
+      <h2 id="preview-heading" data-i18n="pitch.previewHeading">3. Preview the result</h2>
+      <p class="help" data-i18n="pitch.previewHelp">Play the shifted audio. You can change the pitch while the audio plays.</p>
+      <div id="live-preview-region" class="live-preview">
+        <div class="live-transport">
+          <button id="live-play" class="primary-action" type="button" aria-pressed="false" data-i18n="pitch.livePlay" disabled>Play shifted preview</button>
+          <p class="help" data-i18n="pitch.liveHelp">Use the pitch control above while the preview plays.</p>
+        </div>
+        <div class="live-position">
+          <label for="live-position"><span data-i18n="pitch.livePosition">Playback position</span>: <output id="live-time" for="live-position">0:00 / 0:00</output></label>
+          <input id="live-position" type="range" min="0" max="0" step="0.1" value="0" disabled>
+        </div>
+      </div>
+      <div id="rendered-preview-region" class="rendered-preview" hidden>
+        <div class="section-heading">
+          <div>
+            <h3 data-i18n="pitch.renderedPreviewHeading">Rendered preview</h3>
+            <p class="help" data-i18n="pitch.renderedPreviewHelp">Live preview is unavailable. Process an eight-second excerpt instead.</p>
+          </div>
+          <button id="create-preview" class="primary-action" type="button" data-i18n="pitch.createPreview" disabled>Create preview</button>
+        </div>
+        <div class="preview-position">
+          <label for="preview-start"><span data-i18n="pitch.previewPosition">Preview position</span>: <output id="preview-time" for="preview-start">0:00</output></label>
+          <input id="preview-start" type="range" min="0" max="0" step="0.1" value="0" disabled>
+          <button id="use-playback-position" class="secondary-button" type="button" data-i18n="pitch.usePlaybackPosition" disabled>Use current playback position</button>
+        </div>
+        <p id="preview-empty" class="empty-result" data-i18n="pitch.previewEmpty">Create a preview to compare the pitch shift.</p>
+        <div id="preview-result" class="comparison-grid" hidden>
+          <div class="preview-player">
+            <label for="preview-original" data-i18n="pitch.originalExcerpt">Original excerpt</label>
+            <audio id="preview-original" controls preload="metadata"></audio>
+          </div>
+          <div class="preview-player">
+            <label for="preview-shifted" data-i18n="pitch.shiftedExcerpt">Shifted preview</label>
+            <audio id="preview-shifted" controls preload="metadata"></audio>
+            <p id="preview-metric" class="help"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="workflow-section" aria-labelledby="process-heading">
+      <div class="section-heading">
+        <div>
+          <h2 id="process-heading" data-i18n="pitch.processHeading">4. Process the complete file</h2>
+          <p class="help" data-i18n="pitch.processHelp">Processing runs on this device. The result is a 16-bit pulse-code modulation (PCM) Waveform Audio File Format (WAV) file. You can cancel processing at any time.</p>
+        </div>
+        <div class="process-actions">
+          <button id="process-full" class="primary-action" type="button" data-i18n="pitch.processFull" disabled>Process full file</button>
+          <button id="cancel" class="secondary-button" type="button" data-i18n="pitch.cancel" disabled>Cancel</button>
+        </div>
+      </div>
+      <div id="complete-result" class="complete-result" hidden>
+        <label for="shifted-player" data-i18n="pitch.resultHeading">Shifted file</label>
+        <audio id="shifted-player" controls preload="metadata"></audio>
+        <a id="download" class="button-link" download data-i18n="pitch.download">Download shifted WAV</a>
+      </div>
+    </section>
+
+    <details id="processing-details" class="info-section">
+      <summary data-i18n="pitch.processingDetails">Processing details</summary>
+      <dl class="metrics">
+        <div><dt data-i18n="pitch.metricTotal">Total time</dt><dd id="metric-total">—</dd></div>
+        <div><dt data-i18n="pitch.metricDsp">Pitch processing</dt><dd id="metric-dsp">—</dd></div>
+        <div><dt data-i18n="pitch.metricSetup">Engine setup</dt><dd id="metric-setup">—</dd></div>
+        <div><dt data-i18n="pitch.metricWave">WAV encoding</dt><dd id="metric-wave">—</dd></div>
+        <div><dt data-i18n="pitch.metricSpeed">Processing speed</dt><dd id="metric-speed">—</dd></div>
+        <div><dt data-i18n="pitch.metricEngine">Audio engine</dt><dd id="metric-engine">—</dd></div>
+        <div><dt data-i18n="pitch.metricInput">Input duration</dt><dd id="metric-input">—</dd></div>
+        <div><dt data-i18n="pitch.metricOutput">Output duration</dt><dd id="metric-output">—</dd></div>
+        <div><dt data-i18n="pitch.metricFormat">Output format</dt><dd id="metric-format">—</dd></div>
+        <div><dt data-i18n="pitch.metricPeak">Rendered peak</dt><dd id="metric-peak">—</dd></div>
+      </dl>
+    </details>
+
+    <details class="info-section">
+      <summary data-i18n="pitch.aboutEngine">About the audio engine</summary>
+      <p data-i18n="pitch.aboutSelection">This tool uses Signalsmith Stretch. I selected the processing settings through listening tests with vocals, full mixes, and transient-heavy music.</p>
+      <p data-i18n="pitch.aboutMethod">The tool uses the official cheaper preset. It uses WebAssembly SIMD when available and an equivalent scalar build as a fallback.</p>
+      <p data-i18n="pitch.aboutLimits">Pitch shifting can add audible artifacts, especially with large shifts and exposed vocals. The output keeps the source duration but does not keep source metadata.</p>
+      <p><a href="https://github.com/Signalsmith-Audio/signalsmith-stretch" target="_blank" rel="noopener noreferrer" data-i18n="pitch.aboutLicense">Signalsmith Stretch source and licence</a></p>
+    </details>
+  </main>
+</body>
+</html>

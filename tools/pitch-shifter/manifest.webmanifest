@@ -1,0 +1,17 @@
+{
+  "name": "Pitch Shifter",
+  "short_name": "Pitch Shifter",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f1e8",
+  "theme_color": "#f4f1e8",
+  "icons": [
+    {
+      "src": "../../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

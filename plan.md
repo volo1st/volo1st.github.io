@@ -20,7 +20,7 @@ Tool specifications and operating checklists remain with their tools. They do no
 
 ## 3. Current status
 
-Status verified on 2 October 2026.
+Status verified on 3 October 2026.
 
 - The root page is volo1st's public introduction.
 - CSV to ABA Converter version 2 is the current converter.
@@ -32,7 +32,7 @@ Status verified on 2 October 2026.
 - The public-homepage source content and privacy boundary are approved.
 - The owner approved the public homepage and section indexes for release.
 - The CSV-to-ABA workflow validation waits for one normal Commonwealth Bank of Australia (CBA) payment run.
-- No implementation package is active after the shared tool-header refinement.
+- The Pitch Shifter version 1 implementation package is active.
 
 ## 4. Product direction and boundaries
 
@@ -440,17 +440,39 @@ Waiting work is not a blocker for unrelated tool maintenance.
 
 ### 13.1 App ideas
 
-These items are unscheduled ideas. They are not approved projects or implementation packages.
+The metronome and tuner remain unscheduled ideas. Pitch Shifter is now an approved public browser tool and an active implementation package.
 
 | Idea | Initial purpose | Question to answer before planning |
 | --- | --- | --- |
 | Metronome | Provide a steady practice pulse. | Define the practice workflow and required rhythm controls. |
 | Tuner | Help a user tune an instrument. | Define the supported instruments, input method, and tuning modes. |
-| Song pitch shifter | Shift one local song without changing its duration, preview it, and download it. | Complete the algorithm prototype and resolve the limits in `ideas/song-pitch-shifter.md`. |
+| Pitch Shifter | Shift one local song without changing its duration, preview it, and download it. | Complete the version 1 implementation package in `ideas/song-pitch-shifter.md`. |
 
-Classify each idea under the project and tool model before implementation starts.
+Pitch Shifter is classified as a public browser tool. It processes one local file and does not store or upload audio.
 
-The song pitch shifter has an approved specification direction. It remains an unapproved implementation project until its algorithm prototype and open decisions are complete.
+The Pitch Shifter prototype is complete. Owner listening tests selected the Signalsmith Stretch cheaper preset. The version 1 implementation package is approved and active.
+
+### 13.2 Pitch Shifter version 1
+
+- [x] Compare Signalsmith Stretch and SoundTouchJS with full mixes, vocals, bass, drums, and different source formats.
+  - Evidence: Owner listening tests found consistently better quality from Signalsmith Stretch. SoundTouchJS produced audible transient damage.
+- [x] Select the production algorithm and performance settings.
+  - Evidence: The owner could not hear a material quality difference between the default and cheaper Signalsmith presets. The cheaper preset processed a 246-second stereo file on an iPhone 16 Pro in 37.5 seconds total.
+- [x] Find the lower acceptable quality boundary.
+  - Evidence: An 80/40 millisecond manual configuration was the fastest acceptable test setting, but it produced audible distortion. Faster settings sounded unacceptable across three different sources. Keep the official cheaper preset as the production quality margin.
+- [x] Add the focused bilingual interface, short preview, complete-file processing, and WAV download.
+  - Evidence: The local page provides the approved four-step workflow and invalidates old output after a source or pitch change.
+- [x] Add live pitch-shifted playback with the rendered preview as a fallback.
+  - Evidence: The primary preview uses the official AudioWorklet interface for play, pause, seek, and live pitch changes. Feature detection and setup errors reveal the existing rendered preview. Automated tests cover the live controller and fallback interface.
+- [x] Add the local WebAssembly modules, licenses, artifact hashes, and reproduction record.
+  - Evidence: The dependency record pins both source commits, Emscripten 6.0.10, both MIT licences, build options, and the three artifact hashes.
+- [x] Add permanent processing, WAV, interface, privacy, and dependency tests.
+  - Evidence: Generated-tone tests run both Wasm variants. Additional tests cover exact duration, stereo alignment, pitch ratio, WAV structure, clipping, local-only code, translations, dependency hashes, and installation metadata.
+- [ ] Verify keyboard use, narrow screens, and 200 percent zoom.
+- [x] Run the general repository check and review the complete diff.
+  - Evidence: `./scripts/check.sh` passed on 3 October 2026. The final source review found no runtime request that can send audio.
+
+Completion gate: A supported browser can preview, process, play, and download a local mono or stereo song. Processing stays responsive and does not send audio over the network. A failure or cancellation leaves no downloadable result.
 
 The approved icon family uses abstract monoline and bar symbols. Each icon uses the site background `#f4f1e8` and the guitar accent `#173e30`. The Guitar Strum Machine uses its icon for home-screen installation. The other three icons record a visual direction only. They do not change the status of the app ideas.
 
@@ -523,6 +545,10 @@ The approved icon family uses abstract monoline and bar symbols. Each icon uses 
 | 2 October 2026 | Use one abstract music-app icon family and the existing guitar page palette. | Shared colours and related line forms provide subtle ownership without adding a name or monogram to each icon. |
 | 3 October 2026 | Define the pitch shifter as a local-file tool with direct semitone control and WAV export. | Fixed tempo, no microphone, no links, no speed control, and no A-B loop keep the tool focused. Key recognition and MP3 export remain separate extensions. |
 | 3 October 2026 | Keep the pitch-shifter deployment build-free and permit pinned local Wasm components. | Audio quality can justify a specialised dependency. Local pinned artifacts preserve static deployment and avoid runtime third-party requests. |
+| 3 October 2026 | Use Signalsmith Stretch with the official cheaper preset for Pitch Shifter version 1. | Listening tests found better quality than SoundTouchJS and no material quality loss from the cheaper preset. Manual faster settings crossed the accepted distortion boundary. |
+| 3 October 2026 | Use one Pitch Shifter processing mode with SIMD and scalar Wasm variants. | One mode keeps the interface focused. SIMD gives a material speed improvement on tested Apple devices. The scalar variant keeps compatible browsers usable. |
+| 3 October 2026 | Reserve key recognition and MP3 export for later Pitch Shifter versions. | These features have separate algorithms, dependencies, tests, and failure states. WAV export provides a dependable version 1 result. |
+| 3 October 2026 | Use the official Signalsmith AudioWorklet path for live preview and keep the custom offline worker for export. | Live play, seek, and pitch changes improve the main workflow. The offline SIMD path remains faster than real time and provides the downloadable WAV. |
 
 ## 16. Verified completion evidence
 

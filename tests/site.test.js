@@ -10,6 +10,7 @@ const zlib = require('node:zlib');
 const repositoryRoot = path.join(__dirname, '..');
 const i18n = require('../assets/i18n.js');
 require('../tools/guitar-strumming/i18n.js');
+require('../tools/pitch-shifter/i18n.js');
 
 function findHtmlFiles(directory) {
   const files = [];
@@ -234,6 +235,7 @@ test('the tools directory links to each available tool', () => {
 
   assert.match(html, /href="\.\/csv2aba-v2\/"/);
   assert.match(html, /href="\.\/guitar-strumming\/"/);
+  assert.match(html, /href="\.\/pitch-shifter\/"/);
   assert.doesNotMatch(html, /href="\.\/csv2aba\/"/);
   assert.doesNotMatch(html, /song_order/);
   assert.doesNotMatch(html, />Trial</);
@@ -351,6 +353,19 @@ test('versioned interface assets use their current content hash', () => {
         './presets/data.js',
         './presets/catalog.js',
         './app.js',
+      ],
+    },
+    {
+      file: path.join(repositoryRoot, 'tools', 'pitch-shifter', 'index.html'),
+      references: [
+        '../../assets/favicon.svg',
+        '../../assets/app-icons/pitch-key-512.png',
+        '../../assets/site-shell.css',
+        './manifest.webmanifest',
+        './styles.css',
+        '../../assets/i18n.js',
+        './i18n.js',
+        './bootstrap.js',
       ],
     },
   ];
@@ -487,6 +502,7 @@ test('maintained bilingual pages use the shared site shell', () => {
     path.join(repositoryRoot, 'tools', 'index.html'),
     path.join(repositoryRoot, 'tools', 'csv2aba-v2', 'index.html'),
     path.join(repositoryRoot, 'tools', 'guitar-strumming', 'index.html'),
+    path.join(repositoryRoot, 'tools', 'pitch-shifter', 'index.html'),
   ];
   for (const htmlFile of pages) {
     const html = fs.readFileSync(htmlFile, 'utf8');
@@ -543,7 +559,7 @@ test('the shared shell uses warm neutral tokens and domain accent tokens', () =>
   assert.match(shellCss, /--tool-accent:\s*#075a9c/);
   assert.match(
     shellCss,
-    /\[data-domain="guitar"\]\s*\{[^}]*--tool-accent:\s*#27644e/s,
+    /\[data-domain="guitar"\],\s*\[data-domain="music"\]\s*\{[^}]*--tool-accent:\s*#27644e/s,
   );
   assert.match(homeHtml, /class="contact-directory social-directory"/);
   assert.match(homeCss, /--home-link:\s*#3f3a31/);

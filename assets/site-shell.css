@@ -34,7 +34,8 @@
   --tool-on-accent: #ffffff;
 }
 
-[data-domain="guitar"] {
+[data-domain="guitar"],
+[data-domain="music"] {
   --tool-accent: #27644e;
   --tool-accent-hover: #194b38;
   --tool-accent-strong: #173e30;
