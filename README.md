@@ -11,7 +11,7 @@ See [`plan.md`](plan.md) for current actions, product direction, and delivery ph
 - [CSV to ABA Converter](tools/csv2aba-v2/) is the current converter. The former address redirects to it. One normal CBA payment run will complete its workflow validation.
 - [Legacy CSV to ABA Converter](tools/csv2aba-legacy/) is the fallback. Its conversion logic remains unchanged.
 - [Guitar Strum Machine](tools/guitar-strumming/) makes a looping guitar backing track from plain-text input. The tools directory links to this tool.
-- [Pitch Shifter](tools/pitch-shifter/) shifts a local mono or stereo song without changing its duration. It provides live shifted playback, an eight-second fallback preview, and a 16-bit pulse-code modulation (PCM) Waveform Audio File Format (WAV) download.
+- [Pitch Shifter](tools/pitch-shifter/) shifts a local mono or stereo song without changing its duration. One transport compares the original and shifted audio. The tool exports a 16-bit pulse-code modulation (PCM) Waveform Audio File Format (WAV) file.
 
 The home page uses English. The tools directory, version 2 converter, Guitar Strum Machine, and Pitch Shifter support English and Simplified Chinese. The site stores the selected tool language in browser local storage. A language change does not change guitar arrangement text, playback state, share-link data, or selected audio.
 

@@ -95,26 +95,63 @@ test('both audio engines keep duration and shift a generated tone by one octave'
   }
   const measuredFrequency = positiveCrossings / ((frameCount - measurementStart) / sampleRate);
   assert.ok(measuredFrequency > 420 && measuredFrequency < 460, measuredFrequency);
+
+  const defaultResult = processSignalsmithOffline(await createScalarModule(), {
+    channels: [left, right],
+    length: frameCount,
+    sampleRate,
+    semitones: 12,
+    preset: 'default',
+  });
+  assert.equal(defaultResult.diagnostics.preset, 'default');
+  assert.equal(defaultResult.length, frameCount);
+  assert.ok(defaultResult.channels[0].every(Number.isFinite));
 });
 
 test('the production interface keeps processing local and hides incomplete output', () => {
   const html = fs.readFileSync(path.join(toolRoot, 'index.html'), 'utf8');
   const app = fs.readFileSync(path.join(toolRoot, 'app.mjs'), 'utf8');
+  const bootstrap = fs.readFileSync(path.join(toolRoot, 'bootstrap.js'), 'utf8');
+  const css = fs.readFileSync(path.join(toolRoot, 'styles.css'), 'utf8');
   const worker = fs.readFileSync(path.join(toolRoot, 'processing-worker.mjs'), 'utf8');
 
   assert.match(html, /id="audio-file"[^>]*type="file"/);
+  assert.match(html, /id="choose-file"[^>]*aria-controls="audio-file"/);
   assert.match(html, /id="semitones"[^>]*min="-12"[^>]*max="12"[^>]*step="1"/);
-  assert.match(html, /id="preview-result"[^>]*hidden/);
-  assert.match(html, /id="live-play"[^>]*aria-pressed="false"[^>]*disabled/);
-  assert.match(html, /id="live-position"[^>]*type="range"/);
-  assert.match(html, /id="rendered-preview-region"[^>]*hidden/);
-  assert.match(html, /id="complete-result"[^>]*hidden/);
+  assert.doesNotMatch(html, /playback-original|playback-shifted/);
+  assert.match(html, /id="pitch-reset"[^>]*class="[^"]*icon-button/);
+  assert.match(html, /id="transport-play"[^>]*class="[^"]*icon-button[^>]*data-playing="false"[^>]*disabled/);
+  assert.match(html, /id="play-icon"/);
+  assert.match(html, /id="pause-icon"/);
+  assert.match(html, /id="transport-position"[^>]*type="range"[^>]*disabled/);
+  assert.match(html, /id="transport-current"/);
+  assert.match(html, /id="transport-duration"/);
+  assert.match(html, /id="prepare-wave"[^>]*disabled/);
+  assert.match(html, /id="download"[^>]*hidden/);
+  assert.doesNotMatch(html, /id="cancel"/);
+  assert.match(html, /id="source-player"[^>]*hidden/);
+  assert.match(html, /id="shifted-player"[^>]*hidden/);
+  assert.match(html, /id="drop-overlay"[^>]*hidden/);
   assert.match(html, /id="processing-details"[^>]*class="info-section"/);
-  assert.match(html, /<details class="info-section">[\s\S]*pitch\.aboutEngine/);
+  assert.match(html, /<details class="info-section">[\s\S]*pitch\.aboutTool/);
   assert.doesNotMatch(html, /\bopen(?:=""|\s|>)/);
+  assert.doesNotMatch(html, /<audio[^>]*\bcontrols\b/);
+  assert.doesNotMatch(html, /rendered-preview|preview-result|create-preview/);
+  assert.match(css, /\[hidden\][\s\S]*display: none !important/);
+  assert.match(css, /#transport-position[\s\S]*touch-action: pan-y/);
+  assert.match(css, /#transport-position::-(?:webkit-slider-thumb|moz-range-thumb)/);
   assert.match(app, /MAX_DURATION_SECONDS = 30 \* 60/);
   assert.match(app, /MAX_CHANNEL_SAMPLES = 33_554_432/);
-  assert.match(app, /activeController\.abort\(\)/);
+  assert.match(app, /activeController\?\.abort\(\)/);
+  assert.match(app, /pointerScrubbing = true/);
+  assert.match(app, /document\.addEventListener\('drop'/);
+  assert.match(app, /elements\.shiftedPlayer\.src = resultUrl/);
+  assert.match(app, /elements\.download\.href = resultUrl/);
+  assert.match(app, /PROCESSING_PRESET = 'default'/);
+  assert.match(app, /preset: PROCESSING_PRESET/);
+  assert.match(app, /transportPlay\.dataset\.playing = String\(playing\)/);
+  assert.doesNotMatch(app, /PREVIEW_SECONDS|encodeWaveSegment/);
+  assert.match(bootstrap, /status\.dataset\.visible = 'true'/);
   assert.match(worker, /await SimdModule\(\)/);
   assert.match(worker, /await ScalarModule\(\)/);
   assert.match(worker, /encodeWaveChannels/);
@@ -124,7 +161,7 @@ test('the production interface keeps processing local and hides incomplete outpu
   }
 });
 
-test('the live preview uses the cheaper preset and releases its copied buffers', async () => {
+test('the live preview uses the selected preset and releases its copied buffers', async () => {
   const { LivePreviewController, supportsLivePreview } = await import(
     '../tools/pitch-shifter/live-preview.mjs'
   );
@@ -176,6 +213,7 @@ test('the live preview uses the cheaper preset and releases its copied buffers',
   const times = [];
   let ended = false;
   const controller = new LivePreviewController(audioBuffer, {
+    preset: 'default',
     onTime(position) { times.push(position); },
     onEnded() { ended = true; },
     createAudioContext() { return context; },
@@ -189,8 +227,9 @@ test('the live preview uses the cheaper preset and releases its copied buffers',
   await controller.play(0.5, 3);
   assert.deepEqual(calls.find((call) => call[0] === 'configure'), [
     'configure',
-    { preset: 'cheaper' },
+    { preset: 'default' },
   ]);
+  assert.equal(new LivePreviewController(audioBuffer).preset, 'default');
   assert.equal(nodeOptions.numberOfInputs, 1);
   assert.deepEqual(nodeOptions.outputChannelCount, [2]);
   assert.deepEqual(calls.find((call) => call[0] === 'addBuffers'), [
@@ -247,7 +286,6 @@ test('Pitch Shifter module references use current content hashes', () => {
   const references = [
     ['bootstrap.js', './app.mjs'],
     ['app.mjs', './worker-client.mjs'],
-    ['app.mjs', './wav.mjs'],
     ['app.mjs', './live-preview.mjs'],
     [
       'live-preview.mjs',

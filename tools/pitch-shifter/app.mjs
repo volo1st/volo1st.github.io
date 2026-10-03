@@ -1,13 +1,11 @@
-import { processInWorker } from './worker-client.mjs?v=e74edc3ff06a';
-import { encodeWaveChannels } from './wav.mjs?v=3ed2e8357b65';
-import { LivePreviewController, supportsLivePreview } from './live-preview.mjs?v=2b4216d0208e';
+import { processInWorker } from './worker-client.mjs?v=82c1073e3bb6';
+import { LivePreviewController, supportsLivePreview } from './live-preview.mjs?v=6db69ba51288';
 
-const PREVIEW_SECONDS = 8;
-const PREVIEW_PADDING_SECONDS = 0.5;
 const MAX_DURATION_SECONDS = 30 * 60;
 const MAX_CHANNEL_SAMPLES = 33_554_432;
 const MIN_SAMPLE_RATE = 8_000;
 const MAX_SAMPLE_RATE = 192_000;
+const PROCESSING_PRESET = 'default';
 
 const sharedI18n = globalThis.SiteI18n;
 if (!sharedI18n || !globalThis.PitchShifterI18n) {
@@ -15,33 +13,23 @@ if (!sharedI18n || !globalThis.PitchShifterI18n) {
 }
 
 const elements = {
+  workspace: document.querySelector('#workspace'),
   file: document.querySelector('#audio-file'),
+  chooseFile: document.querySelector('#choose-file'),
   fileDetails: document.querySelector('#file-details'),
   status: document.querySelector('#status'),
-  sourceRegion: document.querySelector('#source-player-region'),
-  sourcePlayer: document.querySelector('#source-player'),
+  dropOverlay: document.querySelector('#drop-overlay'),
   semitones: document.querySelector('#semitones'),
   pitchDown: document.querySelector('#pitch-down'),
   pitchUp: document.querySelector('#pitch-up'),
   pitchReset: document.querySelector('#pitch-reset'),
   pitchValue: document.querySelector('#pitch-value'),
-  liveRegion: document.querySelector('#live-preview-region'),
-  livePlay: document.querySelector('#live-play'),
-  livePosition: document.querySelector('#live-position'),
-  liveTime: document.querySelector('#live-time'),
-  renderedPreviewRegion: document.querySelector('#rendered-preview-region'),
-  previewStart: document.querySelector('#preview-start'),
-  previewTime: document.querySelector('#preview-time'),
-  usePlaybackPosition: document.querySelector('#use-playback-position'),
-  createPreview: document.querySelector('#create-preview'),
-  previewEmpty: document.querySelector('#preview-empty'),
-  previewResult: document.querySelector('#preview-result'),
-  previewOriginal: document.querySelector('#preview-original'),
-  previewShifted: document.querySelector('#preview-shifted'),
-  previewMetric: document.querySelector('#preview-metric'),
-  processFull: document.querySelector('#process-full'),
-  cancel: document.querySelector('#cancel'),
-  completeResult: document.querySelector('#complete-result'),
+  transportPlay: document.querySelector('#transport-play'),
+  transportPosition: document.querySelector('#transport-position'),
+  transportCurrent: document.querySelector('#transport-current'),
+  transportDuration: document.querySelector('#transport-duration'),
+  prepareWave: document.querySelector('#prepare-wave'),
+  sourcePlayer: document.querySelector('#source-player'),
   shiftedPlayer: document.querySelector('#shifted-player'),
   download: document.querySelector('#download'),
   metrics: {
@@ -51,6 +39,7 @@ const elements = {
     wave: document.querySelector('#metric-wave'),
     speed: document.querySelector('#metric-speed'),
     engine: document.querySelector('#metric-engine'),
+    preset: document.querySelector('#metric-preset'),
     input: document.querySelector('#metric-input'),
     output: document.querySelector('#metric-output'),
     format: document.querySelector('#metric-format'),
@@ -61,29 +50,36 @@ const elements = {
 let selectedFile = null;
 let decodedAudio = null;
 let operationId = 0;
+let playbackId = 0;
 let activeController = null;
 let busy = false;
 let liveLoading = false;
 let livePreviewAvailable = supportsLivePreview(window);
 let livePreview = null;
-let livePosition = 0;
+let playbackSemitones = 0;
+let transportPosition = 0;
+let pointerScrubbing = false;
 let sourceUrl = null;
-let previewOriginalUrl = null;
-let previewShiftedUrl = null;
 let resultUrl = null;
-let statusState = { key: 'pitch.statusSelect', parameters: {}, tone: 'normal' };
+let statusState = {
+  key: 'pitch.statusSelect',
+  parameters: {},
+  tone: 'normal',
+  visible: false,
+};
 let fileDetailsState = { key: 'pitch.noFile', parameters: {} };
-let previewMetricState = null;
 let metricsState = null;
+let dragDepth = 0;
 
 function t(key, parameters = {}) {
   return sharedI18n.translate(key, parameters);
 }
 
-function setStatus(key, parameters = {}, tone = 'normal') {
-  statusState = { key, parameters, tone };
+function setStatus(key, parameters = {}, tone = 'normal', visible = tone !== 'normal') {
+  statusState = { key, parameters, tone, visible };
   elements.status.textContent = t(key, parameters);
   elements.status.dataset.tone = tone;
+  elements.status.dataset.visible = String(visible);
 }
 
 function revokeUrl(url) {
@@ -134,36 +130,54 @@ function parseSemitoneValue() {
   return Number.isInteger(value) && value >= -12 && value <= 12 ? value : null;
 }
 
+function readSemitones() {
+  const value = parseSemitoneValue();
+  if (value === null) throw new RangeError(t('pitch.errorShift'));
+  return value;
+}
+
 function renderPitchValue() {
   const value = parseSemitoneValue();
   if (value === null) {
     elements.pitchValue.textContent = t('pitch.errorShift');
     return;
   }
+  const displayValue = value > 0 ? `+${value}` : String(value);
   elements.pitchValue.textContent = value === 0
     ? t('pitch.originalPitch')
-    : t('pitch.shiftValue', { value: value > 0 ? `+${value}` : value });
-}
-
-function renderLivePosition() {
-  const duration = decodedAudio?.duration || 0;
-  elements.livePosition.value = String(Math.min(duration, livePosition));
-  elements.liveTime.value = `${formatClock(livePosition)} / ${formatClock(duration)}`;
-}
-
-function renderLiveButton() {
-  const playing = Boolean(livePreview?.playing);
-  elements.livePlay.textContent = t(playing ? 'pitch.livePause' : 'pitch.livePlay');
-  elements.livePlay.setAttribute('aria-pressed', String(playing));
+    : t('pitch.shiftValue', { value: displayValue });
 }
 
 function renderFileDetails() {
   elements.fileDetails.textContent = t(fileDetailsState.key, fileDetailsState.parameters);
 }
 
-function renderPreviewMetric() {
-  if (!previewMetricState) return;
-  elements.previewMetric.textContent = t('pitch.previewMetric', previewMetricState);
+function renderTransportPosition() {
+  const duration = decodedAudio?.duration || 0;
+  const position = Math.max(0, Math.min(duration, transportPosition));
+  elements.transportPosition.max = String(duration);
+  elements.transportPosition.value = String(position);
+  const currentText = formatClock(position);
+  const durationText = formatClock(duration);
+  const positionText = `${currentText} / ${durationText}`;
+  elements.transportCurrent.textContent = currentText;
+  elements.transportDuration.textContent = durationText;
+  const progress = duration > 0 ? position / duration * 100 : 0;
+  elements.transportPosition.style.setProperty('--transport-progress', `${progress}%`);
+  elements.transportPosition.setAttribute('aria-valuetext', positionText);
+}
+
+function isTransportPlaying() {
+  if (playbackSemitones === 0) return !elements.sourcePlayer.paused;
+  if (resultUrl) return !elements.shiftedPlayer.paused;
+  return Boolean(livePreview?.playing);
+}
+
+function renderTransportButton() {
+  const playing = isTransportPlaying();
+  const label = t(playing ? 'pitch.pause' : 'pitch.play');
+  elements.transportPlay.setAttribute('aria-label', label);
+  elements.transportPlay.dataset.playing = String(playing);
 }
 
 function renderMetrics() {
@@ -182,6 +196,10 @@ function renderMetrics() {
     ? 'pitch.engineBypass'
     : (result.engine === 'simd' ? 'pitch.engineSimd' : 'pitch.engineScalar');
   elements.metrics.engine.textContent = t(engineKey);
+  const presetKey = result.diagnostics.preset === 'bypass'
+    ? 'pitch.presetBypass'
+    : (result.diagnostics.preset === 'default' ? 'pitch.presetDefault' : 'pitch.presetCheaper');
+  elements.metrics.preset.textContent = t(presetKey);
   elements.metrics.input.textContent = `${inputDuration.toFixed(3)} s`;
   elements.metrics.output.textContent = `${outputDuration.toFixed(3)} s`;
   elements.metrics.format.textContent = t(
@@ -191,13 +209,20 @@ function renderMetrics() {
   elements.metrics.peak.textContent = formatPeak(result.peak);
 }
 
+function renderActions() {
+  elements.workspace.setAttribute('aria-busy', String(busy));
+  elements.prepareWave.hidden = Boolean(resultUrl);
+  elements.prepareWave.textContent = t(busy ? 'pitch.preparingWave' : 'pitch.prepareWave');
+  elements.download.hidden = !resultUrl;
+}
+
 function renderDynamicText() {
   elements.status.textContent = t(statusState.key, statusState.parameters);
   renderFileDetails();
   renderPitchValue();
-  renderLiveButton();
-  renderLivePosition();
-  renderPreviewMetric();
+  renderTransportPosition();
+  renderTransportButton();
+  renderActions();
   renderMetrics();
 }
 
@@ -207,17 +232,11 @@ function clearAudioElement(player) {
   player.load();
 }
 
-function clearPreview() {
-  revokeUrl(previewOriginalUrl);
-  revokeUrl(previewShiftedUrl);
-  previewOriginalUrl = null;
-  previewShiftedUrl = null;
-  clearAudioElement(elements.previewOriginal);
-  clearAudioElement(elements.previewShifted);
-  elements.previewResult.hidden = true;
-  elements.previewEmpty.hidden = false;
-  elements.previewMetric.textContent = '';
-  previewMetricState = null;
+function clearMetrics() {
+  metricsState = null;
+  Object.values(elements.metrics).forEach((element) => {
+    element.textContent = '—';
+  });
 }
 
 function clearResult() {
@@ -226,174 +245,224 @@ function clearResult() {
   clearAudioElement(elements.shiftedPlayer);
   elements.download.removeAttribute('href');
   elements.download.removeAttribute('download');
-  elements.completeResult.hidden = true;
-  metricsState = null;
-  Object.values(elements.metrics).forEach((element) => {
-    element.textContent = '—';
-  });
-}
-
-function clearDerivedResults() {
-  clearPreview();
-  clearResult();
-}
-
-async function releaseLivePreview({ resetPosition = false } = {}) {
-  const controller = livePreview;
-  livePreview = null;
-  if (resetPosition) livePosition = 0;
-  renderLiveButton();
-  renderLivePosition();
-  if (controller) await controller.release();
-}
-
-function createLivePreview() {
-  if (!decodedAudio || !livePreviewAvailable) return null;
-  livePreview = new LivePreviewController(decodedAudio, {
-    onTime(position) {
-      livePosition = position;
-      renderLivePosition();
-    },
-    onEnded() {
-      renderLiveButton();
-      setStatus('pitch.statusReady');
-      updateControls();
-    },
-  });
-  return livePreview;
-}
-
-async function useRenderedPreviewFallback() {
-  await releaseLivePreview();
-  livePreviewAvailable = false;
-  elements.liveRegion.hidden = true;
-  elements.renderedPreviewRegion.hidden = false;
-  setStatus('pitch.statusLiveUnavailable', {}, 'warning');
-  updateControls();
+  clearMetrics();
+  renderActions();
 }
 
 function updateControls() {
   const ready = Boolean(decodedAudio);
   const shiftIsValid = parseSemitoneValue() !== null;
   const controlsBusy = busy || liveLoading;
+  elements.chooseFile.disabled = controlsBusy;
+  elements.file.disabled = controlsBusy;
   elements.semitones.disabled = !ready || controlsBusy;
   elements.pitchDown.disabled = !ready || controlsBusy;
   elements.pitchUp.disabled = !ready || controlsBusy;
   elements.pitchReset.disabled = !ready || controlsBusy;
-  elements.livePlay.disabled = !ready || controlsBusy || !shiftIsValid || !livePreviewAvailable;
-  elements.livePosition.disabled = !ready || controlsBusy || !livePreviewAvailable;
-  elements.previewStart.disabled = !ready || controlsBusy || !decodedAudio
-    || decodedAudio.duration <= PREVIEW_SECONDS || livePreviewAvailable;
-  elements.usePlaybackPosition.disabled = !ready || controlsBusy || livePreviewAvailable;
-  elements.createPreview.disabled = !ready || controlsBusy || !shiftIsValid || livePreviewAvailable;
-  elements.processFull.disabled = !ready || controlsBusy || !shiftIsValid;
-  elements.cancel.disabled = !busy || !activeController;
+  elements.transportPlay.disabled = !ready || controlsBusy || !shiftIsValid
+    || (playbackSemitones !== 0 && !livePreviewAvailable && !resultUrl);
+  elements.transportPosition.disabled = !ready || controlsBusy;
+  elements.prepareWave.disabled = !ready || controlsBusy || !shiftIsValid;
 }
 
 function setBusy(value) {
   busy = value;
+  renderActions();
   updateControls();
 }
 
-function readSemitones() {
-  const value = parseSemitoneValue();
-  if (value === null) {
-    throw new RangeError(t('pitch.errorShift'));
+function setPlayerTime(player, position) {
+  const setTime = () => {
+    try {
+      player.currentTime = position;
+    } catch (error) {
+      // The next metadata event retries the same position.
+    }
+  };
+  setTime();
+  if (player.readyState === 0) {
+    player.addEventListener('loadedmetadata', setTime, { once: true });
   }
-  return value;
 }
 
-function updateLivePitch(value) {
-  if (!livePreview || value === null) return;
-  livePreview.setSemitones(value).catch(() => {
-    useRenderedPreviewFallback();
+async function releaseLivePreview() {
+  const controller = livePreview;
+  livePreview = null;
+  renderTransportButton();
+  if (controller) await controller.release();
+}
+
+function createLivePreview() {
+  if (!decodedAudio || !livePreviewAvailable) return null;
+  livePreview = new LivePreviewController(decodedAudio, {
+    preset: PROCESSING_PRESET,
+    onTime(position) {
+      if (playbackSemitones === 0 || resultUrl || pointerScrubbing) return;
+      transportPosition = position;
+      renderTransportPosition();
+    },
+    onEnded() {
+      if (playbackSemitones !== 0 && !resultUrl) {
+        transportPosition = decodedAudio?.duration || 0;
+        renderTransportPosition();
+        renderTransportButton();
+      }
+    },
   });
+  return livePreview;
+}
+
+async function handleLiveFailure() {
+  await releaseLivePreview();
+  livePreviewAvailable = false;
+  setStatus('pitch.statusLiveUnavailable', {}, 'warning', true);
+  renderTransportButton();
+  updateControls();
+}
+
+async function pauseTransport() {
+  playbackId += 1;
+  if (playbackSemitones === 0) {
+    elements.sourcePlayer.pause();
+    if (Number.isFinite(elements.sourcePlayer.currentTime)) {
+      transportPosition = elements.sourcePlayer.currentTime;
+    }
+  } else if (resultUrl) {
+    elements.shiftedPlayer.pause();
+    if (Number.isFinite(elements.shiftedPlayer.currentTime)) {
+      transportPosition = elements.shiftedPlayer.currentTime;
+    }
+  } else if (livePreview?.playing) {
+    try {
+      transportPosition = await livePreview.pause();
+    } catch (error) {
+      await handleLiveFailure();
+    }
+  }
+  renderTransportPosition();
+  renderTransportButton();
+}
+
+async function playTransport() {
+  if (!decodedAudio || busy || liveLoading) return;
+  const semitones = readSemitones();
+  playbackSemitones = semitones;
+  const duration = decodedAudio.duration;
+  if (transportPosition >= duration - 0.05) transportPosition = 0;
+  const currentPlayback = playbackId + 1;
+  playbackId = currentPlayback;
+
+  elements.sourcePlayer.pause();
+  elements.shiftedPlayer.pause();
+  try {
+    if (semitones === 0) {
+      if (livePreview?.playing) await livePreview.pause();
+      setPlayerTime(elements.sourcePlayer, transportPosition);
+      await elements.sourcePlayer.play();
+    } else if (resultUrl) {
+      if (livePreview?.playing) await livePreview.pause();
+      setPlayerTime(elements.shiftedPlayer, transportPosition);
+      await elements.shiftedPlayer.play();
+    } else {
+      const controller = livePreview || createLivePreview();
+      if (!controller) {
+        await handleLiveFailure();
+        return;
+      }
+      liveLoading = true;
+      setStatus('pitch.statusLivePreparing');
+      updateControls();
+      await controller.play(transportPosition, semitones);
+      if (currentPlayback !== playbackId) {
+        await controller.pause();
+        return;
+      }
+      setStatus('pitch.statusLivePlaying');
+    }
+  } catch (error) {
+    if (currentPlayback !== playbackId) return;
+    if (semitones !== 0 && !resultUrl) {
+      await handleLiveFailure();
+    } else {
+      setStatus('pitch.errorPlayback', { detail: error.message || error }, 'error', true);
+    }
+  } finally {
+    liveLoading = false;
+    renderTransportPosition();
+    renderTransportButton();
+    updateControls();
+  }
+}
+
+async function seekTransport(position) {
+  if (!decodedAudio) return;
+  transportPosition = Math.max(0, Math.min(decodedAudio.duration, position));
+  try {
+    if (playbackSemitones === 0) {
+      setPlayerTime(elements.sourcePlayer, transportPosition);
+    } else if (resultUrl) {
+      setPlayerTime(elements.shiftedPlayer, transportPosition);
+    } else if (livePreview) {
+      await livePreview.seek(transportPosition, readSemitones());
+    }
+  } catch (error) {
+    if (playbackSemitones !== 0 && !resultUrl) await handleLiveFailure();
+  }
+  renderTransportPosition();
+}
+
+async function applyPitchChange() {
+  const value = parseSemitoneValue();
+  const previousValue = playbackSemitones;
+  const sourceWasPlaying = previousValue === 0 && !elements.sourcePlayer.paused;
+  const generatedWasPlaying = previousValue !== 0
+    && Boolean(resultUrl) && !elements.shiftedPlayer.paused;
+  const liveWasPlaying = previousValue !== 0
+    && !resultUrl && Boolean(livePreview?.playing);
+  const wasPlaying = sourceWasPlaying || generatedWasPlaying || liveWasPlaying;
+  const changesPlaybackPath = value === null
+    || (previousValue === 0) !== (value === 0)
+    || generatedWasPlaying;
+
+  if (wasPlaying && changesPlaybackPath) await pauseTransport();
+  playbackSemitones = value;
+  clearResult();
+  renderPitchValue();
+
+  if (value === null) {
+    updateControls();
+    return;
+  }
+
+  if (livePreview) {
+    try {
+      await livePreview.setSemitones(value);
+    } catch (error) {
+      await handleLiveFailure();
+      return;
+    }
+  }
+  if (decodedAudio) {
+    setStatus(
+      value !== 0 && !livePreviewAvailable
+        ? 'pitch.statusLiveUnavailable'
+        : 'pitch.statusReady',
+      {},
+      value !== 0 && !livePreviewAvailable ? 'warning' : 'normal',
+      value !== 0 && !livePreviewAvailable,
+    );
+  }
+  updateControls();
+  if (wasPlaying && changesPlaybackPath) await playTransport();
 }
 
 function setSemitones(value) {
   const number = Number(value);
-  elements.semitones.value = String(Math.max(-12, Math.min(12, Number.isFinite(number) ? number : 0)));
-  clearDerivedResults();
-  renderPitchValue();
-  const semitones = parseSemitoneValue();
-  updateLivePitch(semitones);
-  if (decodedAudio) {
-    setStatus(livePreview?.playing ? 'pitch.statusLivePlaying' : 'pitch.statusReady');
-  }
-  updateControls();
-}
-
-function createAudioBuffer(channelCount, length, sampleRate) {
-  return new AudioBuffer({ numberOfChannels: channelCount, length, sampleRate });
-}
-
-function copyAudioRange(source, startFrame, frameCount) {
-  const output = createAudioBuffer(source.numberOfChannels, frameCount, source.sampleRate);
-  for (let channel = 0; channel < source.numberOfChannels; channel += 1) {
-    output.copyToChannel(
-      source.getChannelData(channel).subarray(startFrame, startFrame + frameCount),
-      channel,
-    );
-  }
-  return output;
-}
-
-function waveFromAudioBuffer(audioBuffer) {
-  const channels = Array.from(
-    { length: audioBuffer.numberOfChannels },
-    (_, channel) => audioBuffer.getChannelData(channel),
-  );
-  return new Blob([encodeWaveChannels({
-    channels,
-    sampleRate: audioBuffer.sampleRate,
-  })], { type: 'audio/wav' });
-}
-
-function createPreviewExcerpt(source, startSeconds) {
-  const centralStart = Math.min(
-    Math.round(startSeconds * source.sampleRate),
-    Math.max(0, source.length - 1),
-  );
-  const centralLength = Math.min(
-    Math.round(PREVIEW_SECONDS * source.sampleRate),
-    source.length - centralStart,
-  );
-  const padding = Math.round(PREVIEW_PADDING_SECONDS * source.sampleRate);
-  const contextStart = Math.max(0, centralStart - padding);
-  const contextEnd = Math.min(source.length, centralStart + centralLength + padding);
-  return {
-    input: copyAudioRange(source, contextStart, contextEnd - contextStart),
-    original: copyAudioRange(source, centralStart, centralLength),
-    trimStart: centralStart - contextStart,
-    trimLength: centralLength,
-  };
-}
-
-function findSuggestedPreviewStart(source) {
-  if (source.duration <= PREVIEW_SECONDS) return 0;
-  const windowFrames = Math.round(PREVIEW_SECONDS * source.sampleRate);
-  const hopFrames = Math.round(2 * source.sampleRate);
-  const sampleStride = Math.max(1, Math.round(source.sampleRate / 200));
-  let bestStart = 0;
-  let bestEnergy = -1;
-
-  for (let start = 0; start + windowFrames <= source.length; start += hopFrames) {
-    let energy = 0;
-    let sampleCount = 0;
-    for (let frame = start; frame < start + windowFrames; frame += sampleStride) {
-      for (let channel = 0; channel < source.numberOfChannels; channel += 1) {
-        const sample = source.getChannelData(channel)[frame];
-        energy += sample * sample;
-        sampleCount += 1;
-      }
-    }
-    const meanEnergy = energy / sampleCount;
-    if (meanEnergy > bestEnergy) {
-      bestEnergy = meanEnergy;
-      bestStart = start;
-    }
-  }
-  return bestStart / source.sampleRate;
+  elements.semitones.value = String(Math.max(
+    -12,
+    Math.min(12, Number.isFinite(number) ? number : 0),
+  ));
+  applyPitchChange();
 }
 
 async function decodeFile(file) {
@@ -442,263 +511,162 @@ function stopActiveOperation() {
   setBusy(false);
 }
 
-elements.file.addEventListener('change', async () => {
+async function loadFile(file) {
   stopActiveOperation();
-  liveLoading = false;
+  playbackId += 1;
   const currentOperation = operationId;
-  selectedFile = elements.file.files[0] || null;
-  decodedAudio = null;
-  clearDerivedResults();
-  await releaseLivePreview({ resetPosition: true });
+  await pauseTransport();
+  await releaseLivePreview();
   if (currentOperation !== operationId) return;
+
+  selectedFile = file;
+  decodedAudio = null;
+  playbackSemitones = parseSemitoneValue();
+  transportPosition = 0;
+  clearResult();
   revokeUrl(sourceUrl);
   sourceUrl = null;
   clearAudioElement(elements.sourcePlayer);
-  elements.sourceRegion.hidden = true;
-
-  if (!selectedFile) {
-    fileDetailsState = { key: 'pitch.noFile', parameters: {} };
-    renderFileDetails();
-    setStatus('pitch.statusSelect');
-    updateControls();
-    return;
-  }
-
   fileDetailsState = {
     key: 'pitch.fileDetails',
     parameters: {
-      filename: selectedFile.name,
-      size: formatBytes(selectedFile.size),
+      filename: file.name,
+      size: formatBytes(file.size),
       duration: '—',
       channels: '—',
       rate: '—',
     },
   };
   renderFileDetails();
-  setStatus('pitch.statusDecoding', { filename: selectedFile.name });
+  renderTransportPosition();
+  setStatus('pitch.statusDecoding', { filename: file.name });
   setBusy(true);
 
   try {
-    const audioBuffer = await decodeFile(selectedFile);
+    const audioBuffer = await decodeFile(file);
     if (currentOperation !== operationId) return;
     validateDecodedAudio(audioBuffer);
     decodedAudio = audioBuffer;
-    sourceUrl = URL.createObjectURL(selectedFile);
+    sourceUrl = URL.createObjectURL(file);
     elements.sourcePlayer.src = sourceUrl;
-    elements.sourceRegion.hidden = false;
-    livePosition = 0;
-    elements.livePosition.max = String(audioBuffer.duration);
-    renderLivePosition();
-    elements.liveRegion.hidden = !livePreviewAvailable;
-    elements.renderedPreviewRegion.hidden = livePreviewAvailable;
-    const maximumStart = Math.max(0, audioBuffer.duration - PREVIEW_SECONDS);
-    elements.previewStart.max = String(maximumStart);
-    elements.previewStart.value = String(Math.min(
-      maximumStart,
-      findSuggestedPreviewStart(audioBuffer),
-    ));
-    elements.previewTime.value = formatClock(Number(elements.previewStart.value));
     fileDetailsState = {
       key: 'pitch.fileDetails',
       parameters: {
-        filename: selectedFile.name,
-        size: formatBytes(selectedFile.size),
+        filename: file.name,
+        size: formatBytes(file.size),
         duration: formatClock(audioBuffer.duration),
         channels: t(audioBuffer.numberOfChannels === 1 ? 'pitch.mono' : 'pitch.stereo'),
         rate: audioBuffer.sampleRate.toLocaleString(sharedI18n.getLanguage()),
       },
     };
     renderFileDetails();
-    setStatus(livePreviewAvailable ? 'pitch.statusReady' : 'pitch.statusLiveUnavailable', {}, livePreviewAvailable ? 'normal' : 'warning');
+    renderTransportPosition();
+    setStatus('pitch.statusReady');
   } catch (error) {
     if (currentOperation !== operationId) return;
     decodedAudio = null;
-    fileDetailsState = {
-      key: 'pitch.fileDetails',
-      parameters: {
-        filename: selectedFile.name,
-        size: formatBytes(selectedFile.size),
-        duration: '—',
-        channels: '—',
-        rate: '—',
-      },
-    };
-    renderFileDetails();
-    setStatus('pitch.errorProcessing', { detail: error.message }, 'error');
+    setStatus('pitch.errorProcessing', { detail: error.message }, 'error', true);
   } finally {
     if (currentOperation === operationId) setBusy(false);
   }
+}
+
+elements.chooseFile.addEventListener('click', () => {
+  elements.file.value = '';
+  elements.file.click();
+});
+
+elements.file.addEventListener('change', () => {
+  const file = elements.file.files[0];
+  if (file) loadFile(file);
 });
 
 elements.semitones.addEventListener('input', () => {
-  clearDerivedResults();
-  renderPitchValue();
-  const value = parseSemitoneValue();
-  if (value !== null) {
-    updateLivePitch(value);
-    setStatus(livePreview?.playing ? 'pitch.statusLivePlaying' : 'pitch.statusReady');
-  }
-  updateControls();
+  applyPitchChange();
 });
 elements.semitones.addEventListener('change', () => {
-  try {
-    readSemitones();
-  } catch (error) {
-    setStatus('pitch.errorShift', {}, 'error');
+  if (parseSemitoneValue() === null) {
+    setStatus('pitch.errorShift', {}, 'error', true);
   }
 });
-elements.pitchDown.addEventListener('click', () => setSemitones(Number(elements.semitones.value) - 1));
-elements.pitchUp.addEventListener('click', () => setSemitones(Number(elements.semitones.value) + 1));
+elements.pitchDown.addEventListener('click', () => {
+  setSemitones(Number(elements.semitones.value) - 1);
+});
+elements.pitchUp.addEventListener('click', () => {
+  setSemitones(Number(elements.semitones.value) + 1);
+});
 elements.pitchReset.addEventListener('click', () => setSemitones(0));
 
-elements.livePlay.addEventListener('click', async () => {
-  if (!decodedAudio || busy || liveLoading || !livePreviewAvailable) return;
-  const currentOperation = operationId;
-  const controller = livePreview || createLivePreview();
-  if (!controller) return;
-
-  liveLoading = true;
-  updateControls();
-  try {
-    if (controller.playing) {
-      await controller.pause();
-      if (currentOperation !== operationId) return;
-      setStatus('pitch.statusLivePaused');
-    } else {
-      document.querySelectorAll('audio').forEach((player) => player.pause());
-      setStatus('pitch.statusLivePreparing');
-      await controller.play(livePosition, readSemitones());
-      if (currentOperation !== operationId) {
-        await controller.release();
-        return;
-      }
-      setStatus('pitch.statusLivePlaying');
-    }
-    renderLiveButton();
-  } catch (error) {
-    if (currentOperation === operationId) await useRenderedPreviewFallback();
-  } finally {
-    if (currentOperation === operationId) {
-      liveLoading = false;
-      updateControls();
-    }
+elements.transportPlay.addEventListener('click', async () => {
+  if (isTransportPlaying()) {
+    await pauseTransport();
+  } else {
+    await playTransport();
   }
 });
 
-elements.livePosition.addEventListener('input', () => {
-  livePosition = Number(elements.livePosition.value);
-  renderLivePosition();
+elements.transportPosition.addEventListener('pointerdown', () => {
+  pointerScrubbing = true;
+});
+elements.transportPosition.addEventListener('input', () => {
+  transportPosition = Number(elements.transportPosition.value);
+  renderTransportPosition();
+  if (!pointerScrubbing) seekTransport(transportPosition);
+});
+elements.transportPosition.addEventListener('change', () => {
+  const position = Number(elements.transportPosition.value);
+  pointerScrubbing = false;
+  seekTransport(position);
+});
+elements.transportPosition.addEventListener('pointercancel', () => {
+  const position = Number(elements.transportPosition.value);
+  pointerScrubbing = false;
+  seekTransport(position);
 });
 
-elements.livePosition.addEventListener('change', async () => {
-  if (!decodedAudio || !livePreview) return;
-  try {
-    await livePreview.seek(livePosition, readSemitones());
-  } catch (error) {
-    await useRenderedPreviewFallback();
-  }
-});
-
-elements.previewStart.addEventListener('input', () => {
-  elements.previewTime.value = formatClock(Number(elements.previewStart.value));
-  clearPreview();
-});
-
-elements.usePlaybackPosition.addEventListener('click', () => {
-  if (!decodedAudio) return;
-  const maximumStart = Math.max(0, decodedAudio.duration - PREVIEW_SECONDS);
-  elements.previewStart.value = String(Math.min(maximumStart, elements.sourcePlayer.currentTime));
-  elements.previewTime.value = formatClock(Number(elements.previewStart.value));
-  clearPreview();
-});
-
-elements.createPreview.addEventListener('click', async () => {
-  if (!decodedAudio || busy || liveLoading) return;
-  let semitones;
-  try {
-    semitones = readSemitones();
-  } catch (error) {
-    setStatus('pitch.errorShift', {}, 'error');
-    return;
-  }
-
-  const currentOperation = operationId + 1;
-  operationId = currentOperation;
-  activeController = new AbortController();
-  clearPreview();
-  setBusy(true);
-  setStatus('pitch.statusPreview');
-  const excerpt = createPreviewExcerpt(decodedAudio, Number(elements.previewStart.value));
-
-  try {
-    const result = await processInWorker(excerpt.input, {
-      semitones,
-      trimStart: excerpt.trimStart,
-      trimLength: excerpt.trimLength,
-    }, activeController.signal);
-    if (currentOperation !== operationId) return;
-    previewOriginalUrl = replaceUrl(previewOriginalUrl, waveFromAudioBuffer(excerpt.original));
-    previewShiftedUrl = replaceUrl(previewShiftedUrl, result.wave);
-    elements.previewOriginal.src = previewOriginalUrl;
-    elements.previewShifted.src = previewShiftedUrl;
-    const processedSeconds = excerpt.input.duration;
-    const estimatedSeconds = result.timings.totalMilliseconds / 1000
-      / processedSeconds * decodedAudio.duration;
-    previewMetricState = {
-      time: formatSeconds(result.timings.totalMilliseconds),
-      estimate: `${formatClock(estimatedSeconds * 0.9)}–${formatClock(estimatedSeconds * 1.25)}`,
-    };
-    renderPreviewMetric();
-    elements.previewEmpty.hidden = true;
-    elements.previewResult.hidden = false;
-    setStatus(result.peak > 1 ? 'pitch.statusClipPreview' : 'pitch.statusPreviewReady', {}, result.peak > 1 ? 'warning' : 'normal');
-  } catch (error) {
-    if (currentOperation === operationId && error.name !== 'AbortError') {
-      setStatus('pitch.errorProcessing', { detail: error.message }, 'error');
-    }
-  } finally {
-    if (currentOperation === operationId) {
-      activeController = null;
-      setBusy(false);
-    }
-  }
-});
-
-elements.processFull.addEventListener('click', async () => {
+elements.prepareWave.addEventListener('click', async () => {
   if (!decodedAudio || !selectedFile || busy || liveLoading) return;
   let semitones;
   try {
     semitones = readSemitones();
   } catch (error) {
-    setStatus('pitch.errorShift', {}, 'error');
+    setStatus('pitch.errorShift', {}, 'error', true);
     return;
   }
 
+  await pauseTransport();
   const currentOperation = operationId + 1;
   operationId = currentOperation;
   activeController = new AbortController();
   clearResult();
   setBusy(true);
   setStatus('pitch.statusProcessing');
-  document.querySelectorAll('audio').forEach((player) => player.pause());
 
   try {
     await releaseLivePreview();
     if (currentOperation !== operationId) return;
-    const result = await processInWorker(decodedAudio, { semitones }, activeController.signal);
+    const result = await processInWorker(
+      decodedAudio,
+      { semitones, preset: PROCESSING_PRESET },
+      activeController.signal,
+    );
     if (currentOperation !== operationId) return;
     resultUrl = replaceUrl(resultUrl, result.wave);
     elements.shiftedPlayer.src = resultUrl;
     elements.download.href = resultUrl;
     elements.download.download = safeOutputName(selectedFile.name, semitones);
-    elements.completeResult.hidden = false;
     metricsState = { result, inputDuration: decodedAudio.duration };
     renderMetrics();
-    setStatus(result.peak > 1 ? 'pitch.statusClipResult' : 'pitch.statusComplete', {}, result.peak > 1 ? 'warning' : 'normal');
+    setStatus(
+      result.peak > 1 ? 'pitch.statusClipResult' : 'pitch.statusComplete',
+      {},
+      result.peak > 1 ? 'warning' : 'normal',
+      result.peak > 1,
+    );
   } catch (error) {
     if (currentOperation === operationId && error.name !== 'AbortError') {
       clearResult();
-      setStatus('pitch.errorProcessing', { detail: error.message }, 'error');
+      setStatus('pitch.errorProcessing', { detail: error.message }, 'error', true);
     }
   } finally {
     if (currentOperation === operationId) {
@@ -708,32 +676,67 @@ elements.processFull.addEventListener('click', async () => {
   }
 });
 
-elements.cancel.addEventListener('click', () => {
-  if (!activeController) return;
-  activeController.abort();
-  activeController = null;
-  operationId += 1;
-  clearDerivedResults();
-  setBusy(false);
-  setStatus('pitch.statusCancelled');
+for (const player of [elements.sourcePlayer, elements.shiftedPlayer]) {
+  player.addEventListener('timeupdate', () => {
+    const isActive = (playbackSemitones === 0 && player === elements.sourcePlayer)
+      || (playbackSemitones !== 0 && resultUrl && player === elements.shiftedPlayer);
+    if (!isActive || pointerScrubbing) return;
+    transportPosition = player.currentTime;
+    renderTransportPosition();
+  });
+  player.addEventListener('play', renderTransportButton);
+  player.addEventListener('pause', renderTransportButton);
+  player.addEventListener('ended', () => {
+    transportPosition = decodedAudio?.duration || 0;
+    renderTransportPosition();
+    renderTransportButton();
+  });
+}
+
+function hasFileDrag(event) {
+  return Array.from(event.dataTransfer?.types || []).includes('Files');
+}
+
+function hideDropOverlay() {
+  dragDepth = 0;
+  elements.dropOverlay.hidden = true;
+}
+
+document.addEventListener('dragenter', (event) => {
+  if (!hasFileDrag(event)) return;
+  event.preventDefault();
+  dragDepth += 1;
+  if (!busy && !liveLoading) elements.dropOverlay.hidden = false;
 });
 
-document.querySelectorAll('audio').forEach((player) => {
-  player.addEventListener('play', () => {
-    if (livePreview?.playing) {
-      livePreview.pause().then(() => {
-        renderLiveButton();
-        setStatus('pitch.statusLivePaused');
-        updateControls();
-      }).catch(() => {
-        useRenderedPreviewFallback();
-      });
-    }
-    document.querySelectorAll('audio').forEach((otherPlayer) => {
-      if (otherPlayer !== player) otherPlayer.pause();
-    });
-  });
+document.addEventListener('dragover', (event) => {
+  if (!hasFileDrag(event)) return;
+  event.preventDefault();
+  if (event.dataTransfer) {
+    event.dataTransfer.dropEffect = busy || liveLoading ? 'none' : 'copy';
+  }
 });
+
+document.addEventListener('dragleave', (event) => {
+  if (!hasFileDrag(event)) return;
+  dragDepth = Math.max(0, dragDepth - 1);
+  if (dragDepth === 0) elements.dropOverlay.hidden = true;
+});
+
+document.addEventListener('drop', (event) => {
+  if (!hasFileDrag(event)) return;
+  event.preventDefault();
+  hideDropOverlay();
+  if (busy || liveLoading) return;
+  const files = Array.from(event.dataTransfer?.files || []);
+  if (files.length !== 1) {
+    setStatus('pitch.errorOneFile', {}, 'error', true);
+    return;
+  }
+  loadFile(files[0]);
+});
+
+window.addEventListener('blur', hideDropOverlay);
 
 window.addEventListener('site-language-change', () => {
   if (decodedAudio && fileDetailsState.key === 'pitch.fileDetails') {
@@ -750,12 +753,8 @@ window.addEventListener('site-language-change', () => {
 window.addEventListener('beforeunload', () => {
   activeController?.abort();
   livePreview?.release();
-  [sourceUrl, previewOriginalUrl, previewShiftedUrl, resultUrl].forEach(revokeUrl);
+  [sourceUrl, resultUrl].forEach(revokeUrl);
 });
 
-elements.liveRegion.hidden = !livePreviewAvailable;
-elements.renderedPreviewRegion.hidden = livePreviewAvailable;
-renderPitchValue();
-renderLiveButton();
-renderLivePosition();
+renderDynamicText();
 updateControls();

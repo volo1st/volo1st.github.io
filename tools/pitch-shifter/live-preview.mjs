@@ -18,12 +18,17 @@ export class LivePreviewController {
     onEnded = () => {},
     createStretchNode = createSignalsmithNode,
     createAudioContext = null,
+    preset = 'default',
   } = {}) {
+    if (preset !== 'cheaper' && preset !== 'default') {
+      throw new RangeError('The processing preset must be cheaper or default.');
+    }
     this.audioBuffer = audioBuffer;
     this.onTime = onTime;
     this.onEnded = onEnded;
     this.createStretchNode = createStretchNode;
     this.createAudioContext = createAudioContext;
+    this.preset = preset;
     this.context = null;
     this.node = null;
     this.playing = false;
@@ -55,7 +60,7 @@ export class LivePreviewController {
       });
       this.node = node;
       node.connect(context.destination);
-      await node.configure({ preset: 'cheaper' });
+      await node.configure({ preset: this.preset });
       await node.setUpdateInterval(UPDATE_SECONDS, (seconds) => {
         this.handleTimeUpdate(seconds);
       });

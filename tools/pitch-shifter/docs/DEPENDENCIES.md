@@ -51,4 +51,4 @@ The SIMD build also uses `-msimd128`.
 
 Owner listening tests used vocals, bass, drums, full mixes, and sources of different quality. Signalsmith Stretch preserved detail and transients better than SoundTouchJS. The official cheaper preset did not have a material audible difference from the default preset in these tests.
 
-Manual settings faster than an 80/40 millisecond block and interval boundary sounded unacceptable. The 80/40 setting also had audible distortion. The production tool uses the official cheaper preset to keep a quality margin.
+Manual settings faster than an 80/40 millisecond block and interval boundary sounded unacceptable. The 80/40 setting also had audible distortion. The production tool uses the official default preset. The reference high-quality MP3 processed in 2.6 seconds in the accepted owner test.

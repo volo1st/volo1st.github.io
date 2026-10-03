@@ -12,7 +12,7 @@ export function processInWorker(input, settings, signal) {
     );
     const inputCopyMilliseconds = performance.now() - copyStartedAt;
     const transfer = channels.map((channel) => channel.buffer);
-    const worker = new Worker('./processing-worker.mjs?v=f9139b0dc29f', { type: 'module' });
+    const worker = new Worker('./processing-worker.mjs?v=b15548d85add', { type: 'module' });
 
     const stop = () => {
       worker.terminate();

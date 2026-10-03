@@ -450,20 +450,20 @@ The metronome and tuner remain unscheduled ideas. Pitch Shifter is now an approv
 
 Pitch Shifter is classified as a public browser tool. It processes one local file and does not store or upload audio.
 
-The Pitch Shifter prototype is complete. Owner listening tests selected the Signalsmith Stretch cheaper preset. The version 1 implementation package is approved and active.
+The Pitch Shifter prototype is complete. Owner listening and performance tests selected the Signalsmith Stretch default preset. The version 1 implementation package is approved and active.
 
 ### 13.2 Pitch Shifter version 1
 
 - [x] Compare Signalsmith Stretch and SoundTouchJS with full mixes, vocals, bass, drums, and different source formats.
   - Evidence: Owner listening tests found consistently better quality from Signalsmith Stretch. SoundTouchJS produced audible transient damage.
 - [x] Select the production algorithm and performance settings.
-  - Evidence: The owner could not hear a material quality difference between the default and cheaper Signalsmith presets. Production HTTPS tests processed the same 246-second, 48 kHz stereo file in approximately 2 seconds on an iPhone 16 Pro and 1.83 seconds on a Mac Studio with an M1 Max.
+  - Evidence: The owner could not hear a material quality difference between the default and cheaper Signalsmith presets. The default preset processed the reference high-quality MP3 in 2.6 seconds, which the owner accepted. Earlier production HTTPS tests with the cheaper preset processed the 246-second, 48 kHz stereo file in approximately 2 seconds on an iPhone 16 Pro and 1.83 seconds on a Mac Studio with an M1 Max.
 - [x] Find the lower acceptable quality boundary.
-  - Evidence: An 80/40 millisecond manual configuration was the fastest acceptable test setting, but it produced audible distortion. Faster settings sounded unacceptable across three different sources. Keep the official cheaper preset as the production quality margin.
-- [x] Add the focused bilingual interface, short preview, complete-file processing, and WAV download.
-  - Evidence: The local page provides the approved four-step workflow and invalidates old output after a source or pitch change.
-- [x] Add live pitch-shifted playback with the rendered preview as a fallback.
-  - Evidence: The primary preview uses the official AudioWorklet interface for play, pause, seek, and live pitch changes. Feature detection and setup errors reveal the existing rendered preview. Automated tests cover the live controller and fallback interface.
+  - Evidence: An 80/40 millisecond manual configuration was the fastest acceptable test setting, but it produced audible distortion. Faster settings sounded unacceptable across three different sources. The official default preset gives the production quality margin.
+- [x] Add the focused bilingual interface, complete-file processing, and WAV download.
+  - Evidence: One compact workspace provides file selection, pitch control, comparison playback, and WAV export. A source or pitch change invalidates the old output.
+- [x] Add live pitch-shifted playback and one shared transport.
+  - Evidence: One transport controls the original audio, live shifted audio, and generated WAV. It keeps the playback position when the user changes the source. If live playback fails, complete-file processing remains available.
 - [x] Add the local WebAssembly modules, licenses, artifact hashes, and reproduction record.
   - Evidence: The dependency record pins both source commits, Emscripten 6.0.10, both MIT licences, build options, and the three artifact hashes.
 - [x] Add permanent processing, WAV, interface, privacy, and dependency tests.
@@ -472,9 +472,9 @@ The Pitch Shifter prototype is complete. Owner listening tests selected the Sign
   - Evidence: The specification and README require HTTPS for iOS and iPadOS measurements. They record that WebKit Enhanced Security can disable just-in-time compilation on a plain HTTP local-area-network origin.
 - [ ] Verify keyboard use, narrow screens, and 200 percent zoom.
 - [x] Run the general repository check and review the complete diff.
-  - Evidence: `./scripts/check.sh` passed on 3 October 2026. The final source review found no runtime request that can send audio.
+  - Evidence: `./scripts/check.sh` passed on 4 October 2026. The final source review found no runtime request that can send audio.
 
-Completion gate: A supported browser can preview, process, play, and download a local mono or stereo song. Processing stays responsive and does not send audio over the network. A failure or cancellation leaves no downloadable result.
+Completion gate: A supported browser can preview, process, play, and download a local mono or stereo song. Processing stays responsive and does not send audio over the network. A failure leaves no downloadable result.
 
 The approved icon family uses abstract monoline and bar symbols. Each icon uses the site background `#f4f1e8` and the guitar accent `#173e30`. The Guitar Strum Machine uses its icon for home-screen installation. The other three icons record a visual direction only. They do not change the status of the app ideas.
 
@@ -553,6 +553,13 @@ The approved icon family uses abstract monoline and bar symbols. Each icon uses 
 | 3 October 2026 | Use the official Signalsmith AudioWorklet path for live preview and keep the custom offline worker for export. | Live play, seek, and pitch changes improve the main workflow. The offline SIMD path remains faster than real time and provides the downloadable WAV. |
 | 3 October 2026 | Use HTTPS for iOS and iPadOS performance tests. | WebKit Enhanced Security can disable JavaScript and Wasm just-in-time compilation on a plain HTTP local-area-network origin. This behavior invalidated the absolute timing results from the local iPhone prototype. |
 | 3 October 2026 | Do not add a Pitch Shifter progress bar in version 1. | Production HTTPS tests completed the 246-second reference file in approximately 2 seconds on the tested iPhone and Mac. Keep the working status and cancel control for slower devices. |
+| 3 October 2026 | Replace the numbered Pitch Shifter workflow with one compact workspace and one transport. | Original audio, live shifted audio, and the generated WAV need the same play, pause, and seek controls. One transport removes repeated players and keeps comparison at the same position. |
+| 3 October 2026 | Remove the eight-second rendered preview. | The supported current browsers and deployed HTTPS site provide AudioWorklet on the tested devices. Complete-file export remains available after a live-playback failure and supplies exact shifted playback when it completes. |
+| 3 October 2026 | Use one create-or-download action and no processing overlay. | The action can show its current state without blocking the page. A source or pitch change invalidates the download and restores the create action. |
+| 4 October 2026 | Let the Pitch Shifter pitch value select original or shifted playback. | A separate source selector duplicates the pitch state. Zero semitones plays the original file. A non-zero value plays live shifted audio or the generated WAV. |
+| 4 October 2026 | Compare the default preset through a temporary query before revising the export actions. | The query permitted a comparable timing test without adding an end-user quality setting. The test is complete, so the temporary query is removed. |
+| 4 October 2026 | Use the Signalsmith Stretch default preset for Pitch Shifter version 1. | The reference high-quality MP3 processed in 2.6 seconds. The owner accepted this time, and the default preset keeps the larger quality margin. This decision supersedes the cheaper-preset decision from 3 October. |
+| 4 October 2026 | Use Prepare WAV followed by Download WAV, without a cancel control. | Processing takes approximately three seconds on the tested current devices. A distinct download click remains dependable after asynchronous processing, including in Safari. This decision supersedes the earlier requirement to keep Cancel available. |
 
 ## 16. Verified completion evidence
 

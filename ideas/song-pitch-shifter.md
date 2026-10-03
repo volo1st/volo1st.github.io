@@ -51,13 +51,12 @@ Version 1 must not:
 
 1. The user selects a local audio file.
 2. The tool decodes the file into pulse-code modulation (PCM) audio.
-3. The tool shows the file name and duration.
-4. The user selects a semitone shift.
-5. The tool processes the complete file.
-6. The tool lets the user compare the original and shifted audio.
-7. The user downloads the shifted audio as a WAV file.
+3. The user selects a semitone shift.
+4. The user compares the original and shifted audio with one playback control.
+5. The tool creates the complete WAV file.
+6. The prepare action becomes the WAV download.
 
-Do not enable the shifted preview or download before processing succeeds.
+Do not enable playback before decoding succeeds. Do not enable download before processing succeeds.
 
 Invalidate the previous shifted result after the user changes the source file or semitone value.
 
@@ -81,9 +80,11 @@ Do not use simple resampling as a fallback. Simple resampling changes the pitch 
 
 ## 7. Preview and output
 
-Use live pitch-shifted playback as the primary preview. Let the user play, pause, seek, and change the semitone value while the audio plays. Use the same Signalsmith preset and pitch settings as the offline export. The real-time and offline paths do not need to produce identical PCM samples.
+Use one playback control. At zero semitones, play the original audio. At a non-zero value, play the shifted audio. Let the user play, pause, seek, and change the semitone value while audio plays. Keep the playback position when the pitch value changes.
 
-Use the eight-second offline preview only when the browser cannot start the live AudioWorklet path. Keep this fallback available on an insecure local origin.
+Before export, use the live AudioWorklet path for shifted playback. After export, use the generated WAV for shifted playback. This lets the user hear the exact downloadable result.
+
+Do not provide the eight-second rendered preview. If live playback cannot start, report the failure and keep complete-file processing available. After processing, let the unified control play the generated WAV.
 
 The complete-result player and the download must use the same generated WAV object.
 
@@ -117,7 +118,7 @@ Pitch shifter -> shifted PCM
                        +-> MP3 encoder
 ```
 
-Run expensive offline processing in a Web Worker. Do not require AudioWorklet for export or basic preview because the rendered fallback must remain available.
+Run expensive offline processing in a Web Worker. Do not require AudioWorklet for export or original playback.
 
 Use the official Signalsmith AudioWorklet wrapper for live file preview. Keep it separate from the offline export worker. Release its copied audio buffers before a complete-file export.
 
@@ -181,7 +182,7 @@ Owner listening tests selected Signalsmith Stretch. The tests found that:
 - A manual 80/40 millisecond configuration was the fastest acceptable boundary, but it had audible distortion.
 - Faster manual configurations sounded unacceptable across a detailed MP3 mix, an average MP3 backing track, and a compact-disc-quality WAV source.
 
-Use the official Signalsmith Stretch cheaper preset for version 1. Use the SIMD build when the browser supports it. Fall back to the equivalent scalar build when SIMD module setup fails.
+Use the official Signalsmith Stretch default preset for version 1. Use the SIMD build when the browser supports it. Fall back to the equivalent scalar build when SIMD module setup fails.
 
 Do not use a plain HTTP local-area-network address for performance tests on iOS or iPadOS. WebKit Enhanced Security can disable just-in-time compilation for JavaScript and Wasm on this type of origin. This behavior made the local iPhone prototype measurements much slower than production. It did not change the listening-test results.
 
@@ -230,9 +231,9 @@ Reject unsupported channel layouts or files that exceed the agreed processing li
 
 Show progress only when the processing component provides meaningful progress data. Otherwise, show an indeterminate working state.
 
-Do not add a progress bar in version 1. Keep the working status and cancel control for slower devices. Reconsider progress reporting only if representative HTTPS tests show a material wait.
+Do not add a progress bar or cancel control in version 1. Show an indeterminate working state on the prepare action. Reconsider progress reporting only if representative HTTPS tests show a material wait.
 
-Let the user cancel processing. Remove all output from the cancelled operation.
+If live shifted playback fails, keep original playback and complete-file processing available. Do not replace the live engine with a different pitch-shifting algorithm.
 
 Keep the selected source file available after a processing error when it is safe to retry.
 
@@ -249,7 +250,7 @@ Release object addresses and large audio buffers when the user replaces a file o
 ## 15. Version 1 decisions
 
 - Use the public name `Pitch Shifter`.
-- Use Signalsmith Stretch with its official cheaper preset.
+- Use Signalsmith Stretch with its official default preset.
 - Use a custom SIMD Wasm build and an equivalent scalar fallback.
 - Accept mono or stereo audio only.
 - Accept browser-decoded sample rates from 8 kHz through 192 kHz.
@@ -260,8 +261,16 @@ Release object addresses and large audio buffers when the user replaces a file o
 - Reserve key recognition and MP3 export for later versions.
 - Use one user-facing processing mode. Do not expose algorithm or performance settings.
 - Use only play, pause, seek, and current semitone controls from the official real-time browser interface.
-- Keep offline rendering as the fallback when AudioWorklet is unavailable or cannot start.
+- Use one transport for original audio, live shifted audio, and the generated WAV.
+- Let the pitch value select the playback source. Do not add a separate original-or-shifted selector.
+- Do not keep a separate rendered-preview workflow.
+- Let the complete-file action change from prepare to download after processing succeeds.
+- Invalidate the generated WAV after a source or pitch change.
+- Accept a file from the file picker or a page-wide file drop.
+- Use native semantic controls with consistent custom styling.
+- Do not block the complete page while processing. Disable conflicting controls and show a working state on the action.
 - Put processing measurements and the audio-engine explanation in separate sections that are closed by default.
+
 
 ## 16. References
 

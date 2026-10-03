@@ -63,12 +63,20 @@ export function processSignalsmithOffline(module, {
   length,
   sampleRate,
   semitones,
+  preset = 'default',
   chunkSize = DEFAULT_CHUNK_SIZE,
 }) {
   validateInput(channels, length, sampleRate, semitones);
+  if (preset !== 'cheaper' && preset !== 'default') {
+    throw new RangeError('The processing preset must be cheaper or default.');
+  }
   const setupStartedAt = now();
   module._main();
-  module._presetCheaper(channels.length, sampleRate);
+  if (preset === 'default') {
+    module._presetDefault(channels.length, sampleRate);
+  } else {
+    module._presetCheaper(channels.length, sampleRate);
+  }
   module._setTransposeSemitones(semitones, 8_000 / sampleRate);
   module._setFormantSemitones(0, false);
   module._setFormantBase(0);
@@ -130,7 +138,7 @@ export function processSignalsmithOffline(module, {
     channels: outputChannels,
     length,
     sampleRate,
-    diagnostics: { chunkSize, inputLatency, outputLatency, preset: 'cheaper' },
+    diagnostics: { chunkSize, inputLatency, outputLatency, preset },
     timings: {
       setupMilliseconds,
       processingMilliseconds: now() - processingStartedAt,

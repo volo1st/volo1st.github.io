@@ -1,6 +1,6 @@
 import ScalarModule from './vendor/signalsmith-stretch/SignalsmithStretchScalar.mjs?v=7349f115b3d6';
 import SimdModule from './vendor/signalsmith-stretch/SignalsmithStretchSimd.mjs?v=d8556ea43ff1';
-import { processSignalsmithOffline } from './audio-processing.mjs?v=cd8391c3b73c';
+import { processSignalsmithOffline } from './audio-processing.mjs?v=d8fb3d144753';
 import { encodeWaveChannels, measurePeakChannels } from './wav.mjs?v=3ed2e8357b65';
 
 async function createModule() {
