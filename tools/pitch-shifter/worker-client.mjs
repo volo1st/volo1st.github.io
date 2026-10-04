@@ -12,7 +12,7 @@ export function processInWorker(input, settings, signal) {
     );
     const inputCopyMilliseconds = performance.now() - copyStartedAt;
     const transfer = channels.map((channel) => channel.buffer);
-    const worker = new Worker('./processing-worker.mjs?v=b15548d85add', { type: 'module' });
+    const worker = new Worker('./processing-worker.mjs?v=e949ee393e63', { type: 'module' });
 
     const stop = () => {
       worker.terminate();
@@ -45,6 +45,8 @@ export function processInWorker(input, settings, signal) {
         sampleRate: event.data.sampleRate,
         channelCount: event.data.channelCount,
         peak: event.data.peak,
+        outputGain: event.data.outputGain,
+        gainReductionDecibels: event.data.gainReductionDecibels,
         engine: event.data.engine,
         diagnostics: event.data.diagnostics,
         timings: {

@@ -97,7 +97,9 @@ example-shifted-plus-3.wav
 
 Do not overwrite or modify the selected source file.
 
-Measure the rendered peak before export. Do not silently change the gain. If the peak exceeds the WAV range, show a warning that the WAV encoder clips those samples.
+Measure the rendered sample peak before export. If the peak exceeds the WAV range, apply one constant gain reduction to both channels and set the output peak to 0.999. This adjustment must preserve stereo balance and must occur before WAV encoding. Do not use clipping, limiting, or compression for peak protection.
+
+Show every gain adjustment in the processing statistics. If the reduction is 1 dB or less, show the normal completion status. If the reduction is greater than 1 dB, show the adjustment in the completion status.
 
 ## 8. Processing architecture
 
@@ -257,7 +259,7 @@ Release object addresses and large audio buffers when the user replaces a file o
 - Reject decoded audio with more than 33,554,432 total channel samples. This value is 128 MiB of 32-bit PCM.
 - Reject audio longer than 30 minutes.
 - Require output duration to match input duration within one sample frame.
-- Show a clipping warning when the rendered peak exceeds 1.0. Keep the original gain and clip only during 16-bit WAV encoding.
+- Apply constant gain reduction when the rendered sample peak exceeds 1.0. Target 0.999, preserve stereo balance, and report reductions greater than 1 dB in the completion status.
 - Reserve key recognition and MP3 export for later versions.
 - Use one user-facing processing mode. Do not expose algorithm or performance settings.
 - Use only play, pause, seek, and current semitone controls from the official real-time browser interface.

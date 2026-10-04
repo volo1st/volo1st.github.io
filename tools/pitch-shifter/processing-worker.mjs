@@ -1,7 +1,11 @@
 import ScalarModule from './vendor/signalsmith-stretch/SignalsmithStretchScalar.mjs?v=7349f115b3d6';
 import SimdModule from './vendor/signalsmith-stretch/SignalsmithStretchSimd.mjs?v=d8556ea43ff1';
 import { processSignalsmithOffline } from './audio-processing.mjs?v=d8fb3d144753';
-import { encodeWaveChannels, measurePeakChannels } from './wav.mjs?v=3ed2e8357b65';
+import {
+  calculatePeakProtectionGain,
+  encodeWaveChannels,
+  measurePeakChannels,
+} from './wav.mjs?v=57e908795253';
 
 async function createModule() {
   try {
@@ -36,11 +40,14 @@ self.addEventListener('message', async (event) => {
     }
     const encodingStartedAt = performance.now();
     const peak = measurePeakChannels(result.channels, trimStart, trimLength);
+    const outputGain = calculatePeakProtectionGain(peak);
+    const gainReductionDecibels = outputGain < 1 ? -20 * Math.log10(outputGain) : 0;
     const wave = encodeWaveChannels({
       channels: result.channels,
       sampleRate: result.sampleRate,
       startFrame: trimStart,
       frameCount: trimLength,
+      gain: outputGain,
     });
     const encodingMilliseconds = performance.now() - encodingStartedAt;
 
@@ -51,6 +58,8 @@ self.addEventListener('message', async (event) => {
       sampleRate: result.sampleRate,
       channelCount: result.channels.length,
       peak,
+      outputGain,
+      gainReductionDecibels,
       engine,
       diagnostics: result.diagnostics,
       timings: {

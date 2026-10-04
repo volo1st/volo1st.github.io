@@ -8,6 +8,8 @@ function clampSample(sample) {
   return Math.max(-1, Math.min(1, sample));
 }
 
+const WAV_PEAK_TARGET = 0.999;
+
 function validateChannels(channels, startFrame, frameCount) {
   if (!Array.isArray(channels) || channels.length < 1 || channels.length > 2) {
     throw new RangeError('WAV encoding requires one or two channels.');
@@ -34,15 +36,26 @@ export function measurePeakChannels(channels, startFrame = 0, frameCount = chann
   return peak;
 }
 
+export function calculatePeakProtectionGain(peak) {
+  if (!Number.isFinite(peak) || peak < 0) {
+    throw new RangeError('Peak protection requires a finite, non-negative peak.');
+  }
+  return peak > 1 ? WAV_PEAK_TARGET / peak : 1;
+}
+
 export function encodeWaveChannels({
   channels,
   sampleRate,
   startFrame = 0,
   frameCount = channels[0]?.length || 0,
+  gain = 1,
 }) {
   validateChannels(channels, startFrame, frameCount);
   if (!Number.isInteger(sampleRate) || sampleRate < 1) {
     throw new RangeError('WAV encoding requires a positive integer sample rate.');
+  }
+  if (!Number.isFinite(gain) || gain <= 0 || gain > 1) {
+    throw new RangeError('WAV encoding gain must be greater than zero and no greater than one.');
   }
 
   const bytesPerSample = 2;
@@ -70,7 +83,7 @@ export function encodeWaveChannels({
   let offset = 44;
   for (let frame = startFrame; frame < startFrame + frameCount; frame += 1) {
     for (const samples of channels) {
-      const sample = clampSample(samples[frame]);
+      const sample = clampSample(samples[frame] * gain);
       const integer = sample < 0 ? sample * 0x8000 : sample * 0x7fff;
       view.setInt16(offset, Math.round(integer), true);
       offset += bytesPerSample;

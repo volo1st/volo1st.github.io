@@ -1,4 +1,4 @@
-import { processInWorker } from './worker-client.mjs?v=82c1073e3bb6';
+import { processInWorker } from './worker-client.mjs?v=9af7baeeff92';
 import { LivePreviewController, supportsLivePreview } from './live-preview.mjs?v=6db69ba51288';
 
 const MAX_DURATION_SECONDS = 30 * 60;
@@ -6,6 +6,7 @@ const MAX_CHANNEL_SAMPLES = 33_554_432;
 const MIN_SAMPLE_RATE = 8_000;
 const MAX_SAMPLE_RATE = 192_000;
 const PROCESSING_PRESET = 'default';
+const MATERIAL_GAIN_REDUCTION_DB = 1;
 
 const sharedI18n = globalThis.SiteI18n;
 if (!sharedI18n || !globalThis.PitchShifterI18n) {
@@ -46,6 +47,7 @@ const elements = {
     output: document.querySelector('#metric-output'),
     format: document.querySelector('#metric-format'),
     peak: document.querySelector('#metric-peak'),
+    gain: document.querySelector('#metric-gain'),
   },
 };
 
@@ -128,6 +130,13 @@ function formatPeak(peak) {
   const decibels = 20 * Math.log10(peak);
   const prefix = decibels >= 0 ? '+' : '';
   return `${peak.toFixed(4)} (${prefix}${decibels.toFixed(2)} decibels relative to full scale)`;
+}
+
+function formatGainReduction(decibels) {
+  if (!Number.isFinite(decibels)) return '—';
+  return decibels > 0
+    ? `−${decibels.toFixed(2)} dB`
+    : t('pitch.gainUnchanged');
 }
 
 function parseSemitoneValue() {
@@ -230,6 +239,7 @@ function renderMetrics() {
     { rate: result.sampleRate.toLocaleString(sharedI18n.getLanguage()) },
   );
   elements.metrics.peak.textContent = formatPeak(result.peak);
+  elements.metrics.gain.textContent = formatGainReduction(result.gainReductionDecibels);
 }
 
 function renderActions() {
@@ -695,11 +705,12 @@ elements.prepareWave.addEventListener('click', async () => {
     elements.download.download = safeOutputName(selectedFile.name, semitones);
     metricsState = { result, inputDuration: decodedAudio.duration };
     renderMetrics();
+    const reportGainReduction = result.gainReductionDecibels > MATERIAL_GAIN_REDUCTION_DB;
     setStatus(
-      result.peak > 1 ? 'pitch.statusClipResult' : 'pitch.statusComplete',
-      {},
-      result.peak > 1 ? 'warning' : 'normal',
-      result.peak > 1,
+      reportGainReduction ? 'pitch.statusGainReduced' : 'pitch.statusComplete',
+      reportGainReduction ? { value: result.gainReductionDecibels.toFixed(2) } : {},
+      'normal',
+      reportGainReduction,
     );
   } catch (error) {
     if (currentOperation === operationId && error.name !== 'AbortError') {
