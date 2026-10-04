@@ -15,6 +15,10 @@ test('Pitch Shifter translations use identical English and Chinese keys', () => 
     Object.keys(pitchI18n.catalogs['en-AU']).sort(),
     Object.keys(pitchI18n.catalogs['zh-Hans']).sort(),
   );
+  assert.equal(pitchI18n.catalogs['en-AU']['pitch.shift'], 'Export');
+  assert.equal(pitchI18n.catalogs['en-AU']['pitch.shifting'], 'Exporting…');
+  assert.equal(pitchI18n.catalogs['zh-Hans']['pitch.shift'], '导出');
+  assert.equal(pitchI18n.catalogs['zh-Hans']['pitch.shifting'], '正在导出…');
 });
 
 test('the iOS playback audio session recovery is optional and ordered', async () => {
@@ -241,7 +245,7 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(html, /id="transport-position"[^>]*type="range"[^>]*disabled/);
   assert.match(html, /id="transport-current"/);
   assert.match(html, /id="transport-duration"/);
-  assert.match(html, /id="shift-audio"[^>]*data-i18n="pitch\.shift"[^>]*disabled/);
+  assert.match(html, /id="shift-audio"[^>]*data-i18n="pitch\.shift"[^>]*disabled>Export<\/button>/);
   assert.match(html, /<details id="advanced-details" class="info-section">/);
   assert.match(html, /<summary data-i18n="pitch\.advanced">Advanced<\/summary>/);
   assert.match(html, /<select id="output-format"[^>]*disabled>/);

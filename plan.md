@@ -586,6 +586,7 @@ The approved icon family uses abstract monoline and bar symbols. Each icon uses 
 | 5 October 2026 | Use `wasm-media-encoders` 0.7.0 and LAME at 320 kbit/s for Pitch Shifter MP3 export. | The small direct PCM interface fits the existing processing worker and needs no site build system. The pinned local artifacts avoid a third-party runtime dependency. A full reference track encoded at 46.8 times real time on the development host. The MP3 can contain one short frame of codec delay because this encoder does not write LAME gapless metadata. This limit is acceptable for a downloaded pitch-shifted file. |
 | 5 October 2026 | Default Pitch Shifter output to MP3 for an MP3 source and WAV for every other source. | The rule follows the source format when the tool supports it. It does not imply that AAC, FLAC, or other input formats can be preserved. The user can select either supported output before processing. |
 | 5 October 2026 | Put the Pitch Shifter export format in a collapsed Advanced section. | Export format is a secondary setting. A styled native select uses less space than a segmented control and gives iOS users a familiar option picker. The main workspace keeps one Shift or Download action. |
+| 5 October 2026 | Use “Export” for the Pitch Shifter complete-file action. | “Pitch shift” continues to name the audio operation. “Export” describes the button result and gives the English and Chinese interfaces a more natural action label. This decision supersedes the “Shift” action label from 4 October. |
 
 ## 16. Verified completion evidence
 
