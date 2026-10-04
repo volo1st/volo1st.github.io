@@ -17,6 +17,40 @@ test('Pitch Shifter translations use identical English and Chinese keys', () => 
   );
 });
 
+test('the iOS playback audio session recovery is optional and ordered', async () => {
+  const { recoverPlaybackAudioSession } = await import(
+    '../tools/pitch-shifter/audio-session.mjs'
+  );
+  const changes = [];
+  const audioSession = {};
+  Object.defineProperty(audioSession, 'type', {
+    configurable: true,
+    get() { return changes.at(-1); },
+    set(value) { changes.push(value); },
+  });
+  const recovered = await recoverPlaybackAudioSession({
+    navigator: { audioSession },
+    setTimeout(callback, delay) {
+      assert.equal(delay, 0);
+      changes.push('next task');
+      callback();
+    },
+  });
+  assert.equal(recovered, true);
+  assert.deepEqual(changes, ['ambient', 'next task', 'playback']);
+  assert.equal(await recoverPlaybackAudioSession({ navigator: {} }), false);
+
+  Object.defineProperty(audioSession, 'type', {
+    configurable: true,
+    get() { return 'auto'; },
+    set() { throw new Error('Audio session rejected the change.'); },
+  });
+  assert.equal(await recoverPlaybackAudioSession({
+    navigator: { audioSession },
+    setTimeout,
+  }), false);
+});
+
 test('the WAV encoder writes stereo 16-bit PCM and reports hard clipping', async () => {
   const {
     encodeWaveChannels,
@@ -129,6 +163,7 @@ test('the production interface keeps processing local and hides incomplete outpu
   const app = fs.readFileSync(path.join(toolRoot, 'app.mjs'), 'utf8');
   const bootstrap = fs.readFileSync(path.join(toolRoot, 'bootstrap.js'), 'utf8');
   const css = fs.readFileSync(path.join(toolRoot, 'styles.css'), 'utf8');
+  const livePreview = fs.readFileSync(path.join(toolRoot, 'live-preview.mjs'), 'utf8');
   const worker = fs.readFileSync(path.join(toolRoot, 'processing-worker.mjs'), 'utf8');
 
   assert.match(html, /id="audio-file"[^>]*type="file"/);
@@ -136,7 +171,9 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(html, /id="file-button-text"/);
   assert.doesNotMatch(html, /id="file-name"/);
   assert.match(html, /id="file-metadata"><\/p>/);
-  assert.match(html, /id="semitones"[^>]*min="-12"[^>]*max="12"[^>]*step="1"[^>]*data-i18n-aria-label="pitch\.pitchShift"/);
+  assert.match(html, /<output id="semitones"[^>]*aria-live="polite"[^>]*>0<\/output>/);
+  assert.doesNotMatch(html, /<input id="semitones"/);
+  assert.ok([...html.matchAll(/class="pitch-symbol-icon"/g)].length >= 3);
   assert.doesNotMatch(html, /class="control-label"/);
   assert.doesNotMatch(html, /playback-original|playback-shifted/);
   assert.match(html, /id="pitch-reset"[^>]*class="[^"]*icon-button/);
@@ -146,7 +183,7 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(html, /id="transport-position"[^>]*type="range"[^>]*disabled/);
   assert.match(html, /id="transport-current"/);
   assert.match(html, /id="transport-duration"/);
-  assert.match(html, /id="prepare-wave"[^>]*disabled/);
+  assert.match(html, /id="shift-audio"[^>]*data-i18n="pitch\.shift"[^>]*disabled/);
   assert.match(html, /id="download"[^>]*hidden/);
   assert.doesNotMatch(html, /id="cancel"/);
   assert.match(html, /id="source-player"[^>]*hidden/);
@@ -164,9 +201,10 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(css, /\[hidden\][\s\S]*display: none !important/);
   assert.match(css, /#transport-position[\s\S]*touch-action: pan-y/);
   assert.match(css, /#transport-position::-(?:webkit-slider-thumb|moz-range-thumb)/);
-  assert.match(css, /#semitones[\s\S]*appearance: textfield/);
-  assert.match(css, /\.pitch-actions[\s\S]*display: flex/);
+  assert.doesNotMatch(css, /#semitones[\s\S]*appearance: textfield/);
+  assert.match(css, /\.pitch-actions[\s\S]*display: flex[\s\S]*justify-content: center/);
   assert.match(css, /grid-template-columns: 2\.75rem minmax\(0, 1fr\) 2\.75rem/);
+  assert.match(css, /data-preview-pending="true"[\s\S]*opacity: 1/);
   assert.match(css, /#transport-play\[data-playing="true"\]/);
   assert.match(app, /MAX_DURATION_SECONDS = 30 \* 60/);
   assert.match(app, /MAX_CHANNEL_SAMPLES = 33_554_432/);
@@ -180,6 +218,10 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(app, /preset: PROCESSING_PRESET/);
   assert.match(app, /transportPlay\.dataset\.playing = String\(playing\)/);
   assert.match(app, /fileButtonText\.textContent = hasFile/);
+  assert.match(app, /playMediaElement\(elements\.shiftedPlayer\)/);
+  assert.match(app, /playMediaElement\(elements\.sourcePlayer\)/);
+  assert.match(app, /recoverPlaybackAudioSession\(window\)/);
+  assert.match(livePreview, /recoverPlaybackAudioSession\(globalThis\)/);
   assert.match(app, /else if \(livePreviewAvailable\)[\s\S]*controller\.play\(transportPosition, semitones\)/);
   assert.doesNotMatch(app, /PREVIEW_SECONDS|encodeWaveSegment/);
   assert.match(bootstrap, /status\.dataset\.visible = 'true'/);
@@ -189,7 +231,7 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.doesNotMatch(worker, /outputGain|gainReductionDecibels/);
   assert.match(worker, /encodeWaveChannels/);
 
-  for (const source of [html, app, worker]) {
+  for (const source of [html, app, livePreview, worker]) {
     assert.doesNotMatch(source, /\bfetch\s*\(|XMLHttpRequest|WebSocket|sendBeacon/);
   }
 });
@@ -320,6 +362,8 @@ test('Pitch Shifter module references use current content hashes', () => {
     ['bootstrap.js', './app.mjs'],
     ['app.mjs', './worker-client.mjs'],
     ['app.mjs', './live-preview.mjs'],
+    ['app.mjs', './audio-session.mjs'],
+    ['live-preview.mjs', './audio-session.mjs'],
     [
       'live-preview.mjs',
       './vendor/signalsmith-stretch/SignalsmithStretchRealtime.mjs',

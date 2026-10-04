@@ -1,6 +1,6 @@
 'use strict';
 
-import('./app.mjs?v=c3ca7907ba13').catch((error) => {
+import('./app.mjs?v=496018358ef5').catch((error) => {
   const status = document.querySelector('#status');
   if (status) {
     status.dataset.tone = 'error';

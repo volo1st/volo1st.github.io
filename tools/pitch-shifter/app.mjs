@@ -1,5 +1,6 @@
 import { processInWorker } from './worker-client.mjs?v=7f5512467cd7';
-import { LivePreviewController, supportsLivePreview } from './live-preview.mjs?v=6db69ba51288';
+import { LivePreviewController, supportsLivePreview } from './live-preview.mjs?v=dba93427c47d';
+import { recoverPlaybackAudioSession } from './audio-session.mjs?v=3e48f8886a62';
 
 const MAX_DURATION_SECONDS = 30 * 60;
 const MAX_CHANNEL_SAMPLES = 33_554_432;
@@ -29,7 +30,7 @@ const elements = {
   transportPosition: document.querySelector('#transport-position'),
   transportCurrent: document.querySelector('#transport-current'),
   transportDuration: document.querySelector('#transport-duration'),
-  prepareWave: document.querySelector('#prepare-wave'),
+  shiftAudio: document.querySelector('#shift-audio'),
   sourcePlayer: document.querySelector('#source-player'),
   shiftedPlayer: document.querySelector('#shifted-player'),
   download: document.querySelector('#download'),
@@ -60,6 +61,7 @@ let busy = false;
 let liveLoading = false;
 let livePreviewAvailable = supportsLivePreview(window);
 let livePreview = null;
+let semitoneShift = 0;
 let playbackSemitones = 0;
 let transportPosition = 0;
 let pointerScrubbing = false;
@@ -140,29 +142,18 @@ function formatClippedSamples(count, percentage) {
   });
 }
 
-function parseSemitoneValue() {
-  if (elements.semitones.value.trim() === '') return null;
-  const value = Number(elements.semitones.value);
-  return Number.isInteger(value) && value >= -12 && value <= 12 ? value : null;
-}
-
 function readSemitones() {
-  const value = parseSemitoneValue();
-  if (value === null) throw new RangeError(t('pitch.errorShift'));
-  return value;
+  return semitoneShift;
 }
 
 function renderPitchValue() {
-  const value = parseSemitoneValue();
-  if (value === null) {
-    elements.semitones.removeAttribute('aria-valuetext');
-    return;
-  }
+  const value = readSemitones();
   const displayValue = value > 0 ? `+${value}` : String(value);
   const valueText = value === 0
     ? t('pitch.originalPitch')
     : t('pitch.shiftValue', { value: displayValue });
-  elements.semitones.setAttribute('aria-valuetext', valueText);
+  elements.semitones.textContent = displayValue;
+  elements.semitones.setAttribute('aria-label', valueText);
 }
 
 function renderFileDetails() {
@@ -248,8 +239,8 @@ function renderMetrics() {
 
 function renderActions() {
   elements.workspace.setAttribute('aria-busy', String(busy));
-  elements.prepareWave.hidden = Boolean(resultUrl);
-  elements.prepareWave.textContent = t(busy ? 'pitch.preparingWave' : 'pitch.prepareWave');
+  elements.shiftAudio.hidden = Boolean(resultUrl);
+  elements.shiftAudio.textContent = t(busy ? 'pitch.shifting' : 'pitch.shift');
   elements.download.hidden = !resultUrl;
 }
 
@@ -290,18 +281,17 @@ function clearResult() {
 
 function updateControls() {
   const ready = Boolean(decodedAudio);
-  const shiftIsValid = parseSemitoneValue() !== null;
   const controlsBusy = busy || liveLoading;
+  elements.workspace.dataset.previewPending = String(liveLoading);
   elements.chooseFile.disabled = controlsBusy;
   elements.file.disabled = controlsBusy;
-  elements.semitones.disabled = !ready || controlsBusy;
-  elements.pitchDown.disabled = !ready || controlsBusy;
-  elements.pitchUp.disabled = !ready || controlsBusy;
-  elements.pitchReset.disabled = !ready || controlsBusy;
-  elements.transportPlay.disabled = !ready || controlsBusy || !shiftIsValid
+  elements.pitchDown.disabled = !ready || controlsBusy || semitoneShift <= -12;
+  elements.pitchUp.disabled = !ready || controlsBusy || semitoneShift >= 12;
+  elements.pitchReset.disabled = !ready || controlsBusy || semitoneShift === 0;
+  elements.transportPlay.disabled = !ready || controlsBusy
     || (playbackSemitones !== 0 && !livePreviewAvailable && !resultUrl);
   elements.transportPosition.disabled = !ready || controlsBusy;
-  elements.prepareWave.disabled = !ready || controlsBusy || !shiftIsValid;
+  elements.shiftAudio.disabled = !ready || controlsBusy;
 }
 
 function setBusy(value) {
@@ -322,6 +312,14 @@ function setPlayerTime(player, position) {
   if (player.readyState === 0) {
     player.addEventListener('loadedmetadata', setTime, { once: true });
   }
+}
+
+async function playMediaElement(player) {
+  const playback = player.play();
+  await Promise.all([
+    playback,
+    recoverPlaybackAudioSession(window),
+  ]);
 }
 
 async function releaseLivePreview() {
@@ -397,7 +395,7 @@ async function playTransport() {
     if (resultUrl) {
       if (livePreview?.playing) await livePreview.pause();
       setPlayerTime(elements.shiftedPlayer, transportPosition);
-      await elements.shiftedPlayer.play();
+      await playMediaElement(elements.shiftedPlayer);
     } else if (livePreviewAvailable) {
       const controller = livePreview || createLivePreview();
       if (!controller) {
@@ -415,7 +413,7 @@ async function playTransport() {
       setStatus('pitch.statusLivePlaying');
     } else if (semitones === 0) {
       setPlayerTime(elements.sourcePlayer, transportPosition);
-      await elements.sourcePlayer.play();
+      await playMediaElement(elements.sourcePlayer);
     } else {
       await handleLiveFailure();
     }
@@ -426,7 +424,7 @@ async function playTransport() {
       if (semitones === 0) {
         try {
           setPlayerTime(elements.sourcePlayer, transportPosition);
-          await elements.sourcePlayer.play();
+          await playMediaElement(elements.sourcePlayer);
         } catch (sourceError) {
           setStatus(
             'pitch.errorPlayback',
@@ -465,26 +463,20 @@ async function seekTransport(position) {
 }
 
 async function applyPitchChange() {
-  const value = parseSemitoneValue();
+  const value = readSemitones();
   const previousValue = playbackSemitones;
   const sourceWasPlaying = !livePreviewAvailable && previousValue === 0
     && !elements.sourcePlayer.paused;
   const generatedWasPlaying = Boolean(resultUrl) && !elements.shiftedPlayer.paused;
   const liveWasPlaying = !resultUrl && Boolean(livePreview?.playing);
   const wasPlaying = sourceWasPlaying || generatedWasPlaying || liveWasPlaying;
-  const changesPlaybackPath = value === null
-    || generatedWasPlaying
+  const changesPlaybackPath = generatedWasPlaying
     || (sourceWasPlaying && value !== 0);
 
   if (wasPlaying && changesPlaybackPath) await pauseTransport();
   playbackSemitones = value;
   clearResult();
   renderPitchValue();
-
-  if (value === null) {
-    updateControls();
-    return;
-  }
 
   if (livePreview) {
     try {
@@ -513,10 +505,10 @@ async function applyPitchChange() {
 
 function setSemitones(value) {
   const number = Number(value);
-  elements.semitones.value = String(Math.max(
+  semitoneShift = Math.max(
     -12,
-    Math.min(12, Number.isFinite(number) ? number : 0),
-  ));
+    Math.min(12, Number.isFinite(number) ? Math.trunc(number) : 0),
+  );
   applyPitchChange();
 }
 
@@ -576,7 +568,7 @@ async function loadFile(file) {
 
   selectedFile = file;
   decodedAudio = null;
-  playbackSemitones = parseSemitoneValue();
+  playbackSemitones = readSemitones();
   transportPosition = 0;
   clearResult();
   revokeUrl(sourceUrl);
@@ -633,19 +625,11 @@ elements.file.addEventListener('change', () => {
   if (file) loadFile(file);
 });
 
-elements.semitones.addEventListener('input', () => {
-  applyPitchChange();
-});
-elements.semitones.addEventListener('change', () => {
-  if (parseSemitoneValue() === null) {
-    setStatus('pitch.errorShift', {}, 'error', true);
-  }
-});
 elements.pitchDown.addEventListener('click', () => {
-  setSemitones(Number(elements.semitones.value) - 1);
+  setSemitones(readSemitones() - 1);
 });
 elements.pitchUp.addEventListener('click', () => {
-  setSemitones(Number(elements.semitones.value) + 1);
+  setSemitones(readSemitones() + 1);
 });
 elements.pitchReset.addEventListener('click', () => setSemitones(0));
 
@@ -676,15 +660,9 @@ elements.transportPosition.addEventListener('pointercancel', () => {
   seekTransport(position);
 });
 
-elements.prepareWave.addEventListener('click', async () => {
+elements.shiftAudio.addEventListener('click', async () => {
   if (!decodedAudio || !selectedFile || busy || liveLoading) return;
-  let semitones;
-  try {
-    semitones = readSemitones();
-  } catch (error) {
-    setStatus('pitch.errorShift', {}, 'error', true);
-    return;
-  }
+  const semitones = readSemitones();
 
   await pauseTransport();
   const currentOperation = operationId + 1;

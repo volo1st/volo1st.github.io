@@ -67,6 +67,16 @@ Preserve the required ABA record width. Test byte length as well as character le
 - Avoid a new external dependency when a small, tested local solution is sufficient.
 - If an external script is necessary, pin its version and use Subresource Integrity when the host supports it.
 
+## Browser audio rules
+
+- Start or resume audio directly from a user action.
+- On iOS and iPadOS, treat speaker silence with working headphone output as a possible audio-session failure.
+- If `navigator.audioSession.type` is available, start or resume the audio object first. Then set the type to `ambient`, wait for the next task, and set the type to `playback`.
+- Treat the Audio Session API as an optional recovery. Continue normal playback if the API is unavailable or the type change fails.
+- Apply this recovery to Web Audio playback and media-element playback.
+- Test the built-in speaker, an external audio device, playback resume, and return from a background state on a representative iPhone or iPad.
+- See `tools/guitar-strumming/docs/PROTOTYPE.md` for the original failure evidence and accepted recovery sequence.
+
 ## Tests and checks
 
 Run checks that are relevant to each change.

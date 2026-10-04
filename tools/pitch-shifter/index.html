@@ -14,10 +14,10 @@
   <link rel="apple-touch-icon" href="../../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93">
   <link rel="manifest" href="./manifest.webmanifest?v=f449d8929a05">
   <link rel="stylesheet" href="../../assets/site-shell.css?v=b093396d6884">
-  <link rel="stylesheet" href="./styles.css?v=62b859c38ad6">
+  <link rel="stylesheet" href="./styles.css?v=f3d5505ff817">
   <script src="../../assets/i18n.js?v=3bafa7de2d71" defer></script>
-  <script src="./i18n.js?v=756c5190b5e6" defer></script>
-  <script src="./bootstrap.js?v=1babb48bc49d" defer></script>
+  <script src="./i18n.js?v=6b89b2e708cc" defer></script>
+  <script src="./bootstrap.js?v=d92194a9be7d" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -37,7 +37,7 @@
   </header>
 
   <main class="site-main pitch-main">
-    <section id="workspace" class="workflow-section" aria-labelledby="pitch-workspace-heading" aria-busy="false">
+    <section id="workspace" class="workflow-section" aria-labelledby="pitch-workspace-heading" aria-busy="false" data-preview-pending="false">
       <h2 id="pitch-workspace-heading" class="visually-hidden" data-i18n="pitch.workspace">Pitch-shifting workspace</h2>
 
       <div class="file-row">
@@ -59,14 +59,21 @@
             </svg>
           </button>
           <div class="pitch-stepper">
-            <button id="pitch-down" type="button" aria-label="Decrease pitch by one semitone" data-i18n-aria-label="pitch.decrease" disabled>−</button>
-            <input id="semitones" type="number" min="-12" max="12" step="1" value="0" inputmode="numeric" aria-label="Pitch shift in semitones" data-i18n-aria-label="pitch.pitchShift" disabled>
-            <button id="pitch-up" type="button" aria-label="Increase pitch by one semitone" data-i18n-aria-label="pitch.increase" disabled>+</button>
+            <button id="pitch-down" class="pitch-symbol-button" type="button" aria-label="Decrease pitch by one semitone" data-i18n-aria-label="pitch.decrease" disabled>
+              <svg class="pitch-symbol-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9 3v17M9 11c2.8-2.4 7.2-2.7 7.2 1.3 0 3.4-3.1 5.1-7.2 6.2"></path>
+              </svg>
+            </button>
+            <output id="semitones" aria-label="Original pitch" data-i18n-aria-label="pitch.originalPitch" aria-live="polite">0</output>
+            <button id="pitch-up" class="pitch-symbol-button" type="button" aria-label="Increase pitch by one semitone" data-i18n-aria-label="pitch.increase" disabled>
+              <svg class="pitch-symbol-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9 4v16M15 3v16M6 9.5l12-2M6 16.5l12-2"></path>
+              </svg>
+            </button>
           </div>
           <button id="pitch-reset" class="secondary-button icon-button reset-button" type="button" aria-label="Reset to original pitch" data-i18n-aria-label="pitch.reset" disabled>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4.5 5v5.5H10"></path>
-              <path d="M5.2 10.3A7.5 7.5 0 1 1 6.5 18"></path>
+            <svg class="pitch-symbol-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 3v15M15 6v15M9 10l6-2M9 16l6-2"></path>
             </svg>
           </button>
         </div>
@@ -83,7 +90,7 @@
       </div>
 
       <div class="result-actions">
-        <button id="prepare-wave" class="primary-action prepare-action" type="button" data-i18n="pitch.prepareWave" disabled>Prepare WAV</button>
+        <button id="shift-audio" class="primary-action shift-action" type="button" data-i18n="pitch.shift" disabled>Shift</button>
         <a id="download" class="button-link" download data-i18n="pitch.download" hidden>Download WAV</a>
       </div>
 
@@ -95,7 +102,7 @@
 
     <details id="processing-details" class="info-section">
       <summary data-i18n="pitch.processingDetails">Processing statistics</summary>
-      <p id="metrics-empty" class="metrics-empty" data-i18n="pitch.metricsEmpty">Prepare the WAV to see processing statistics.</p>
+      <p id="metrics-empty" class="metrics-empty" data-i18n="pitch.metricsEmpty">Shift the file to see processing statistics.</p>
       <dl id="metrics" class="metrics" hidden>
         <div><dt data-i18n="pitch.metricTotal">Total time</dt><dd id="metric-total">—</dd></div>
         <div><dt data-i18n="pitch.metricDsp">Pitch processing</dt><dd id="metric-dsp">—</dd></div>

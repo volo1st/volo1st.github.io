@@ -1,3 +1,5 @@
+import { recoverPlaybackAudioSession } from './audio-session.mjs?v=3e48f8886a62';
+
 const UPDATE_SECONDS = 0.1;
 
 async function createSignalsmithNode(audioContext, options) {
@@ -96,6 +98,7 @@ export class LivePreviewController {
   async play(position, semitones) {
     await this.initialize();
     await this.context.resume();
+    await recoverPlaybackAudioSession(globalThis);
     this.position = position >= this.audioBuffer.duration ? 0 : Math.max(0, position);
     await this.node.schedule({
       active: true,
