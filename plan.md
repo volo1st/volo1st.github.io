@@ -570,6 +570,7 @@ The approved icon family uses abstract monoline and bar symbols. Each icon uses 
 
 ## 16. Verified completion evidence
 
+- On 4 October 2026, the owner verified the updated Pitch Shifter on an iPhone. Live and generated-file playback worked through the built-in speaker. The playback controls no longer flashed, text selection was disabled in the workspace, and the progress control no longer showed the iOS tap-highlight rectangle.
 - On 4 October 2026, the owner compared hard clipping with fast and smooth look-ahead limiting on two demanding commercial mixes and found all three results acceptable. Automated tests confirmed exact clipped-sample measurement, 16-bit WAV clamping, translation-key parity, and current browser-module hashes.
 - On 3 October 2026, the owner verified live preview and shifted WAV export through the deployed HTTPS site. The same 246-second, 48 kHz stereo file completed in approximately 2 seconds on an iPhone 16 Pro and 1.83 seconds on a Mac Studio with an M1 Max.
 - On 3 October 2026, the owner approved the pitch-shifter product boundary, direct semitone control, build-free dependency policy, algorithm comparison, WAV baseline, and staged key-recognition and MP3 extensions.
