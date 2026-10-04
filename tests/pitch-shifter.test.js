@@ -17,11 +17,11 @@ test('Pitch Shifter translations use identical English and Chinese keys', () => 
   );
 });
 
-test('the WAV encoder writes stereo 16-bit PCM and supports constant peak protection', async () => {
+test('the WAV encoder writes stereo 16-bit PCM and reports hard clipping', async () => {
   const {
-    calculatePeakProtectionGain,
     encodeWaveChannels,
     measurePeakChannels,
+    measureWaveRange,
   } = await import(
     '../tools/pitch-shifter/wav.mjs'
   );
@@ -43,21 +43,20 @@ test('the WAV encoder writes stereo 16-bit PCM and supports constant peak protec
   assert.equal(view.getInt16(46, true), 8_192);
   assert.equal(view.getInt16(60, true), 32_767);
   assert.equal(measurePeakChannels(channels), 1.5);
+  assert.deepEqual(measureWaveRange(channels), {
+    peak: 1.5,
+    clippedSampleCount: 2,
+    totalSampleCount: 10,
+    clippedSamplePercentage: 20,
+  });
+  assert.deepEqual(measureWaveRange(channels, 1, 3), {
+    peak: 1,
+    clippedSampleCount: 0,
+    totalSampleCount: 6,
+    clippedSamplePercentage: 0,
+  });
   assert.equal(channels[0][0], -1.5);
   assert.equal(channels[0][4], 1.5);
-
-  const gain = calculatePeakProtectionGain(1.5);
-  const protectedWave = encodeWaveChannels({ channels, sampleRate: 48_000, gain });
-  const protectedView = new DataView(protectedWave);
-  assert.ok(Math.abs(gain - 0.666) < 1e-12);
-  assert.equal(protectedView.getInt16(44, true), -32_735);
-  assert.equal(protectedView.getInt16(60, true), 32_734);
-  assert.equal(calculatePeakProtectionGain(1), 1);
-  assert.throws(() => calculatePeakProtectionGain(Number.NaN), /finite, non-negative peak/);
-  assert.throws(
-    () => encodeWaveChannels({ channels, sampleRate: 48_000, gain: 1.1 }),
-    /gain must be greater than zero and no greater than one/,
-  );
 });
 
 test('both audio engines keep duration and shift a generated tone by one octave', async () => {
@@ -156,7 +155,7 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(html, /id="processing-details"[^>]*class="info-section"/);
   assert.match(html, /id="metrics-empty"/);
   assert.match(html, /id="metrics"[^>]*hidden/);
-  assert.match(html, /id="metric-gain"/);
+  assert.match(html, /id="metric-clipping"/);
   assert.match(html, /data-i18n="pitch\.aboutPeakProtection"/);
   assert.match(html, /<details class="info-section">[\s\S]*pitch\.aboutTool/);
   assert.doesNotMatch(html, /\bopen(?:=""|\s|>)/);
@@ -177,7 +176,7 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(app, /elements\.shiftedPlayer\.src = resultUrl/);
   assert.match(app, /elements\.download\.href = resultUrl/);
   assert.match(app, /PROCESSING_PRESET = 'default'/);
-  assert.match(app, /MATERIAL_GAIN_REDUCTION_DB = 1/);
+  assert.match(app, /EXTENSIVE_CLIPPING_PERCENTAGE = 1/);
   assert.match(app, /preset: PROCESSING_PRESET/);
   assert.match(app, /transportPlay\.dataset\.playing = String\(playing\)/);
   assert.match(app, /fileButtonText\.textContent = hasFile/);
@@ -186,8 +185,8 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(bootstrap, /status\.dataset\.visible = 'true'/);
   assert.match(worker, /await SimdModule\(\)/);
   assert.match(worker, /await ScalarModule\(\)/);
-  assert.match(worker, /calculatePeakProtectionGain\(peak\)/);
-  assert.match(worker, /gain: outputGain/);
+  assert.match(worker, /measureWaveRange\(result\.channels, trimStart, trimLength\)/);
+  assert.doesNotMatch(worker, /outputGain|gainReductionDecibels/);
   assert.match(worker, /encodeWaveChannels/);
 
   for (const source of [html, app, worker]) {

@@ -1,4 +1,4 @@
-import { processInWorker } from './worker-client.mjs?v=9af7baeeff92';
+import { processInWorker } from './worker-client.mjs?v=7f5512467cd7';
 import { LivePreviewController, supportsLivePreview } from './live-preview.mjs?v=6db69ba51288';
 
 const MAX_DURATION_SECONDS = 30 * 60;
@@ -6,7 +6,7 @@ const MAX_CHANNEL_SAMPLES = 33_554_432;
 const MIN_SAMPLE_RATE = 8_000;
 const MAX_SAMPLE_RATE = 192_000;
 const PROCESSING_PRESET = 'default';
-const MATERIAL_GAIN_REDUCTION_DB = 1;
+const EXTENSIVE_CLIPPING_PERCENTAGE = 1;
 
 const sharedI18n = globalThis.SiteI18n;
 if (!sharedI18n || !globalThis.PitchShifterI18n) {
@@ -47,7 +47,7 @@ const elements = {
     output: document.querySelector('#metric-output'),
     format: document.querySelector('#metric-format'),
     peak: document.querySelector('#metric-peak'),
-    gain: document.querySelector('#metric-gain'),
+    clipping: document.querySelector('#metric-clipping'),
   },
 };
 
@@ -132,11 +132,12 @@ function formatPeak(peak) {
   return `${peak.toFixed(4)} (${prefix}${decibels.toFixed(2)} decibels relative to full scale)`;
 }
 
-function formatGainReduction(decibels) {
-  if (!Number.isFinite(decibels)) return '—';
-  return decibels > 0
-    ? `−${decibels.toFixed(2)} dB`
-    : t('pitch.gainUnchanged');
+function formatClippedSamples(count, percentage) {
+  if (!Number.isInteger(count) || !Number.isFinite(percentage)) return '—';
+  return t('pitch.clippedSamplesValue', {
+    count: count.toLocaleString(sharedI18n.getLanguage()),
+    value: percentage.toFixed(2),
+  });
 }
 
 function parseSemitoneValue() {
@@ -239,7 +240,10 @@ function renderMetrics() {
     { rate: result.sampleRate.toLocaleString(sharedI18n.getLanguage()) },
   );
   elements.metrics.peak.textContent = formatPeak(result.peak);
-  elements.metrics.gain.textContent = formatGainReduction(result.gainReductionDecibels);
+  elements.metrics.clipping.textContent = formatClippedSamples(
+    result.clippedSampleCount,
+    result.clippedSamplePercentage,
+  );
 }
 
 function renderActions() {
@@ -705,12 +709,12 @@ elements.prepareWave.addEventListener('click', async () => {
     elements.download.download = safeOutputName(selectedFile.name, semitones);
     metricsState = { result, inputDuration: decodedAudio.duration };
     renderMetrics();
-    const reportGainReduction = result.gainReductionDecibels > MATERIAL_GAIN_REDUCTION_DB;
+    const reportClipping = result.clippedSamplePercentage > EXTENSIVE_CLIPPING_PERCENTAGE;
     setStatus(
-      reportGainReduction ? 'pitch.statusGainReduced' : 'pitch.statusComplete',
-      reportGainReduction ? { value: result.gainReductionDecibels.toFixed(2) } : {},
-      'normal',
-      reportGainReduction,
+      reportClipping ? 'pitch.statusClipped' : 'pitch.statusComplete',
+      reportClipping ? { value: result.clippedSamplePercentage.toFixed(2) } : {},
+      reportClipping ? 'warning' : 'normal',
+      reportClipping,
     );
   } catch (error) {
     if (currentOperation === operationId && error.name !== 'AbortError') {
