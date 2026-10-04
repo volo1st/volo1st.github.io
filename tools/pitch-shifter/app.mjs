@@ -168,7 +168,6 @@ function renderFileDetails() {
     ),
   );
   elements.chooseFile.title = hasFile ? fileDetailsState.name : '';
-  elements.fileMetadata.hidden = !fileDetailsState.metadataKey;
   elements.fileMetadata.textContent = fileDetailsState.metadataKey
     ? t(fileDetailsState.metadataKey, fileDetailsState.parameters)
     : '';

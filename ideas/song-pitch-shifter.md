@@ -270,7 +270,8 @@ Release object addresses and large audio buffers when the user replaces a file o
 - Accept a file from the file picker or a page-wide file drop.
 - Use native semantic controls with consistent custom styling.
 - Show the selected filename on the file-picker button. Keep the file metadata separate, and let the same button replace the file.
-- Put play or pause and the pitch stepper on one compact row. Show the semitone input as green text instead of a boxed field.
+- Put play or pause and the pitch controls on one compact row. On narrow screens, align play to the left, centre the pitch stepper, and align reset to the right. Show the semitone input as green text instead of a boxed field. Do not show a separate pitch label.
+- Reserve the file-metadata line before file selection. Do not move the remaining controls when the metadata appears.
 - Do not block the complete page while processing. Disable conflicting controls and show a working state on the action.
 - Put processing measurements and the audio-engine explanation in separate sections that are closed by default.
 - Do not mix live playback information with WAV preparation timings. Before WAV preparation, explain that processing statistics are not available.

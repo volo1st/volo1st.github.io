@@ -119,8 +119,9 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(html, /id="choose-file"[^>]*aria-controls="audio-file"[^>]*aria-describedby="file-metadata"/);
   assert.match(html, /id="file-button-text"/);
   assert.doesNotMatch(html, /id="file-name"/);
-  assert.match(html, /id="file-metadata"[^>]*hidden/);
-  assert.match(html, /id="semitones"[^>]*min="-12"[^>]*max="12"[^>]*step="1"/);
+  assert.match(html, /id="file-metadata"><\/p>/);
+  assert.match(html, /id="semitones"[^>]*min="-12"[^>]*max="12"[^>]*step="1"[^>]*data-i18n-aria-label="pitch\.pitchShift"/);
+  assert.doesNotMatch(html, /class="control-label"/);
   assert.doesNotMatch(html, /playback-original|playback-shifted/);
   assert.match(html, /id="pitch-reset"[^>]*class="[^"]*icon-button/);
   assert.match(html, /id="transport-play"[^>]*class="[^"]*icon-button[^>]*data-playing="false"[^>]*disabled/);
@@ -147,6 +148,7 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(css, /#transport-position::-(?:webkit-slider-thumb|moz-range-thumb)/);
   assert.match(css, /#semitones[\s\S]*appearance: textfield/);
   assert.match(css, /\.pitch-actions[\s\S]*display: flex/);
+  assert.match(css, /grid-template-columns: 2\.75rem minmax\(0, 1fr\) 2\.75rem/);
   assert.match(css, /#transport-play\[data-playing="true"\]/);
   assert.match(app, /MAX_DURATION_SECONDS = 30 \* 60/);
   assert.match(app, /MAX_CHANNEL_SAMPLES = 33_554_432/);
