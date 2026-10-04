@@ -204,7 +204,8 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.doesNotMatch(css, /#semitones[\s\S]*appearance: textfield/);
   assert.match(css, /\.pitch-actions[\s\S]*display: flex[\s\S]*justify-content: center/);
   assert.match(css, /grid-template-columns: 2\.75rem minmax\(0, 1fr\) 2\.75rem/);
-  assert.match(css, /data-preview-pending="true"[\s\S]*opacity: 1/);
+  assert.match(css, /#workspace\[data-preview-pending="true"\][\s\S]*input:disabled[\s\S]*opacity: 1/);
+  assert.match(css, /#workspace\[data-preview-pending="true"\] #pitch-reset:disabled/);
   assert.match(css, /#transport-play\[data-playing="true"\]/);
   assert.match(app, /MAX_DURATION_SECONDS = 30 \* 60/);
   assert.match(app, /MAX_CHANNEL_SAMPLES = 33_554_432/);

@@ -296,9 +296,15 @@
   opacity: 0.58;
 }
 
-.workflow-section[data-preview-pending="true"] button:disabled,
-.workflow-section[data-preview-pending="true"] input:disabled {
+#workspace[data-preview-pending="true"] button:disabled,
+#workspace[data-preview-pending="true"] input:disabled {
   opacity: 1;
+}
+
+#workspace[data-preview-pending="true"] #pitch-reset:disabled {
+  border-color: #bd8a3d;
+  color: #815016;
+  background: #fff7e8;
 }
 
 .result-actions {
