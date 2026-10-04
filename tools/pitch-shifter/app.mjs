@@ -279,19 +279,26 @@ function clearResult() {
   renderActions();
 }
 
+function setControlDisabled(element, unavailable) {
+  const previewLock = liveLoading && !unavailable;
+  element.dataset.previewLock = String(previewLock);
+  element.disabled = unavailable || previewLock;
+}
+
 function updateControls() {
   const ready = Boolean(decodedAudio);
-  const controlsBusy = busy || liveLoading;
   elements.workspace.dataset.previewPending = String(liveLoading);
-  elements.chooseFile.disabled = controlsBusy;
-  elements.file.disabled = controlsBusy;
-  elements.pitchDown.disabled = !ready || controlsBusy || semitoneShift <= -12;
-  elements.pitchUp.disabled = !ready || controlsBusy || semitoneShift >= 12;
-  elements.pitchReset.disabled = !ready || controlsBusy || semitoneShift === 0;
-  elements.transportPlay.disabled = !ready || controlsBusy
-    || (playbackSemitones !== 0 && !livePreviewAvailable && !resultUrl);
-  elements.transportPosition.disabled = !ready || controlsBusy;
-  elements.shiftAudio.disabled = !ready || controlsBusy;
+  setControlDisabled(elements.chooseFile, busy);
+  setControlDisabled(elements.file, busy);
+  setControlDisabled(elements.pitchDown, !ready || busy || semitoneShift <= -12);
+  setControlDisabled(elements.pitchUp, !ready || busy || semitoneShift >= 12);
+  setControlDisabled(elements.pitchReset, !ready || busy || semitoneShift === 0);
+  setControlDisabled(
+    elements.transportPlay,
+    !ready || busy || (playbackSemitones !== 0 && !livePreviewAvailable && !resultUrl),
+  );
+  setControlDisabled(elements.transportPosition, !ready || busy);
+  setControlDisabled(elements.shiftAudio, !ready || busy);
 }
 
 function setBusy(value) {

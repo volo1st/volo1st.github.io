@@ -32,6 +32,8 @@
   display: grid;
   gap: 1.25rem;
   padding: 1rem;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .file-row {
@@ -246,6 +248,7 @@
   background: transparent;
   cursor: pointer;
   touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #transport-position::-webkit-slider-runnable-track {
@@ -296,12 +299,11 @@
   opacity: 0.58;
 }
 
-#workspace[data-preview-pending="true"] button:disabled,
-#workspace[data-preview-pending="true"] input:disabled {
+#workspace [data-preview-lock="true"]:disabled {
   opacity: 1;
 }
 
-#workspace[data-preview-pending="true"] #pitch-reset:disabled {
+#workspace #pitch-reset[data-preview-lock="true"]:disabled {
   border-color: #bd8a3d;
   color: #815016;
   background: #fff7e8;
