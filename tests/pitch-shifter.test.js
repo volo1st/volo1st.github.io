@@ -242,8 +242,12 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(html, /id="transport-current"/);
   assert.match(html, /id="transport-duration"/);
   assert.match(html, /id="shift-audio"[^>]*data-i18n="pitch\.shift"[^>]*disabled/);
-  assert.match(html, /name="output-format"[^>]*value="wav"[^>]*checked[^>]*disabled/);
-  assert.match(html, /name="output-format"[^>]*value="mp3"[^>]*disabled/);
+  assert.match(html, /<details id="advanced-details" class="info-section">/);
+  assert.match(html, /<summary data-i18n="pitch\.advanced">Advanced<\/summary>/);
+  assert.match(html, /<select id="output-format"[^>]*disabled>/);
+  assert.match(html, /<option value="wav">WAV<\/option>/);
+  assert.match(html, /<option value="mp3">MP3 · 320 kbit\/s<\/option>/);
+  assert.ok(html.indexOf('id="advanced-details"') < html.indexOf('id="processing-details"'));
   assert.match(html, /id="download"[^>]*hidden/);
   assert.doesNotMatch(html, /id="cancel"/);
   assert.match(html, /id="source-player"[^>]*hidden/);
@@ -268,6 +272,8 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(css, /#workspace \[data-preview-lock="true"\]:disabled[\s\S]*opacity: 1/);
   assert.match(css, /#workspace #pitch-reset\[data-preview-lock="true"\]:disabled/);
   assert.match(css, /#transport-play\[data-playing="true"\]/);
+  assert.match(css, /\.advanced-control[\s\S]*grid-template-columns:/);
+  assert.match(css, /\.advanced-control select:focus-visible/);
   assert.match(app, /MAX_DURATION_SECONDS = 30 \* 60/);
   assert.match(app, /MAX_CHANNEL_SAMPLES = 33_554_432/);
   assert.match(app, /const previewLock = liveLoading && !unavailable/);
@@ -278,6 +284,8 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(app, /elements\.download\.href = resultUrl/);
   assert.match(app, /PROCESSING_PRESET = 'default'/);
   assert.match(app, /isMp3File\(file\) \? 'mp3' : 'wav'/);
+  assert.match(app, /elements\.outputFormat\.value = outputFormat/);
+  assert.match(app, /elements\.outputFormat\.addEventListener\('change'/);
   assert.match(app, /outputFormat: outputFormat|outputFormat \}/);
   assert.match(app, /EXTENSIVE_CLIPPING_PERCENTAGE = 1/);
   assert.match(app, /preset: PROCESSING_PRESET/);

@@ -30,7 +30,7 @@ const elements = {
   transportPosition: document.querySelector('#transport-position'),
   transportCurrent: document.querySelector('#transport-current'),
   transportDuration: document.querySelector('#transport-duration'),
-  outputFormats: Array.from(document.querySelectorAll('input[name="output-format"]')),
+  outputFormat: document.querySelector('#output-format'),
   shiftAudio: document.querySelector('#shift-audio'),
   sourcePlayer: document.querySelector('#source-player'),
   shiftedPlayer: document.querySelector('#shifted-player'),
@@ -250,9 +250,7 @@ function renderMetrics() {
 
 function renderActions() {
   elements.workspace.setAttribute('aria-busy', String(busy));
-  elements.outputFormats.forEach((input) => {
-    input.checked = input.value === outputFormat;
-  });
+  elements.outputFormat.value = outputFormat;
   elements.shiftAudio.hidden = Boolean(resultUrl);
   elements.shiftAudio.textContent = t(busy ? 'pitch.shifting' : 'pitch.shift');
   elements.download.textContent = t(
@@ -315,7 +313,7 @@ function updateControls() {
     !ready || busy || (playbackSemitones !== 0 && !livePreviewAvailable && !resultUrl),
   );
   setControlDisabled(elements.transportPosition, !ready || busy);
-  elements.outputFormats.forEach((input) => setControlDisabled(input, !ready || busy));
+  setControlDisabled(elements.outputFormat, !ready || busy);
   setControlDisabled(elements.shiftAudio, !ready || busy);
 }
 
@@ -659,15 +657,13 @@ elements.pitchUp.addEventListener('click', () => {
 });
 elements.pitchReset.addEventListener('click', () => setSemitones(0));
 
-elements.outputFormats.forEach((input) => {
-  input.addEventListener('change', () => {
-    if (!input.checked || busy) return;
-    outputFormat = input.value;
-    clearResult();
-    if (decodedAudio) setStatus('pitch.statusReady');
-    renderActions();
-    updateControls();
-  });
+elements.outputFormat.addEventListener('change', () => {
+  if (busy) return;
+  outputFormat = elements.outputFormat.value;
+  clearResult();
+  if (decodedAudio) setStatus('pitch.statusReady');
+  renderActions();
+  updateControls();
 });
 
 elements.transportPlay.addEventListener('click', async () => {

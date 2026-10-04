@@ -318,60 +318,6 @@
   padding-top: 1.1rem;
 }
 
-.output-format {
-  display: inline-flex;
-  min-width: 0;
-  margin: 0;
-  border: 1px solid var(--site-control-border);
-  border-radius: 0.4rem;
-  padding: 0;
-  overflow: hidden;
-  background: var(--site-subtle-surface);
-}
-
-.output-format label {
-  position: relative;
-  display: block;
-  flex: 1;
-  cursor: pointer;
-}
-
-.output-format label + label {
-  border-left: 1px solid var(--site-control-border);
-}
-
-.output-format input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-}
-
-.output-format span {
-  display: grid;
-  min-width: 3.7rem;
-  min-height: 2.65rem;
-  place-items: center;
-  padding: 0.5rem 0.7rem;
-  color: var(--site-muted);
-  font-weight: 700;
-}
-
-.output-format input:checked + span {
-  color: var(--tool-accent-strong);
-  background: var(--tool-accent-soft);
-}
-
-.output-format input:focus-visible + span {
-  outline: 3px solid var(--site-focus);
-  outline-offset: -3px;
-}
-
-.output-format input:disabled + span {
-  cursor: not-allowed;
-  opacity: 0.58;
-}
-
 .status {
   margin: 0;
   border-left: 4px solid var(--tool-accent);
@@ -414,6 +360,47 @@
 
 .info-section > :last-child {
   margin-bottom: 1rem;
+}
+
+.advanced-control {
+  display: grid;
+  grid-template-columns: minmax(8rem, max-content) minmax(10rem, 16rem);
+  align-items: center;
+  gap: 0.5rem 1rem;
+  border-top: 1px solid var(--site-panel-border);
+  padding-top: 0.85rem;
+}
+
+.advanced-control label {
+  font-weight: 700;
+}
+
+.advanced-control select {
+  width: 100%;
+  min-height: 2.75rem;
+  border: 1px solid var(--site-control-border);
+  border-radius: 0.4rem;
+  padding: 0.55rem 0.75rem;
+  color: var(--site-text);
+  background: var(--site-subtle-surface);
+  font: inherit;
+  font-weight: 700;
+}
+
+.advanced-control select:focus-visible {
+  outline: 3px solid var(--site-focus);
+  outline-offset: 2px;
+}
+
+.advanced-control select:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.control-help {
+  grid-column: 1 / -1;
+  margin-top: 0;
+  color: var(--site-muted);
 }
 
 .metrics {
@@ -505,6 +492,10 @@
 
   .reset-button {
     justify-self: end;
+  }
+
+  .advanced-control {
+    grid-template-columns: 1fr;
   }
 
   .metrics {
