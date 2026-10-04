@@ -560,6 +560,8 @@ The approved icon family uses abstract monoline and bar symbols. Each icon uses 
 | 4 October 2026 | Compare the default preset through a temporary query before revising the export actions. | The query permitted a comparable timing test without adding an end-user quality setting. The test is complete, so the temporary query is removed. |
 | 4 October 2026 | Use the Signalsmith Stretch default preset for Pitch Shifter version 1. | The reference high-quality MP3 processed in 2.6 seconds. The owner accepted this time, and the default preset keeps the larger quality margin. This decision supersedes the cheaper-preset decision from 3 October. |
 | 4 October 2026 | Use Prepare WAV followed by Download WAV, without a cancel control. | Processing takes approximately three seconds on the tested current devices. A distinct download click remains dependable after asynchronous processing, including in Safari. This decision supersedes the earlier requirement to keep Cancel available. |
+| 4 October 2026 | Use one AudioWorklet path across zero semitones on secure origins. | Switching between a native audio element and the AudioWorklet caused an audible delay when the pitch crossed zero. One running engine can change pitch without a playback handoff. Native zero-semitone playback remains available on insecure origins for local testing. |
+| 4 October 2026 | Keep live playback information separate from WAV preparation statistics. | The browser does not provide a dependable live processor-load measurement. An explanatory empty state is clearer than incomplete or mixed statistics. |
 
 ## 16. Verified completion evidence
 

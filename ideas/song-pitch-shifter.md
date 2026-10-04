@@ -80,9 +80,9 @@ Do not use simple resampling as a fallback. Simple resampling changes the pitch 
 
 ## 7. Preview and output
 
-Use one playback control. At zero semitones, play the original audio. At a non-zero value, play the shifted audio. Let the user play, pause, seek, and change the semitone value while audio plays. Keep the playback position when the pitch value changes.
+Use one playback control. On a secure origin, use one AudioWorklet path at all semitone values, including zero. This prevents an engine handoff when the pitch crosses zero. On an insecure origin, permit native original playback at zero and keep shifted playback unavailable. Let the user play, pause, seek, and change the semitone value while audio plays. Keep the playback position when the pitch value changes.
 
-Before export, use the live AudioWorklet path for shifted playback. After export, use the generated WAV for shifted playback. This lets the user hear the exact downloadable result.
+Before export, use the live AudioWorklet path for playback on a secure origin. After export, use the generated WAV for playback. This lets the user hear the exact downloadable result.
 
 Do not provide the eight-second rendered preview. If live playback cannot start, report the failure and keep complete-file processing available. After processing, let the unified control play the generated WAV.
 
@@ -263,6 +263,7 @@ Release object addresses and large audio buffers when the user replaces a file o
 - Use only play, pause, seek, and current semitone controls from the official real-time browser interface.
 - Use one transport for original audio, live shifted audio, and the generated WAV.
 - Let the pitch value select the playback source. Do not add a separate original-or-shifted selector.
+- Keep pre-export playback in one AudioWorklet on a secure origin. Do not switch to a native audio element when the pitch crosses zero.
 - Do not keep a separate rendered-preview workflow.
 - Let the complete-file action change from prepare to download after processing succeeds.
 - Invalidate the generated WAV after a source or pitch change.
@@ -270,6 +271,7 @@ Release object addresses and large audio buffers when the user replaces a file o
 - Use native semantic controls with consistent custom styling.
 - Do not block the complete page while processing. Disable conflicting controls and show a working state on the action.
 - Put processing measurements and the audio-engine explanation in separate sections that are closed by default.
+- Do not mix live playback information with WAV preparation timings. Before WAV preparation, explain that processing statistics are not available.
 
 
 ## 16. References
