@@ -20,7 +20,7 @@ Tool specifications and operating checklists remain with their tools. They do no
 
 ## 3. Current status
 
-Status verified on 3 October 2026.
+Status verified on 5 October 2026.
 
 - The root page is volo1st's public introduction.
 - CSV to ABA Converter version 2 is the current converter.
@@ -32,7 +32,7 @@ Status verified on 3 October 2026.
 - The public-homepage source content and privacy boundary are approved.
 - The owner approved the public homepage and section indexes for release.
 - The CSV-to-ABA workflow validation waits for one normal Commonwealth Bank of Australia (CBA) payment run.
-- The Pitch Shifter version 1 implementation package is active.
+- The Pitch Shifter MP3 export package is active.
 
 ## 4. Product direction and boundaries
 
@@ -476,6 +476,22 @@ The Pitch Shifter prototype is complete. Owner listening and performance tests s
 
 Completion gate: A supported browser can preview, process, play, and download a local mono or stereo song. Processing stays responsive and does not send audio over the network. A failure leaves no downloadable result.
 
+### 13.3 Pitch Shifter MP3 export
+
+- [x] Compare current browser LAME encoders for scope, maintenance, licence clarity, size, and performance.
+  - Evidence: `wasm-media-encoders` 0.7.0 provides a direct pulse-code modulation (PCM) interface in a 5.9 KB JavaScript artifact and a 133.0 KB Wasm artifact. It encoded the 246-second, 48 kHz stereo reference track at 320 kbit/s in 5.27 seconds on the development host. The output decoded without an error. `lame-wasm` 0.2.0 did not include the embedded LAME licence in its package archive. Mediabunny 1.61.1 required approximately 1 MB of minified browser code for the encoder and its peer framework.
+- [x] Add WAV and MP3 output selection. Use the source format as the default when it is supported.
+  - Evidence: The compact selector defaults an MP3 source to MP3 and every other source to WAV. A format change invalidates the old download. The background worker returns one typed file result for playback and download.
+- [x] Add pinned local encoder artifacts, licences, hashes, and source records.
+  - Evidence: The dependency record contains the wrapper and LAME commits, npm integrity value, seven SHA-256 hashes, build tools, local licences, the LAME source archive, the C bridge, and the upstream Makefile.
+- [x] Add permanent MP3 encoding, interface, translation, dependency, and failure-state tests.
+  - Evidence: Tests encode stereo 48 kHz PCM and mono 8 kHz and 192 kHz PCM. They check the 320 kbit/s MPEG-1 Layer III header, output sample-rate selection, local artifact hashes, both language catalogs, interface controls, local paths, and current module hashes. The existing worker failure path keeps a failed result unavailable.
+- [ ] Verify 320 kbit/s MP3 output quality and performance on a current iPhone.
+- [x] Run the general repository check and review the complete diff.
+  - Evidence: `./scripts/check.sh` passed on 5 October 2026. The complete diff review found no audio upload, third-party runtime request, stale asset hash, or unrelated source change.
+
+Completion gate: A supported browser can export either WAV or 320 kbit/s MP3. An MP3 source defaults to MP3. Other sources default to WAV. The output stays local. An encoder failure leaves no downloadable result.
+
 The approved icon family uses abstract monoline and bar symbols. Each icon uses the site background `#f4f1e8` and the guitar accent `#173e30`. The Guitar Strum Machine uses its icon for home-screen installation. The other three icons record a visual direction only. They do not change the status of the app ideas.
 
 ## 14. Initial audit closure matrix
@@ -567,6 +583,8 @@ The approved icon family uses abstract monoline and bar symbols. Each icon uses 
 | 4 October 2026 | Apply constant gain reduction to Pitch Shifter WAV output when the rendered sample peak exceeds the format range. | The Signalsmith default preset can create peaks above full scale from mastered input. A shared gain value prevents clipping and preserves stereo balance without a limiter. Statistics always show the adjustment. The completion status reports reductions greater than 1 dB. This decision supersedes the earlier clip-and-warn behavior. |
 | 4 October 2026 | Clamp Pitch Shifter samples outside the WAV range instead of reducing the complete output level or adding a limiter. | Listening tests compared hard clipping, a fast look-ahead limiter, and a smooth look-ahead limiter on two demanding commercial mixes. The owner found all three results acceptable. Hard clipping preserves the output level and avoids a new dynamics processor. Processing statistics show the pre-encode peak and the clipped-sample count. The main status reports clipping only when more than 1 percent of channel samples are outside the WAV range. This decision supersedes the constant-gain decision from 4 October. |
 | 4 October 2026 | Use the established iOS audio-session recovery for all Pitch Shifter playback and simplify the pitch controls. | The built-in iPhone speaker was silent for live and generated-file playback while EarPods worked. Guitar Strum Machine previously had the same WebKit failure and recovered by cycling the audio session from `ambient` to `playback` after playback started. Keep this optional API as a best-effort enhancement. Replace the editable pitch field with flat, sharp, and natural buttons plus a read-only value. Keep the desktop group compact and centred. Keep the mobile edge alignment. Use “Shift” as the file action. Keep MP3 export in a separate package. |
+| 5 October 2026 | Use `wasm-media-encoders` 0.7.0 and LAME at 320 kbit/s for Pitch Shifter MP3 export. | The small direct PCM interface fits the existing processing worker and needs no site build system. The pinned local artifacts avoid a third-party runtime dependency. A full reference track encoded at 46.8 times real time on the development host. The MP3 can contain one short frame of codec delay because this encoder does not write LAME gapless metadata. This limit is acceptable for a downloaded pitch-shifted file. |
+| 5 October 2026 | Default Pitch Shifter output to MP3 for an MP3 source and WAV for every other source. | The rule follows the source format when the tool supports it. It does not imply that AAC, FLAC, or other input formats can be preserved. The user can select either supported output before processing. |
 
 ## 16. Verified completion evidence
 

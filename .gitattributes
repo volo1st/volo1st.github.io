@@ -1,1 +1,3 @@
 tools/pitch-shifter/vendor/signalsmith-stretch/SignalsmithStretchRealtime.mjs whitespace=-trailing-space
+tools/pitch-shifter/vendor/wasm-media-encoders/LICENSE-LAME.txt whitespace=-trailing-space,-space-before-tab
+tools/pitch-shifter/vendor/wasm-media-encoders/source/Makefile whitespace=-trailing-space

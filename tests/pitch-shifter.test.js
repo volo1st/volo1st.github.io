@@ -93,6 +93,63 @@ test('the WAV encoder writes stereo 16-bit PCM and reports hard clipping', async
   assert.equal(channels[0][4], 1.5);
 });
 
+test('the MP3 encoder writes pinned 320 kbit/s MPEG-1 Layer III output', async () => {
+  const originalFetch = global.fetch;
+  global.fetch = async (url) => {
+    const file = fs.readFileSync(new URL(url));
+    const bytes = file.buffer.slice(file.byteOffset, file.byteOffset + file.byteLength);
+    return {
+      ok: true,
+      status: 200,
+      async arrayBuffer() { return bytes; },
+    };
+  };
+
+  try {
+    const { encodeMp3Channels, selectMp3SampleRate } = await import(
+      '../tools/pitch-shifter/mp3.mjs'
+    );
+    assert.equal(selectMp3SampleRate(8_000), 32_000);
+    assert.equal(selectMp3SampleRate(44_100), 44_100);
+    assert.equal(selectMp3SampleRate(48_000), 48_000);
+    assert.equal(selectMp3SampleRate(192_000), 48_000);
+
+    const sampleRate = 48_000;
+    const frameCount = sampleRate / 10;
+    const left = new Float32Array(frameCount);
+    const right = new Float32Array(frameCount);
+    for (let frame = 0; frame < frameCount; frame += 1) {
+      left[frame] = 1.2 * Math.sin(2 * Math.PI * 440 * frame / sampleRate);
+      right[frame] = 1.2 * Math.sin(2 * Math.PI * 660 * frame / sampleRate);
+    }
+    const result = await encodeMp3Channels({
+      channels: [left, right],
+      sampleRate,
+    });
+    assert.equal(result.bitrateKilobits, 320);
+    assert.equal(result.outputSampleRate, 48_000);
+    assert.ok(result.buffer.byteLength > 4_000);
+
+    const header = new DataView(result.buffer).getUint32(0, false);
+    assert.equal(header >>> 21, 0x7ff);
+    assert.equal((header >>> 19) & 0x3, 0x3);
+    assert.equal((header >>> 17) & 0x3, 0x1);
+    assert.equal((header >>> 12) & 0xf, 14);
+    assert.equal((header >>> 10) & 0x3, 1);
+
+    for (const inputRate of [8_000, 192_000]) {
+      const shortResult = await encodeMp3Channels({
+        channels: [new Float32Array(Math.ceil(inputRate / 50))],
+        sampleRate: inputRate,
+      });
+      assert.equal(shortResult.outputSampleRate, inputRate === 8_000 ? 32_000 : 48_000);
+      assert.ok(shortResult.buffer.byteLength > 0);
+    }
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
 test('both audio engines keep duration and shift a generated tone by one octave', async () => {
   const [
     { default: createScalarModule },
@@ -165,6 +222,7 @@ test('the production interface keeps processing local and hides incomplete outpu
   const css = fs.readFileSync(path.join(toolRoot, 'styles.css'), 'utf8');
   const livePreview = fs.readFileSync(path.join(toolRoot, 'live-preview.mjs'), 'utf8');
   const worker = fs.readFileSync(path.join(toolRoot, 'processing-worker.mjs'), 'utf8');
+  const mp3 = fs.readFileSync(path.join(toolRoot, 'mp3.mjs'), 'utf8');
 
   assert.match(html, /id="audio-file"[^>]*type="file"/);
   assert.match(html, /id="choose-file"[^>]*aria-controls="audio-file"[^>]*aria-describedby="file-metadata"/);
@@ -184,6 +242,8 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(html, /id="transport-current"/);
   assert.match(html, /id="transport-duration"/);
   assert.match(html, /id="shift-audio"[^>]*data-i18n="pitch\.shift"[^>]*disabled/);
+  assert.match(html, /name="output-format"[^>]*value="wav"[^>]*checked[^>]*disabled/);
+  assert.match(html, /name="output-format"[^>]*value="mp3"[^>]*disabled/);
   assert.match(html, /id="download"[^>]*hidden/);
   assert.doesNotMatch(html, /id="cancel"/);
   assert.match(html, /id="source-player"[^>]*hidden/);
@@ -217,6 +277,8 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(app, /elements\.shiftedPlayer\.src = resultUrl/);
   assert.match(app, /elements\.download\.href = resultUrl/);
   assert.match(app, /PROCESSING_PRESET = 'default'/);
+  assert.match(app, /isMp3File\(file\) \? 'mp3' : 'wav'/);
+  assert.match(app, /outputFormat: outputFormat|outputFormat \}/);
   assert.match(app, /EXTENSIVE_CLIPPING_PERCENTAGE = 1/);
   assert.match(app, /preset: PROCESSING_PRESET/);
   assert.match(app, /transportPlay\.dataset\.playing = String\(playing\)/);
@@ -233,6 +295,10 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(worker, /measureWaveRange\(result\.channels, trimStart, trimLength\)/);
   assert.doesNotMatch(worker, /outputGain|gainReductionDecibels/);
   assert.match(worker, /encodeWaveChannels/);
+  assert.match(worker, /encodeMp3Channels/);
+  assert.match(mp3, /bitrate: MP3_BITRATE_KILOBITS/);
+  assert.match(mp3, /createEncoder\('audio\/mpeg', wasmBytes\)/);
+  assert.doesNotMatch(mp3, /https?:\/\//);
 
   for (const source of [html, app, livePreview, worker]) {
     assert.doesNotMatch(source, /\bfetch\s*\(|XMLHttpRequest|WebSocket|sendBeacon/);
@@ -360,6 +426,35 @@ test('the pinned Signalsmith artifacts and licences match the dependency record'
   }
 });
 
+test('the pinned MP3 encoder artifacts and licences match the dependency record', () => {
+  const expectedHashes = {
+    'WasmMediaEncoder.min.js': 'dd4e17abf5377dfecc726d6ec5e7b72dab01cf3522974278e5347f4e68480fb3',
+    'mp3.wasm': '85e81719250b9a667b1258143f689dda70e3e57a7e7c29ab0b4cef65c8f6eb9a',
+    'LICENSE.txt': '7f766c19bc26ca14d9dad1bf102211f12b0a5c139f66e1132a9867fcfa04bdf0',
+    'LICENSE-LAME.txt': 'bfe4a52dc4645385f356a8e83cc54216a293e3b6f1cb4f79f5fc0277abf937fd',
+  };
+  const vendorRoot = path.join(toolRoot, 'vendor', 'wasm-media-encoders');
+  for (const [filename, expectedHash] of Object.entries(expectedHashes)) {
+    const actualHash = crypto
+      .createHash('sha256')
+      .update(fs.readFileSync(path.join(vendorRoot, filename)))
+      .digest('hex');
+    assert.equal(actualHash, expectedHash);
+  }
+
+  assert.match(fs.readFileSync(path.join(vendorRoot, 'LICENSE.txt'), 'utf8'), /MIT License/);
+  assert.match(
+    fs.readFileSync(path.join(vendorRoot, 'LICENSE-LAME.txt'), 'utf8'),
+    /GNU LIBRARY GENERAL PUBLIC LICENSE/,
+  );
+  const dependencyRecord = fs.readFileSync(path.join(toolRoot, 'docs', 'DEPENDENCIES.md'), 'utf8');
+  assert.match(dependencyRecord, /4a45333baadbab312d1cc0911151dfad23157c51/);
+  assert.match(dependencyRecord, /98db548e8e851defbba3184125ce10725355c332/);
+  for (const expectedHash of Object.values(expectedHashes)) {
+    assert.match(dependencyRecord, new RegExp(expectedHash));
+  }
+});
+
 test('Pitch Shifter module references use current content hashes', () => {
   const references = [
     ['bootstrap.js', './app.mjs'],
@@ -374,6 +469,9 @@ test('Pitch Shifter module references use current content hashes', () => {
     ['worker-client.mjs', './processing-worker.mjs'],
     ['processing-worker.mjs', './audio-processing.mjs'],
     ['processing-worker.mjs', './wav.mjs'],
+    ['processing-worker.mjs', './mp3.mjs'],
+    ['mp3.mjs', './vendor/wasm-media-encoders/WasmMediaEncoder.min.js'],
+    ['mp3.mjs', './vendor/wasm-media-encoders/mp3.wasm'],
     [
       'processing-worker.mjs',
       './vendor/signalsmith-stretch/SignalsmithStretchScalar.mjs',

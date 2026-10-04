@@ -21,6 +21,10 @@ async function createModule() {
 self.addEventListener('message', async (event) => {
   try {
     const { trimStart = 0, trimLength = event.data.length, ...settings } = event.data;
+    const outputFormat = settings.outputFormat || 'wav';
+    if (outputFormat !== 'wav' && outputFormat !== 'mp3') {
+      throw new RangeError('The output format must be WAV or MP3.');
+    }
     let engine = 'bypass';
     let result = {
       channels: settings.channels,
@@ -39,17 +43,40 @@ self.addEventListener('message', async (event) => {
     }
     const encodingStartedAt = performance.now();
     const range = measureWaveRange(result.channels, trimStart, trimLength);
-    const wave = encodeWaveChannels({
-      channels: result.channels,
-      sampleRate: result.sampleRate,
-      startFrame: trimStart,
-      frameCount: trimLength,
-    });
+    let file;
+    let mimeType;
+    let outputSampleRate = result.sampleRate;
+    let bitrateKilobits = null;
+    if (outputFormat === 'mp3') {
+      const { encodeMp3Channels } = await import('./mp3.mjs?v=7528b6927b55');
+      const mp3 = await encodeMp3Channels({
+        channels: result.channels,
+        sampleRate: result.sampleRate,
+        startFrame: trimStart,
+        frameCount: trimLength,
+      });
+      file = mp3.buffer;
+      mimeType = 'audio/mpeg';
+      outputSampleRate = mp3.outputSampleRate;
+      bitrateKilobits = mp3.bitrateKilobits;
+    } else {
+      file = encodeWaveChannels({
+        channels: result.channels,
+        sampleRate: result.sampleRate,
+        startFrame: trimStart,
+        frameCount: trimLength,
+      });
+      mimeType = 'audio/wav';
+    }
     const encodingMilliseconds = performance.now() - encodingStartedAt;
 
     self.postMessage({
       type: 'complete',
-      wave,
+      file,
+      mimeType,
+      outputFormat,
+      outputSampleRate,
+      bitrateKilobits,
       length: trimLength,
       sampleRate: result.sampleRate,
       channelCount: result.channels.length,
@@ -60,7 +87,7 @@ self.addEventListener('message', async (event) => {
         ...result.timings,
         encodingMilliseconds,
       },
-    }, [wave]);
+    }, [file]);
   } catch (error) {
     self.postMessage({
       type: 'error',

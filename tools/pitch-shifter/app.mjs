@@ -1,4 +1,4 @@
-import { processInWorker } from './worker-client.mjs?v=7f5512467cd7';
+import { processInWorker } from './worker-client.mjs?v=0b82e70fc493';
 import { LivePreviewController, supportsLivePreview } from './live-preview.mjs?v=dba93427c47d';
 import { recoverPlaybackAudioSession } from './audio-session.mjs?v=3e48f8886a62';
 
@@ -30,6 +30,7 @@ const elements = {
   transportPosition: document.querySelector('#transport-position'),
   transportCurrent: document.querySelector('#transport-current'),
   transportDuration: document.querySelector('#transport-duration'),
+  outputFormats: Array.from(document.querySelectorAll('input[name="output-format"]')),
   shiftAudio: document.querySelector('#shift-audio'),
   sourcePlayer: document.querySelector('#source-player'),
   shiftedPlayer: document.querySelector('#shifted-player'),
@@ -40,7 +41,7 @@ const elements = {
     total: document.querySelector('#metric-total'),
     dsp: document.querySelector('#metric-dsp'),
     setup: document.querySelector('#metric-setup'),
-    wave: document.querySelector('#metric-wave'),
+    encoding: document.querySelector('#metric-encoding'),
     speed: document.querySelector('#metric-speed'),
     engine: document.querySelector('#metric-engine'),
     preset: document.querySelector('#metric-preset'),
@@ -62,6 +63,7 @@ let liveLoading = false;
 let livePreviewAvailable = supportsLivePreview(window);
 let livePreview = null;
 let semitoneShift = 0;
+let outputFormat = 'wav';
 let playbackSemitones = 0;
 let transportPosition = 0;
 let pointerScrubbing = false;
@@ -142,6 +144,12 @@ function formatClippedSamples(count, percentage) {
   });
 }
 
+function isMp3File(file) {
+  return file.type === 'audio/mpeg'
+    || file.type === 'audio/mp3'
+    || /\.mp3$/i.test(file.name);
+}
+
 function readSemitones() {
   return semitoneShift;
 }
@@ -212,7 +220,7 @@ function renderMetrics() {
   elements.metrics.total.textContent = formatSeconds(result.timings.totalMilliseconds);
   elements.metrics.dsp.textContent = formatSeconds(result.timings.dspMilliseconds);
   elements.metrics.setup.textContent = formatSeconds(result.timings.setupMilliseconds);
-  elements.metrics.wave.textContent = formatSeconds(result.timings.encodingMilliseconds);
+  elements.metrics.encoding.textContent = formatSeconds(result.timings.encodingMilliseconds);
   elements.metrics.speed.textContent = Number.isFinite(speed)
     ? t('pitch.speedValue', { value: speed.toFixed(2) })
     : '—';
@@ -226,10 +234,13 @@ function renderMetrics() {
   elements.metrics.preset.textContent = t(presetKey);
   elements.metrics.input.textContent = `${inputDuration.toFixed(3)} s`;
   elements.metrics.output.textContent = `${outputDuration.toFixed(3)} s`;
-  elements.metrics.format.textContent = t(
-    result.channelCount === 1 ? 'pitch.formatMono' : 'pitch.formatStereo',
-    { rate: result.sampleRate.toLocaleString(sharedI18n.getLanguage()) },
-  );
+  const formatKey = result.outputFormat === 'mp3'
+    ? (result.channelCount === 1 ? 'pitch.formatMp3Mono' : 'pitch.formatMp3Stereo')
+    : (result.channelCount === 1 ? 'pitch.formatWavMono' : 'pitch.formatWavStereo');
+  elements.metrics.format.textContent = t(formatKey, {
+    rate: result.outputSampleRate.toLocaleString(sharedI18n.getLanguage()),
+    bitrate: result.bitrateKilobits,
+  });
   elements.metrics.peak.textContent = formatPeak(result.peak);
   elements.metrics.clipping.textContent = formatClippedSamples(
     result.clippedSampleCount,
@@ -239,8 +250,14 @@ function renderMetrics() {
 
 function renderActions() {
   elements.workspace.setAttribute('aria-busy', String(busy));
+  elements.outputFormats.forEach((input) => {
+    input.checked = input.value === outputFormat;
+  });
   elements.shiftAudio.hidden = Boolean(resultUrl);
   elements.shiftAudio.textContent = t(busy ? 'pitch.shifting' : 'pitch.shift');
+  elements.download.textContent = t(
+    outputFormat === 'mp3' ? 'pitch.downloadMp3' : 'pitch.downloadWav',
+  );
   elements.download.hidden = !resultUrl;
 }
 
@@ -298,6 +315,7 @@ function updateControls() {
     !ready || busy || (playbackSemitones !== 0 && !livePreviewAvailable && !resultUrl),
   );
   setControlDisabled(elements.transportPosition, !ready || busy);
+  elements.outputFormats.forEach((input) => setControlDisabled(input, !ready || busy));
   setControlDisabled(elements.shiftAudio, !ready || busy);
 }
 
@@ -550,12 +568,12 @@ function validateDecodedAudio(audioBuffer) {
   }
 }
 
-function safeOutputName(filename, semitones) {
+function safeOutputName(filename, semitones, format) {
   const base = filename.replace(/\.[^.]+$/, '').replace(/[. ]+$/, '') || 'shifted-audio';
   const shift = semitones === 0
     ? 'original-pitch'
     : `${semitones > 0 ? 'plus' : 'minus'}-${Math.abs(semitones)}`;
-  return `${base}-shifted-${shift}.wav`;
+  return `${base}-shifted-${shift}.${format}`;
 }
 
 function stopActiveOperation() {
@@ -574,6 +592,7 @@ async function loadFile(file) {
   if (currentOperation !== operationId) return;
 
   selectedFile = file;
+  outputFormat = isMp3File(file) ? 'mp3' : 'wav';
   decodedAudio = null;
   playbackSemitones = readSemitones();
   transportPosition = 0;
@@ -640,6 +659,17 @@ elements.pitchUp.addEventListener('click', () => {
 });
 elements.pitchReset.addEventListener('click', () => setSemitones(0));
 
+elements.outputFormats.forEach((input) => {
+  input.addEventListener('change', () => {
+    if (!input.checked || busy) return;
+    outputFormat = input.value;
+    clearResult();
+    if (decodedAudio) setStatus('pitch.statusReady');
+    renderActions();
+    updateControls();
+  });
+});
+
 elements.transportPlay.addEventListener('click', async () => {
   if (isTransportPlaying()) {
     await pauseTransport();
@@ -684,20 +714,27 @@ elements.shiftAudio.addEventListener('click', async () => {
     if (currentOperation !== operationId) return;
     const result = await processInWorker(
       decodedAudio,
-      { semitones, preset: PROCESSING_PRESET },
+      { semitones, preset: PROCESSING_PRESET, outputFormat },
       activeController.signal,
     );
     if (currentOperation !== operationId) return;
-    resultUrl = replaceUrl(resultUrl, result.wave);
+    resultUrl = replaceUrl(resultUrl, result.file);
     elements.shiftedPlayer.src = resultUrl;
     elements.download.href = resultUrl;
-    elements.download.download = safeOutputName(selectedFile.name, semitones);
+    elements.download.download = safeOutputName(
+      selectedFile.name,
+      semitones,
+      result.outputFormat,
+    );
     metricsState = { result, inputDuration: decodedAudio.duration };
     renderMetrics();
     const reportClipping = result.clippedSamplePercentage > EXTENSIVE_CLIPPING_PERCENTAGE;
     setStatus(
       reportClipping ? 'pitch.statusClipped' : 'pitch.statusComplete',
-      reportClipping ? { value: result.clippedSamplePercentage.toFixed(2) } : {},
+      {
+        format: result.outputFormat.toUpperCase(),
+        value: result.clippedSamplePercentage.toFixed(2),
+      },
       reportClipping ? 'warning' : 'normal',
       reportClipping,
     );

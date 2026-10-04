@@ -12,7 +12,7 @@ export function processInWorker(input, settings, signal) {
     );
     const inputCopyMilliseconds = performance.now() - copyStartedAt;
     const transfer = channels.map((channel) => channel.buffer);
-    const worker = new Worker('./processing-worker.mjs?v=61bc8b58ef42', { type: 'module' });
+    const worker = new Worker('./processing-worker.mjs?v=6ccd294b008d', { type: 'module' });
 
     const stop = () => {
       worker.terminate();
@@ -40,7 +40,10 @@ export function processInWorker(input, settings, signal) {
       const totalMilliseconds = performance.now() - totalStartedAt;
       stop();
       resolve({
-        wave: new Blob([event.data.wave], { type: 'audio/wav' }),
+        file: new Blob([event.data.file], { type: event.data.mimeType }),
+        outputFormat: event.data.outputFormat,
+        outputSampleRate: event.data.outputSampleRate,
+        bitrateKilobits: event.data.bitrateKilobits,
         length: event.data.length,
         sampleRate: event.data.sampleRate,
         channelCount: event.data.channelCount,
