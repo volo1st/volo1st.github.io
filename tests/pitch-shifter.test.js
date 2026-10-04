@@ -116,8 +116,9 @@ test('the production interface keeps processing local and hides incomplete outpu
   const worker = fs.readFileSync(path.join(toolRoot, 'processing-worker.mjs'), 'utf8');
 
   assert.match(html, /id="audio-file"[^>]*type="file"/);
-  assert.match(html, /id="choose-file"[^>]*aria-controls="audio-file"[^>]*aria-describedby="file-name file-metadata"/);
-  assert.match(html, /id="file-name"/);
+  assert.match(html, /id="choose-file"[^>]*aria-controls="audio-file"[^>]*aria-describedby="file-metadata"/);
+  assert.match(html, /id="file-button-text"/);
+  assert.doesNotMatch(html, /id="file-name"/);
   assert.match(html, /id="file-metadata"[^>]*hidden/);
   assert.match(html, /id="semitones"[^>]*min="-12"[^>]*max="12"[^>]*step="1"/);
   assert.doesNotMatch(html, /playback-original|playback-shifted/);
@@ -144,7 +145,8 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(css, /\[hidden\][\s\S]*display: none !important/);
   assert.match(css, /#transport-position[\s\S]*touch-action: pan-y/);
   assert.match(css, /#transport-position::-(?:webkit-slider-thumb|moz-range-thumb)/);
-  assert.match(css, /grid-template-columns: 2\.75rem 4\.75rem 2\.75rem 2\.75rem/);
+  assert.match(css, /#semitones[\s\S]*appearance: textfield/);
+  assert.match(css, /\.pitch-actions[\s\S]*display: flex/);
   assert.match(css, /#transport-play\[data-playing="true"\]/);
   assert.match(app, /MAX_DURATION_SECONDS = 30 \* 60/);
   assert.match(app, /MAX_CHANNEL_SAMPLES = 33_554_432/);
@@ -156,6 +158,7 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(app, /PROCESSING_PRESET = 'default'/);
   assert.match(app, /preset: PROCESSING_PRESET/);
   assert.match(app, /transportPlay\.dataset\.playing = String\(playing\)/);
+  assert.match(app, /fileButtonText\.textContent = hasFile/);
   assert.match(app, /else if \(livePreviewAvailable\)[\s\S]*controller\.play\(transportPosition, semitones\)/);
   assert.doesNotMatch(app, /PREVIEW_SECONDS|encodeWaveSegment/);
   assert.match(bootstrap, /status\.dataset\.visible = 'true'/);

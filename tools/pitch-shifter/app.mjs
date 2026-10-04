@@ -16,7 +16,7 @@ const elements = {
   workspace: document.querySelector('#workspace'),
   file: document.querySelector('#audio-file'),
   chooseFile: document.querySelector('#choose-file'),
-  fileName: document.querySelector('#file-name'),
+  fileButtonText: document.querySelector('#file-button-text'),
   fileMetadata: document.querySelector('#file-metadata'),
   status: document.querySelector('#status'),
   dropOverlay: document.querySelector('#drop-overlay'),
@@ -24,7 +24,6 @@ const elements = {
   pitchDown: document.querySelector('#pitch-down'),
   pitchUp: document.querySelector('#pitch-up'),
   pitchReset: document.querySelector('#pitch-reset'),
-  pitchValue: document.querySelector('#pitch-value'),
   transportPlay: document.querySelector('#transport-play'),
   transportPosition: document.querySelector('#transport-position'),
   transportCurrent: document.querySelector('#transport-current'),
@@ -72,7 +71,6 @@ let statusState = {
 };
 let fileDetailsState = {
   name: null,
-  nameKey: 'pitch.noFile',
   metadataKey: null,
   parameters: {},
 };
@@ -147,18 +145,29 @@ function readSemitones() {
 function renderPitchValue() {
   const value = parseSemitoneValue();
   if (value === null) {
-    elements.pitchValue.textContent = t('pitch.errorShift');
+    elements.semitones.removeAttribute('aria-valuetext');
     return;
   }
   const displayValue = value > 0 ? `+${value}` : String(value);
-  elements.pitchValue.textContent = value === 0
+  const valueText = value === 0
     ? t('pitch.originalPitch')
     : t('pitch.shiftValue', { value: displayValue });
+  elements.semitones.setAttribute('aria-valuetext', valueText);
 }
 
 function renderFileDetails() {
-  elements.fileName.textContent = fileDetailsState.name
-    || t(fileDetailsState.nameKey, fileDetailsState.parameters);
+  const hasFile = Boolean(fileDetailsState.name);
+  elements.fileButtonText.textContent = hasFile
+    ? fileDetailsState.name
+    : t('pitch.chooseFile');
+  elements.chooseFile.setAttribute(
+    'aria-label',
+    t(
+      hasFile ? 'pitch.chooseAnotherFile' : 'pitch.chooseFile',
+      hasFile ? { filename: fileDetailsState.name } : {},
+    ),
+  );
+  elements.chooseFile.title = hasFile ? fileDetailsState.name : '';
   elements.fileMetadata.hidden = !fileDetailsState.metadataKey;
   elements.fileMetadata.textContent = fileDetailsState.metadataKey
     ? t(fileDetailsState.metadataKey, fileDetailsState.parameters)
@@ -562,7 +571,6 @@ async function loadFile(file) {
   clearAudioElement(elements.sourcePlayer);
   fileDetailsState = {
     name: file.name,
-    nameKey: null,
     metadataKey: 'pitch.fileSize',
     parameters: {
       size: formatBytes(file.size),
@@ -582,7 +590,6 @@ async function loadFile(file) {
     elements.sourcePlayer.src = sourceUrl;
     fileDetailsState = {
       name: file.name,
-      nameKey: null,
       metadataKey: 'pitch.fileMetadata',
       parameters: {
         size: formatBytes(file.size),

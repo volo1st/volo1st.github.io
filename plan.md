@@ -562,6 +562,7 @@ The approved icon family uses abstract monoline and bar symbols. Each icon uses 
 | 4 October 2026 | Use Prepare WAV followed by Download WAV, without a cancel control. | Processing takes approximately three seconds on the tested current devices. A distinct download click remains dependable after asynchronous processing, including in Safari. This decision supersedes the earlier requirement to keep Cancel available. |
 | 4 October 2026 | Use one AudioWorklet path across zero semitones on secure origins. | Switching between a native audio element and the AudioWorklet caused an audible delay when the pitch crossed zero. One running engine can change pitch without a playback handoff. Native zero-semitone playback remains available on insecure origins for local testing. |
 | 4 October 2026 | Keep live playback information separate from WAV preparation statistics. | The browser does not provide a dependable live processor-load measurement. An explanatory empty state is clearer than incomplete or mixed statistics. |
+| 4 October 2026 | Combine the Pitch Shifter play and pitch controls, and use the file button as the selected-file display. | The compact layout keeps the primary controls together. The file button remains the replacement-file action, and separate metadata keeps the filename readable on narrow screens. |
 
 ## 16. Verified completion evidence
 

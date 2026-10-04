@@ -41,22 +41,20 @@
   gap: 0.75rem 1rem;
 }
 
-.file-details {
-  display: flex;
+.file-button {
+  max-width: 100%;
+}
+
+.file-button span {
   min-width: 0;
-  align-items: baseline;
-  gap: 0.35rem;
-  color: var(--site-muted);
-  overflow-wrap: anywhere;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.file-details p {
+#file-metadata {
   margin: 0;
-}
-
-#file-metadata::before {
-  margin-right: 0.35rem;
-  content: "·";
+  color: var(--site-muted);
 }
 
 .primary-action,
@@ -177,38 +175,48 @@
   font-weight: 700;
 }
 
-.pitch-stepper {
+.pitch-actions {
   display: flex;
   flex-wrap: wrap;
-  align-items: stretch;
+  align-items: center;
+  gap: 0.65rem 1rem;
+}
+
+.pitch-stepper {
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
 }
 
 #semitones {
-  width: 5.25rem;
+  appearance: textfield;
+  width: 3.25rem;
   min-height: 2.75rem;
-  border: 1px solid var(--site-control-border);
+  border: 0;
   border-radius: 0.4rem;
-  padding: 0.45rem;
-  color: var(--site-text);
-  background: #ffffff;
+  padding: 0.45rem 0.2rem;
+  color: var(--tool-accent);
+  background: transparent;
   font: inherit;
-  font-size: 1.08rem;
-  font-weight: 700;
+  font-size: 1.15rem;
+  font-weight: 750;
   text-align: center;
 }
 
-#pitch-value {
-  min-height: 1.5rem;
-  color: var(--tool-accent);
-  font-weight: 750;
+#semitones::-webkit-inner-spin-button,
+#semitones::-webkit-outer-spin-button {
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+#semitones:focus-visible {
+  outline: 2px solid var(--site-focus);
+  outline-offset: 1px;
 }
 
 .transport {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: start;
-  gap: 0.75rem 1rem;
+  min-width: 0;
 }
 
 .transport-position {
@@ -413,19 +421,8 @@
     width: 100%;
   }
 
-  .file-details {
-    display: grid;
+  #file-metadata {
     width: 100%;
-    gap: 0.1rem;
-  }
-
-  #file-name {
-    color: var(--site-text);
-    font-weight: 650;
-  }
-
-  #file-metadata::before {
-    content: none;
   }
 
   .metrics {
@@ -443,13 +440,5 @@
 
   .metrics div:first-child {
     border-top: 0;
-  }
-}
-
-@media (max-width: 420px) {
-  .pitch-stepper {
-    display: grid;
-    grid-template-columns: 2.75rem 4.75rem 2.75rem 2.75rem;
-    justify-content: start;
   }
 }

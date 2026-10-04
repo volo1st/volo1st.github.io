@@ -14,10 +14,10 @@
   <link rel="apple-touch-icon" href="../../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93">
   <link rel="manifest" href="./manifest.webmanifest?v=f449d8929a05">
   <link rel="stylesheet" href="../../assets/site-shell.css?v=b093396d6884">
-  <link rel="stylesheet" href="./styles.css?v=d821c4c294cd">
+  <link rel="stylesheet" href="./styles.css?v=2692fc53818e">
   <script src="../../assets/i18n.js?v=3bafa7de2d71" defer></script>
-  <script src="./i18n.js?v=9772e6dfc544" defer></script>
-  <script src="./bootstrap.js?v=351e28e6e846" defer></script>
+  <script src="./i18n.js?v=4ac5dc710659" defer></script>
+  <script src="./bootstrap.js?v=7872496e64ea" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -42,38 +42,38 @@
 
       <div class="file-row">
         <input id="audio-file" class="visually-hidden" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.flac,.ogg,.opus" tabindex="-1">
-        <button id="choose-file" class="secondary-button" type="button" aria-controls="audio-file" aria-describedby="file-name file-metadata" data-i18n="pitch.chooseFile">Choose audio file</button>
-        <div class="file-details">
-          <p id="file-name" data-i18n="pitch.noFile">No audio file selected.</p>
-          <p id="file-metadata" hidden></p>
-        </div>
+        <button id="choose-file" class="secondary-button file-button" type="button" aria-controls="audio-file" aria-describedby="file-metadata">
+          <span id="file-button-text" data-i18n="pitch.chooseFile">Choose audio file</span>
+        </button>
+        <p id="file-metadata" hidden></p>
       </div>
 
       <div class="pitch-control">
-        <label class="control-label" for="semitones" data-i18n="pitch.pitchShift">Pitch shift</label>
-        <div class="pitch-stepper">
-          <button id="pitch-down" type="button" aria-label="Decrease pitch by one semitone" data-i18n-aria-label="pitch.decrease" disabled>−</button>
-          <input id="semitones" type="number" min="-12" max="12" step="1" value="0" inputmode="numeric" aria-describedby="pitch-value" disabled>
-          <button id="pitch-up" type="button" aria-label="Increase pitch by one semitone" data-i18n-aria-label="pitch.increase" disabled>+</button>
-          <button id="pitch-reset" class="secondary-button icon-button reset-button" type="button" aria-label="Reset to original pitch" data-i18n-aria-label="pitch.reset" disabled>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4.5 5v5.5H10"></path>
-              <path d="M5.2 10.3A7.5 7.5 0 1 1 6.5 18"></path>
+        <label class="control-label" for="semitones" data-i18n="pitch.pitchShift">Pitch shift (semitones)</label>
+        <div class="pitch-actions">
+          <button id="transport-play" class="primary-action icon-button" type="button" aria-label="Play" data-i18n-aria-label="pitch.play" data-playing="false" disabled>
+            <svg id="play-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path class="filled-icon" d="M8 5.5v13l10-6.5z"></path>
+            </svg>
+            <svg id="pause-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path class="filled-icon" d="M7 5.5h3.5v13H7zM13.5 5.5H17v13h-3.5z"></path>
             </svg>
           </button>
+          <div class="pitch-stepper">
+            <button id="pitch-down" type="button" aria-label="Decrease pitch by one semitone" data-i18n-aria-label="pitch.decrease" disabled>−</button>
+            <input id="semitones" type="number" min="-12" max="12" step="1" value="0" inputmode="numeric" disabled>
+            <button id="pitch-up" type="button" aria-label="Increase pitch by one semitone" data-i18n-aria-label="pitch.increase" disabled>+</button>
+            <button id="pitch-reset" class="secondary-button icon-button reset-button" type="button" aria-label="Reset to original pitch" data-i18n-aria-label="pitch.reset" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4.5 5v5.5H10"></path>
+                <path d="M5.2 10.3A7.5 7.5 0 1 1 6.5 18"></path>
+              </svg>
+            </button>
+          </div>
         </div>
-        <output id="pitch-value" for="semitones" aria-live="polite" data-i18n="pitch.originalPitch">Original pitch</output>
       </div>
 
       <div class="transport">
-        <button id="transport-play" class="primary-action icon-button" type="button" aria-label="Play" data-i18n-aria-label="pitch.play" data-playing="false" disabled>
-          <svg id="play-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path class="filled-icon" d="M8 5.5v13l10-6.5z"></path>
-          </svg>
-          <svg id="pause-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path class="filled-icon" d="M7 5.5h3.5v13H7zM13.5 5.5H17v13h-3.5z"></path>
-          </svg>
-        </button>
         <div class="transport-position">
           <input id="transport-position" type="range" min="0" max="0" step="0.1" value="0" data-i18n-aria-label="pitch.playbackPosition" disabled>
           <div class="transport-times" aria-hidden="true">
