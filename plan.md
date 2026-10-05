@@ -32,7 +32,7 @@ Status verified on 5 October 2026.
 - The public-homepage source content and privacy boundary are approved.
 - The owner approved the public homepage and section indexes for release.
 - The CSV-to-ABA workflow validation waits for one normal Commonwealth Bank of Australia (CBA) payment run.
-- The Pitch Shifter MP3 export package is active.
+- Pitch Shifter version 1 and its MP3 export package are complete and deployed.
 
 ## 4. Product direction and boundaries
 
@@ -440,17 +440,17 @@ Waiting work is not a blocker for unrelated tool maintenance.
 
 ### 13.1 App ideas
 
-The metronome and tuner remain unscheduled ideas. Pitch Shifter is now an approved public browser tool and an active implementation package.
+The metronome and tuner remain unscheduled ideas. Pitch Shifter is a complete public browser tool.
 
 | Idea | Initial purpose | Question to answer before planning |
 | --- | --- | --- |
 | Metronome | Provide a steady practice pulse. | Define the practice workflow and required rhythm controls. |
 | Tuner | Help a user tune an instrument. | Define the supported instruments, input method, and tuning modes. |
-| Pitch Shifter | Shift one local song without changing its duration, preview it, and download it. | Complete the version 1 implementation package in `ideas/song-pitch-shifter.md`. |
+| Pitch Shifter | Shift one local song without changing its duration, preview it, and download it. | Version 1 is complete. Key recognition remains a separate future idea. |
 
 Pitch Shifter is classified as a public browser tool. It processes one local file and does not store or upload audio.
 
-The Pitch Shifter prototype is complete. Owner listening and performance tests selected the Signalsmith Stretch default preset. The version 1 implementation package is approved and active.
+The Pitch Shifter prototype, version 1 package, and MP3 export package are complete. Owner listening and performance tests selected the Signalsmith Stretch default preset.
 
 ### 13.2 Pitch Shifter version 1
 
@@ -470,7 +470,8 @@ The Pitch Shifter prototype is complete. Owner listening and performance tests s
   - Evidence: Generated-tone tests run both Wasm variants. Additional tests cover exact duration, stereo alignment, pitch ratio, WAV structure, clipping, local-only code, translations, dependency hashes, and installation metadata.
 - [x] Record valid performance-test conditions.
   - Evidence: The specification and README require HTTPS for iOS and iPadOS measurements. They record that WebKit Enhanced Security can disable just-in-time compilation on a plain HTTP local-area-network origin.
-- [ ] Verify keyboard use, narrow screens, and 200 percent zoom.
+- [x] Verify keyboard use, narrow screens, and 200 percent zoom.
+  - Evidence: On 5 October 2026, the owner confirmed that all three interface checks work correctly.
 - [x] Run the general repository check and review the complete diff.
   - Evidence: `./scripts/check.sh` passed on 4 October 2026. The final source review found no runtime request that can send audio.
 
@@ -486,7 +487,8 @@ Completion gate: A supported browser can preview, process, play, and download a 
   - Evidence: The dependency record contains the wrapper and LAME commits, npm integrity value, seven SHA-256 hashes, build tools, local licences, the LAME source archive, the C bridge, and the upstream Makefile.
 - [x] Add permanent MP3 encoding, interface, translation, dependency, and failure-state tests.
   - Evidence: Tests encode stereo 48 kHz PCM and mono 8 kHz and 192 kHz PCM. They check the 320 kbit/s MPEG-1 Layer III header, output sample-rate selection, local artifact hashes, both language catalogs, interface controls, local paths, and current module hashes. The existing worker failure path keeps a failed result unavailable.
-- [ ] Verify 320 kbit/s MP3 output quality and performance on a current iPhone.
+- [x] Verify 320 kbit/s MP3 output quality and performance on a current iPhone.
+  - Evidence: On 5 October 2026, the owner confirmed that MP3 export quality and performance work correctly on the tested current iPhone.
 - [x] Run the general repository check and review the complete diff.
   - Evidence: `./scripts/check.sh` passed on 5 October 2026. The complete diff review found no audio upload, third-party runtime request, stale asset hash, or unrelated source change.
 
@@ -587,9 +589,11 @@ The approved icon family uses abstract monoline and bar symbols. Each icon uses 
 | 5 October 2026 | Default Pitch Shifter output to MP3 for an MP3 source and WAV for every other source. | The rule follows the source format when the tool supports it. It does not imply that AAC, FLAC, or other input formats can be preserved. The user can select either supported output before processing. |
 | 5 October 2026 | Put the Pitch Shifter export format in a collapsed Advanced section. | Export format is a secondary setting. A styled native select uses less space than a segmented control and gives iOS users a familiar option picker. The main workspace keeps one Shift or Download action. |
 | 5 October 2026 | Use “Export” for the Pitch Shifter complete-file action. | “Pitch shift” continues to name the audio operation. “Export” describes the button result and gives the English and Chinese interfaces a more natural action label. This decision supersedes the “Shift” action label from 4 October. |
+| 5 October 2026 | Animate one to three dots during Pitch Shifter export. | A small CSS animation distinguishes active processing from a static disabled control. The accessible button text stays stable, and the reduced-motion state shows three fixed dots. |
 
 ## 16. Verified completion evidence
 
+- On 5 October 2026, the owner confirmed correct Pitch Shifter keyboard use, narrow-screen behavior, 200 percent zoom, and current-iPhone MP3 export quality and performance. These checks completed the version 1 and MP3 export packages.
 - On 4 October 2026, the owner verified the updated Pitch Shifter on an iPhone. Live and generated-file playback worked through the built-in speaker. The playback controls no longer flashed, text selection was disabled in the workspace, and the progress control no longer showed the iOS tap-highlight rectangle.
 - On 4 October 2026, the owner compared hard clipping with fast and smooth look-ahead limiting on two demanding commercial mixes and found all three results acceptable. Automated tests confirmed exact clipped-sample measurement, 16-bit WAV clamping, translation-key parity, and current browser-module hashes.
 - On 3 October 2026, the owner verified live preview and shifted WAV export through the deployed HTTPS site. The same 246-second, 48 kHz stereo file completed in approximately 2 seconds on an iPhone 16 Pro and 1.83 seconds on a Mac Studio with an M1 Max.

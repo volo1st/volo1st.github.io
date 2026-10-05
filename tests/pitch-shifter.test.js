@@ -16,9 +16,9 @@ test('Pitch Shifter translations use identical English and Chinese keys', () => 
     Object.keys(pitchI18n.catalogs['zh-Hans']).sort(),
   );
   assert.equal(pitchI18n.catalogs['en-AU']['pitch.shift'], 'Export');
-  assert.equal(pitchI18n.catalogs['en-AU']['pitch.shifting'], 'Exporting…');
+  assert.equal(pitchI18n.catalogs['en-AU']['pitch.shifting'], 'Exporting');
   assert.equal(pitchI18n.catalogs['zh-Hans']['pitch.shift'], '导出');
-  assert.equal(pitchI18n.catalogs['zh-Hans']['pitch.shifting'], '正在导出…');
+  assert.equal(pitchI18n.catalogs['zh-Hans']['pitch.shifting'], '正在导出');
 });
 
 test('the iOS playback audio session recovery is optional and ordered', async () => {
@@ -276,6 +276,9 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(css, /#workspace \[data-preview-lock="true"\]:disabled[\s\S]*opacity: 1/);
   assert.match(css, /#workspace #pitch-reset\[data-preview-lock="true"\]:disabled/);
   assert.match(css, /#transport-play\[data-playing="true"\]/);
+  assert.match(css, /#workspace\[aria-busy="true"\] \.shift-action::after/);
+  assert.match(css, /@keyframes export-dots/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(css, /\.advanced-control[\s\S]*grid-template-columns:/);
   assert.match(css, /\.advanced-control select:focus-visible/);
   assert.match(app, /MAX_DURATION_SECONDS = 30 \* 60/);

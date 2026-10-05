@@ -2,9 +2,9 @@
 
 ## 1. Status
 
-This document defines the approved version 1 product and engineering decisions.
+This document defines the completed version 1 product and engineering decisions.
 
-The prototype is complete. Version 1 implementation is approved.
+The prototype, version 1 implementation, and MP3 export extension are complete.
 
 ## 2. Product definition
 
@@ -53,8 +53,9 @@ Version 1 must not:
 2. The tool decodes the file into pulse-code modulation (PCM) audio.
 3. The user selects a semitone shift.
 4. The user compares the original and shifted audio with one playback control.
-5. The tool creates the complete WAV file.
-6. The prepare action becomes the WAV download.
+5. The user can change the output format in Advanced settings.
+6. The tool creates the complete output file.
+7. The Export action becomes the format-specific download.
 
 Do not enable playback before decoding succeeds. Do not enable download before processing succeeds.
 
@@ -82,11 +83,11 @@ Do not use simple resampling as a fallback. Simple resampling changes the pitch 
 
 Use one playback control. On a secure origin, use one AudioWorklet path at all semitone values, including zero. This prevents an engine handoff when the pitch crosses zero. On an insecure origin, permit native original playback at zero and keep shifted playback unavailable. Let the user play, pause, seek, and change the semitone value while audio plays. Keep the playback position when the pitch value changes.
 
-Before export, use the live AudioWorklet path for playback on a secure origin. After export, use the generated WAV for playback. This lets the user hear the exact downloadable result.
+Before export, use the live AudioWorklet path for playback on a secure origin. After export, use the generated output for playback. This lets the user hear the exact downloadable result.
 
-Do not provide the eight-second rendered preview. If live playback cannot start, report the failure and keep complete-file processing available. After processing, let the unified control play the generated WAV.
+Do not provide the eight-second rendered preview. If live playback cannot start, report the failure and keep complete-file processing available. After processing, let the unified control play the generated output.
 
-The complete-result player and the download must use the same generated WAV object.
+The complete-result player and the download must use the same generated file object.
 
 Version 1 must export a 16-bit PCM WAV file. Preserve mono or stereo channel layout. Add the shift to the output file name. For example:
 
@@ -97,9 +98,9 @@ example-shifted-plus-3.wav
 
 Do not overwrite or modify the selected source file.
 
-Measure the rendered sample peak before export. If the peak exceeds the WAV range, apply one constant gain reduction to both channels and set the output peak to 0.999. This adjustment must preserve stereo balance and must occur before WAV encoding. Do not use clipping, limiting, or compression for peak protection.
+Measure the rendered sample peak before encoding. Preserve the rendered level. Clamp only samples that are outside the output range. Do not add a limiter, compressor, or complete-file gain adjustment.
 
-Show every gain adjustment in the processing statistics. If the reduction is 1 dB or less, show the normal completion status. If the reduction is greater than 1 dB, show the adjustment in the completion status.
+Show the pre-encode peak and clipped-sample proportion in the processing statistics. Show the normal completion status when no more than 1 percent of channel samples are clipped. Show a clipping notice when the proportion is greater than 1 percent.
 
 ## 8. Processing architecture
 
@@ -215,15 +216,15 @@ Prefer a small local detector over the complete Essentia.js package. Reconsider 
 
 ## 12. MP3 export extension
 
-MP3 export is a later output adapter. It does not change the pitch-shifting algorithm.
+MP3 export is a complete output adapter. It does not change the pitch-shifting algorithm.
 
 The tool must encode the shifted PCM audio. It cannot preserve the compressed frames from an MP3 source.
 
-Do not rely only on the browser's WebCodecs MP3 encoder. Codec support can differ between supported browsers. Evaluate a pinned local encoder if MP3 export becomes an approved requirement.
+Use the pinned local `wasm-media-encoders` 0.7.0 wrapper and LAME encoder. Encode MP3 at 320 kbit/s. Do not make a runtime request for the encoder.
 
-Keep WAV available as the dependable output format. Report MP3 encoder failure without removing a valid WAV result.
+Keep WAV available. Default an MP3 source to MP3 output. Default every other source to WAV output. Changing the output format must invalidate an old result.
 
-Define the MP3 bitrate, metadata behavior, encoder license, and cross-browser acceptance tests before implementation.
+MP3 output can contain a short codec delay. It does not preserve source metadata. Record the encoder licences, source revisions, artifact hashes, and reproduction steps in the dependency record.
 
 ## 13. Failure behavior
 
@@ -233,7 +234,7 @@ Reject unsupported channel layouts or files that exceed the agreed processing li
 
 Show progress only when the processing component provides meaningful progress data. Otherwise, show an indeterminate working state.
 
-Do not add a progress bar or cancel control in version 1. Show an indeterminate working state on the prepare action. Reconsider progress reporting only if representative HTTPS tests show a material wait.
+Do not add a progress bar or cancel control in version 1. Show an indeterminate one-to-three-dot working state on the Export action. Reconsider progress reporting only if representative HTTPS tests show a material wait.
 
 If live shifted playback fails, keep original playback and complete-file processing available. Do not replace the live engine with a different pitch-shifting algorithm.
 
@@ -259,24 +260,27 @@ Release object addresses and large audio buffers when the user replaces a file o
 - Reject decoded audio with more than 33,554,432 total channel samples. This value is 128 MiB of 32-bit PCM.
 - Reject audio longer than 30 minutes.
 - Require output duration to match input duration within one sample frame.
-- Apply constant gain reduction when the rendered sample peak exceeds 1.0. Target 0.999, preserve stereo balance, and report reductions greater than 1 dB in the completion status.
-- Reserve key recognition and MP3 export for later versions.
+- Preserve the rendered level and clamp only samples outside the output range. Report the pre-encode peak and clipped-sample proportion. Show a notice when more than 1 percent of channel samples are clipped.
+- Keep key recognition for a later version.
+- Provide WAV and 320 kbit/s MP3 export. Use pinned local LAME artifacts for MP3.
 - Use one user-facing processing mode. Do not expose algorithm or performance settings.
 - Use only play, pause, seek, and current semitone controls from the official real-time browser interface.
-- Use one transport for original audio, live shifted audio, and the generated WAV.
+- Use one transport for original audio, live shifted audio, and the generated output.
 - Let the pitch value select the playback source. Do not add a separate original-or-shifted selector.
 - Keep pre-export playback in one AudioWorklet on a secure origin. Do not switch to a native audio element when the pitch crosses zero.
 - Do not keep a separate rendered-preview workflow.
-- Let the complete-file action change from prepare to download after processing succeeds.
-- Invalidate the generated WAV after a source or pitch change.
+- Let the complete-file action change from Export to a format-specific download after processing succeeds.
+- Invalidate the generated output after a source, pitch, or output-format change.
 - Accept a file from the file picker or a page-wide file drop.
 - Use native semantic controls with consistent custom styling.
 - Show the selected filename on the file-picker button. Keep the file metadata separate, and let the same button replace the file.
 - Put play or pause and the pitch controls on one compact row. On narrow screens, align play to the left, centre the pitch stepper, and align reset to the right. Show the semitone input as green text instead of a boxed field. Do not show a separate pitch label.
 - Reserve the file-metadata line before file selection. Do not move the remaining controls when the metadata appears.
 - Do not block the complete page while processing. Disable conflicting controls and show a working state on the action.
+- Animate one to three dots on the Export action during processing. Keep the accessible label stable. Show three fixed dots when the user requests reduced motion.
+- Put the output format in an Advanced section that is closed by default.
 - Put processing measurements and the audio-engine explanation in separate sections that are closed by default.
-- Do not mix live playback information with WAV preparation timings. Before WAV preparation, explain that processing statistics are not available.
+- Do not mix live playback information with export timings. Before export, explain that processing statistics are not available.
 
 
 ## 16. References

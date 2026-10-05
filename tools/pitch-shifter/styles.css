@@ -151,6 +151,37 @@
   background: var(--tool-accent-notice);
 }
 
+#workspace[aria-busy="true"] .shift-action::after {
+  content: "...";
+  display: inline-block;
+  width: 0.9em;
+  margin-left: 0.08em;
+  clip-path: inset(0 66% 0 0);
+  white-space: nowrap;
+  animation: export-dots 1.2s linear infinite;
+}
+
+@keyframes export-dots {
+  0%, 32%, 100% {
+    clip-path: inset(0 66% 0 0);
+  }
+
+  33%, 65% {
+    clip-path: inset(0 33% 0 0);
+  }
+
+  66%, 99% {
+    clip-path: inset(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #workspace[aria-busy="true"] .shift-action::after {
+    clip-path: inset(0);
+    animation: none;
+  }
+}
+
 #transport-play[data-playing="false"] #pause-icon,
 #transport-play[data-playing="true"] #play-icon {
   display: none;
