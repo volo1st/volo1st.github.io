@@ -31,6 +31,7 @@ Status verified on 5 October 2026.
 - The Chinese-English text sorter was removed.
 - The public-homepage source content and privacy boundary are approved.
 - The owner approved the public homepage and section indexes for release.
+- The deployed public foundation passed owner browser review.
 - The CSV-to-ABA workflow validation waits for one normal Commonwealth Bank of Australia (CBA) payment run.
 - Pitch Shifter version 1 and its MP3 export package are complete and deployed.
 
@@ -373,9 +374,10 @@ Do not disable or alter site motion through `prefers-reduced-motion`. If motion 
 - [x] Use the same approved tool names and letter case on all pages.
 - [x] Keep the current page-specific search-indexing behavior. Do not add a site-wide indexing policy.
   - Evidence: The owner confirmed that no additional search-indexing work is necessary on 5 October 2026.
-- [ ] Test keyboard use, narrow screens, and 200 percent zoom.
+- [x] Test keyboard use, narrow screens, and 200 percent zoom.
+  - Evidence: The owner completed the deployed public-foundation review on 5 October 2026. The final reported issue was the Pitch Shifter export indicator. The owner confirmed that the deployed fix works.
 
-Evidence: The root page contains the approved English source and public profiles. Its linked introduction opens the Code, Sound, and Music section indexes. The Code index links to `/tools/`, the Sound index links to Bits & Beats Studio, and the Music index links to public music profiles and Guitar Strum Machine. Existing tool addresses did not change. Automated tests check the internal links, section destinations, tool translations, metadata, identity boundary, tool selection, semantic accents, external-link behavior, and current asset hashes. Owner browser review remains open.
+Evidence: The root page contains the approved English source and public profiles. Its linked introduction opens the Code, Sound, and Music section indexes. The Code index links to `/tools/`, the Sound index links to Bits & Beats Studio, and the Music index links to public music profiles and Guitar Strum Machine. Existing tool addresses did not change. Automated tests check the internal links, section destinations, tool translations, metadata, identity boundary, tool selection, semantic accents, external-link behavior, and current asset hashes. Owner browser review is complete.
 
 Completion gate: The deployed root address works as a public namecard, and all existing tools remain available.
 
@@ -605,6 +607,7 @@ The approved icon family uses abstract monoline and bar symbols. Each icon uses 
 
 ## 16. Verified completion evidence
 
+- On 5 October 2026, the owner confirmed that the deployed Pitch Shifter export indicator works. This resolved the final reported issue in the public-foundation review and completed the Phase 3 gate.
 - On 5 October 2026, the repository opted into the tracked project lifecycle. The user-level Codex skill was installed, the project mapping parsed successfully, `experience.md` was confirmed as ignored, and the general repository check passed. Hooks remain deferred until observed omissions justify them.
 - On 5 October 2026, the owner confirmed correct Pitch Shifter keyboard use, narrow-screen behavior, 200 percent zoom, and current-iPhone MP3 export quality and performance. These checks completed the version 1 and MP3 export packages.
 - On 4 October 2026, the owner verified the updated Pitch Shifter on an iPhone. Live and generated-file playback worked through the built-in speaker. The playback controls no longer flashed, text selection was disabled in the workspace, and the progress control no longer showed the iOS tap-highlight rectangle.
