@@ -191,13 +191,6 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  #workspace[aria-busy="true"] .export-dots span {
-    visibility: visible;
-    animation: none;
-  }
-}
-
 #transport-play[data-playing="false"] #pause-icon,
 #transport-play[data-playing="true"] #play-icon {
   display: none;

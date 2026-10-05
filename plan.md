@@ -354,6 +354,12 @@ Draw the signal in one neutral color. Use small anti-aliased circular particles.
 
 For later media, use only media that Vincent owns or has approval to publish. Add useful alternative text to meaningful media. Use an empty alternative description for decoration. Set image dimensions to prevent layout movement. Do not load a social embed or third-party tracking script.
 
+#### 8.2.5 Motion
+
+Use motion only when it communicates important state or meaning. Do not add decorative motion without a clear function.
+
+Do not disable or alter site motion through `prefers-reduced-motion`. If motion is not important enough to remain available, omit it from the design.
+
 ### 8.3 Public-site implementation
 
 - [x] Replace the tools-only root page with the personal homepage.
@@ -558,7 +564,7 @@ The approved icon family uses abstract monoline and bar symbols. Each icon uses 
 | 1 October 2026 | Prototype an interaction-driven link signal in the homepage gap. | Each point maps to an external link. The effect stays idle without animation and has a no-signal comparison mode. |
 | 1 October 2026 | Remove the link-signal prototype. | The mapping was too subtle to understand on desktop and depended on hover that did not translate to mobile. |
 | 1 October 2026 | Use a restrained Sagittarius constellation as the homepage identity signal. | The constellation has personal meaning, works without hover, and gives the intentional blank space a function. Its star positions use SIMBAD data, while its dotted connections remain a simplified drawing. |
-| 1 October 2026 | Do not apply the reduced-motion preference to the constellation. | The effect is small, subtle, and not essential to page operation. |
+| 1 October 2026 | Use motion only for important state or meaning, and do not apply `prefers-reduced-motion` to site motion. | The site uses little motion. When motion is included, it has a function and must remain available. Omit motion that does not meet this standard. |
 | 1 October 2026 | Keep the constellation automatic and non-interactive. | Sensor control requires permission and can disturb visitors. The small visual effect does not justify a prompt. |
 | 1 October 2026 | Use the introduction as navigation to Code, Sound, and Music. | Linked words avoid another navigation row and give the introduction a second function. Games remain a design influence until they have useful public content. |
 | 2 October 2026 | Replace homepage social text with one monochrome icon strip. | The icons reduce visual density. One separator preserves the personal and studio grouping without visible labels. Precise link names distinguish repeated services. |
@@ -592,10 +598,10 @@ The approved icon family uses abstract monoline and bar symbols. Each icon uses 
 | 5 October 2026 | Default Pitch Shifter output to MP3 for an MP3 source and WAV for every other source. | The rule follows the source format when the tool supports it. It does not imply that AAC, FLAC, or other input formats can be preserved. The user can select either supported output before processing. |
 | 5 October 2026 | Put the Pitch Shifter export format in a collapsed Advanced section. | Export format is a secondary setting. A styled native select uses less space than a segmented control and gives iOS users a familiar option picker. The main workspace keeps one Shift or Download action. |
 | 5 October 2026 | Use “Export” for the Pitch Shifter complete-file action. | “Pitch shift” continues to name the audio operation. “Export” describes the button result and gives the English and Chinese interfaces a more natural action label. This decision supersedes the “Shift” action label from 4 October. |
-| 5 October 2026 | Animate one to three dots during Pitch Shifter export. | A small CSS animation distinguishes active processing from a static disabled control. The accessible button text stays stable, and the reduced-motion state shows three fixed dots. |
+| 5 October 2026 | Animate one to three dots during Pitch Shifter export. | A small CSS animation distinguishes active processing from a static disabled control. The accessible button text stays stable. |
 | 5 October 2026 | Use the tracked project lifecycle for non-trivial repository work. | Todoist selects and prioritizes the package. Repository documents govern requirements, decisions, and evidence. Todoist records the verified outcome. A later retrospective promotes or discards local experience candidates. |
 | 5 October 2026 | Defer a custom not-found page and keep the current search-indexing behavior. | GitHub Pages supports a root `404.html`, but the site does not need custom recovery navigation now. A site-wide indexing policy would add maintenance without a current use. Existing page-specific behavior remains unchanged. |
-| 5 October 2026 | Use explicit dot elements for the Pitch Shifter export indicator. | The deployed pseudo-element clipping animation did not visibly cycle during owner testing. Explicit dots use discrete visibility states and keep the accessible button label stable. Reduced Motion continues to show three fixed dots. |
+| 5 October 2026 | Use explicit dot elements for the Pitch Shifter export indicator. | The deployed pseudo-element clipping animation did not visibly cycle during owner testing. Explicit dots use discrete visibility states and keep the accessible button label stable. |
 
 ## 16. Verified completion evidence
 

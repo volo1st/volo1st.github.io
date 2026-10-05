@@ -40,6 +40,20 @@ function findMarkdownFiles(directory) {
   return files;
 }
 
+function findInterfaceSourceFiles(directory) {
+  const files = [];
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    if (entry.name === 'vendor') continue;
+    const entryPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...findInterfaceSourceFiles(entryPath));
+    } else if (/\.(?:css|html|js|mjs)$/.test(entry.name)) {
+      files.push(entryPath);
+    }
+  }
+  return files;
+}
+
 function readSimpleRgbPng(file) {
   const image = fs.readFileSync(file);
   assert.deepEqual([...image.subarray(0, 8)], [137, 80, 78, 71, 13, 10, 26, 10]);
@@ -464,6 +478,21 @@ test('the home constellation is local, optional, and non-interactive', () => {
   assert.doesNotMatch(script, /prefers-reduced-motion/);
   assert.doesNotMatch(script, /\bfetch\s*\(|XMLHttpRequest|WebSocket/);
   assert.doesNotMatch(script, /setInterval|setTimeout/);
+});
+
+test('site motion is not disabled by a reduced-motion preference', () => {
+  const files = [
+    ...findInterfaceSourceFiles(path.join(repositoryRoot, 'assets')),
+    ...findInterfaceSourceFiles(path.join(repositoryRoot, 'tools')),
+  ];
+
+  for (const file of files) {
+    assert.doesNotMatch(
+      fs.readFileSync(file, 'utf8'),
+      /prefers-reduced-motion/,
+      path.relative(repositoryRoot, file),
+    );
+  }
 });
 
 test('the guitar page provides a generic Open Graph preview without replacing arrangement URLs', () => {

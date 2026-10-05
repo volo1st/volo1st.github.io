@@ -281,7 +281,7 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(css, /#workspace\[aria-busy="true"\] \.export-dots/);
   assert.match(css, /@keyframes export-dot-two/);
   assert.match(css, /@keyframes export-dot-three/);
-  assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.doesNotMatch(css, /prefers-reduced-motion/);
   assert.match(css, /\.advanced-control[\s\S]*grid-template-columns:/);
   assert.match(css, /\.advanced-control select:focus-visible/);
   assert.match(app, /MAX_DURATION_SECONDS = 30 \* 60/);

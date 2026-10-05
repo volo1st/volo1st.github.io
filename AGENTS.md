@@ -66,6 +66,8 @@ Preserve the required ABA record width. Test byte length as well as character le
 - Report a missing third-party dependency. Do not silently change the result.
 - Avoid a new external dependency when a small, tested local solution is sufficient.
 - If an external script is necessary, pin its version and use Subresource Integrity when the host supports it.
+- Use motion only when it communicates important state or meaning.
+- Do not disable or alter site motion through `prefers-reduced-motion`. If motion is not important, omit it.
 
 ## Browser audio rules
 
