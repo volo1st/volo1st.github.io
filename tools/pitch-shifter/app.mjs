@@ -32,6 +32,7 @@ const elements = {
   transportDuration: document.querySelector('#transport-duration'),
   outputFormat: document.querySelector('#output-format'),
   shiftAudio: document.querySelector('#shift-audio'),
+  shiftActionLabel: document.querySelector('#shift-action-label'),
   sourcePlayer: document.querySelector('#source-player'),
   shiftedPlayer: document.querySelector('#shifted-player'),
   download: document.querySelector('#download'),
@@ -252,7 +253,7 @@ function renderActions() {
   elements.workspace.setAttribute('aria-busy', String(busy));
   elements.outputFormat.value = outputFormat;
   elements.shiftAudio.hidden = Boolean(resultUrl);
-  elements.shiftAudio.textContent = t(busy ? 'pitch.shifting' : 'pitch.shift');
+  elements.shiftActionLabel.textContent = t(busy ? 'pitch.shifting' : 'pitch.shift');
   elements.download.textContent = t(
     outputFormat === 'mp3' ? 'pitch.downloadMp3' : 'pitch.downloadWav',
   );

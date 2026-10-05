@@ -362,9 +362,11 @@ For later media, use only media that Vincent owns or has approval to publish. Ad
 - [x] Add the approved introduction, profiles, and contact path.
 - [x] Add complete page descriptions and social-preview metadata.
 - [x] Add useful Code, Sound, and Music section indexes.
-- [ ] Add a not-found page if GitHub Pages supports the required behavior.
+- [x] Defer a custom not-found page until broken-link traffic or site growth makes recovery navigation useful.
+  - Evidence: [GitHub Pages supports a root `404.html`](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-custom-404-page-for-your-github-pages-site). The owner deferred this page on 5 October 2026.
 - [x] Use the same approved tool names and letter case on all pages.
-- [ ] Decide which prototype and tool pages search engines can index.
+- [x] Keep the current page-specific search-indexing behavior. Do not add a site-wide indexing policy.
+  - Evidence: The owner confirmed that no additional search-indexing work is necessary on 5 October 2026.
 - [ ] Test keyboard use, narrow screens, and 200 percent zoom.
 
 Evidence: The root page contains the approved English source and public profiles. Its linked introduction opens the Code, Sound, and Music section indexes. The Code index links to `/tools/`, the Sound index links to Bits & Beats Studio, and the Music index links to public music profiles and Guitar Strum Machine. Existing tool addresses did not change. Automated tests check the internal links, section destinations, tool translations, metadata, identity boundary, tool selection, semantic accents, external-link behavior, and current asset hashes. Owner browser review remains open.
@@ -435,6 +437,7 @@ Do not add a framework or build system only because the site has multiple pages.
 | Chinese-English text sorter | Removed | A new requirement justifies recovery from Git history. |
 | Authentication for school tools | Deferred | A tool needs confidential configuration, stored data, or restricted access. |
 | Static-site generator | Deferred | Manual maintenance causes repeated errors or material delay. |
+| Custom not-found page | Deferred | Broken-link traffic or site growth makes recovery navigation useful. |
 
 Waiting work is not a blocker for unrelated tool maintenance.
 
@@ -591,6 +594,8 @@ The approved icon family uses abstract monoline and bar symbols. Each icon uses 
 | 5 October 2026 | Use “Export” for the Pitch Shifter complete-file action. | “Pitch shift” continues to name the audio operation. “Export” describes the button result and gives the English and Chinese interfaces a more natural action label. This decision supersedes the “Shift” action label from 4 October. |
 | 5 October 2026 | Animate one to three dots during Pitch Shifter export. | A small CSS animation distinguishes active processing from a static disabled control. The accessible button text stays stable, and the reduced-motion state shows three fixed dots. |
 | 5 October 2026 | Use the tracked project lifecycle for non-trivial repository work. | Todoist selects and prioritizes the package. Repository documents govern requirements, decisions, and evidence. Todoist records the verified outcome. A later retrospective promotes or discards local experience candidates. |
+| 5 October 2026 | Defer a custom not-found page and keep the current search-indexing behavior. | GitHub Pages supports a root `404.html`, but the site does not need custom recovery navigation now. A site-wide indexing policy would add maintenance without a current use. Existing page-specific behavior remains unchanged. |
+| 5 October 2026 | Use explicit dot elements for the Pitch Shifter export indicator. | The deployed pseudo-element clipping animation did not visibly cycle during owner testing. Explicit dots use discrete visibility states and keep the accessible button label stable. Reduced Motion continues to show three fixed dots. |
 
 ## 16. Verified completion evidence
 

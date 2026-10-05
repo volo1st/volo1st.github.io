@@ -14,10 +14,10 @@
   <link rel="apple-touch-icon" href="../../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93">
   <link rel="manifest" href="./manifest.webmanifest?v=f449d8929a05">
   <link rel="stylesheet" href="../../assets/site-shell.css?v=b093396d6884">
-  <link rel="stylesheet" href="./styles.css?v=14d8908c4a1f">
+  <link rel="stylesheet" href="./styles.css?v=255ce2e075e9">
   <script src="../../assets/i18n.js?v=3bafa7de2d71" defer></script>
   <script src="./i18n.js?v=4262b977a406" defer></script>
-  <script src="./bootstrap.js?v=67b43d7b5a0f" defer></script>
+  <script src="./bootstrap.js?v=e56e86879799" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -90,7 +90,10 @@
       </div>
 
       <div class="result-actions">
-        <button id="shift-audio" class="primary-action shift-action" type="button" data-i18n="pitch.shift" disabled>Export</button>
+        <button id="shift-audio" class="primary-action shift-action" type="button" disabled>
+          <span id="shift-action-label" data-i18n="pitch.shift">Export</span>
+          <span class="export-dots" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span>
+        </button>
         <a id="download" class="button-link" download data-i18n="pitch.downloadWav" hidden>Download WAV</a>
       </div>
 
