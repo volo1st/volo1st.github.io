@@ -120,6 +120,16 @@ Add permanent automated tests when a change introduces behavior that can regress
 - Keep the English and Simplified Chinese translation key sets identical.
 - Use stable error codes for translated validation messages.
 
+## Tracked project lifecycle
+
+This repository uses the `tracked-project-lifecycle` skill.
+
+- Read `.codex/project-workflow.toml` before non-trivial work.
+- Use Todoist to select and prioritize the current work package.
+- Use repository documents for requirements, decisions, and evidence.
+- Reconcile Todoist only after the repository completion checks pass.
+- Record qualifying mistakes, surprises, and workarounds in the configured experience file.
+
 ## Change discipline
 
 - Make the smallest change that fully solves the task.

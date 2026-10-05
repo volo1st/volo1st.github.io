@@ -590,9 +590,11 @@ The approved icon family uses abstract monoline and bar symbols. Each icon uses 
 | 5 October 2026 | Put the Pitch Shifter export format in a collapsed Advanced section. | Export format is a secondary setting. A styled native select uses less space than a segmented control and gives iOS users a familiar option picker. The main workspace keeps one Shift or Download action. |
 | 5 October 2026 | Use “Export” for the Pitch Shifter complete-file action. | “Pitch shift” continues to name the audio operation. “Export” describes the button result and gives the English and Chinese interfaces a more natural action label. This decision supersedes the “Shift” action label from 4 October. |
 | 5 October 2026 | Animate one to three dots during Pitch Shifter export. | A small CSS animation distinguishes active processing from a static disabled control. The accessible button text stays stable, and the reduced-motion state shows three fixed dots. |
+| 5 October 2026 | Use the tracked project lifecycle for non-trivial repository work. | Todoist selects and prioritizes the package. Repository documents govern requirements, decisions, and evidence. Todoist records the verified outcome. A later retrospective promotes or discards local experience candidates. |
 
 ## 16. Verified completion evidence
 
+- On 5 October 2026, the repository opted into the tracked project lifecycle. The user-level Codex skill was installed, the project mapping parsed successfully, `experience.md` was confirmed as ignored, and the general repository check passed. Hooks remain deferred until observed omissions justify them.
 - On 5 October 2026, the owner confirmed correct Pitch Shifter keyboard use, narrow-screen behavior, 200 percent zoom, and current-iPhone MP3 export quality and performance. These checks completed the version 1 and MP3 export packages.
 - On 4 October 2026, the owner verified the updated Pitch Shifter on an iPhone. Live and generated-file playback worked through the built-in speaker. The playback controls no longer flashed, text selection was disabled in the workspace, and the progress control no longer showed the iOS tap-highlight rectangle.
 - On 4 October 2026, the owner compared hard clipping with fast and smooth look-ahead limiting on two demanding commercial mixes and found all three results acceptable. Automated tests confirmed exact clipped-sample measurement, 16-bit WAV clamping, translation-key parity, and current browser-module hashes.
@@ -610,7 +612,7 @@ The approved icon family uses abstract monoline and bar symbols. Each icon uses 
 
 ## 17. External task-system mapping
 
-Use the phase headings in this plan when an external task system is necessary.
+Use `.codex/project-workflow.toml` for the external task-system mapping. Use the phase headings in this plan to define the work packages.
 
 - Keep only the next public-website package actionable.
 - Keep later phases ordered and without dates.
@@ -618,3 +620,5 @@ Use the phase headings in this plan when an external task system is necessary.
 - Inspect comments and attachments before moving or closing an existing task.
 - Get confirmation before deleting or substantially restructuring an external task.
 - Do not access the private Todoist project named `.`.
+- Reconcile routine package-boundary changes after the applicable repository checks pass.
+- Keep `experience.md` local. Create it only after a mistake, surprise, or useful workaround.

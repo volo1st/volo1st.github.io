@@ -1,0 +1,11 @@
+version = 1
+plan_path = "plan.md"
+experience_path = "experience.md"
+experience_mode = "local"
+
+[todoist]
+initiative_task_id = "667C9P7pgVGcFWvc"
+actionable_label = "abc"
+max_actionable_tasks = 1
+promote_next = true
+sync_mode = "package-boundaries"
