@@ -451,17 +451,22 @@ Waiting work is not a blocker for unrelated tool maintenance.
 
 ### 13.1 App ideas
 
-The metronome and tuner remain unscheduled ideas. Pitch Shifter is a complete public browser tool.
+Keep unscheduled website-tool ideas in this section. Do not keep a separate Todoist task for each idea. Create a Todoist work package only when an idea is selected for definition or implementation.
 
-| Idea | Initial purpose | Question to answer before planning |
-| --- | --- | --- |
-| Metronome | Provide a steady practice pulse. | Define the practice workflow and required rhythm controls. |
-| Tuner | Help a user tune an instrument. | Define the supported instruments, input method, and tuning modes. |
-| Pitch Shifter | Shift one local song without changing its duration, preview it, and download it. | Version 1 is complete. Key recognition remains a separate future idea. |
+| Idea | Status | Initial purpose | Question or outcome |
+| --- | --- | --- | --- |
+| Metronome | Unscheduled | Provide a steady practice pulse. | Define the practice workflow and required rhythm controls. |
+| Tuner | Unscheduled | Help a user tune many types of instrument. | Define the input method, tuning modes, accuracy target, and visualization. Use [StroboPro](https://www.strobopro.se/) as a product reference and [audioMotion Analyzer](https://audiomotion.dev/demo/fluid.html) as a visualization reference. |
+| Pitch Shifter | Complete | Shift one local song without changing its duration, preview it, and download it. | Version 1 and MP3 export are complete. Key recognition remains a separate future idea. |
+| Guitar Strum Machine | Complete | Make looping guitar-strumming practice tracks from plain text. | The public tool and its product specification are complete. |
 
 Pitch Shifter is classified as a public browser tool. It processes one local file and does not store or upload audio.
 
 The Pitch Shifter prototype, version 1 package, and MP3 export package are complete. Owner listening and performance tests selected the Signalsmith Stretch default preset.
+
+Guitar Strum Machine is classified as a public browser tool. Its requirements and decisions are in `ideas/guitar-strumming-backing-track-tool.md`.
+
+MeTube is not part of this app-idea list. It is a Home Lab service that needs server, storage, and operating decisions. Keep its evaluation with the video-streaming service package.
 
 ### 13.2 Pitch Shifter version 1
 
@@ -604,6 +609,7 @@ The approved icon family uses abstract monoline and bar symbols. Each icon uses 
 | 5 October 2026 | Use the tracked project lifecycle for non-trivial repository work. | Todoist selects and prioritizes the package. Repository documents govern requirements, decisions, and evidence. Todoist records the verified outcome. A later retrospective promotes or discards local experience candidates. |
 | 5 October 2026 | Defer a custom not-found page and keep the current search-indexing behavior. | GitHub Pages supports a root `404.html`, but the site does not need custom recovery navigation now. A site-wide indexing policy would add maintenance without a current use. Existing page-specific behavior remains unchanged. |
 | 5 October 2026 | Use explicit dot elements for the Pitch Shifter export indicator. | The deployed pseudo-element clipping animation did not visibly cycle during owner testing. Explicit dots use discrete visibility states and keep the accessible button label stable. |
+| 5 October 2026 | Keep unscheduled website-tool ideas in this plan instead of separate Todoist tasks. | The repository preserves product context and references. Todoist stays limited to selected work packages. Pitch Shifter and Guitar Strum Machine are complete. Tuner remains unscheduled. MeTube stays with the Home Lab video-streaming package because it has a different execution and support model. |
 
 ## 16. Verified completion evidence
 
