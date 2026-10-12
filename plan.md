@@ -381,18 +381,28 @@ Evidence: The root page contains the approved English source and public profiles
 
 Completion gate: The deployed root address works as a public namecard, and all existing tools remain available.
 
-## 9. Phase 4: Add portfolio sections
+## 9. Phase 4: Review selected public work
 
-- [ ] Add the software engineering portfolio.
-- [ ] Add the audio and live sound portfolio.
-- [ ] Add the singing and music portfolio.
-- [ ] Use a consistent case-study structure.
+- [x] Review the Code page and decide whether more public software content is useful now.
+  - Evidence: On 12 October 2026, the owner confirmed that the current Code page is sufficient. It links to the tools directory and GitHub. Most professional software work cannot be shared publicly. Detailed software case studies are optional.
+- [ ] Review the Sound page and select approved public work, or record that the current links are sufficient for now.
+- [ ] Review the Music page and select approved public work, or record that the current links are sufficient for now.
+
+Review evidence on 12 October 2026: The Sound page links to the approved Bits & Beats Studio profiles. The Music page links to the approved YouTube and Bilibili profiles and Guitar Strum Machine. No specific recording, performance, or audio project has been selected for a new entry. The owner must select public material or confirm that the existing links are sufficient before this review can close. Keep both pages unchanged while that decision is pending.
+
+Add content only when it helps visitors and is approved for publication. A music tool can appear in Code and Music. Code can explain how it was built. Music can explain its use. Do not add an entry only to fill a portfolio.
+
+Apply these requirements when a new entry is selected:
+
+- [ ] Use a consistent structure suited to the entry. A detailed case study is optional.
 - [ ] Identify Vincent's role in each item.
 - [ ] Use only approved public media and credits.
 - [ ] Add text alternatives for meaningful media.
 - [ ] Check each item for employer, client, performer, and venue confidentiality.
 
-Each case study must state the context, goal, role, public work, supported result, and relevant public links or media.
+If a detailed case study is useful, state the context, goal, role, public work, supported result, and relevant public links or media.
+
+Completion gate: Each section has useful approved links or selected public work. Record the owner's decision for each section. Defer optional entries when suitable public material is unavailable.
 
 ## 10. Phase 5: Establish the project and tool model
 
@@ -530,6 +540,8 @@ The approved icon family uses abstract monoline and bar symbols. Each icon uses 
 | Incomplete documents and page data | Partly implemented | Complete licensing, deployment, operations, and public-site work. |
 
 ## 15. Decision log
+
+Decision on 12 October 2026: Keep the current Code page. The owner confirmed that most professional software work cannot be shared publicly and that the public applications currently focus on music. A tool can serve both sections: Code explains its construction, and Music explains its use. Replace the required software portfolio with a completed content review. Make detailed case studies optional. Review Sound and Music before selecting further public content. Do not add weaker entries only to fill a portfolio.
 
 | Date | Decision | Reason |
 | --- | --- | --- |
