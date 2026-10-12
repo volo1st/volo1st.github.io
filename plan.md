@@ -385,10 +385,12 @@ Completion gate: The deployed root address works as a public namecard, and all e
 
 - [x] Review the Code page and decide whether more public software content is useful now.
   - Evidence: On 12 October 2026, the owner confirmed that the current Code page is sufficient. It links to the tools directory and GitHub. Most professional software work cannot be shared publicly. Detailed software case studies are optional.
-- [ ] Review the Sound page and select approved public work, or record that the current links are sufficient for now.
-- [ ] Review the Music page and select approved public work, or record that the current links are sufficient for now.
+- [x] Review the Sound page and select approved public work, or record that the current links are sufficient for now.
+  - Evidence: On 12 October 2026, the owner confirmed that the current studio profile links are sufficient for now.
+- [x] Review the Music page and select approved public work, or record that the current links are sufficient for now.
+  - Evidence: On 12 October 2026, the owner confirmed that the current music profile and practice-tool links are sufficient for now.
 
-Review evidence on 12 October 2026: The Sound page links to the approved Bits & Beats Studio profiles. The Music page links to the approved YouTube and Bilibili profiles and Guitar Strum Machine. No specific recording, performance, or audio project has been selected for a new entry. The owner must select public material or confirm that the existing links are sufficient before this review can close. Keep both pages unchanged while that decision is pending.
+Review evidence on 12 October 2026: The Sound page links to the approved Bits & Beats Studio profiles. The Music page links to the approved YouTube and Bilibili profiles and Guitar Strum Machine. The owner confirmed that both pages are sufficient for now. No specific recording, performance, or audio project has been selected for a new entry. The content review is complete. Featured videos remain deferred until useful public material and a suitable presentation are selected. Keep both pages unchanged.
 
 Add content only when it helps visitors and is approved for publication. A music tool can appear in Code and Music. Code can explain how it was built. Music can explain its use. Do not add an entry only to fill a portfolio.
 
@@ -403,6 +405,8 @@ Apply these requirements when a new entry is selected:
 If a detailed case study is useful, state the context, goal, role, public work, supported result, and relevant public links or media.
 
 Completion gate: Each section has useful approved links or selected public work. Record the owner's decision for each section. Defer optional entries when suitable public material is unavailable.
+
+Completion evidence: On 12 October 2026, the owner accepted the current Code, Sound, and Music pages. No new entries are required. The conditional entry requirements above apply when future content is selected. Phase 5 is the next work package.
 
 ## 10. Phase 5: Establish the project and tool model
 
@@ -545,6 +549,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 12 October 2026 | Keep the current Sound and Music pages. Defer featured videos. | The owner confirmed that the current links are sufficient. Select useful public material and its presentation before adding a featured entry. The content review is complete. Project and tool standards are next. |
 | 12 September 2026 | Keep the former converter available while version 2 is developed and tested. | The former converter has operational evidence for one monthly process. |
 | 14 September 2026 | Use a local check script. Do not add Git hooks or continuous integration at this time. | A one-person static website does not need the additional setup and maintenance at this time. |
 | 14 September 2026 | Add English and Simplified Chinese to the current converter. | The operator is more comfortable with Chinese. English-only workflow text caused operating problems. |
