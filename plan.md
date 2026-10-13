@@ -431,10 +431,14 @@ Scope decision on 13 October 2026: Keep this package small. Use the README for s
 - [x] Add a validation checklist for the current converter workflow.
 - [x] Apply browser-asset versioning to each maintained page asset.
   - Evidence: The home page, current converter, and Guitar Strum Machine register their local interface assets in the SHA-256 stale-hash test. The frozen legacy fallback remains unversioned.
-- [ ] Select a license, or state that the repository has no license.
+- [x] Select a license, or state that the repository has no license.
+  - Evidence: On 13 October 2026, the README records that no repository-wide license has been selected and retains the distinction for third-party licenses.
 - [ ] Document the GitHub Pages deployment process.
 - [ ] Record the custom domain and the settings needed to restore it. Verify unavailable account settings with the owner before documenting them.
-- [ ] Document how to recover a known working revision. Identify what Git history does not preserve.
+- [x] Document how to recover a known working revision. Identify what Git history does not preserve.
+  - Evidence: On 13 October 2026, the README documents commit inspection, reversal of an ordinary commit, repository checks, and public verification. It identifies external account, hosting, and domain settings that Git does not preserve. No recovery action was performed.
+
+Checkpoint on 13 October 2026: The README adds deployment and domain-recovery notes linked to current GitHub instructions. The public Pages API returned 404 and did not reveal the publishing source. No repository workflow file identifies a custom deployment. The source branch and folder, or Actions source, and the DNS provider remain unverified. The owner has been asked for these settings. Deployment and domain-recovery verification remain blocked pending that answer. Do not mark this package complete or start another package. The general repository check passed after the README changes.
 
 Deferred unless a specific failure, service change, or maintenance need justifies them: a broad transport-security and redirect review, a hosting-header and limits review, a site-wide network audit, fixed browser and dependency review schedules, a maintainer handoff manual, and additional automated checks. Existing privacy rules, dependency records, and required checks still apply to changes.
 

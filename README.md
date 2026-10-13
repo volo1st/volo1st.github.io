@@ -70,3 +70,21 @@ Run this command before each commit or deployment. It completes these checks:
 - staged and unstaged whitespace.
 
 The script does not install software or send repository data to a service.
+
+## Deployment and recovery
+
+The repository is `volo1st/volo1st.github.io`. The site address is `https://volo1st.com/`. The tracked `CNAME` file contains `volo1st.com`.
+
+Before deployment, run `./scripts/check.sh` and review the complete diff. Commit the approved changes. In GitHub Settings → Pages, confirm the publishing source before pushing to it. The current source branch and folder have not yet been verified for these notes. See [GitHub's publishing-source instructions](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
+
+After deployment, confirm that the Pages workflow succeeded. Open the home page, the changed pages, and the tools directory through the public address. For an interface change, check keyboard use, visible focus, a narrow screen, and 200 percent zoom. For a tool change, run its representative workflow with invented data.
+
+To recover from a faulty change, preserve any local work first. Use `git log --oneline` to identify the faulty commit and the last working revision. Review the faulty commit with `git show COMMIT`. For an ordinary commit, use `git revert COMMIT` to create a reversal that preserves history. Replace `COMMIT` with the reviewed commit identifier. Review related changes before reverting more than one commit. A merge commit needs a separate review. Run the repository check, review the reversal, and deploy it through the confirmed publishing source. Then repeat the public-page checks.
+
+Git history preserves committed source and local assets. It does not preserve GitHub account access, Pages settings, domain registration, or Domain Name System (DNS) provider settings. Keep account recovery details outside this public repository.
+
+Domain recovery needs access to GitHub and the DNS provider. Restore the custom domain in Settings → Pages and the DNS records at the provider. The current provider and account settings have not yet been verified for these notes. Follow [GitHub's custom-domain instructions](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site). The `CNAME` file alone is not a complete record of the hosting and DNS settings.
+
+## License status
+
+No repository-wide license has been selected. Third-party components retain their own license files and notices. See the [Pitch Shifter dependency record](tools/pitch-shifter/docs/DEPENDENCIES.md) for its bundled components.
