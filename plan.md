@@ -410,6 +410,8 @@ Completion evidence: On 12 October 2026, the owner accepted the current Code, So
 
 ## 10. Phase 5: Establish the project and tool model
 
+Deferred by owner decision on 13 October 2026. The existing repository instructions cover current tool development. Do not create a formal classification system, reusable template, or additional release process now. Resume only when adding or maintaining tools exposes a specific problem. The unchecked items below are deferred, not completed. Phase 6 is the next package.
+
 - [ ] Define the difference between a portfolio item, public project, public tool, and restricted tool.
 - [ ] Add status terms for active, trial, maintained, archived, and restricted items.
 - [ ] Define the minimum page information for each project and tool.
@@ -420,7 +422,9 @@ Completion evidence: On 12 October 2026, the owner accepted the current Code, So
 
 Completion gate: A new idea has a clear location, status, support model, and release checklist.
 
-## 11. Phase 6: Complete operations and project documents
+## 11. Phase 6: Keep useful operations notes
+
+Scope decision on 13 October 2026: Keep this package small. Use the README for short deployment and recovery instructions. Record the custom-domain setting needed for recovery. State the repository license status without selecting a license for the owner. Keep existing privacy, dependency, and tool-limit records. Do not add a general operations manual.
 
 - [x] Add a repository README with purpose, tools, local use, and checks.
 - [x] Add one local command for syntax, tests, references, and whitespace.
@@ -429,16 +433,14 @@ Completion gate: A new idea has a clear location, status, support model, and rel
   - Evidence: The home page, current converter, and Guitar Strum Machine register their local interface assets in the SHA-256 stale-hash test. The frozen legacy fallback remains unversioned.
 - [ ] Select a license, or state that the repository has no license.
 - [ ] Document the GitHub Pages deployment process.
-- [ ] Document the custom domain and Domain Name System process.
-- [ ] Review Transport Layer Security and redirects.
-- [ ] Review available HTTP security headers and GitHub Pages limits.
-- [ ] Confirm that the site has no unrecorded analytics or network requests.
-- [ ] Define backup and recovery steps.
-- [ ] Define browser-support and dependency-review intervals.
-- [ ] Define what another person needs to maintain the site.
-- [ ] Add more format, HTML, lint, or automated accessibility checks when a measured need justifies them.
+- [ ] Record the custom domain and the settings needed to restore it. Verify unavailable account settings with the owner before documenting them.
+- [ ] Document how to recover a known working revision. Identify what Git history does not preserve.
 
-Completion gate: Deployment, recovery, privacy, and maintenance do not depend on undocumented knowledge.
+Deferred unless a specific failure, service change, or maintenance need justifies them: a broad transport-security and redirect review, a hosting-header and limits review, a site-wide network audit, fixed browser and dependency review schedules, a maintainer handoff manual, and additional automated checks. Existing privacy rules, dependency records, and required checks still apply to changes.
+
+Review evidence on 13 October 2026: The README already documents local use, checks, tool privacy, limits, and the Pitch Shifter dependency record. The repository has a root `CNAME` and third-party license files, but no root license file. Deployment settings and domain-provider recovery settings have not been verified. No hosting or domain setting was changed during this review.
+
+Completion gate: The README gives short, verified instructions to deploy and recover this static site, identifies required external settings, and states the repository license status.
 
 ## 12. Phase 7: Add a content system only when necessary
 
@@ -456,6 +458,7 @@ Do not add a framework or build system only because the site has multiple pages.
 | Item | Status | Resume condition |
 | --- | --- | --- |
 | CSV-to-ABA workflow validation | Waiting | The operator runs the normal payment process and records non-confidential evidence. |
+| Project and tool standards | Deferred | Adding or maintaining a tool exposes a specific problem that existing instructions do not address. |
 | Chinese-English text sorter | Removed | A new requirement justifies recovery from Git history. |
 | Authentication for school tools | Deferred | A tool needs confidential configuration, stored data, or restricted access. |
 | Static-site generator | Deferred | Manual maintenance causes repeated errors or material delay. |
@@ -549,6 +552,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 13 October 2026 | Defer the formal project and tool model. Limit operations work to useful deployment, domain-recovery, revision-recovery, and license notes. | The owner wants maintenance suited to a small personal site. Existing instructions cover current safeguards. Add process only when a specific problem justifies it. |
 | 12 October 2026 | Keep the current Sound and Music pages. Defer featured videos. | The owner confirmed that the current links are sufficient. Select useful public material and its presentation before adding a featured entry. The content review is complete. Project and tool standards are next. |
 | 12 September 2026 | Keep the former converter available while version 2 is developed and tested. | The former converter has operational evidence for one monthly process. |
 | 14 September 2026 | Use a local check script. Do not add Git hooks or continuous integration at this time. | A one-person static website does not need the additional setup and maintenance at this time. |
