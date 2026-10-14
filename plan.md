@@ -731,3 +731,17 @@ Release decision on 15 October 2026: The owner accepted the final page and reque
 Release evidence on 15 October 2026: The repository check passed for all seven test files. The studio home, bilingual rates page, navigation, documentation and regression tests were committed together. The owner approved release with browser-only checks still unverified.
 
 Breadcrumb cleanup release on 15 October 2026: The owner requested deployment. The complete diff was reviewed. `./scripts/check.sh` passed for all seven test files. The change removes summary spans and unused styles, and refreshes shared stylesheet hashes. Browser-only checks were not available in this session.
+
+## 19. Get Lucky chord correction
+
+On 15 October 2026, the owner requested Bm7, D, F#m7 and E, played with Am7, C, Em7 and D shapes at capo 2. Preserve concurrent owner edits to the strumming pattern.
+
+Use the existing shape notation and capo playback. Add the missing open Em7 voicing, `020000`, to the local chord catalog. The tool remains before its declared 1.0.0 release, so update the existing preset slug in place under the recorded pre-release policy. Update the README to match that policy.
+
+Test the parsed shapes, capo value and actual playback pitch classes. Keep the normal catalog validation and timeline tests. Refresh the two changed script hashes. No new dependency or network request is required.
+
+Implementation evidence: Add open Em7 to the supported catalog and its catalog test. The Get Lucky regression test verifies Am7, C, Em7 and D at capo 2 and the expected Bm7, D, F#m7 and E playback pitch classes. The strum source was not changed.
+
+Correction on 15 October 2026: The initial change omitted arrangement key metadata. Use number notation with original and playing keys set to F# minor, capo 2, and `4:m7`, `6`, `1:m7`, `7`. This enables arrangement key controls and preserves the requested shapes and sounding chords. The regression test now checks both keys, notation, shapes and sounding harmony. Preserve the strum source.
+
+Release decision on 15 October 2026: The owner requested 116 beats per minute and approved release of the Get Lucky update. Retain F# minor metadata, number notation, capo 2 and the existing strum pattern. Run the repository check and review the full diff before committing and deploying through GitHub Pages. Browser listening checks are not available in this session.

@@ -20,7 +20,7 @@ const audioApi = globalThis.GuitarStrummingAudio;
 
 const expectedChordIdentifiers = [
   'A', 'Am', 'Bb', 'Bm', 'C', 'Cm', 'D', 'Dm', 'Em', 'F', 'F#m', 'G',
-  'Am7', 'C7', 'Cmaj7', 'D7', 'G7', 'Cadd9', 'Dsus4', 'G5',
+  'Am7', 'Em7', 'C7', 'Cmaj7', 'D7', 'G7', 'Cadd9', 'Dsus4', 'G5',
   'Am/G', 'C/E', 'D/F#', 'G/B',
 ];
 
@@ -861,7 +861,7 @@ test('number arrangements reject named tokens and unsupported resolved shapes', 
   assert.equal(unsupported.candidateSong.chordBars[0][0].numberChord.normalized, '3:7');
 });
 
-test('the initial catalog contains the 24 required chord identifiers', () => {
+test('the catalog contains the supported chord identifiers', () => {
   assert.deepEqual(catalog.listCanonicalIdentifiers(), expectedChordIdentifiers);
   for (const identifier of expectedChordIdentifiers) {
     const entry = catalog.getChord(identifier);

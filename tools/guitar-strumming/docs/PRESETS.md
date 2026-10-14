@@ -69,7 +69,7 @@ The initial catalog contains four original entries and three exercises from two 
 
 The expressive feature demo is the former page example and the default preset.
 
-Current pre-release preset sources include `capo: 0` and `swing: off`.
+Current pre-release preset sources include an explicit `capo:` setting and `swing: off`. The Get Lucky exercise runs at 116 beats per minute and uses capo 2 with Am7, C, Em7 and D shapes. The sounding chords are Bm7, D, F#m7 and E. Its original and playing keys are F# minor. Number notation uses `4:m7`, `6`, `1:m7` and `7` so the arrangement key controls remain available.
 
 Show each teaching goal below the Preset dropdown.
 

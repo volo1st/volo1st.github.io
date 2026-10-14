@@ -23,6 +23,7 @@
     createEntry('F#m', [2, 4, 4, 2, 2, 2]),
     createEntry('G', [3, 2, 0, 0, 0, 3]),
     createEntry('Am7', ['x', 0, 2, 0, 1, 0]),
+    createEntry('Em7', [0, 2, 0, 0, 0, 0]),
     createEntry('C7', ['x', 3, 2, 3, 1, 0]),
     createEntry('Cmaj7', ['x', 3, 2, 0, 0, 0]),
     createEntry('D7', ['x', 'x', 0, 2, 1, 2]),

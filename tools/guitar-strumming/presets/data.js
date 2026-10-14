@@ -154,14 +154,17 @@ strum:
       rightsBasis: 'Short user transcription',
       rightsNotice: 'Unofficial user transcription for teaching. No lyrics, melody notation, audio, or artwork.',
       source: `4/4#16
-bpm: 120
+bpm: 116
 count-in: 1
 tempo-ramp: off
-capo: 0
+original-key: F# minor
+key: F# minor
+notation: numbers
+capo: 2
 swing: off
 
 chords:
-| Am | C | G | D7 |
+| 4:m7 | 6 | 1:m7 | 7 |
 
 strum:
 | D U2P D2P U2P D - D3P - D - D4 U4 - U4 D4 - | x4`,

@@ -383,3 +383,29 @@ test('the page loads the preset catalog before the application', () => {
   assert.match(html, /id="preset-notice-heading"/);
   assert.ok(html.indexOf('id="preset-notice-heading"') > html.indexOf('id="strum-sound-test"'));
 });
+
+test('Get Lucky uses easy shapes at capo 2 with the requested sounding harmony', () => {
+  const preset = presets.getPreset('get-lucky-palm-muted-strumming-v1');
+  const parsed = parser.parseSongSource(preset.source, { catalog: chordCatalog });
+  assert.equal(parsed.ok, true);
+  assert.equal(parsed.song.bpm, 116);
+  assert.equal(parsed.song.capoFret, 2);
+  assert.equal(parsed.song.notation, 'numbers');
+  assert.equal(parsed.song.originalKey.canonicalText, 'F# minor');
+  assert.equal(parsed.song.playingKey.canonicalText, 'F# minor');
+  assert.deepEqual(parsed.song.chordBars.map((bar) => bar[0].chord), ['Am7', 'C', 'Em7', 'D']);
+  assert.deepEqual(parsed.song.chordBars.map((bar) => bar[0].soundingChord), ['Bm7', 'D', 'F#m7', 'E']);
+  const expectedPitchClasses = [
+    [2, 6, 9, 11], // Bm7
+    [2, 6, 9], // D
+    [1, 4, 6, 9], // F#m7
+    [4, 8, 11], // E
+  ];
+  parsed.song.chordBars.forEach((bar, index) => {
+    const voicing = chordCatalog.getDefaultVoicing(bar[0].chord);
+    const pitches = core.resolveVoicingPitches(voicing.frets, parsed.song.capoFret);
+    const pitchClasses = [...new Set(pitches.filter((pitch) => pitch !== 'x').map((pitch) => pitch % 12))].sort((a, b) => a - b);
+    assert.deepEqual(pitchClasses, expectedPitchClasses[index]);
+  });
+  assert.doesNotThrow(() => core.normalizeSong(parsed.song));
+});
