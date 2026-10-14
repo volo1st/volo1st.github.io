@@ -6,6 +6,12 @@ The home page is volo1st's public introduction. It links to the [Code](code/), [
 
 See [`plan.md`](plan.md) for current actions, product direction, and delivery phases.
 
+## Studio rates
+
+The [studio index](studio/) shows the studio name, rates link and studio social links. The [studio rates page](studio/rates/) lists the 2026 rates in English and Simplified Chinese. The Sound section links to the studio index. It uses the existing site language preference and stores no enquiry data. Enquiries use external studio social profiles.
+
+Update rates and both language catalogs in `studio/rates/i18n.js`. Keep the English fallback text in `studio/rates/index.html` in sync. Refresh content hashes in the HTML after asset changes. Run the repository check before release.
+
 ## Tools
 
 - [CSV to ABA Converter](tools/csv2aba-v2/) is the current converter. The former address redirects to it. One normal CBA payment run will complete its workflow validation.

@@ -669,3 +669,62 @@ Use `.codex/project-workflow.toml` for the external task-system mapping. Use the
 - Do not access the private Todoist project named `.`.
 - Reconcile routine package-boundary changes after the applicable repository checks pass.
 - Keep `experience.md` local. Create it only after a mistake, surprise, or useful workaround.
+
+## 18. Studio rates page
+
+Selected by the owner on 15 October 2026. This package resumes website work after the completed operations notes. No other package is active.
+
+Purpose: Give studio clients a readable rate list and a direct enquiry path.
+
+Decisions before implementation:
+
+- Use `/studio/rates/`. Reserve `/studio/` for future studio content. A later subdomain can use `/rates/` and retain the former address through a redirect.
+- Match the existing site. Use three service rows that stack on narrow screens.
+- Use 2026, Australian dollars, and the approved wording “No GST is charged.”
+- Recording costs $100 per hour, with an engineer, equipment and a two-hour minimum. Mixing and editing cost $90 per hour. Song and album packages use custom quotes.
+- Agree on revisions, deliverables, schedule and additional work in each quote. Do not invent a fixed revision count or cancellation rule.
+- Use the approved studio Instagram and RedNote profiles for enquiries.
+- Reuse the local translation utility. Keep English content readable when JavaScript is unavailable. Add no dependency, build step, form or network request.
+- Use semantic sections, explicit language buttons, visible focus and a responsive grid. Do not add motion.
+
+Completion checks:
+
+- [x] Implement the English and Simplified Chinese page and Sound link.
+- [x] Verify translations, language changes, local references and asset versions with automated tests.
+- [x] Run the repository check and review the complete diff.
+- [ ] Verify keyboard use, visible focus, narrow screens and 200 percent zoom in a browser.
+- [x] Commit the package after the required checks pass or an owner-approved release exception.
+
+Failure behavior: The English rate list and contact links remain available without JavaScript. Browser storage is optional. A failed language script does not remove the rate list.
+
+Evidence on 15 October 2026: `./scripts/check.sh` passed for all seven test files. The new tests verify matching language keys, English fallback text, language-button state, document language and title, saved preference, and asset hashes. Existing site checks verify references and semantic ID references. The complete source diff was reviewed.
+
+Earlier blocker: This session has no browser tool. Keyboard use, visible focus, narrow screens and 200 percent zoom remain unverified. The owner later accepted the page and explicitly requested commit and deployment. This approval supersedes the earlier release hold. Do not report the missing browser checks as passed.
+
+Revision on 15 October 2026: The owner requested the final shared rate-card draft verbatim. This replaces the first page's rewritten descriptions and booking text. Retain the separately agreed 2026 year, currency and tax note, and social contact links. Use EP in both languages. Keep the breadcrumb in English, including its accessible label. Reduce the content and heading sizes. Browser verification remains pending.
+
+Typography revision on 15 October 2026: Use the existing display serif in italic for the year label, with light letter spacing. Set service notes to 0.75rem and a lighter warm grey. Keep the page background and shared fonts. Refresh the stylesheet content hash. Browser review remains pending.
+
+Content revision on 15 October 2026: Use “Contact me” and the matching singular Chinese wording. Remove the recording and mixing tagline from the page and both catalogs. Move the currency and tax note to the footer at 0.6875rem. Keep the social links. Browser checks remain pending.
+
+Studio presentation revision on 15 October 2026: Add a divider and padding above the currency footer. Set service descriptions in a local serif font stack with Chinese Song-style fallbacks and a 1.7 line height. Keep the compact text size, service-note style and shared site assets. No font download is required. Browser review remains pending.
+
+Contact revision on 15 October 2026: Move the contact invitation and studio social links from Additional Information to a dedicated Contact Me section. Invite visitors to send a message on Instagram or RedNote for a project discussion and tailored quote. Add matching Simplified Chinese text. Match the existing section headings and dividers. Browser checks remain pending.
+
+Contact link revision on 15 October 2026: Put Instagram and RedNote links inside the contact sentence. Remove the separate link row. Translate the sentence as text spans around persistent links, so language changes preserve the links without HTML injection. Use the site neutral link colours and underlines. Browser review remains pending.
+
+Typography revision on 15 October 2026: Additional Information bullets use the same serif font stack and line height as service descriptions. Refresh the stylesheet hash. Browser review remains pending.
+
+Spacing revision on 15 October 2026: Services, Additional Information, Contact Me and the footer share one rule for zero outer margin, 1.25rem vertical padding and the top divider. Remove the booking list browser-default margins. This removes the extra gaps before the later sections. Browser review remains pending.
+
+Structure revision on 15 October 2026: Add `/studio/` with the studio name as its only main content. The rates page uses “2026 Studio Rates” as its main heading. Its fixed-English breadcrumb is `volo1st / studio / rates`, with links to the home page and studio index. Keep the existing Sound link to rates. The studio index uses the shared site shell and local, versioned CSS. Browser review remains pending.
+
+Navigation revision on 15 October 2026: Move the Sound page rates, Instagram and RedNote links to the studio index. Replace the former Sound studio block with a single “my studio” link to `/studio/`. Reuse the site section-link style on both pages. Update navigation tests and README. Browser review remains pending.
+
+Naming revision on 15 October 2026: Use 小红书 for the platform name in both language catalogs, studio-page links, and home-page social-link accessible labels and titles. Keep the existing profile URLs.
+
+Mobile layout revision on 15 October 2026: Keep service headings and rates in two columns on narrow screens. Reduce the mobile column gap. The heading column can wrap when space is limited. Browser and zoom review remain pending.
+
+Release decision on 15 October 2026: The owner accepted the final page and requested commit and deployment. Deploy through the established GitHub Pages `master` branch. The full source diff was reviewed. Run the repository check before committing. Browser-only checks remain unverified and do not block this owner-approved release.
+
+Release evidence on 15 October 2026: The repository check passed for all seven test files. The studio home, bilingual rates page, navigation, documentation and regression tests were committed together. The owner approved release with browser-only checks still unverified.

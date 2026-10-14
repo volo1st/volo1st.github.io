@@ -11,6 +11,7 @@ const repositoryRoot = path.join(__dirname, '..');
 const i18n = require('../assets/i18n.js');
 require('../tools/guitar-strumming/i18n.js');
 require('../tools/pitch-shifter/i18n.js');
+require('../studio/rates/i18n.js');
 
 function findHtmlFiles(directory) {
   const files = [];
@@ -192,8 +193,8 @@ test('the home page presents the approved public identity and contact links', ()
   assert.equal([...html.matchAll(/class="social-separator"/g)].length, 1);
   assert.match(html, /aria-label="Personal profiles"/);
   assert.match(html, /aria-label="Bits &amp; Beats Studio profiles"/);
-  assert.match(html, /aria-label="Personal RedNote" title="Personal RedNote"/);
-  assert.match(html, /aria-label="Bits &amp; Beats Studio on RedNote" title="Bits &amp; Beats Studio on RedNote"/);
+  assert.match(html, /aria-label="Personal 小红书" title="Personal 小红书"/);
+  assert.match(html, /aria-label="Bits &amp; Beats Studio on 小红书" title="Bits &amp; Beats Studio on 小红书"/);
 
   const externalLinks = [...html.matchAll(/<a\b[^>]*href="https:[^"]+"[^>]*>/g)]
     .map((match) => match[0]);
@@ -220,7 +221,11 @@ test('the public section indexes provide useful destinations', () => {
     assert.match(html, new RegExp(`<span aria-current="page">${section.heading}<\\/span>`));
     assert.match(html, /class="breadcrumb-summary">[^<]+<\/span>/);
     assert.match(html, /class="site-breadcrumb"/);
-    assert.match(html, /<p class="section-status">More when there’s something worth showing\.<\/p>/);
+    if (section.directory === 'sound') {
+      assert.match(html, /href="\.\.\/studio\/">my studio<\/a>/);
+    } else {
+      assert.match(html, /<p class="section-status">More when there’s something worth showing\.<\/p>/);
+    }
     assert.doesNotMatch(html, /class="section-intro"/);
     assert.match(html, /href="\.\.\/">volo1st<\/a>/);
     assert.doesNotMatch(html, /Vincent/);
@@ -237,7 +242,7 @@ test('the public section indexes provide useful destinations', () => {
   const soundHtml = fs.readFileSync(path.join(repositoryRoot, 'sound', 'index.html'), 'utf8');
   const musicHtml = fs.readFileSync(path.join(repositoryRoot, 'music', 'index.html'), 'utf8');
   assert.match(codeHtml, /href="\.\.\/tools\/"/);
-  assert.match(soundHtml, /instagram\.com\/bits\.n\.beats/);
+  assert.match(soundHtml, /href="\.\.\/studio\/">my studio<\/a>/);
   assert.match(musicHtml, /href="\.\.\/tools\/guitar-strumming\/"/);
 });
 
