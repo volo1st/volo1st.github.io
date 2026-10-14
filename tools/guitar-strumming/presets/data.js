@@ -167,7 +167,7 @@ chords:
 | 4:m7 | 6 | 1:m7 | 7 |
 
 strum:
-| D U2P D2P U2P D - D3P - D - D4 U4 - U4 D4 - | x4`,
+| D UX D2P UX D - D2P - D - D4P U4 - U4 D4 -| x4`,
     },
   ];
 

@@ -745,3 +745,7 @@ Implementation evidence: Add open Em7 to the supported catalog and its catalog t
 Correction on 15 October 2026: The initial change omitted arrangement key metadata. Use number notation with original and playing keys set to F# minor, capo 2, and `4:m7`, `6`, `1:m7`, `7`. This enables arrangement key controls and preserves the requested shapes and sounding chords. The regression test now checks both keys, notation, shapes and sounding harmony. Preserve the strum source.
 
 Release decision on 15 October 2026: The owner requested 116 beats per minute and approved release of the Get Lucky update. Retain F# minor metadata, number notation, capo 2 and the existing strum pattern. Run the repository check and review the full diff before committing and deploying through GitHub Pages. Browser listening checks are not available in this session.
+
+Strumming revision on 15 October 2026: The owner auditioned a revised Get Lucky pattern and reported a closer feel. Save the supplied pattern verbatim: `| D UX D2P UX D - D2P - D - D U4 - U4 D4 -| x4`. This replaces two early palm-muted upstrokes with dead upstrokes, changes the beat-2 muted downstroke to two strings, and uses a full downstroke on beat 3-and. Keep 116 beats per minute, capo 2, key metadata and chords. Refresh the preset script hash.
+
+Further strumming revision on 15 October 2026: Use the owner's revised pattern `| D UX D2P UX D - D2P - D - D4P U4 - U4 D4 -| x4`. The downstroke on beat 3-and now uses four strings with palm mute. Refresh the preset script hash.
