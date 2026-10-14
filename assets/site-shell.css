@@ -118,11 +118,6 @@ textarea:focus-visible,
   color: #171512;
 }
 
-.breadcrumb-summary {
-  color: var(--site-muted-soft);
-  font-size: 0.95rem;
-}
-
 .language-switcher {
   display: inline-flex;
   flex: 0 0 auto;
@@ -170,14 +165,6 @@ textarea:focus-visible,
     row-gap: 0.2rem;
   }
 
-  .breadcrumb-summary-separator {
-    display: none;
-  }
-
-  .breadcrumb-summary {
-    flex-basis: 100%;
-    line-height: 1.4;
-  }
 }
 
 @media (max-width: 360px) {

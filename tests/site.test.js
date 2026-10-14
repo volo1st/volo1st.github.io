@@ -219,7 +219,7 @@ test('the public section indexes provide useful destinations', () => {
     );
     assert.doesNotMatch(html, /<h1\b/);
     assert.match(html, new RegExp(`<span aria-current="page">${section.heading}<\\/span>`));
-    assert.match(html, /class="breadcrumb-summary">[^<]+<\/span>/);
+    assert.doesNotMatch(html, /breadcrumb-summary/);
     assert.match(html, /class="site-breadcrumb"/);
     if (section.directory === 'sound') {
       assert.match(html, /href="\.\.\/studio\/">my studio<\/a>/);

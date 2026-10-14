@@ -558,6 +558,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 15 October 2026 | Remove all breadcrumb summaries and their separators from Code, Sound, Music and Tools. | The owner wants simpler navigation. Remove unused shared styles and refresh the stylesheet hashes. |
 | 13 October 2026 | Defer the formal project and tool model. Limit operations work to useful deployment, domain-recovery, revision-recovery, and license notes. | The owner wants maintenance suited to a small personal site. Existing instructions cover current safeguards. Add process only when a specific problem justifies it. |
 | 12 October 2026 | Keep the current Sound and Music pages. Defer featured videos. | The owner confirmed that the current links are sufficient. Select useful public material and its presentation before adding a featured entry. The content review is complete. Project and tool standards are next. |
 | 12 September 2026 | Keep the former converter available while version 2 is developed and tested. | The former converter has operational evidence for one monthly process. |
@@ -728,3 +729,5 @@ Mobile layout revision on 15 October 2026: Keep service headings and rates in tw
 Release decision on 15 October 2026: The owner accepted the final page and requested commit and deployment. Deploy through the established GitHub Pages `master` branch. The full source diff was reviewed. Run the repository check before committing. Browser-only checks remain unverified and do not block this owner-approved release.
 
 Release evidence on 15 October 2026: The repository check passed for all seven test files. The studio home, bilingual rates page, navigation, documentation and regression tests were committed together. The owner approved release with browser-only checks still unverified.
+
+Breadcrumb cleanup release on 15 October 2026: The owner requested deployment. The complete diff was reviewed. `./scripts/check.sh` passed for all seven test files. The change removes summary spans and unused styles, and refreshes shared stylesheet hashes. Browser-only checks were not available in this session.
