@@ -23,6 +23,7 @@ Use ASD-STE100-style controlled English for user text and project documents.
 - Give one main instruction in each sentence.
 - Use active voice when possible.
 - Use the same term for the same item.
+- Use the Oxford comma in English lists of three or more items when appropriate.
 - Define an abbreviation at its first use.
 - Do not use an abbreviation if it is not necessary.
 - Avoid idioms, slang, vague words, and unnecessary jargon.

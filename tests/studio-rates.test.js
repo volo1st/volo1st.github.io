@@ -76,7 +76,7 @@ test('studio breadcrumb remains English and both languages use EP', () => {
   assert.match(breadcrumb, /lang="en-AU"/);
   const api = loadLanguage();
   assert.equal(api.translate('studio.packagesText', {}, 'en-AU'),
-    'Tailored recording and mixing packages for singles, covers, EPs and albums.');
+    'Tailored recording and mixing packages for singles, covers, EPs, and albums.');
   assert.match(api.translate('studio.packagesText', {}, 'zh-Hans'), /EP/);
 });
 

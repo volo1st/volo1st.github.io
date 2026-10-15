@@ -558,7 +558,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
-| 15 October 2026 | Remove all breadcrumb summaries and their separators from Code, Sound, Music and Tools. | The owner wants simpler navigation. Remove unused shared styles and refresh the stylesheet hashes. |
+| 15 October 2026 | Remove all breadcrumb summaries and their separators from Code, Sound, Music, and Tools. | The owner wants simpler navigation. Remove unused shared styles and refresh the stylesheet hashes. |
 | 13 October 2026 | Defer the formal project and tool model. Limit operations work to useful deployment, domain-recovery, revision-recovery, and license notes. | The owner wants maintenance suited to a small personal site. Existing instructions cover current safeguards. Add process only when a specific problem justifies it. |
 | 12 October 2026 | Keep the current Sound and Music pages. Defer featured videos. | The owner confirmed that the current links are sufficient. Select useful public material and its presentation before adding a featured entry. The content review is complete. Project and tool standards are next. |
 | 12 September 2026 | Keep the former converter available while version 2 is developed and tested. | The former converter has operational evidence for one monthly process. |
@@ -682,25 +682,25 @@ Decisions before implementation:
 - Use `/studio/rates/`. Reserve `/studio/` for future studio content. A later subdomain can use `/rates/` and retain the former address through a redirect.
 - Match the existing site. Use three service rows that stack on narrow screens.
 - Use 2026, Australian dollars, and the approved wording “No GST is charged.”
-- Recording costs $100 per hour, with an engineer, equipment and a two-hour minimum. Mixing and editing cost $90 per hour. Song and album packages use custom quotes.
-- Agree on revisions, deliverables, schedule and additional work in each quote. Do not invent a fixed revision count or cancellation rule.
+- Recording costs $100 per hour, with an engineer, equipment, and a two-hour minimum. Mixing and editing cost $90 per hour. Song and album packages use custom quotes.
+- Agree on revisions, deliverables, schedule, and additional work in each quote. Do not invent a fixed revision count or cancellation rule.
 - Use the approved studio Instagram and RedNote profiles for enquiries.
-- Reuse the local translation utility. Keep English content readable when JavaScript is unavailable. Add no dependency, build step, form or network request.
-- Use semantic sections, explicit language buttons, visible focus and a responsive grid. Do not add motion.
+- Reuse the local translation utility. Keep English content readable when JavaScript is unavailable. Add no dependency, build step, form, or network request.
+- Use semantic sections, explicit language buttons, visible focus, and a responsive grid. Do not add motion.
 
 Completion checks:
 
 - [x] Implement the English and Simplified Chinese page and Sound link.
-- [x] Verify translations, language changes, local references and asset versions with automated tests.
+- [x] Verify translations, language changes, local references, and asset versions with automated tests.
 - [x] Run the repository check and review the complete diff.
-- [ ] Verify keyboard use, visible focus, narrow screens and 200 percent zoom in a browser.
+- [ ] Verify keyboard use, visible focus, narrow screens, and 200 percent zoom in a browser.
 - [x] Commit the package after the required checks pass or an owner-approved release exception.
 
 Failure behavior: The English rate list and contact links remain available without JavaScript. Browser storage is optional. A failed language script does not remove the rate list.
 
 Evidence on 15 October 2026: `./scripts/check.sh` passed for all seven test files. The new tests verify matching language keys, English fallback text, language-button state, document language and title, saved preference, and asset hashes. Existing site checks verify references and semantic ID references. The complete source diff was reviewed.
 
-Earlier blocker: This session has no browser tool. Keyboard use, visible focus, narrow screens and 200 percent zoom remain unverified. The owner later accepted the page and explicitly requested commit and deployment. This approval supersedes the earlier release hold. Do not report the missing browser checks as passed.
+Earlier blocker: This session has no browser tool. Keyboard use, visible focus, narrow screens, and 200 percent zoom remain unverified. The owner later accepted the page and explicitly requested commit and deployment. This approval supersedes the earlier release hold. Do not report the missing browser checks as passed.
 
 Revision on 15 October 2026: The owner requested the final shared rate-card draft verbatim. This replaces the first page's rewritten descriptions and booking text. Retain the separately agreed 2026 year, currency and tax note, and social contact links. Use EP in both languages. Keep the breadcrumb in English, including its accessible label. Reduce the content and heading sizes. Browser verification remains pending.
 
@@ -708,7 +708,7 @@ Typography revision on 15 October 2026: Use the existing display serif in italic
 
 Content revision on 15 October 2026: Use “Contact me” and the matching singular Chinese wording. Remove the recording and mixing tagline from the page and both catalogs. Move the currency and tax note to the footer at 0.6875rem. Keep the social links. Browser checks remain pending.
 
-Studio presentation revision on 15 October 2026: Add a divider and padding above the currency footer. Set service descriptions in a local serif font stack with Chinese Song-style fallbacks and a 1.7 line height. Keep the compact text size, service-note style and shared site assets. No font download is required. Browser review remains pending.
+Studio presentation revision on 15 October 2026: Add a divider and padding above the currency footer. Set service descriptions in a local serif font stack with Chinese Song-style fallbacks and a 1.7 line height. Keep the compact text size, service-note style, and shared site assets. No font download is required. Browser review remains pending.
 
 Contact revision on 15 October 2026: Move the contact invitation and studio social links from Additional Information to a dedicated Contact Me section. Invite visitors to send a message on Instagram or RedNote for a project discussion and tailored quote. Add matching Simplified Chinese text. Match the existing section headings and dividers. Browser checks remain pending.
 
@@ -716,11 +716,11 @@ Contact link revision on 15 October 2026: Put Instagram and RedNote links inside
 
 Typography revision on 15 October 2026: Additional Information bullets use the same serif font stack and line height as service descriptions. Refresh the stylesheet hash. Browser review remains pending.
 
-Spacing revision on 15 October 2026: Services, Additional Information, Contact Me and the footer share one rule for zero outer margin, 1.25rem vertical padding and the top divider. Remove the booking list browser-default margins. This removes the extra gaps before the later sections. Browser review remains pending.
+Spacing revision on 15 October 2026: Services, Additional Information, Contact Me, and the footer share one rule for zero outer margin, 1.25rem vertical padding and the top divider. Remove the booking list browser-default margins. This removes the extra gaps before the later sections. Browser review remains pending.
 
 Structure revision on 15 October 2026: Add `/studio/` with the studio name as its only main content. The rates page uses “2026 Studio Rates” as its main heading. Its fixed-English breadcrumb is `volo1st / studio / rates`, with links to the home page and studio index. Keep the existing Sound link to rates. The studio index uses the shared site shell and local, versioned CSS. Browser review remains pending.
 
-Navigation revision on 15 October 2026: Move the Sound page rates, Instagram and RedNote links to the studio index. Replace the former Sound studio block with a single “my studio” link to `/studio/`. Reuse the site section-link style on both pages. Update navigation tests and README. Browser review remains pending.
+Navigation revision on 15 October 2026: Move the Sound page rates, Instagram, and RedNote links to the studio index. Replace the former Sound studio block with a single “my studio” link to `/studio/`. Reuse the site section-link style on both pages. Update navigation tests and README. Browser review remains pending.
 
 Naming revision on 15 October 2026: Use 小红书 for the platform name in both language catalogs, studio-page links, and home-page social-link accessible labels and titles. Keep the existing profile URLs.
 
@@ -728,24 +728,26 @@ Mobile layout revision on 15 October 2026: Keep service headings and rates in tw
 
 Release decision on 15 October 2026: The owner accepted the final page and requested commit and deployment. Deploy through the established GitHub Pages `master` branch. The full source diff was reviewed. Run the repository check before committing. Browser-only checks remain unverified and do not block this owner-approved release.
 
-Release evidence on 15 October 2026: The repository check passed for all seven test files. The studio home, bilingual rates page, navigation, documentation and regression tests were committed together. The owner approved release with browser-only checks still unverified.
+Release evidence on 15 October 2026: The repository check passed for all seven test files. The studio home, bilingual rates page, navigation, documentation, and regression tests were committed together. The owner approved release with browser-only checks still unverified.
 
 Breadcrumb cleanup release on 15 October 2026: The owner requested deployment. The complete diff was reviewed. `./scripts/check.sh` passed for all seven test files. The change removes summary spans and unused styles, and refreshes shared stylesheet hashes. Browser-only checks were not available in this session.
 
 ## 19. Get Lucky chord correction
 
-On 15 October 2026, the owner requested Bm7, D, F#m7 and E, played with Am7, C, Em7 and D shapes at capo 2. Preserve concurrent owner edits to the strumming pattern.
+On 15 October 2026, the owner requested Bm7, D, F#m7, and E, played with Am7, C, Em7, and D shapes at capo 2. Preserve concurrent owner edits to the strumming pattern.
 
 Use the existing shape notation and capo playback. Add the missing open Em7 voicing, `020000`, to the local chord catalog. The tool remains before its declared 1.0.0 release, so update the existing preset slug in place under the recorded pre-release policy. Update the README to match that policy.
 
-Test the parsed shapes, capo value and actual playback pitch classes. Keep the normal catalog validation and timeline tests. Refresh the two changed script hashes. No new dependency or network request is required.
+Test the parsed shapes, capo value, and actual playback pitch classes. Keep the normal catalog validation and timeline tests. Refresh the two changed script hashes. No new dependency or network request is required.
 
-Implementation evidence: Add open Em7 to the supported catalog and its catalog test. The Get Lucky regression test verifies Am7, C, Em7 and D at capo 2 and the expected Bm7, D, F#m7 and E playback pitch classes. The strum source was not changed.
+Implementation evidence: Add open Em7 to the supported catalog and its catalog test. The Get Lucky regression test verifies Am7, C, Em7, and D at capo 2 and the expected Bm7, D, F#m7, and E playback pitch classes. The strum source was not changed.
 
-Correction on 15 October 2026: The initial change omitted arrangement key metadata. Use number notation with original and playing keys set to F# minor, capo 2, and `4:m7`, `6`, `1:m7`, `7`. This enables arrangement key controls and preserves the requested shapes and sounding chords. The regression test now checks both keys, notation, shapes and sounding harmony. Preserve the strum source.
+Correction on 15 October 2026: The initial change omitted arrangement key metadata. Use number notation with original and playing keys set to F# minor, capo 2, and `4:m7`, `6`, `1:m7`, `7`. This enables arrangement key controls and preserves the requested shapes and sounding chords. The regression test now checks both keys, notation, shapes, and sounding harmony. Preserve the strum source.
 
-Release decision on 15 October 2026: The owner requested 116 beats per minute and approved release of the Get Lucky update. Retain F# minor metadata, number notation, capo 2 and the existing strum pattern. Run the repository check and review the full diff before committing and deploying through GitHub Pages. Browser listening checks are not available in this session.
+Release decision on 15 October 2026: The owner requested 116 beats per minute and approved release of the Get Lucky update. Retain F# minor metadata, number notation, capo 2, and the existing strum pattern. Run the repository check and review the full diff before committing and deploying through GitHub Pages. Browser listening checks are not available in this session.
 
-Strumming revision on 15 October 2026: The owner auditioned a revised Get Lucky pattern and reported a closer feel. Save the supplied pattern verbatim: `| D UX D2P UX D - D2P - D - D U4 - U4 D4 -| x4`. This replaces two early palm-muted upstrokes with dead upstrokes, changes the beat-2 muted downstroke to two strings, and uses a full downstroke on beat 3-and. Keep 116 beats per minute, capo 2, key metadata and chords. Refresh the preset script hash.
+Strumming revision on 15 October 2026: The owner auditioned a revised Get Lucky pattern and reported a closer feel. Save the supplied pattern verbatim: `| D UX D2P UX D - D2P - D - D U4 - U4 D4 -| x4`. This replaces two early palm-muted upstrokes with dead upstrokes, changes the beat-2 muted downstroke to two strings, and uses a full downstroke on beat 3-and. Keep 116 beats per minute, capo 2, key metadata, and chords. Refresh the preset script hash.
 
 Further strumming revision on 15 October 2026: Use the owner's revised pattern `| D UX D2P UX D - D2P - D - D4P U4 - U4 D4 -| x4`. The downstroke on beat 3-and now uses four strings with palm mute. Refresh the preset script hash.
+
+Writing revision on 15 October 2026: Use Oxford commas where appropriate in English lists of three or more items. Correct missing commas in studio text and current project documentation. Record the rule in `AGENTS.md`. Keep paired phrases such as “acoustic and electric instruments” unchanged. Refresh the studio translation script hash and update the text expectation in its existing test.

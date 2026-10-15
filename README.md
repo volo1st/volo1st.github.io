@@ -8,7 +8,7 @@ See [`plan.md`](plan.md) for current actions, product direction, and delivery ph
 
 ## Studio rates
 
-The [studio index](studio/) shows the studio name, rates link and studio social links. The [studio rates page](studio/rates/) lists the 2026 rates in English and Simplified Chinese. The Sound section links to the studio index. It uses the existing site language preference and stores no enquiry data. Enquiries use external studio social profiles.
+The [studio index](studio/) shows the studio name, rates link, and studio social links. The [studio rates page](studio/rates/) lists the 2026 rates in English and Simplified Chinese. The Sound section links to the studio index. It uses the existing site language preference and stores no enquiry data. Enquiries use external studio social profiles.
 
 Update rates and both language catalogs in `studio/rates/i18n.js`. Keep the English fallback text in `studio/rates/index.html` in sync. Refresh content hashes in the HTML after asset changes. Run the repository check before release.
 
