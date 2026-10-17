@@ -183,9 +183,6 @@ test('the home page presents the approved public identity and contact links', ()
   assert.equal([...html.matchAll(/Vincent/g)].length, 1);
   assert.match(html, /<link rel="canonical" href="https:\/\/volo1st\.com\/">/);
   assert.match(html, /href="\.\/assets\/home\.css\?v=[a-f0-9]{12}"/);
-  assert.match(html, /src="\.\/assets\/home\.js\?v=[a-f0-9]{12}"/);
-  assert.match(html, /<figure class="constellation"[^>]*Sagittarius constellation/);
-  assert.match(html, /<canvas id="sagittarius" aria-hidden="true"><\/canvas>/);
   assert.doesNotMatch(html, /link-signal|data-signal/);
   assert.doesNotMatch(html, /<h2[^>]*>\s*(?:Find me|Bits &amp; Beats Studio)/);
   assert.equal([...html.matchAll(/class="social-link"/g)].length, 6);
@@ -319,7 +316,6 @@ test('versioned interface assets use their current content hash', () => {
         './assets/favicon.svg',
         './assets/site-shell.css',
         './assets/home.css',
-        './assets/home.js',
         './assets/social-icons.svg',
       ],
     },
@@ -481,19 +477,6 @@ test('the guitar page provides local home-screen metadata', () => {
     assert.equal(icon.type, 'image/png');
     assert.equal(icon.purpose, 'any');
   }
-});
-
-test('the home constellation is local, optional, and non-interactive', () => {
-  const script = fs.readFileSync(path.join(repositoryRoot, 'assets', 'home.js'), 'utf8');
-
-  assert.match(script, /constellation'\) === 'off'/);
-  assert.match(script, /document\.hidden/);
-  assert.match(script, /ResizeObserver/);
-  assert.match(script, /SIMBAD J2000 ICRS positions/);
-  assert.doesNotMatch(script, /DeviceMotionEvent|devicemotion|requestPermission/);
-  assert.doesNotMatch(script, /prefers-reduced-motion/);
-  assert.doesNotMatch(script, /\bfetch\s*\(|XMLHttpRequest|WebSocket/);
-  assert.doesNotMatch(script, /setInterval|setTimeout/);
 });
 
 test('site motion is not disabled by a reduced-motion preference', () => {

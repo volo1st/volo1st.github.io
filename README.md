@@ -25,7 +25,7 @@ The home page uses English. The tools directory, version 2 converter, Guitar Str
 
 The maintained pages use `assets/site-shell.css` for shared identity, breadcrumb, language control, and design tokens. The home page uses `assets/home.css` for its namecard layout. The public section indexes use `assets/section-index.css` for their content lists. The shared shell maps a semantic `data-domain` value to each tool accent. The original pixel-art `V` block is the browser icon. The legacy CSV-to-ABA conversion logic remains unchanged.
 
-The home page draws a small Sagittarius constellation in the space between the introduction and contact links. The principal star positions use normalized J2000 International Celestial Reference System (ICRS) data from SIMBAD. Small circular particles form the stars and dotted connections. The connections are a simplified drawing, not an official constellation boundary. The local canvas effect stops when the page is hidden and hides when the available space is too small. Add `?constellation=off` to disable the effect for comparison.
+The home page is static. It uses HTML and local CSS without JavaScript.
 
 The home page uses local SVG paths from Simple Icons version 16 for its social links. The paths use the CC0 1.0 Simple Icons collection. Each mark renders in the page text color. The page does not request an icon font, script, or image from a third party.
 

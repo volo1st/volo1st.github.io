@@ -208,8 +208,7 @@ Group the personal and Bits & Beats Studio links separately. Show monochrome ser
 Use this content order:
 
 1. Introduction and section links.
-2. Sagittarius identity signal.
-3. One compact social-link strip with separate personal and studio groups.
+2. One compact social-link strip with separate personal and studio groups.
 
 Replace the tools-only root page with the personal homepage. Move the current directory purpose to `/tools/`. Keep all existing tool addresses unchanged.
 
@@ -268,7 +267,7 @@ Evidence: The following public-site design specification defines the wide layout
 
 The public site must feel warm, practical, personal, and lightly playful. It must not look like a resume, a corporate portfolio, a terminal, or a game interface.
 
-Keep the existing warm page background. Keep the pixel `V` as the browser icon, but do not repeat it as an in-page logo. Do not add an element that exists only as decoration. The Sagittarius signal communicates Vincent's star sign. Do not use a pixel font for body text.
+Keep the existing warm page background. Keep the pixel `V` as the browser icon, but do not repeat it as an in-page logo. Do not add an element that exists only as decoration. Do not use a pixel font for body text.
 
 Use this visual hierarchy:
 
@@ -283,7 +282,6 @@ Keep the current 960-pixel maximum content width. Use the existing page gutter, 
 On wide screens:
 
 - Let the short introduction use the available width.
-- Put the Sagittarius signal in the blank space between the introduction and social strip.
 - Show the personal and studio profiles in one compact icon strip.
 - Use a bounded page region between 30 and 42 rem high. Distribute the introduction and contact directory within that region.
 
@@ -292,7 +290,6 @@ On wide screens:
 │ Hi, I’m Vincent.                                             │
 │ I code, shape sound, and make noise.                          │
 │ Online, I’m volo1st.                                         │
-│                     · Sagittarius ·                          │
 ├──────────────────────────────────────────────────────────────┤
 │ [GitHub] [YouTube] [Bilibili] [RedNote] | [Instagram] [...] │
 └──────────────────────────────────────────────────────────────┘
@@ -301,7 +298,6 @@ On wide screens:
 On narrow screens:
 
 - Use one content column for the introduction.
-- Keep the Sagittarius signal clear of the introduction and social strip.
 - Keep the social icon groups on one row when the available width permits it.
 - Use the small viewport height so that the layout fills approximately one visible phone screen.
 - Do not use horizontal page scrolling.
@@ -311,7 +307,6 @@ On narrow screens:
 │ Hi, I’m Vincent.            │
 │ I code, shape sound...      │
 │ Online, I’m volo1st.        │
-│       · Sagittarius ·       │
 ├─────────────────────────────┤
 │ [GH] [YT] [BI] [RN] | [...]│
 └─────────────────────────────┘
@@ -347,11 +342,9 @@ Change the shared focus color from `#d78300` to `#9b5c00` during implementation.
 
 The first homepage release is text-first. Do not add a portrait, game artwork, client media, studio photograph, or social feed.
 
-Use the existing pixel `V` browser icon, local social SVGs, CSS rules, and the local Sagittarius canvas in the first release. Normalize the principal star positions from [SIMBAD](https://simbad.cds.unistra.fr/simbad/) J2000 ICRS coordinates. The dotted connection topology is a simplified visual guide. It is not an official constellation boundary or figure.
+Use the existing pixel `V` browser icon, local social SVGs, and CSS rules. Keep the homepage static.
 
 Use version 16 SVG paths from the [Simple Icons](https://github.com/simple-icons/simple-icons) CC0 1.0 collection for GitHub, YouTube, Bilibili, Xiaohongshu, and Instagram. Store the paths locally. Render them with the current text color. Do not load a third-party icon dependency at runtime.
-
-Draw the signal in one neutral color. Use small anti-aliased circular particles. Let it drift and morph smoothly within the available gap. Make the movement clear during a short visit. Let the figure approach the safe horizontal edges. Do not let it overlap text or links. Hide it when the gap is too small. Stop motion when the page is hidden. Do not make a network request. Support `?constellation=off` for visual comparison.
 
 For later media, use only media that Vincent owns or has approval to publish. Add useful alternative text to meaningful media. Use an empty alternative description for decoration. Set image dimensions to prevent layout movement. Do not load a social embed or third-party tracking script.
 
@@ -554,10 +547,13 @@ The approved icon family uses abstract monoline and bar symbols. Each icon uses 
 
 ## 15. Decision log
 
+Homepage removal evidence on 17 October 2026: Removed the particle canvas, its script, and its overlay styles. Updated the homepage stylesheet hash, README, design requirements, and existing tests. The complete diff was reviewed. `./scripts/check.sh` passed for all seven test files. Manual browser review did not run. It is optional for this small static change under the approved verification rule.
+
 Decision on 12 October 2026: Keep the current Code page. The owner confirmed that most professional software work cannot be shared publicly and that the public applications currently focus on music. A tool can serve both sections: Code explains its construction, and Music explains its use. Replace the required software portfolio with a completed content review. Make detailed case studies optional. Review Sound and Music before selecting further public content. Do not add weaker entries only to fill a portfolio.
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 17 October 2026 | Remove the homepage particle animation and its code, styles, and comparison option. | The owner requested removal. Keep the introduction, section links, social profiles, and existing spacing. This supersedes the earlier Sagittarius design decisions. |
 | 17 October 2026 | Keep checks proportionate to the change. Do not set up browser automation for text, links, placeholder pages, or simple style changes. | The owner found heavy test setup too slow for its value. Use the existing repository check and diff review. Use manual browser review when available. Missing browser review does not block these small changes. Keep meaningful functional and ABA safety tests. |
 | 16 October 2026 | Add Room acoustics and Live sound under Sound. Rename “my studio” to “Studio”. | The owner approved the labels and addresses. Room acoustics can cover demonstrations, measurements, and acoustic treatment services. Live sound can cover front-of-house mixing. Start with clearly marked placeholder pages. |
 | 15 October 2026 | Remove all breadcrumb summaries and their separators from Code, Sound, Music, and Tools. | The owner wants simpler navigation. Remove unused shared styles and refresh the stylesheet hashes. |
