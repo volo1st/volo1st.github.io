@@ -9,8 +9,8 @@
     <title>UI style guide | volo1st</title>
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=73514134a473">
-    <link rel="stylesheet" href="./components.css?v=a6df086eef97">
-    <link rel="stylesheet" href="./guide.css?v=5f2d5861c7d2">
+    <link rel="stylesheet" href="./components.css?v=7421c375ab7e">
+    <link rel="stylesheet" href="./guide.css?v=3cc8f719f3cb">
   </head>
   <body>
     <header class="site-header">
@@ -28,7 +28,7 @@
     </header>
     <main class="site-main guide-main">
       <header class="guide-intro">
-        <p class="guide-eyebrow">Draft 01 · for review</p>
+        <p class="guide-eyebrow">Draft 02 · typography review</p>
         <h1 class="ui-title">One site. One shared language.</h1>
         <p class="guide-lead">A working user interface (UI) style guide for type, controls, and common patterns. Compare the current styles. Then refine the shared draft before changing existing pages.</p>
         <p class="ui-small">The draft styles apply only to this guide. Buttons show visual states and do not run app actions. Native fields and disclosures can be used. No input is stored or processed.</p>
@@ -62,32 +62,27 @@
       </nav>
       <section id="type" class="guide-section" aria-labelledby="type-heading">
         <p class="guide-eyebrow">01 / Typography</p>
-        <h2 id="type-heading" class="ui-heading">Four roles, with room to breathe.</h2>
+        <h2 id="type-heading" class="ui-heading">Serif by default. Sans-serif for controls.</h2>
+        <p>Use one serif family for headings and content. Use sans-serif for interactive controls and their labels. Use monospace for source text and technical values. Inline links keep the surrounding text font.</p>
         <p class="ui-small">These are local font stacks. The actual fonts depend on the device. Compare English and Chinese before choosing the final set.</p>
-        <div class="guide-grid">
+        <div class="guide-grid guide-type-grid">
           <article class="guide-sample">
-            <h3 class="guide-caption">Body / system sans-serif</h3>
-            <p class="guide-font-sample guide-font-body">Clear controls. Useful information.</p>
-            <p class="guide-font-sample guide-font-body" lang="zh-Hans">清晰的控件。实用的信息。</p>
-            <p class="ui-small">Labels, controls, help, and app text.</p>
+            <h3 class="guide-caption">Default / serif</h3>
+            <p class="guide-font-sample guide-font-body">Recordings, rooms, and live stages.</p>
+            <p class="guide-font-sample guide-font-body" lang="zh-Hans">录音、房间声学与现场扩声。</p>
+            <p class="ui-small">Headings, prose, notices, help, and table content.</p>
           </article>
           <article class="guide-sample">
-            <h3 class="guide-caption">Display / site serif</h3>
-            <p class="guide-font-sample guide-font-display">Recordings, rooms, and live stages.</p>
-            <p class="guide-font-sample guide-font-display" lang="zh-Hans">录音、房间声学与现场扩声。</p>
-            <p class="ui-small">Page titles and section headings.</p>
-          </article>
-          <article class="guide-sample">
-            <h3 class="guide-caption">Reading / serif with Chinese fallbacks</h3>
-            <p class="guide-font-sample guide-font-reading">Good sound starts with careful listening.</p>
-            <p class="guide-font-sample guide-font-reading" lang="zh-Hans">好的声音始于仔细聆听。</p>
-            <p class="ui-small">Longer descriptions and studio content.</p>
+            <h3 class="guide-caption">Controls / system sans-serif</h3>
+            <p class="guide-font-sample guide-font-control">Play · Export · Select a file</p>
+            <p class="guide-font-sample guide-font-control" lang="zh-Hans">播放 · 导出 · 选择文件</p>
+            <p class="ui-small">Buttons, fields, labels, interface navigation, and disclosure summaries.</p>
           </article>
           <article class="guide-sample">
             <h3 class="guide-caption">Code / monospace</h3>
             <p class="guide-font-sample guide-font-mono">tempo: 100<br>chords: C Am F G</p>
             <p class="guide-font-sample guide-font-mono" lang="zh-Hans">速度：100<br>和弦：C Am F G</p>
-            <p class="ui-small">Source text, code, and technical values.</p>
+            <p class="ui-small">Source text, code, and technical values that need monospace.</p>
           </article>
         </div>
         <div class="guide-sample guide-follow">
@@ -324,7 +319,7 @@
           <div class="guide-sample guide-stack">
             <div class="ui-field">
               <label class="ui-label" for="example-source">Source text</label>
-              <textarea class="ui-textarea" id="example-source" rows="4" spellcheck="false" aria-describedby="example-source-help">tempo: 100
+              <textarea class="ui-textarea ui-code" id="example-source" rows="4" spellcheck="false" aria-describedby="example-source-help">tempo: 100
 chords: C Am F G</textarea>
               <p id="example-source-help" class="ui-help">This field does not change an arrangement.</p>
             </div>

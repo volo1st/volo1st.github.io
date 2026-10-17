@@ -185,12 +185,14 @@ The shell subtracts `--site-gutter` once from the total width. A `32px` value pr
 
 Review the draft in `style-guide/components.css` before promoting it to shared assets.
 
-1. **Foundations:** Body, display, reading, and monospace fonts; a small text scale; semantic colors; spacing; radii; border roles; widths; and focus.
+1. **Foundations:** One serif family for default content and headings, one sans-serif family for interactive controls, and one monospace family for source text; a small text scale; semantic colors; spacing; radii; border roles; widths; and focus.
 2. **Common components:** Button, link-button, icon button, field, select, range, label/help, notice, panel, disclosure, table, metrics, language choice, and visually hidden text.
 3. **Page composition:** Home namecard, section index, reading page, service list, and app workspace. Composition uses components rather than redefining them.
 4. **App-specific displays:** Chord timeline, transport timing, pitch symbols, workflow sequencing, and domain data. These can use shared tokens without losing their own layout.
 
 Use explicit classes for common appearance. Use native attributes such as `disabled`, `readonly`, `aria-invalid`, `aria-pressed`, and `open` for state. Keep application logic responsible for when a state changes. Use domain attributes for accent variables rather than separate blue and green copies of each component.
+
+Typography direction selected on 17 October 2026: The owner prefers serif as the default. The draft now uses the same serif stack for headings, prose, notices, help, and table content. Buttons, inputs, selects, control labels, interface navigation, and disclosure summaries use system sans-serif. Inline content links retain the surrounding font. Code, arrangement source, and suitable technical values use monospace. Chinese serif fallbacks are part of the default stack. Existing page styles and current-style specimens have not been migrated.
 
 Do not use `!important` or broad element overrides to make one demo look correct. Do not introduce a framework or content generator for this package. Native range controls in the draft keep browser-specific geometry; their accent and surrounding layout are shared. If a custom track is selected, review both browser engines before migrating it.
 

@@ -553,6 +553,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 17 October 2026 | Start the style guide refinement with serif as the default, sans-serif for interactive controls, and monospace for source text and technical values. | The owner prefers this typography direction. Use one serif family for headings and prose. Keep inline links with their surrounding text. Review the draft before applying the rule to existing pages. |
 | 17 October 2026 | Audit existing HTML and CSS, and build a UI style guide before refactoring the site. | The owner reported style drift. Review common controls together. Preserve app-specific displays, such as chord cards. Approve the shared design before migrating existing pages. |
 | 17 October 2026 | Remove the homepage particle animation and its code, styles, and comparison option. | The owner requested removal. Keep the introduction, section links, social profiles, and existing spacing. This supersedes the earlier Sagittarius design decisions. |
 | 17 October 2026 | Keep checks proportionate to the change. Do not set up browser automation for text, links, placeholder pages, or simple style changes. | The owner found heavy test setup too slow for its value. Use the existing repository check and diff review. Use manual browser review when available. Missing browser review does not block these small changes. Keep meaningful functional and ABA safety tests. |
@@ -814,3 +815,11 @@ Engineering review: Prefer native buttons, inputs, selects, and disclosures. Kee
 Tracking at the completion boundary: Todoist task `6hmjQFvhpXv93Jmc` records the owner-selected audit and showcase package. Reconcile its result after committing. Do not promote the deferred project-model or content-system tasks.
 
 Next stage: Review and refine the draft with the owner. Do not start the site-wide migration in this package.
+
+### 21.1 Typography iteration
+
+Direction selected on 17 October 2026: Use serif by default for headings, prose, notices, help, and table content. Use sans-serif for buttons, inputs, selects, control labels, interface navigation, and disclosure summaries. Inline text links retain the surrounding content font. Use monospace for code, arrangement source, and technical values that need it.
+
+Use one local serif stack for both display and reading text. Include Chinese serif fallbacks. Keep system sans-serif for controls and one monospace stack for source text. Remove decorative monospace from guide headings and captions. Keep the current-style specimens unchanged for comparison. This iteration changes only the draft and its documentation.
+
+Verification evidence: `./scripts/check.sh` passed for all seven test files. The complete diff was reviewed. Refreshed both draft stylesheet hashes. Browser font rendering and visual review remain pending. No test tools were installed for this style change.
