@@ -106,9 +106,14 @@ For ABA changes, also test:
 - error recovery; and
 - download state.
 
-For interface changes, test keyboard use, visible focus, narrow screens, and 200 percent zoom.
+Keep verification proportionate to the change and its failure consequences.
 
-Add permanent automated tests when a change introduces behavior that can regress.
+- For text, link, placeholder-page, and simple style changes, use the existing repository check and review the diff.
+- Do not add browser automation, download browsers, or install system libraries for these small changes.
+- When a browser is available, use a short manual check for keyboard use, visible focus, narrow screens, and 200 percent zoom. If a browser is unavailable, record the missing review. Do not block these small changes on that review.
+- Use browser automation only when it can detect a specific, material failure that simpler checks cannot detect. Keep setup and execution time proportionate to that failure.
+- Add permanent automated tests for new or changed functional behavior when they protect against a meaningful regression. Do not add tests that only repeat static text or implementation details.
+- Keep the required financial-file validation and safety tests for ABA changes.
 
 ## Documentation and work tracking
 

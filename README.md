@@ -6,6 +6,8 @@ The home page is volo1st's public introduction. It links to the [Code](code/), [
 
 See [`plan.md`](plan.md) for current actions, product direction, and delivery phases.
 
+The Sound section links to Studio, [Room acoustics](sound/room-acoustics/), and [Live sound](sound/live-sound/). Room acoustics and Live sound have English placeholder pages. Both pages state that examples are coming soon. They do not list prices or confirm service availability.
+
 ## Studio rates
 
 The [studio index](studio/) shows the studio name, rates link, and studio social links. The [studio rates page](studio/rates/) lists the 2026 rates in English and Simplified Chinese. The Sound section links to the studio index. It uses the existing site language preference and stores no enquiry data. Enquiries use external studio social profiles.
@@ -76,6 +78,8 @@ Run this command before each commit or deployment. It completes these checks:
 - staged and unstaged whitespace.
 
 The script does not install software or send repository data to a service.
+
+For text, link, placeholder-page, and simple style changes, use this script and review the diff. Do not install browser-test tooling for these changes. If a browser is available, use a short manual review. Record an unavailable browser review without blocking the change. See `AGENTS.md` for the test rules for functional and financial-file changes.
 
 ## Deployment and recovery
 

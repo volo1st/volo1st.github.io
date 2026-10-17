@@ -558,6 +558,8 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 17 October 2026 | Keep checks proportionate to the change. Do not set up browser automation for text, links, placeholder pages, or simple style changes. | The owner found heavy test setup too slow for its value. Use the existing repository check and diff review. Use manual browser review when available. Missing browser review does not block these small changes. Keep meaningful functional and ABA safety tests. |
+| 16 October 2026 | Add Room acoustics and Live sound under Sound. Rename “my studio” to “Studio”. | The owner approved the labels and addresses. Room acoustics can cover demonstrations, measurements, and acoustic treatment services. Live sound can cover front-of-house mixing. Start with clearly marked placeholder pages. |
 | 15 October 2026 | Remove all breadcrumb summaries and their separators from Code, Sound, Music, and Tools. | The owner wants simpler navigation. Remove unused shared styles and refresh the stylesheet hashes. |
 | 13 October 2026 | Defer the formal project and tool model. Limit operations work to useful deployment, domain-recovery, revision-recovery, and license notes. | The owner wants maintenance suited to a small personal site. Existing instructions cover current safeguards. Add process only when a specific problem justifies it. |
 | 12 October 2026 | Keep the current Sound and Music pages. Defer featured videos. | The owner confirmed that the current links are sufficient. Select useful public material and its presentation before adding a featured entry. The content review is complete. Project and tool standards are next. |
@@ -751,3 +753,33 @@ Strumming revision on 15 October 2026: The owner auditioned a revised Get Lucky 
 Further strumming revision on 15 October 2026: Use the owner's revised pattern `| D UX D2P UX D - D2P - D - D4P U4 - U4 D4 -| x4`. The downstroke on beat 3-and now uses four strings with palm mute. Refresh the preset script hash.
 
 Writing revision on 15 October 2026: Use Oxford commas where appropriate in English lists of three or more items. Correct missing commas in studio text and current project documentation. Record the rule in `AGENTS.md`. Keep paired phrases such as “acoustic and electric instruments” unchanged. Refresh the studio translation script hash and update the text expectation in its existing test.
+
+## 20. Sound section placeholders
+
+Purpose: Give room acoustics and live sound work stable addresses under Sound.
+
+Selection on 16 October 2026: The owner selected this package and approved the labels and addresses. Todoist has no actionable website child task. Reconcile this package at the completion boundary. Leave deferred packages unchanged.
+
+Requirements and decisions:
+
+- Show Studio, Room acoustics, and Live sound on `/sound/`.
+- Keep `/studio/`. Add `/sound/room-acoustics/` and `/sound/live-sound/`.
+- Describe room measurements and acoustic treatment on the Room acoustics page.
+- Describe front-of-house mixing on the Live sound page. An abbreviation is not necessary.
+- Mark both new pages with “Examples coming soon.” Do not add unverified examples, prices, or service availability claims.
+- Keep the English section-page convention and the existing site design. Use plain HTML, local styles, and breadcrumb links to Sound.
+- Use real destination pages. If examples are unavailable, show the placeholder text.
+
+Design review: Static pages and ordinary links meet this package's needs. The shared shell supplies visible focus and wrapping breadcrumbs. Reuse the section link layout. Use a small local stylesheet for the detail pages. No script, external dependency, or new network service is required.
+
+- [x] Add the links and placeholder pages.
+  - Evidence: Sound links to Studio, Room acoustics, and Live sound. Both new pages include a heading, a short description, breadcrumb links, and “Examples coming soon.”
+- [x] Run the repository check and review the complete diff.
+  - Evidence: `./scripts/check.sh` passed for all seven test files. Existing tests check the Sound destinations, local references, HTML identifiers, and current asset hashes. The complete source diff and new files were reviewed.
+- Optional review: Check keyboard use, visible focus, narrow screens, and 200 percent zoom when a browser is available. This review has not run.
+- [x] Record verification limits.
+  - Evidence: Manual browser review did not run. The owner-approved verification rule permits this static-page package to proceed with the repository check and diff review. Commit the verified source changes together. Deployment remains separate.
+
+Blocker recorded on 17 October 2026: The environment has no installed browser. A temporary Playwright and Chromium download succeeded after network approval. Chromium could not run from `/tmp` because that mount blocks executable files. After an approved workspace launch, Chromium reported missing system libraries, including `libglib-2.0.so.0`. No browser test ran. The temporary browser was moved out of the repository. Do not install system libraries as part of this content package. Browser review, the package commit, and Todoist completion remain pending. Deployment is not part of this package.
+
+Verification decision on 17 October 2026: The owner rejected heavy automated test setup for small changes because it provides little value and takes too long. Record this rule in `AGENTS.md` and the README. The unavailable browser review is now optional for this static-page package. The recorded browser blocker no longer prevents a commit. Keep the missing review visible. Todoist has no matching package task to complete. Leave deferred tasks unchanged.

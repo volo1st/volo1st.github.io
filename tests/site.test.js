@@ -222,7 +222,7 @@ test('the public section indexes provide useful destinations', () => {
     assert.doesNotMatch(html, /breadcrumb-summary/);
     assert.match(html, /class="site-breadcrumb"/);
     if (section.directory === 'sound') {
-      assert.match(html, /href="\.\.\/studio\/">my studio<\/a>/);
+      assert.match(html, /href="\.\.\/studio\/">Studio<\/a>/);
     } else {
       assert.match(html, /<p class="section-status">More when there’s something worth showing\.<\/p>/);
     }
@@ -242,7 +242,9 @@ test('the public section indexes provide useful destinations', () => {
   const soundHtml = fs.readFileSync(path.join(repositoryRoot, 'sound', 'index.html'), 'utf8');
   const musicHtml = fs.readFileSync(path.join(repositoryRoot, 'music', 'index.html'), 'utf8');
   assert.match(codeHtml, /href="\.\.\/tools\/"/);
-  assert.match(soundHtml, /href="\.\.\/studio\/">my studio<\/a>/);
+  assert.match(soundHtml, /href="\.\.\/studio\/">Studio<\/a>/);
+  assert.match(soundHtml, /href="\.\/room-acoustics\/">Room acoustics<\/a>/);
+  assert.match(soundHtml, /href="\.\/live-sound\/">Live sound<\/a>/);
   assert.match(musicHtml, /href="\.\.\/tools\/guitar-strumming\/"/);
 });
 
@@ -336,6 +338,15 @@ test('versioned interface assets use their current content hash', () => {
         '../assets/favicon.svg',
         '../assets/site-shell.css',
         '../assets/section-index.css',
+      ],
+    })),
+    ...['room-acoustics', 'live-sound'].map((directory) => ({
+      file: path.join(repositoryRoot, 'sound', directory, 'index.html'),
+      references: [
+        '../../assets/favicon.svg',
+        '../../assets/site-shell.css',
+        '../../assets/section-index.css',
+        '../details.css',
       ],
     })),
     {
