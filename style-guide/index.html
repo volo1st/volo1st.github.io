@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <meta name="theme-color" content="#f4f1e8">
+    <meta name="description" content="Draft UI style guide and current component comparisons for volo1st.">
+    <title>UI style guide | volo1st</title>
+    <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
+    <link rel="stylesheet" href="../assets/site-shell.css?v=73514134a473">
+    <link rel="stylesheet" href="./components.css?v=a6df086eef97">
+    <link rel="stylesheet" href="./guide.css?v=5f2d5861c7d2">
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-breadcrumb" aria-label="Breadcrumb">
+        <a href="../">
+          volo1st
+        </a>
+        <span aria-hidden="true">
+          /
+        </span>
+        <span aria-current="page">
+          UI style guide
+        </span>
+      </nav>
+    </header>
+    <main class="site-main guide-main">
+      <header class="guide-intro">
+        <p class="guide-eyebrow">Draft 01 · for review</p>
+        <h1 class="ui-title">One site. One shared language.</h1>
+        <p class="guide-lead">A working user interface (UI) style guide for type, controls, and common patterns. Compare the current styles. Then refine the shared draft before changing existing pages.</p>
+        <p class="ui-small">The draft styles apply only to this guide. Buttons show visual states and do not run app actions. Native fields and disclosures can be used. No input is stored or processed.</p>
+        <p><a class="ui-link" href="../docs/ui-audit.md">Read the HTML and CSS audit</a></p>
+      </header>
+      <nav class="guide-nav" aria-label="Style guide sections">
+        <a class="ui-link" href="#type">
+          Typography
+        </a>
+        <a class="ui-link" href="#foundations">
+          Foundations
+        </a>
+        <a class="ui-link" href="#actions">
+          Actions
+        </a>
+        <a class="ui-link" href="#fields">
+          Fields
+        </a>
+        <a class="ui-link" href="#notices">
+          Notices
+        </a>
+        <a class="ui-link" href="#patterns">
+          Patterns
+        </a>
+        <a class="ui-link" href="#current">
+          Current styles
+        </a>
+        <a class="ui-link" href="#review">
+          Review
+        </a>
+      </nav>
+      <section id="type" class="guide-section" aria-labelledby="type-heading">
+        <p class="guide-eyebrow">01 / Typography</p>
+        <h2 id="type-heading" class="ui-heading">Four roles, with room to breathe.</h2>
+        <p class="ui-small">These are local font stacks. The actual fonts depend on the device. Compare English and Chinese before choosing the final set.</p>
+        <div class="guide-grid">
+          <article class="guide-sample">
+            <h3 class="guide-caption">Body / system sans-serif</h3>
+            <p class="guide-font-sample guide-font-body">Clear controls. Useful information.</p>
+            <p class="guide-font-sample guide-font-body" lang="zh-Hans">清晰的控件。实用的信息。</p>
+            <p class="ui-small">Labels, controls, help, and app text.</p>
+          </article>
+          <article class="guide-sample">
+            <h3 class="guide-caption">Display / site serif</h3>
+            <p class="guide-font-sample guide-font-display">Recordings, rooms, and live stages.</p>
+            <p class="guide-font-sample guide-font-display" lang="zh-Hans">录音、房间声学与现场扩声。</p>
+            <p class="ui-small">Page titles and section headings.</p>
+          </article>
+          <article class="guide-sample">
+            <h3 class="guide-caption">Reading / serif with Chinese fallbacks</h3>
+            <p class="guide-font-sample guide-font-reading">Good sound starts with careful listening.</p>
+            <p class="guide-font-sample guide-font-reading" lang="zh-Hans">好的声音始于仔细聆听。</p>
+            <p class="ui-small">Longer descriptions and studio content.</p>
+          </article>
+          <article class="guide-sample">
+            <h3 class="guide-caption">Code / monospace</h3>
+            <p class="guide-font-sample guide-font-mono">tempo: 100<br>chords: C Am F G</p>
+            <p class="guide-font-sample guide-font-mono" lang="zh-Hans">速度：100<br>和弦：C Am F G</p>
+            <p class="ui-small">Source text, code, and technical values.</p>
+          </article>
+        </div>
+        <div class="guide-sample guide-follow">
+          <p class="guide-caption">Type hierarchy / sample text, not extra document headings</p>
+          <p class="ui-title">A clear starting point.</p>
+          <p class="ui-heading">A section worth reading.</p>
+          <p class="ui-subheading">A useful group of controls</p>
+          <p>Body text explains what happens next. Use the same term for the same item.</p>
+          <p class="ui-small">Supporting text adds a limit or a short instruction.</p>
+          <p class="ui-code">00:42 / 03:20 · 100 beats per minute</p>
+        </div>
+      </section>
+      <section id="foundations" class="guide-section" aria-labelledby="foundations-heading">
+        <p class="guide-eyebrow">02 / Foundations</p>
+        <h2 id="foundations-heading" class="ui-heading">Warm surfaces. Clear accents.</h2>
+        <div class="guide-swatches">
+          <div class="guide-swatch guide-swatch--page">
+            <span>
+              Page
+            </span>
+            <code>#f4f1e8</code>
+          </div>
+          <div class="guide-swatch guide-swatch--panel">
+            <span>
+              Panel
+            </span>
+            <code>#fffdf7</code>
+          </div>
+          <div class="guide-swatch guide-swatch--text">
+            <span>
+              Text
+            </span>
+            <code>#17202a</code>
+          </div>
+          <div class="guide-swatch guide-swatch--muted">
+            <span>
+              Muted text
+            </span>
+            <code>#4a4a43</code>
+          </div>
+          <div class="guide-swatch guide-swatch--blue">
+            <span>
+              General tools
+            </span>
+            <code>#075a9c</code>
+          </div>
+          <div class="guide-swatch guide-swatch--green">
+            <span>
+              Music tools
+            </span>
+            <code>#27644e</code>
+          </div>
+          <div class="guide-swatch guide-swatch--focus">
+            <span>
+              Keyboard focus
+            </span>
+            <code>#9b5c00</code>
+          </div>
+          <div class="guide-swatch guide-swatch--border">
+            <span>
+              Control border
+            </span>
+            <code>#777263</code>
+          </div>
+        </div>
+        <div class="guide-grid guide-follow">
+          <div class="guide-sample">
+            <h3 class="ui-subheading">Spacing scale</h3>
+            <div class="guide-space guide-space--1">
+              0.25rem
+            </div>
+            <div class="guide-space guide-space--2">
+              0.5rem
+            </div>
+            <div class="guide-space guide-space--3">
+              0.75rem
+            </div>
+            <div class="guide-space guide-space--4">
+              1rem
+            </div>
+            <div class="guide-space guide-space--6">
+              1.5rem
+            </div>
+            <div class="guide-space guide-space--8">
+              2rem
+            </div>
+          </div>
+          <div class="guide-sample">
+            <h3 class="ui-subheading">Shape and focus</h3>
+            <p>Controls use a 0.4rem radius. Panels use a 0.65rem radius. Standard controls are at least 2.75rem high.</p>
+            <p class="ui-small">Press Tab to inspect the existing shared focus outline. Hover samples use the pointer. Do not remove focus when changing the final design.</p>
+            <button type="button" class="ui-button">
+              Focus sample
+            </button>
+          </div>
+        </div>
+      </section>
+      <section id="actions" class="guide-section" aria-labelledby="actions-heading">
+        <p class="guide-eyebrow">03 / Actions</p>
+        <h2 id="actions-heading" class="ui-heading">The same button, in each context.</h2>
+        <div class="guide-grid">
+          <div class="guide-sample">
+            <h3 class="guide-caption">General / blue accent</h3>
+            <div class="guide-row">
+              <button type="button" class="ui-button ui-button--primary">
+                Primary action
+              </button>
+              <button type="button" class="ui-button">
+                Secondary
+              </button>
+              <button type="button" class="ui-button ui-button--quiet">
+                Quiet action
+              </button>
+            </div>
+          </div>
+          <div class="guide-sample" data-domain="music">
+            <h3 class="guide-caption">Music / green accent</h3>
+            <div class="guide-row">
+              <button type="button" class="ui-button ui-button--primary">
+                Primary action
+              </button>
+              <button type="button" class="ui-button">
+                Secondary
+              </button>
+              <button type="button" class="ui-button ui-button--quiet">
+                Quiet action
+              </button>
+            </div>
+          </div>
+          <div class="guide-sample">
+            <h3 class="guide-caption">Unavailable and busy</h3>
+            <div class="guide-row">
+              <button type="button" class="ui-button ui-button--primary" disabled>
+                Primary unavailable
+              </button>
+              <button type="button" class="ui-button" disabled>
+                Secondary unavailable
+              </button>
+              <button type="button" class="ui-button" disabled aria-busy="true">
+                Processing…
+              </button>
+            </div>
+            <p class="ui-small">Static state examples. No background task is running.</p>
+          </div>
+          <div class="guide-sample">
+            <h3 class="guide-caption">Selected, icon, and caution</h3>
+            <div class="guide-row">
+              <button type="button" class="ui-button" aria-pressed="true">
+                Loop
+              </button>
+              <button type="button" class="ui-button" aria-pressed="false">
+                Loop
+              </button>
+              <button type="button" class="ui-button ui-button--icon" aria-label="Play sample">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M7 4v16l14-8z"></path>
+                </svg>
+              </button>
+              <button type="button" class="ui-button ui-button--danger">
+                Remove item
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="guide-sample guide-follow">
+          <h3 class="guide-caption">Links / navigation keeps link semantics</h3>
+          <div class="guide-row">
+            <a class="ui-link" href="#review">
+              Neutral text link
+            </a>
+            <a class="ui-link ui-link--accent" href="#review">
+              Accent text link
+            </a>
+            <a class="ui-button ui-button--primary" href="#review">
+              Link styled as a button
+            </a>
+          </div>
+          <p class="ui-small">These links open the Review section. They do not run an app action.</p>
+        </div>
+      </section>
+      <section id="fields" class="guide-section" aria-labelledby="fields-heading">
+        <p class="guide-eyebrow">04 / Fields</p>
+        <h2 id="fields-heading" class="ui-heading">One family of common controls.</h2>
+        <div class="guide-grid">
+          <div class="guide-sample guide-stack">
+            <div class="ui-field">
+              <label class="ui-label" for="example-text">Project name</label>
+              <input class="ui-input" id="example-text" type="text" value="Room study" aria-describedby="example-text-help">
+              <p class="ui-help" id="example-text-help">A short label for this example.</p>
+            </div>
+            <div class="ui-field">
+              <label class="ui-label" for="example-number">Tempo, in beats per minute</label>
+              <input class="ui-input" id="example-number" type="number" min="30" max="300" step="1" value="100">
+            </div>
+            <div class="ui-field">
+              <label class="ui-label" for="example-select">Export format</label>
+              <select class="ui-select" id="example-select">
+                <option>WAV</option>
+                <option>MP3 · 320 kbit/s</option>
+                <option>A longer option to check available space</option>
+              </select>
+            </div>
+            <div class="ui-field">
+              <label class="ui-label" for="example-range">Level</label>
+              <input class="ui-range" id="example-range" type="range" min="0" max="100" value="42">
+              <p class="ui-help">Native range control. Use arrow keys to change the value.</p>
+            </div>
+          </div>
+          <div class="guide-sample guide-stack" data-domain="music">
+            <div class="ui-field">
+              <label class="ui-label" for="example-invalid">Project name · invalid state</label>
+              <input class="ui-input" id="example-invalid" type="text" value="" aria-invalid="true" aria-describedby="example-invalid-help">
+              <p id="example-invalid-help" class="ui-help ui-help--error">Enter a project name. This is a static error example.</p>
+            </div>
+            <div class="ui-field">
+              <label class="ui-label" for="example-readonly">Read-only result</label>
+              <input class="ui-input ui-code" id="example-readonly" type="text" value="Example result" readonly>
+            </div>
+            <div class="ui-field">
+              <label class="ui-label" for="example-disabled">Unavailable format</label>
+              <select class="ui-select" id="example-disabled" disabled>
+                <option>Select a file first</option>
+              </select>
+            </div>
+            <div class="ui-field">
+              <label class="ui-label" for="example-music-range">Music accent</label>
+              <input class="ui-range" id="example-music-range" type="range" min="30" max="300" value="100">
+            </div>
+            <div class="ui-field">
+              <label class="ui-label" for="example-disabled-range">Unavailable slider</label>
+              <input class="ui-range" id="example-disabled-range" type="range" min="0" max="100" value="0" disabled>
+            </div>
+          </div>
+          <div class="guide-sample guide-stack">
+            <div class="ui-field">
+              <label class="ui-label" for="example-source">Source text</label>
+              <textarea class="ui-textarea" id="example-source" rows="4" spellcheck="false" aria-describedby="example-source-help">tempo: 100
+chords: C Am F G</textarea>
+              <p id="example-source-help" class="ui-help">This field does not change an arrangement.</p>
+            </div>
+            <div class="ui-field">
+              <label class="ui-label" for="example-file">File control</label>
+              <input class="ui-file" id="example-file" type="file" aria-describedby="example-file-help">
+              <p class="ui-help" id="example-file-help">No file is read, uploaded, or converted by this guide.</p>
+            </div>
+          </div>
+          <div class="guide-sample guide-stack">
+            <div class="ui-field">
+              <label class="ui-label" for="example-chinese" lang="zh-Hans">项目名称</label>
+              <input class="ui-input" id="example-chinese" type="text" value="房间声学示例" lang="zh-Hans">
+              <p class="ui-help" lang="zh-Hans">输入简短的项目名称。</p>
+            </div>
+            <fieldset class="ui-panel">
+              <legend class="ui-label">Related options</legend>
+              <label class="ui-choice"><input type="checkbox" checked> Include a count-in</label>
+              <label class="ui-choice"><input type="radio" name="sample-mode" value="original" checked> Original</label>
+              <label class="ui-choice"><input type="radio" name="sample-mode" value="preview"> Preview</label>
+            </fieldset>
+            <p class="ui-small">Checkboxes and radio buttons are native examples for future common controls. Current apps mostly use selects.</p>
+          </div>
+        </div>
+      </section>
+      <section id="notices" class="guide-section" aria-labelledby="notices-heading">
+        <p class="guide-eyebrow">05 / Notices</p>
+        <h2 id="notices-heading" class="ui-heading">Meaning comes before color.</h2>
+        <p class="ui-small">These samples are static. Apps should keep their live status and error announcements when adopting the visual styles.</p>
+        <div class="guide-grid">
+          <aside class="ui-notice" aria-labelledby="notice-info">
+            <h3 id="notice-info" class="ui-subheading">Information</h3>
+            <p>Select an example to continue.</p>
+          </aside>
+          <aside class="ui-notice" data-tone="success" aria-labelledby="notice-success">
+            <h3 id="notice-success" class="ui-subheading">Success</h3>
+            <p>The example is ready to review.</p>
+          </aside>
+          <aside class="ui-notice" data-tone="warning" aria-labelledby="notice-warning">
+            <h3 id="notice-warning" class="ui-subheading">Warning</h3>
+            <p>Review the source before you continue.</p>
+          </aside>
+          <aside class="ui-notice" data-tone="error" aria-labelledby="notice-error">
+            <h3 id="notice-error" class="ui-subheading">Error</h3>
+            <p>The example has two issues.</p>
+            <ul>
+              <li>
+                Enter a project name.
+              </li>
+              <li>
+                Select an output format.
+              </li>
+            </ul>
+          </aside>
+        </div>
+        <div class="guide-grid guide-follow">
+          <div class="ui-notice">
+            <div class="ui-notice__row">
+              <div>
+                <h3 class="ui-subheading">Dismissible notice sample</h3>
+                <p>The notice content is separate from overlay placement.</p>
+              </div>
+              <button type="button" class="ui-button ui-button--quiet ui-button--icon" aria-label="Dismiss sample notice">
+                ×
+              </button>
+            </div>
+            <p class="ui-small">Static sample. This close button does not dismiss the notice.</p>
+          </div>
+          <div class="ui-panel">
+            <h3 class="ui-subheading">Empty state</h3>
+            <p class="ui-small">No examples are selected.</p>
+            <p>Describe the next step instead of showing a blank panel.</p>
+          </div>
+        </div>
+      </section>
+      <section id="patterns" class="guide-section" aria-labelledby="patterns-heading">
+        <p class="guide-eyebrow">06 / Patterns</p>
+        <h2 id="patterns-heading" class="ui-heading">Reusable pieces, distinct pages.</h2>
+        <div class="guide-grid">
+          <article class="ui-panel ui-panel--raised">
+            <h3 class="ui-subheading">A content panel</h3>
+            <p class="ui-reading">A panel groups related content. Use a plain section when a border and surface do not add meaning.</p>
+            <a class="ui-link" href="#review">
+              Review the draft
+            </a>
+          </article>
+          <div class="ui-panel">
+            <h3 class="ui-subheading">Label and value pairs</h3>
+            <dl class="ui-metrics">
+              <div>
+                <dt>Duration</dt>
+                <dd>3:20</dd>
+              </div>
+              <div>
+                <dt>Sample rate</dt>
+                <dd>48 kHz</dd>
+              </div>
+            </dl>
+          </div>
+          <details class="ui-disclosure">
+            <summary>Closed disclosure</summary>
+            <div class="ui-disclosure__body">
+              <p>Native HTML provides keyboard behavior and open state.</p>
+            </div>
+          </details>
+          <details class="ui-disclosure" open>
+            <summary>Open disclosure</summary>
+            <div class="ui-disclosure__body">
+              <p>Keep the same border, padding, and type in both states.</p>
+              <a class="ui-link" href="#review">
+                Review this component
+              </a>
+            </div>
+          </details>
+        </div>
+        <div class="ui-table-scroll guide-table" tabindex="0" role="region" aria-label="Example file table">
+          <table class="ui-table">
+            <caption>Example files · invented data</caption>
+            <thead>
+              <tr>
+                <th scope="col">
+                  File
+                </th>
+                <th scope="col">
+                  Format
+                </th>
+                <th scope="col">
+                  State
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  room-example.wav
+                </td>
+                <td>
+                  WAV
+                </td>
+                <td>
+                  Ready
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  practice-example.mp3
+                </td>
+                <td>
+                  MP3
+                </td>
+                <td>
+                  Waiting
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <hr class="ui-divider">
+        <p class="ui-small">Breadcrumbs and the language control already have a shared source. Their current variants appear below. Chord cards, pitch symbols, and audio timing remain specialized components.</p>
+      </section>
+      <section id="current" class="guide-section" aria-labelledby="current-heading">
+        <p class="guide-eyebrow">07 / Current styles</p>
+        <h2 id="current-heading" class="ui-heading">Compare what the site uses today.</h2>
+        <p>Each preview loads the current source stylesheets in a separate document. The draft above cannot change them. Open a specimen on its own to check the full page width.</p>
+        <details class="ui-disclosure guide-current">
+          <summary>Public pages · introduction, links, and headings</summary>
+          <div class="ui-disclosure__body">
+            <p><a class="ui-link" href="./public.html" target="_blank" rel="noopener noreferrer">Open public-page specimen</a></p>
+            <iframe title="Current public-page typography and links" src="./public.html" loading="lazy"></iframe>
+          </div>
+        </details>
+        <details class="ui-disclosure guide-current">
+          <summary>Studio rates · reading text, service rows, and language choice</summary>
+          <div class="ui-disclosure__body">
+            <p><a class="ui-link" href="./studio.html" target="_blank" rel="noopener noreferrer">Open studio specimen</a></p>
+            <iframe title="Current studio rate styles" src="./studio.html" loading="lazy"></iframe>
+          </div>
+        </details>
+        <details class="ui-disclosure guide-current">
+          <summary>Converter · primary actions, fields, safety, and errors</summary>
+          <div class="ui-disclosure__body">
+            <p><a class="ui-link" href="./converter.html" target="_blank" rel="noopener noreferrer">Open converter specimen</a></p>
+            <iframe title="Current converter controls and notices" src="./converter.html" loading="lazy"></iframe>
+          </div>
+        </details>
+        <details class="ui-disclosure guide-current">
+          <summary>Guitar · controls, validation, and the specialized chord card</summary>
+          <div class="ui-disclosure__body">
+            <p><a class="ui-link" href="./guitar.html" target="_blank" rel="noopener noreferrer">Open guitar specimen</a></p>
+            <iframe title="Current Guitar Strum Machine controls and chord card" src="./guitar.html" loading="lazy"></iframe>
+          </div>
+        </details>
+        <details class="ui-disclosure guide-current">
+          <summary>Pitch Shifter · controls, seek slider, and status tones</summary>
+          <div class="ui-disclosure__body">
+            <p><a class="ui-link" href="./pitch.html" target="_blank" rel="noopener noreferrer">Open pitch specimen</a></p>
+            <iframe title="Current Pitch Shifter controls and status" src="./pitch.html" loading="lazy"></iframe>
+          </div>
+        </details>
+      </section>
+      <footer id="review" class="guide-footer">
+        <p class="guide-eyebrow">08 / Review</p>
+        <h2 class="ui-heading">Choose the system before migrating.</h2>
+        <ol>
+          <li>
+            Choose the fonts and text sizes.
+          </li>
+          <li>
+            Choose control borders, heights, spacing, and disabled treatment.
+          </li>
+          <li>
+            Choose notice tones and panel density.
+          </li>
+          <li>
+            Review long labels, Chinese text, keyboard focus, narrow layouts, and 200 percent zoom.
+          </li>
+          <li>
+            Approve the draft. Then migrate one page or app at a time.
+          </li>
+        </ol>
+        <p class="ui-small">Source review and the existing repository checks cover this first draft. Browser review remains for the visual iteration. No browser tooling is installed for this package.</p>
+        <p><a class="ui-link" href="../docs/ui-audit.md">Component inventory and migration boundaries</a></p>
+      </footer>
+    </main>
+  </body>
+</html>

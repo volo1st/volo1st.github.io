@@ -310,6 +310,15 @@ test('converter examples use explicit invented identities', () => {
 
 test('versioned interface assets use their current content hash', () => {
   const pages = [
+    ...fs.readdirSync(path.join(repositoryRoot, 'style-guide'))
+      .filter((filename) => filename.endsWith('.html'))
+      .map((filename) => {
+        const file = path.join(repositoryRoot, 'style-guide', filename);
+        const html = fs.readFileSync(file, 'utf8');
+        const references = [...html.matchAll(/<link\b[^>]*href="([^"]+)"/g)]
+          .map((match) => match[1].split(/[?#]/, 1)[0]);
+        return { file, references };
+      }),
     {
       file: path.join(repositoryRoot, 'index.html'),
       references: [

@@ -6,6 +6,8 @@ The home page is volo1st's public introduction. It links to the [Code](code/), [
 
 See [`plan.md`](plan.md) for current actions, product direction, and delivery phases.
 
+The [UI style guide](style-guide/) contains a draft shared design and isolated examples of the current page styles. The [HTML and CSS audit](docs/ui-audit.md) records components, semantics, style differences, and migration boundaries. Open `style-guide/index.html` directly in a browser. The guide needs no build step, app engine, or server. It stores no input and reads no selected file. Its action buttons show visual states only. Existing pages do not load the draft component styles. Review the guide before migrating them. Keep `style-guide/components.css` as the draft source until the design is approved. The guide is public if deployed; `noindex` is not access control.
+
 The Sound section links to Studio, [Room acoustics](sound/room-acoustics/), and [Live sound](sound/live-sound/). Room acoustics and Live sound have English placeholder pages. Both pages state that examples are coming soon. They do not list prices or confirm service availability.
 
 ## Studio rates

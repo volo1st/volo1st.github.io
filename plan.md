@@ -553,6 +553,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 17 October 2026 | Audit existing HTML and CSS, and build a UI style guide before refactoring the site. | The owner reported style drift. Review common controls together. Preserve app-specific displays, such as chord cards. Approve the shared design before migrating existing pages. |
 | 17 October 2026 | Remove the homepage particle animation and its code, styles, and comparison option. | The owner requested removal. Keep the introduction, section links, social profiles, and existing spacing. This supersedes the earlier Sagittarius design decisions. |
 | 17 October 2026 | Keep checks proportionate to the change. Do not set up browser automation for text, links, placeholder pages, or simple style changes. | The owner found heavy test setup too slow for its value. Use the existing repository check and diff review. Use manual browser review when available. Missing browser review does not block these small changes. Keep meaningful functional and ABA safety tests. |
 | 16 October 2026 | Add Room acoustics and Live sound under Sound. Rename “my studio” to “Studio”. | The owner approved the labels and addresses. Room acoustics can cover demonstrations, measurements, and acoustic treatment services. Live sound can cover front-of-house mixing. Start with clearly marked placeholder pages. |
@@ -779,3 +780,37 @@ Design review: Static pages and ordinary links meet this package's needs. The sh
 Blocker recorded on 17 October 2026: The environment has no installed browser. A temporary Playwright and Chromium download succeeded after network approval. Chromium could not run from `/tmp` because that mount blocks executable files. After an approved workspace launch, Chromium reported missing system libraries, including `libglib-2.0.so.0`. No browser test ran. The temporary browser was moved out of the repository. Do not install system libraries as part of this content package. Browser review, the package commit, and Todoist completion remain pending. Deployment is not part of this package.
 
 Verification decision on 17 October 2026: The owner rejected heavy automated test setup for small changes because it provides little value and takes too long. Record this rule in `AGENTS.md` and the README. The unavailable browser review is now optional for this static-page package. The recorded browser blocker no longer prevents a commit. Keep the missing review visible. Todoist has no matching package task to complete. Leave deferred tasks unchanged.
+
+## 21. HTML and CSS audit, and UI style guide
+
+Selection on 17 October 2026: The owner selected this package. Todoist has no actionable website task. The existing deferred tasks do not cover this work. Keep them unchanged.
+
+Purpose: Identify current component semantics and style differences. Give the owner one page to review before selecting a shared design.
+
+Requirements and decisions:
+
+- Inspect every maintained HTML page and stylesheet. Record the frozen legacy page separately.
+- Record page structure, fonts, colors, spacing, components, states, semantic risks, and app-specific exceptions in `docs/ui-audit.md`.
+- Add `/style-guide/` as a static component showcase. Keep it out of the homepage navigation during review.
+- Show a clearly marked draft for shared components and isolated examples from the current stylesheets. Do not copy current CSS into the examples.
+- Show typography, bilingual text samples, links, buttons, text fields, selects, sliders, notices, panels, disclosures, tables, metrics, and common states.
+- Use existing local assets and native HTML controls. Do not add a framework, build system, browser-test installation, audio engine, or conversion logic.
+- Keep candidate component CSS under `style-guide/` until the owner accepts it. Existing page styles remain unchanged.
+- Review the showcase with the owner in the next stage. Migrate common controls only after that review. Preserve specialized chord and audio displays, current addresses, translation keys, and app state behavior.
+
+Failure behavior: The showcase has no payment, audio, or download operations. Static state samples remain visible without JavaScript. Each current-style example loads its own family of page styles in a separate document, so app selectors cannot change another example. A missing stylesheet remains a missing-reference check failure.
+
+Engineering review: Prefer native buttons, inputs, selects, and disclosures. Keep action semantics separate from navigation semantics. CSS tokens alone do not share a component's markup, state rules, or dimensions. Use isolated documents to compare the existing cascades before extracting shared classes. The audit records the primary references and the limits of source-only review.
+
+- [x] Complete the source audit and migration recommendations.
+  - Evidence: `docs/ui-audit.md` inventories all 14 existing HTML documents and 11 stylesheets at revision `ec8eadf`. It records component semantics, foundations, style differences, state risks, specialized exceptions, and a staged migration sequence.
+- [x] Build the draft showcase and current-style examples.
+  - Evidence: `/style-guide/` contains a shared-component draft and five isolated current-style specimens. The specimens load the existing source stylesheets. No existing page imports the draft CSS. The guide has no scripts or app engines.
+- [x] Run the existing repository check and review the complete diff.
+  - Evidence: `./scripts/check.sh` passed for all seven test files. The existing asset-hash check includes all guide documents. The source diff was reviewed. No browser tooling was added.
+- [x] Record review limits.
+  - Evidence: Browser rendering, keyboard operation, device fonts, and zoom have not been reviewed. This is a source audit and a visual-review draft. Manual review belongs to the next stage. Commit this verified first package without migrating existing pages.
+
+Tracking at the completion boundary: Todoist task `6hmjQFvhpXv93Jmc` records the owner-selected audit and showcase package. Reconcile its result after committing. Do not promote the deferred project-model or content-system tasks.
+
+Next stage: Review and refine the draft with the owner. Do not start the site-wide migration in this package.

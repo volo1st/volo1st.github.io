@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en-AU" data-domain="music">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <title>Current pitch styles | UI style guide</title>
+    <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
+    <link rel="stylesheet" href="../assets/site-shell.css?v=73514134a473">
+    <link rel="stylesheet" href="../tools/pitch-shifter/styles.css?v=46446ceef39c">
+    <link rel="stylesheet" href="./specimens.css?v=458d210c7d38">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-context-row">
+        <nav class="site-breadcrumb" aria-label="Breadcrumb">
+          <a href="./">
+            UI style guide
+          </a>
+          <span aria-hidden="true">
+            /
+          </span>
+          <span aria-current="page">
+            Current pitch styles
+          </span>
+        </nav>
+        <div class="language-switcher" role="group" aria-label="Language state samples">
+          <button type="button" aria-pressed="true">
+            EN
+          </button>
+          <button type="button" aria-pressed="false" lang="zh-Hans">
+            中文
+          </button>
+        </div>
+      </div>
+    </header>
+    <main class="site-main pitch-main specimen-shell">
+      <h1>Pitch component samples</h1>
+      <p class="specimen-caption">Current source: Pitch Shifter. No audio, file-reading, or export logic. Buttons show states only.</p>
+      <section class="workflow-section" aria-labelledby="pitch-controls">
+        <h2 id="pitch-controls">Common controls</h2>
+        <div class="specimen-row">
+          <button type="button" class="primary-action">
+            Primary action
+          </button>
+          <button type="button" class="secondary-button">
+            Secondary
+          </button>
+          <button type="button" class="primary-action" disabled>
+            Unavailable
+          </button>
+        </div>
+        <div class="pitch-stepper">
+          <button type="button" aria-label="Decrease pitch sample">
+            −
+          </button>
+          <output id="semitones">
+            +2
+          </output>
+          <button type="button" aria-label="Increase pitch sample">
+            +
+          </button>
+          <button type="button" class="secondary-button reset-button">
+            Reset
+          </button>
+        </div>
+        <div class="transport-position">
+          <label for="transport-position">Seek slider sample</label>
+          <input id="transport-position" type="range" min="0" max="200" value="84" step="0.1">
+          <div class="transport-times" aria-hidden="true">
+            <span>
+              1:24
+            </span>
+            <span>
+              3:20
+            </span>
+          </div>
+        </div>
+        <p class="specimen-caption">The static progress fill is a fixture. The app updates it during playback.</p>
+        <div class="result-actions">
+          <button type="button" class="primary-action shift-action">
+            Export sample
+          </button>
+          <a class="button-link" href="./">
+            Link button
+          </a>
+        </div>
+        <p class="status" data-tone="normal">Information status sample.</p>
+        <p class="status" data-tone="warning">Warning status sample.</p>
+        <p class="status" data-tone="error">Error status sample.</p>
+      </section>
+      <details class="info-section" open>
+        <summary>Current disclosure and select</summary>
+        <div class="advanced-control">
+          <label for="pitch-format">Output format</label>
+          <select id="pitch-format" aria-describedby="pitch-format-help">
+            <option>WAV</option>
+            <option>MP3 · 320 kbit/s</option>
+          </select>
+          <p id="pitch-format-help" class="control-help">Compare the one-pixel border and tinted surface.</p>
+        </div>
+      </details>
+      <details class="info-section" open>
+        <summary>Current metrics</summary>
+        <dl class="metrics">
+          <div>
+            <dt>Duration</dt>
+            <dd>3:20</dd>
+          </div>
+          <div>
+            <dt>Sample rate</dt>
+            <dd>48 kHz</dd>
+          </div>
+        </dl>
+      </details>
+    </main>
+  </body>
+</html>

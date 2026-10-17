@@ -1,0 +1,16 @@
+/* Specimen layout only. Component appearance comes from the current page CSS. */
+.specimen-shell { padding-block: 1rem 3rem; }
+.specimen-caption { margin: 0 0 1rem; color: var(--site-muted); font: 0.8rem/1.5 system-ui, sans-serif; }
+.specimen-block { margin-block: 1.5rem; }
+.specimen-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.specimen-stack { display: grid; gap: 0.75rem; }
+.specimen-shell .section-destinations { margin-top: 1.5rem; }
+.specimen-shell .home-hero { margin-bottom: 1.5rem; }
+.specimen-shell #transport-position { --transport-progress: 42%; }
+/* The app normally supplies these timing values from its chord presentation. */
+.specimen-chord { --bar-min-width: 12rem; }
+.specimen-chord .chord-label-lanes { --label-lane-count: 1; }
+.specimen-chord .chord-change-label { --label-lane: 0; left: 0; }
+.specimen-chord .chord-change-label.specimen-second { left: 50%; }
+.specimen-chord .chord-duration-region { left: 0; width: 50%; }
+.specimen-chord .chord-duration-region.specimen-second { left: 50%; }

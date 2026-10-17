@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <title>Current studio styles | UI style guide</title>
+    <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
+    <link rel="stylesheet" href="../assets/site-shell.css?v=73514134a473">
+    <link rel="stylesheet" href="../studio/rates/rates.css?v=3db8b78e0657">
+    <link rel="stylesheet" href="./specimens.css?v=458d210c7d38">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-context-row">
+        <nav class="site-breadcrumb" aria-label="Breadcrumb">
+          <a href="./">
+            UI style guide
+          </a>
+          <span aria-hidden="true">
+            /
+          </span>
+          <span aria-current="page">
+            Current studio styles
+          </span>
+        </nav>
+        <div class="language-switcher" role="group" aria-label="Language state samples">
+          <button type="button" aria-pressed="true" aria-label="English sample">
+            English
+          </button>
+          <button type="button" aria-pressed="false" aria-label="Simplified Chinese sample" lang="zh-Hans">
+            简体中文
+          </button>
+        </div>
+      </div>
+    </header>
+    <main class="site-main rates-main specimen-shell">
+      <p class="specimen-caption">Current source: studio rates. Invented service content and prices. Language buttons show states only.</p>
+      <header class="rates-header">
+        <h1 class="rates-year">Example Studio Rates</h1>
+      </header>
+      <section class="service" aria-labelledby="studio-service">
+        <h2 id="studio-service">Example recording</h2>
+        <p class="rate">$80/hr</p>
+        <p class="service-text">A short description of the example service, equipment, and session.</p>
+        <p class="service-note">A supporting note with the current small-text style.</p>
+      </section>
+      <section class="service" aria-labelledby="studio-chinese" lang="zh-Hans">
+        <h2 id="studio-chinese">录音示例</h2>
+        <p class="rate">$80/小时</p>
+        <p class="service-text">示例服务说明。比较中文字体、行距与文字大小。</p>
+        <p class="service-note">这是用于比较样式的说明文字。</p>
+      </section>
+      <section class="booking" aria-labelledby="studio-booking">
+        <h2 id="studio-booking">Additional information</h2>
+        <ul>
+          <li>
+            One short example instruction.
+          </li>
+          <li>
+            A longer example instruction to compare line height and spacing.
+          </li>
+        </ul>
+      </section>
+      <section class="contact" aria-labelledby="studio-contact">
+        <h2 id="studio-contact">Contact link style</h2>
+        <p class="service-text contact-text">Return to the <a href="./">UI style guide</a> to compare the draft.</p>
+      </section>
+      <footer class="rates-footer">
+        <p class="currency">Example footer text. These are not published service rates.</p>
+      </footer>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en-AU" data-domain="guitar">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <title>Current guitar styles | UI style guide</title>
+    <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
+    <link rel="stylesheet" href="../assets/site-shell.css?v=73514134a473">
+    <link rel="stylesheet" href="../tools/guitar-strumming/styles.css?v=8b8d16700dec">
+    <link rel="stylesheet" href="./specimens.css?v=458d210c7d38">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-context-row">
+        <nav class="site-breadcrumb" aria-label="Breadcrumb">
+          <a href="./">
+            UI style guide
+          </a>
+          <span aria-hidden="true">
+            /
+          </span>
+          <span aria-current="page">
+            Current guitar styles
+          </span>
+        </nav>
+        <div class="language-switcher" role="group" aria-label="Language state samples">
+          <button type="button" aria-pressed="true">
+            EN
+          </button>
+          <button type="button" aria-pressed="false" lang="zh-Hans">
+            中文
+          </button>
+        </div>
+      </div>
+    </header>
+    <main class="site-main specimen-shell">
+      <h1>Guitar component samples</h1>
+      <p class="specimen-caption">Current source: Guitar Strum Machine. No audio, preset, or arrangement logic. Buttons show states only.</p>
+      <section class="practice-workspace" aria-labelledby="guitar-controls">
+        <h2 id="guitar-controls">Common controls</h2>
+        <div class="preset-control">
+          <label for="guitar-select">Exercise</label>
+          <select id="guitar-select">
+            <option>Example arrangement</option>
+            <option>A longer example option</option>
+          </select>
+          <p class="preset-goal">Supporting text uses the current small-text style.</p>
+        </div>
+        <div class="button-group">
+          <button type="button">
+            Primary action
+          </button>
+          <button type="button" class="secondary-button">
+            Secondary
+          </button>
+          <button type="button" disabled>
+            Unavailable
+          </button>
+        </div>
+        <div class="tempo-control">
+          <div class="tempo-heading">
+            <label for="guitar-number">Tempo</label>
+            <div class="bpm-value">
+              <input id="guitar-number" type="number" min="30" max="300" value="100">
+              <span aria-hidden="true">
+                BPM
+              </span>
+            </div>
+          </div>
+          <label class="visually-hidden" for="guitar-range">Tempo slider sample</label>
+          <input id="guitar-range" type="range" min="30" max="300" value="100">
+        </div>
+        <p class="specimen-caption">The sample number and range are independent. The app synchronizes them.</p>
+        <p class="validation-summary valid">Valid example.</p>
+        <p class="validation-summary invalid">Invalid example.</p>
+        <ul class="validation-errors">
+          <li>
+            Enter a required value.
+          </li>
+        </ul>
+      </section>
+      <details open>
+        <summary>Current disclosure and editor</summary>
+        <div class="details-content">
+          <div class="chord-view-switcher" role="group" aria-label="Chord display state samples">
+            <button type="button" aria-pressed="true">
+              Shapes
+            </button>
+            <button type="button" aria-pressed="false">
+              Numbers
+            </button>
+            <button type="button" aria-pressed="false">
+              Sounding
+            </button>
+          </div>
+          <label for="guitar-source">Arrangement text sample</label>
+          <textarea id="guitar-source" rows="4" spellcheck="false">tempo: 100
+chords: C Am F G</textarea>
+        </div>
+      </details>
+      <section class="practice-workspace specimen-block" aria-labelledby="guitar-chord">
+        <h2 id="guitar-chord">Specialized chord card</h2>
+        <p class="specimen-caption">Preserve this layout and its app behavior. The fixture supplies timing values that the app normally calculates.</p>
+        <div class="chord-guide-scroll" tabindex="0" aria-labelledby="guitar-chord">
+          <ol class="chord-timeline">
+            <li class="chord-bar-card specimen-chord">
+              <span class="chord-bar-number">
+                Bar 1
+              </span>
+              <div class="chord-label-lanes">
+                <span class="chord-change-label is-current">
+                  <strong class="chord-name">
+                    C
+                  </strong>
+                  <span class="chord-timing-cue">
+                    1
+                  </span>
+                </span>
+                <span class="chord-change-label specimen-second">
+                  <strong class="chord-name">
+                    Am
+                  </strong>
+                  <span class="chord-timing-cue">
+                    3
+                  </span>
+                </span>
+              </div>
+              <div class="chord-duration-band" aria-hidden="true">
+                <span class="chord-duration-region is-current"></span>
+                <span class="chord-duration-region specimen-second"></span>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
