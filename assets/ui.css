@@ -100,7 +100,8 @@
 
 /* Explicit layouts own their children's spacing, including native block margins. */
 .ui-flow > * { margin-block: 0; }
-.ui-flow > * + * { margin-block-start: var(--ui-space-4); }
+.ui-flow > * + *,
+.ui-flow > * + .ui-help { margin-block-start: var(--ui-space-4); }
 .ui-flow > * + :is(.ui-heading, .ui-subheading) { margin-block-start: var(--ui-space-6); }
 .ui-flow > :is(.ui-title, .ui-heading, .ui-subheading) + * { margin-block-start: var(--ui-space-2); }
 .ui-flow > :is(ul, ol) { padding-inline-start: var(--ui-space-6); }

@@ -1061,3 +1061,10 @@ Purpose and decision on 20 October 2026: The owner reported that the horizontal 
 Failure behavior: Keep the one-pixel rule, existing spacing, and native horizontal-rule semantics. Change no app behavior. Refresh all references to the shared stylesheet.
 
 Verification evidence: `./scripts/check.sh` passed all seven test files. Reviewed the shared rule and refreshed asset hashes. Manual browser and zoom review did not run. No tests, dependencies, or browser tools were added.
+
+
+### 23.2 Space after share actions
+
+Purpose and decision on 20 October 2026: The owner reported that the share status was too close to the action buttons. The later `.ui-help` margin reset overrode the equal-specificity content-flow rule. Give help text inside a flow enough selector specificity to retain the existing 1rem gap. Keep the smaller gap after headings. Field grids retain their own spacing. Add the share-action and status pattern to the guitar specimen. This is a routine visual correction.
+
+Verification evidence: `./scripts/check.sh` passed all seven test files. Reviewed the spacing cascade, preserved heading and field spacing, and refreshed shared stylesheet hashes. Manual browser review did not run. No application behavior, tests, dependencies, or browser tools changed.
