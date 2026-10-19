@@ -194,6 +194,8 @@ Use explicit classes for common appearance. Use native attributes such as `disab
 
 Typography direction selected on 17 October 2026: The owner prefers serif as the default. The draft now uses the same serif stack for headings, prose, notices, help, and table content. Buttons, inputs, selects, control labels, interface navigation, and disclosure summaries use system sans-serif. Inline content links retain the surrounding font. Code, arrangement source, and suitable technical values use monospace. Chinese serif fallbacks are part of the default stack. Existing page styles and current-style specimens have not been migrated.
 
+Scale accepted on 19 October 2026: Use four named sizes: supporting text at 0.875rem, body text at 1rem, section headings at 1.5rem, and page titles at 2rem. Use weights 400 and 700. Serif headings remain regular. Control labels, buttons, emphasis, and body-size subsection headings use bold. Use line heights 1.6 for text and controls, and 1.2 for headings. Use normal letter spacing. The homepage greeting remains an explicit exception for the later migration. The current-style specimens retain the original declarations for comparison.
+
 Do not use `!important` or broad element overrides to make one demo look correct. Do not introduce a framework or content generator for this package. Native range controls in the draft keep browser-specific geometry; their accent and surrounding layout are shared. If a custom track is selected, review both browser engines before migrating it.
 
 ## Review and migration sequence

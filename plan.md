@@ -553,6 +553,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 19 October 2026 | Use four text sizes, two weights, and two line heights in the style guide draft. | The owner accepted supporting text at 0.875rem, body text at 1rem, section headings at 1.5rem, and page titles at 2rem. Use weights 400 and 700, normal letter spacing, body line height 1.6, and heading line height 1.2. Keep the homepage greeting as a later explicit exception. |
 | 17 October 2026 | Start the style guide refinement with serif as the default, sans-serif for interactive controls, and monospace for source text and technical values. | The owner prefers this typography direction. Use one serif family for headings and prose. Keep inline links with their surrounding text. Review the draft before applying the rule to existing pages. |
 | 17 October 2026 | Audit existing HTML and CSS, and build a UI style guide before refactoring the site. | The owner reported style drift. Review common controls together. Preserve app-specific displays, such as chord cards. Approve the shared design before migrating existing pages. |
 | 17 October 2026 | Remove the homepage particle animation and its code, styles, and comparison option. | The owner requested removal. Keep the introduction, section links, social profiles, and existing spacing. This supersedes the earlier Sagittarius design decisions. |
@@ -823,3 +824,11 @@ Direction selected on 17 October 2026: Use serif by default for headings, prose,
 Use one local serif stack for both display and reading text. Include Chinese serif fallbacks. Keep system sans-serif for controls and one monospace stack for source text. Remove decorative monospace from guide headings and captions. Keep the current-style specimens unchanged for comparison. This iteration changes only the draft and its documentation.
 
 Verification evidence: `./scripts/check.sh` passed for all seven test files. The complete diff was reviewed. Refreshed both draft stylesheet hashes. Browser font rendering and visual review remain pending. No test tools were installed for this style change.
+
+### 21.2 Typography scale
+
+Direction accepted on 19 October 2026: Use four named size tokens: supporting text at 0.875rem, body text at 1rem, section headings at 1.5rem, and page titles at 2rem. These correspond to 14, 16, 24, and 32 pixels at a 16-pixel base size. Use only weights 400 and 700. Serif headings use weight 400. Buttons, control labels, emphasis, and body-size subsection headings use weight 700.
+
+Use line height 1.6 for body text and controls. Use line height 1.2 for headings. Use normal letter spacing. Update guide captions, font samples, metrics, and comparison summaries to use these same roles. Keep the current-style specimens and existing pages unchanged. The homepage greeting remains an explicit exception for the later migration.
+
+Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff and confirmed that draft text sizes, weights, and line heights use the named tokens. Refreshed both draft stylesheet hashes. Manual browser review remains pending. No tests or tools were added for this static style iteration.
