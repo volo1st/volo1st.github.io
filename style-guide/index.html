@@ -9,7 +9,7 @@
     <title>UI style guide | volo1st</title>
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=73514134a473">
-    <link rel="stylesheet" href="./components.css?v=79ef55e6016f">
+    <link rel="stylesheet" href="./components.css?v=368b85a4a95a">
     <link rel="stylesheet" href="./guide.css?v=c3758bcbd3b0">
   </head>
   <body>
@@ -28,7 +28,7 @@
     </header>
     <main class="site-main guide-main ui-container">
       <header class="guide-intro ui-flow">
-        <p class="guide-eyebrow">Draft 09 · tables and summary values</p>
+        <p class="guide-eyebrow">Draft 10 · optional striped rows</p>
         <h1 class="ui-title">One site. One shared language.</h1>
         <p class="guide-lead">A working user interface (UI) style guide for type, controls, and common patterns. Compare the current styles. Then refine the shared draft before changing existing pages.</p>
         <p class="ui-small">The draft styles apply only to this guide. Buttons show visual states and do not run app actions. Native fields and disclosures can be used. No input is stored or processed.</p>
@@ -660,6 +660,78 @@ chords: C Am F G</textarea>
                 <td class="ui-table__number">4:02</td>
                 <td class="ui-table__number">136.50</td>
                 <td>2 ready</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <h3 class="ui-subheading">Striped rows</h3>
+        <p>Use alternating row surfaces for longer tables. Add <code class="ui-code">ui-table--striped</code> to the shared table class. Stripes help track a row. They do not indicate selection or status.</p>
+        <div class="ui-table-scroll" tabindex="0" role="region" aria-labelledby="striped-table-caption" aria-describedby="file-table-help">
+          <table class="ui-table ui-table--striped">
+            <caption id="striped-table-caption">Striped example files · invented data</caption>
+            <thead>
+              <tr>
+                <th scope="col" class="ui-table__number">Item</th>
+                <th scope="col" class="ui-table__text">File</th>
+                <th scope="col" class="ui-table__number">Duration</th>
+                <th scope="col">State</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="ui-table__number">1</td>
+                <th scope="row" class="ui-table__text"><code class="ui-code">room-take-01.wav</code></th>
+                <td class="ui-table__number">0:12</td>
+                <td>Ready</td>
+              </tr>
+              <tr>
+                <td class="ui-table__number">2</td>
+                <th scope="row" class="ui-table__text"><code class="ui-code">room-take-02.wav</code></th>
+                <td class="ui-table__number">0:28</td>
+                <td>Ready</td>
+              </tr>
+              <tr>
+                <td class="ui-table__number">3</td>
+                <th scope="row" class="ui-table__text"><code class="ui-code">practice-01.wav</code></th>
+                <td class="ui-table__number">1:04</td>
+                <td>Ready</td>
+              </tr>
+              <tr>
+                <td class="ui-table__number">4</td>
+                <th scope="row" class="ui-table__text"><code class="ui-code">practice-02.wav</code></th>
+                <td class="ui-table__number">0:45</td>
+                <td>Ready</td>
+              </tr>
+              <tr>
+                <td class="ui-table__number">5</td>
+                <th scope="row" class="ui-table__text"><code class="ui-code">acoustic-sweep.wav</code></th>
+                <td class="ui-table__number">0:10</td>
+                <td>Review source</td>
+              </tr>
+              <tr>
+                <td class="ui-table__number">6</td>
+                <th scope="row" class="ui-table__text"><code class="ui-code">voice-memo.wav</code></th>
+                <td class="ui-table__number">0:37</td>
+                <td>Ready</td>
+              </tr>
+              <tr>
+                <td class="ui-table__number">7</td>
+                <th scope="row" class="ui-table__text"><code class="ui-code">empty-example.wav</code></th>
+                <td class="ui-table__number">0:00</td>
+                <td>Empty</td>
+              </tr>
+              <tr>
+                <td class="ui-table__number">8</td>
+                <th scope="row" class="ui-table__text"><code class="ui-code">field-recording-with-a-long-example-name.wav</code></th>
+                <td class="ui-table__number">1:16</td>
+                <td>Review source</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th scope="row" colspan="2">Total · 8 files</th>
+                <td class="ui-table__number">4:32</td>
+                <td>5 ready</td>
               </tr>
             </tfoot>
           </table>

@@ -553,6 +553,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 19 October 2026 | Add optional striped table rows to the draft guide. | The owner requested this option for long tables. Keep the plain table as the default. Alternate neutral body-row surfaces while retaining shared headings, totals, cell spacing, and scrolling. |
 | 19 October 2026 | Refine tables and summary values in the draft guide. | The owner selected this next step. Use one table style and one summary grid. Share serif typography and spacing. Right-align numeric columns and keep wide-table scrolling local. Show missing values explicitly. |
 | 19 October 2026 | Refine shared notice tones, content, and spacing in the draft guide. | The owner selected the next refinement. Keep information, success, warning, and error independent of tool accents. Use explicit text, a shared surface and stripe pattern, and the accepted text spacing. Keep essential errors persistent. |
 | 19 October 2026 | Consolidate spacing, panels, and disclosures in the draft guide. | The owner selected this next step. Use the existing spacing scale for content flow, field groups, actions, and sections. Share panel and disclosure padding. Remove ordinary sample frames and the raised panel variant. Keep plain content unboxed. |
@@ -927,3 +928,11 @@ Requirements and decisions:
 Engineering review and failure behavior: Preserve native table and definition-list relationships. Do not use CSS to turn table rows into cards. Narrow screens can scroll the table region while summaries reflow. Missing data stays explicit and does not become zero. The guide performs no calculation, sorting, file processing, or app state update. Existing app output and financial-file logic remain unchanged.
 
 Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, numeric cell alignment, descriptive-column minimum, captions, header scopes, scroll-region names, definition-list groups, and static example totals. Refreshed the component stylesheet hash. Existing apps and isolated specimens did not change. Manual browser, keyboard scrolling, narrow-screen, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.
+
+### 21.9 Optional striped table rows
+
+Purpose and decision: Add `.ui-table--striped` as an optional modifier for long tables. Keep `.ui-table` as the shared base and plain default. Alternate white and warm inset surfaces on direct body rows only. Retain the base headings, footer totals, dividers, typography, padding, and local scrolling. Use existing surface tokens. Add an eight-row example with invented data and a footer total.
+
+Engineering review and failure behavior: Row stripes are a reading aid. They do not indicate selection or status. Keep explicit state text and native table relationships. Do not add hover, sorting, selection, or script behavior. Limit the selectors to direct body rows so headers, totals, and nested tables keep their own styles. This iteration changes only the guide.
+
+Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, selector scope, shared base styles, caption and scroll-region references, and static totals. Refreshed the component stylesheet hash. Manual browser, keyboard scrolling, narrow-screen, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.
