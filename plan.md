@@ -553,6 +553,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 19 October 2026 | Use a solid selected language segment and remove link styling. | The owner accepted the compact size but found selection unclear. Remove the underline. Use a dark neutral fill with light selected text. Keep unselected segments light and hover separate from selection. |
 | 19 October 2026 | Make the language group compact and keep each label on one line. | The owner found the group too large and reported a wrapped Chinese label. Use natural segment widths, supporting-size text, smaller padding, and a 28-pixel desktop minimum. Retain 44-pixel touch targets. |
 | 19 October 2026 | Join language choices into a segmented button group in the draft. | The owner found the separate choices too far apart. Use adjacent equal-width buttons with a shared border seam, rounded outer corners, and a warm selected fill. Retain the selected underline, native state, common sizing, and visible focus. |
 | 19 October 2026 | Refine page headers, breadcrumbs, and language choice in the draft guide. | The owner selected this last common area before migration review. Share spacing, control sizing, and focus. Keep the quiet language choice and selected underline. Preserve compact tool headers and English breadcrumbs. |
@@ -981,3 +982,11 @@ Purpose and decision: The owner reported that the equal-width language segments 
 Engineering review and failure behavior: Use minimum dimensions rather than a fixed height. Keep the selected state, joined borders, full language names, and visible focus. Let the context row wrap when necessary. Do not wrap a language label to force the group into a row. Keep generic button groups unchanged. This supersedes the equal-width language rule in section 21.12 and changes only the guide.
 
 Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, language-specific flex override, no-wrap rule, compact geometry, and pointer-based minimum dimensions. Refreshed the component stylesheet hash. Recorded the wrapping mistake in the ignored local experience file. Manual browser, keyboard, narrow-screen, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.
+
+### 21.14 Clear selected language state
+
+Purpose and decision: Keep the accepted compact group dimensions. Remove the selected-language underline and its link-style decoration rules. Give the selected segment a dark neutral fill and border with light text. Keep unselected segments on the panel surface. Give unselected hover a light warm surface so it cannot resemble selection. This supersedes the selected fill and underline from section 21.12.
+
+Engineering review and failure behavior: Preserve native `aria-pressed` state and the common keyboard focus outline. Keep the selected colors on hover. Do not change font size, padding, label wrapping, or desktop and touch dimensions. The guide's language examples remain static. Existing apps and specimens remain unchanged.
+
+Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, selected and unselected hover precedence, removed decoration rules, and unchanged compact geometry. Refreshed the component stylesheet hash. Manual browser, keyboard, narrow-screen, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.
