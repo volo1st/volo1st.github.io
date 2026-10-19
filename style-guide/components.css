@@ -234,14 +234,26 @@
 .ui-button[aria-busy="true"]:disabled { cursor: progress; }
 
 .ui-panel { min-width: 0; border: 1px solid var(--site-panel-border); border-radius: var(--ui-radius-panel); padding: var(--ui-panel-padding); background: var(--site-panel-background); }
-.ui-notice { border-left: 4px solid var(--ui-info); border-radius: 0 var(--ui-radius-control) var(--ui-radius-control) 0; padding: var(--ui-space-3) var(--ui-space-4); background: var(--ui-info-surface); }
-.ui-notice[data-tone="success"] { border-color: var(--ui-success); background: var(--ui-success-surface); }
-.ui-notice[data-tone="warning"] { border-color: var(--ui-warning); background: var(--ui-warning-surface); }
-.ui-notice[data-tone="error"] { border-color: var(--ui-error); background: var(--ui-error-surface); }
-.ui-notice p { margin: 0; }
-.ui-notice p + p, .ui-notice ul { margin-top: var(--ui-space-2); }
-.ui-notice ul { margin-bottom: 0; padding-left: var(--ui-space-6); }
-.ui-notice__row { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--ui-space-4); }
+.ui-notice {
+  --ui-notice-tone: var(--ui-info);
+  --ui-notice-surface: var(--ui-info-surface);
+  min-width: 0;
+  border-inline-start: var(--ui-space-1) solid var(--ui-notice-tone);
+  border-radius: var(--ui-radius-panel);
+  padding: var(--ui-space-4);
+  color: var(--site-text);
+  background: var(--ui-notice-surface);
+  font-family: var(--ui-font-body);
+  font-size: var(--ui-size-body);
+  font-weight: var(--ui-weight-regular);
+  line-height: var(--ui-leading-body);
+  overflow-wrap: anywhere;
+}
+.ui-notice[data-tone="success"] { --ui-notice-tone: var(--ui-success); --ui-notice-surface: var(--ui-success-surface); }
+.ui-notice[data-tone="warning"] { --ui-notice-tone: var(--ui-warning); --ui-notice-surface: var(--ui-warning-surface); }
+.ui-notice[data-tone="error"] { --ui-notice-tone: var(--ui-error); --ui-notice-surface: var(--ui-error-surface); }
+.ui-notice__title { color: var(--ui-notice-tone); }
+.ui-notice__row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: var(--ui-space-4); }
 
 .ui-disclosure { min-width: 0; border: 1px solid var(--site-panel-border); border-radius: var(--ui-radius-panel); background: var(--site-panel-background); }
 .ui-disclosure > summary { min-height: var(--ui-control-min-height); border-radius: var(--ui-radius-panel); padding: var(--ui-space-3) var(--ui-panel-padding); font-family: var(--ui-font-control); font-weight: var(--ui-weight-bold); cursor: pointer; }
@@ -264,5 +276,5 @@
 .language-switcher button { font-family: var(--ui-font-control); font-size: var(--ui-size-body); font-weight: var(--ui-weight-bold); line-height: var(--ui-leading-body); }
 
 /* This scope belongs to the draft. Do not change existing app state rules. */
-.ui-panel [hidden], .ui-disclosure [hidden],
+.ui-panel [hidden], .ui-disclosure [hidden], .ui-notice [hidden],
 .ui-flow > [hidden], .ui-stack > [hidden], .ui-actions > [hidden] { display: none; }

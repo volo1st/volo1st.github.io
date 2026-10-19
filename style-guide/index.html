@@ -9,7 +9,7 @@
     <title>UI style guide | volo1st</title>
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=73514134a473">
-    <link rel="stylesheet" href="./components.css?v=eb019b210f55">
+    <link rel="stylesheet" href="./components.css?v=a75445bb80a6">
     <link rel="stylesheet" href="./guide.css?v=c3758bcbd3b0">
   </head>
   <body>
@@ -28,7 +28,7 @@
     </header>
     <main class="site-main guide-main ui-container">
       <header class="guide-intro ui-flow">
-        <p class="guide-eyebrow">Draft 07 · spacing and panels</p>
+        <p class="guide-eyebrow">Draft 08 · notices and status text</p>
         <h1 class="ui-title">One site. One shared language.</h1>
         <p class="guide-lead">A working user interface (UI) style guide for type, controls, and common patterns. Compare the current styles. Then refine the shared draft before changing existing pages.</p>
         <p class="ui-small">The draft styles apply only to this guide. Buttons show visual states and do not run app actions. Native fields and disclosures can be used. No input is stored or processed.</p>
@@ -449,52 +449,75 @@ chords: C Am F G</textarea>
       <section id="notices" class="guide-section ui-flow" aria-labelledby="notices-heading">
         <p class="guide-eyebrow">06 / Notices</p>
         <h2 id="notices-heading" class="ui-heading">Meaning comes before color.</h2>
-        <p class="ui-small">These samples are static. Apps should keep their live status and error announcements when adopting the visual styles.</p>
+        <p>Use blue for information, green for success, gold for warnings, and red for errors. Keep these meanings across tools. State the meaning and the next step in text. Use dark body text and a colored heading.</p>
+        <p class="ui-small">All samples are static. No validation or background task runs here. Existing apps keep their live announcements and error focus rules until migration.</p>
         <div class="guide-grid">
-          <aside class="ui-notice" aria-labelledby="notice-info">
-            <h3 id="notice-info" class="ui-subheading">Information</h3>
+          <aside class="ui-notice ui-flow" aria-labelledby="notice-info">
+            <h3 id="notice-info" class="ui-subheading ui-notice__title">Information</h3>
             <p>Select an example to continue.</p>
           </aside>
-          <aside class="ui-notice" data-tone="success" aria-labelledby="notice-success">
-            <h3 id="notice-success" class="ui-subheading">Success</h3>
+          <aside class="ui-notice ui-flow" data-tone="success" aria-labelledby="notice-success">
+            <h3 id="notice-success" class="ui-subheading ui-notice__title">Success</h3>
             <p>The example is ready to review.</p>
           </aside>
-          <aside class="ui-notice" data-tone="warning" aria-labelledby="notice-warning">
-            <h3 id="notice-warning" class="ui-subheading">Warning</h3>
+          <aside class="ui-notice ui-flow" data-tone="warning" aria-labelledby="notice-warning">
+            <h3 id="notice-warning" class="ui-subheading ui-notice__title">Warning</h3>
             <p>Review the source before you continue.</p>
           </aside>
-          <aside class="ui-notice" data-tone="error" aria-labelledby="notice-error">
-            <h3 id="notice-error" class="ui-subheading">Error</h3>
-            <p>The example has two issues.</p>
+          <aside class="ui-notice ui-flow" data-tone="error" aria-labelledby="notice-error">
+            <h3 id="notice-error" class="ui-subheading ui-notice__title">Error</h3>
+            <p>Correct these two sample fields.</p>
             <ul>
-              <li>
-                Enter a project name.
-              </li>
-              <li>
-                Select an output format.
-              </li>
+              <li><a class="ui-link" href="#example-invalid">Enter a project name.</a></li>
+              <li><a class="ui-link" href="#example-invalid-select">Select an output format.</a></li>
             </ul>
+            <p class="ui-small">The links lead to static invalid-field samples. Editing a sample does not clear its error.</p>
           </aside>
         </div>
+        <h3 class="ui-subheading">Short status messages</h3>
+        <p>Use the same notice for a single paragraph. The music accent does not change the meanings below.</p>
+        <div class="guide-grid" data-domain="music">
+          <div class="ui-notice ui-flow">
+            <p><strong>Information:</strong> Preparing the example.</p>
+          </div>
+          <div class="ui-notice ui-flow" data-tone="success">
+            <p><strong>Success:</strong> The example is ready.</p>
+          </div>
+        </div>
+        <aside class="ui-notice ui-flow" data-tone="warning" aria-labelledby="notice-long-warning">
+          <h3 id="notice-long-warning" class="ui-subheading ui-notice__title">Warning · review the source settings</h3>
+          <p>The source label <code class="ui-code">room-study-example-with-a-long-source-label-and-review-notes.wav</code> is longer than the available space on a narrow screen. It must remain readable.</p>
+          <p>Keep the message available while the user checks the source. Put the required steps in a list.</p>
+          <ul>
+            <li>Check the project name and output format.</li>
+            <li>Keep the source available until the review is complete.</li>
+          </ul>
+          <p lang="zh-Hans">警告：请先检查源文件设置。完成检查前，请保留这条提示。</p>
+          <p><a class="ui-link" href="#fields">Review the field samples</a></p>
+        </aside>
+        <h3 class="ui-subheading">Optional dismissal</h3>
+        <p>Allow dismissal for nonessential feedback. Keep required instructions and actionable errors visible. Empty content uses a neutral panel.</p>
         <div class="guide-grid">
-          <div class="ui-notice">
+          <aside class="ui-notice ui-flow" data-tone="success" aria-labelledby="notice-dismissible">
             <div class="ui-notice__row">
-              <div>
-                <h3 class="ui-subheading">Dismissible notice sample</h3>
-                <p>The notice content is separate from overlay placement.</p>
+              <div class="ui-flow">
+                <h3 id="notice-dismissible" class="ui-subheading ui-notice__title">Success · dismissible sample</h3>
+                <p>The content wraps while the close button keeps its size.</p>
+                <p lang="zh-Hans">成功：示例已准备好，可以查看。</p>
               </div>
               <button type="button" class="ui-button ui-button--quiet ui-button--icon" aria-label="Dismiss sample notice">
                 ×
               </button>
             </div>
             <p class="ui-small">Static sample. This close button does not dismiss the notice.</p>
-          </div>
+          </aside>
           <div class="ui-panel ui-flow">
             <h3 class="ui-subheading">Empty state</h3>
             <p class="ui-small">No examples are selected.</p>
             <p>Describe the next step instead of showing a blank panel.</p>
           </div>
         </div>
+        <p class="ui-small">Use <code class="ui-code">ui-notice ui-flow</code> for message content and <code class="ui-code">ui-notice__title</code> for its heading. Set <code class="ui-code">data-tone</code> to <code class="ui-code">success</code>, <code class="ui-code">warning</code>, or <code class="ui-code">error</code>. The default tone is information. Appearance does not assign live-region behavior.</p>
       </section>
       <section id="patterns" class="guide-section ui-flow" aria-labelledby="patterns-heading">
         <p class="guide-eyebrow">07 / Patterns</p>

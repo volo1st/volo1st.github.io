@@ -553,6 +553,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 19 October 2026 | Refine shared notice tones, content, and spacing in the draft guide. | The owner selected the next refinement. Keep information, success, warning, and error independent of tool accents. Use explicit text, a shared surface and stripe pattern, and the accepted text spacing. Keep essential errors persistent. |
 | 19 October 2026 | Consolidate spacing, panels, and disclosures in the draft guide. | The owner selected this next step. Use the existing spacing scale for content flow, field groups, actions, and sections. Share panel and disclosure padding. Remove ordinary sample frames and the raised panel variant. Keep plain content unboxed. |
 | 19 October 2026 | Make draft controls compact on desktop and inset the select arrow. | The owner found the desktop buttons too large and the select arrow too close to the border. Use a 2.25rem control minimum on wide screens with a fine pointer and hover. Retain the 2.75rem touch minimum. Reserve space for the select arrow and retain native selection behavior. |
 | 19 October 2026 | Consolidate buttons and form controls in the draft guide before migrating apps. | The owner selected this next step. Share control dimensions, typography, focus, and disabled styles. Keep error borders from changing field dimensions. Preserve native field behavior and app-specific state logic. |
@@ -892,3 +893,19 @@ Requirements and decisions:
 Failure behavior and engineering review: The guide remains static and needs no script. Explicit layout classes control direct children without global paragraph or section overrides. Native fieldsets retain their legends. Native disclosures retain keyboard and focus behavior. No fixed heights or clipped containers may hide wrapped content or focus outlines. Browser rendering remains an optional manual review for this style change.
 
 Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, direct child margins, responsive padding, disclosure alignment, labels, and linked help text. Refreshed both draft stylesheet hashes. Existing pages and isolated specimen files did not change. Manual browser, keyboard, narrow-screen, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.
+
+### 21.7 Notice tones and content
+
+Purpose: Give information, success, warning, and error notices one shared visual structure. Refine only the guide before app migration.
+
+Requirements and decisions:
+
+- Retain the existing blue, green, gold, and red tone pairs. Keep tone meanings independent of the tool accent. Use an explicit heading or text label so color is not the only indication.
+- Use a 4-pixel left stripe, one panel radius, and 1rem padding. Keep body text dark and serif. Color the notice heading with its semantic tone. Keep buttons sans-serif and links underlined.
+- Use the accepted `.ui-flow` spacing for notice text and lists. Remove notice-specific paragraph overrides. Show single-paragraph status, long text, error lists, Chinese text, and optional actions.
+- Keep the dismiss control at its shared size while the content column can shrink and wrap. Keep the dismissible example static. Add no script, animation, timeout, or app state change.
+- Keep essential instructions and actionable errors persistent. Keep empty content neutral. Do not attach live-region roles to static examples. During later migration, preserve existing app announcements and error focus rules.
+
+Engineering review and failure behavior: Appearance does not assign announcement urgency. Use the W3C status-message and alert guidance when migrating dynamic app messages. Static notice samples perform no validation or background task. Links may move to existing guide fields. Existing field state samples remain static. Long content must wrap without clipping or shrinking the dismiss button. Retain visible keyboard focus. Missing optional browser review does not block this style iteration.
+
+Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, semantic tone variables, shared content spacing, dismiss-button sizing, and error links. The local contrast calculation gives heading-to-surface ratios of 5.75:1 or higher for all four tones. Recorded the color-pair results and primary references in `docs/ui-audit.md`. Refreshed the component stylesheet hash. Existing apps and specimen files did not change. Manual browser, keyboard, narrow-screen, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.
