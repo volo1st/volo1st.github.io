@@ -276,8 +276,8 @@ test('the production interface keeps processing local and hides incomplete outpu
   assert.match(css, /\.pitch-actions[\s\S]*display: flex[\s\S]*justify-content: center/);
   assert.match(css, /#transport-play\[data-playing="true"\]/);
   assert.match(css, /#workspace\[aria-busy="true"\] \.export-dots/);
-  assert.match(css, /@keyframes export-dot-two/);
-  assert.match(css, /@keyframes export-dot-three/);
+  assert.match(css, /@keyframes pitch-export-dot-two/);
+  assert.match(css, /@keyframes pitch-export-dot-three/);
   assert.doesNotMatch(css, /prefers-reduced-motion/);
   assert.match(css, /\.advanced-control[\s\S]*grid-template-columns:/);
   assert.match(app, /MAX_DURATION_SECONDS = 30 \* 60/);

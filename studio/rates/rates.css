@@ -1,15 +1,15 @@
-.rates-header { margin-bottom: var(--ui-space-6); }
-.service, .booking, .contact, .rates-footer { margin: 0; padding-block: var(--ui-space-6); border-top: 1px solid var(--site-divider); }
-.service { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: var(--ui-space-2) var(--ui-space-6); }
-.service h2, .rate { margin: 0; }
-.rate { font-weight: var(--ui-weight-bold); }
-.service-text, .service-note { grid-column: 1 / -1; margin: 0; }
-.booking ul { margin: 0; padding-inline-start: var(--ui-space-6); }
-.booking li + li { margin-top: var(--ui-space-2); }
-@media (max-width: 560px) { .service { column-gap: var(--ui-space-3); } }
+:where([data-page="studio-rates"]) .rates-header { margin-bottom: var(--ui-space-6); }
+:where([data-page="studio-rates"]) .service, :where([data-page="studio-rates"]) .booking, :where([data-page="studio-rates"]) .contact, :where([data-page="studio-rates"]) .rates-footer { margin: 0; padding-block: var(--ui-space-6); border-top: 1px solid var(--site-divider); }
+:where([data-page="studio-rates"]) .service { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: var(--ui-space-2) var(--ui-space-6); }
+:where([data-page="studio-rates"]) .service h2, :where([data-page="studio-rates"]) .rate { margin: 0; }
+:where([data-page="studio-rates"]) .rate { font-weight: var(--ui-weight-bold); }
+:where([data-page="studio-rates"]) .service-text, :where([data-page="studio-rates"]) .service-note { grid-column: 1 / -1; margin: 0; }
+:where([data-page="studio-rates"]) .booking ul { margin: 0; padding-inline-start: var(--ui-space-6); }
+:where([data-page="studio-rates"]) .booking li + li { margin-top: var(--ui-space-2); }
+@media (max-width: 560px) { :where([data-page="studio-rates"]) .service { column-gap: var(--ui-space-3); } }
 @media print {
-  .ui-language { display: none; }
-  .rates-main { padding-block: 0; }
-  .service, .booking, .contact { break-inside: avoid; }
-  :root { color: #000; background: #fff; }
+  :where([data-page="studio-rates"]) .ui-language { display: none; }
+  :where([data-page="studio-rates"]) .rates-main { padding-block: 0; }
+  :where([data-page="studio-rates"]) .service, :where([data-page="studio-rates"]) .booking, :where([data-page="studio-rates"]) .contact { break-inside: avoid; }
+  :root:where(:has(> body[data-page="studio-rates"])) { color: #000; background: #fff; }
 }

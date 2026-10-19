@@ -8,6 +8,8 @@ See [`plan.md`](plan.md) for current actions, product direction, and delivery ph
 
 The [UI style guide](style-guide/) demonstrates the shared design and isolated page examples. The [HTML and CSS audit](docs/ui-audit.md) records the original differences and migration boundaries. Open `style-guide/index.html` directly in a browser. The guide needs no build step, app engine, or server. It stores no input and reads no selected file. Its action buttons show visual states only. Maintained pages and examples load `assets/ui.css`. Use its classes for common typography, layout, controls, notices, tables, and summaries. Keep specialized displays and page composition in local stylesheets. The guide is public if deployed; `noindex` is not access control.
 
+Each maintained page has a `data-page` root on its body. Scope local selectors with `:where([data-page="page-name"])`. Use the same root in its specimen. Keep shared selectors in `site-shell.css` and `ui.css` global.
+
 The Sound section links to Studio, [Room acoustics](sound/room-acoustics/), and [Live sound](sound/live-sound/). Room acoustics and Live sound have English placeholder pages. Both pages state that examples are coming soon. They do not list prices or confirm service availability.
 
 ## Studio rates

@@ -1,4 +1,4 @@
 /* Section navigation layout. Typography and links use assets/ui.css. */
-.section-destinations { margin-block-start: var(--ui-section-padding); }
-.section-links { display: flex; flex-wrap: wrap; gap: var(--ui-space-2) var(--ui-space-6); margin: 0; padding: 0; list-style: none; }
-.section-status { margin-block-start: var(--ui-space-6); }
+:where([data-page="code"], [data-page="sound"], [data-page="music"], [data-page="studio"], [data-page="room-acoustics"], [data-page="live-sound"]) .section-destinations { margin-block-start: var(--ui-section-padding); }
+:where([data-page="code"], [data-page="sound"], [data-page="music"], [data-page="studio"], [data-page="room-acoustics"], [data-page="live-sound"]) .section-links { display: flex; flex-wrap: wrap; gap: var(--ui-space-2) var(--ui-space-6); margin: 0; padding: 0; list-style: none; }
+:where([data-page="code"], [data-page="sound"], [data-page="music"], [data-page="studio"], [data-page="room-acoustics"], [data-page="live-sound"]) .section-status { margin-block-start: var(--ui-space-6); }

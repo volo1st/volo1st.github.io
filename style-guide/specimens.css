@@ -1,16 +1,16 @@
 /* Specimen layout only. Component appearance comes from assets/ui.css and specialized app CSS. */
 
-.specimen-caption { margin: 0 0 1rem; color: var(--site-muted); font-size: var(--ui-size-supporting); }
-.specimen-block { margin-block: 1.5rem; }
-.specimen-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
-.specimen-stack { display: grid; gap: 0.75rem; }
-.specimen-shell .section-destinations { margin-top: 1.5rem; }
-.specimen-shell .home-hero { margin-bottom: 1.5rem; }
-.specimen-shell #transport-position { --transport-progress: 42%; }
+:where([data-specimen]) .specimen-caption { margin: 0 0 1rem; color: var(--site-muted); font-size: var(--ui-size-supporting); }
+:where([data-specimen]) .specimen-block { margin-block: 1.5rem; }
+:where([data-specimen]) .specimen-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+:where([data-specimen]) .specimen-stack { display: grid; gap: 0.75rem; }
+:where([data-specimen]) .specimen-shell .section-destinations { margin-top: 1.5rem; }
+:where([data-specimen]) .specimen-shell .home-hero { margin-bottom: 1.5rem; }
+:where([data-specimen]) .specimen-shell #transport-position { --transport-progress: 42%; }
 /* The app normally supplies these timing values from its chord presentation. */
-.specimen-chord { --bar-min-width: 12rem; }
-.specimen-chord .chord-label-lanes { --label-lane-count: 1; }
-.specimen-chord .chord-change-label { --label-lane: 0; left: 0; }
-.specimen-chord .chord-change-label.specimen-second { left: 50%; }
-.specimen-chord .chord-duration-region { left: 0; width: 50%; }
-.specimen-chord .chord-duration-region.specimen-second { left: 50%; }
+:where([data-specimen]) .specimen-chord { --bar-min-width: 12rem; }
+:where([data-specimen]) .specimen-chord .chord-label-lanes { --label-lane-count: 1; }
+:where([data-specimen]) .specimen-chord .chord-change-label { --label-lane: 0; left: 0; }
+:where([data-specimen]) .specimen-chord .chord-change-label.specimen-second { left: 50%; }
+:where([data-specimen]) .specimen-chord .chord-duration-region { left: 0; width: 50%; }
+:where([data-specimen]) .specimen-chord .chord-duration-region.specimen-second { left: 50%; }

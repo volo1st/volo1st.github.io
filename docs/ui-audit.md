@@ -264,3 +264,24 @@ The owner approved application after the guide review. See section 22 in [plan.m
 For new pages, load `site-shell.css`, then `ui.css`, then the local composition stylesheet. Use `.ui-container` for page width. Use `.ui-flow`, `.ui-stack`, `.ui-field`, and `.ui-actions` for spacing. Apply component classes to native elements. Do not copy common declarations into page CSS. Use the guide to review a shared change before applying a new exception. The five specimens contain static, invented examples and run no app engines.
 
 Source checks do not establish rendered or device behavior. Manual keyboard, focus, narrow-screen, 200 percent zoom, and representative iPhone or iPad audio checks remain pending. This package adds no browser automation or dependencies.
+
+
+## Page-root isolation · 20 October 2026
+
+Every maintained live page has a stable `data-page` attribute on its body. Each tool and studio specimen uses the same value as the live page. The mixed public specimen uses matching roots around its examples. Specimen-only styles require `data-specimen`. The guide has its own page root.
+
+Shared palette, typography, components, and layout primitives stay global in `assets/site-shell.css` and `assets/ui.css`. Page composition and specialized rules require a root guard:
+
+```html
+<body data-page="guitar">
+```
+
+```css
+:where([data-page="guitar"]) .chord-timeline {
+  display: flex;
+}
+```
+
+The `:where()` guard adds no selector specificity. Scope every selector in a comma-separated list. Apply the same guard inside media rules. The section-layout stylesheet lists its supported page roots in one guard. Keep page-only variables on the page root. The studio print rule uses a guarded document-root selector to preserve the page background and inherited color. Keep animation bindings inside the scope and give animation names a page prefix. Keyframe steps remain native keyframe selectors.
+
+These guards restrict where a local rule can match. They do not create a separate cascade within the page. Local selectors must still preserve shared component contracts. The frozen legacy converter and redirect remain outside this convention. See section 24 in [plan.md](../plan.md) for checks and completion evidence.

@@ -553,6 +553,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 20 October 2026 | Scope local styles to explicit page roots. | The owner approved `data-page` roots and zero-specificity `:where()` guards. Shared foundations remain global. Live pages and their specimens use matching roots. |
 | 20 October 2026 | Correct Guitar layout and use a footer disclaimer. | The owner reported panel overflow, lost chord scrolling, squeezed chord-view labels, and an intrusive notice. Constrain the shared single-column grid. Use wrapping action buttons for chord views. Keep the disclaimer below a divider in small, muted serif text. |
 | 19 October 2026 | Apply the approved guide to maintained pages and tools. | The owner approved the first pass and authorized migration. Promote one component stylesheet, migrate public pages first, and then migrate each maintained tool. Preserve specialized displays, translations, input, audio, and converter safety behavior. |
 | 19 October 2026 | Use segmented language controls for tools and quiet `En / 中` choices for reading pages. | The owner finds the filled group intrusive outside tools and prefers one Chinese character. Disable the current language to avoid repeating the same action. Preserve its selected appearance. Reuse native buttons for same-page language switching. |
@@ -1068,3 +1069,24 @@ Verification evidence: `./scripts/check.sh` passed all seven test files. Reviewe
 Purpose and decision on 20 October 2026: The owner reported that the share status was too close to the action buttons. The later `.ui-help` margin reset overrode the equal-specificity content-flow rule. Give help text inside a flow enough selector specificity to retain the existing 1rem gap. Keep the smaller gap after headings. Field grids retain their own spacing. Add the share-action and status pattern to the guitar specimen. This is a routine visual correction.
 
 Verification evidence: `./scripts/check.sh` passed all seven test files. Reviewed the spacing cascade, preserved heading and field spacing, and refreshed shared stylesheet hashes. Manual browser review did not run. No application behavior, tests, dependencies, or browser tools changed.
+
+
+## 24. Scope local styles to page roots
+
+Selection on 20 October 2026: The owner approved page-root isolation for local styles. Todoist task `6hpHr8cGjJvP8Jj6` records this package. Deferred product packages remain unchanged.
+
+Purpose and requirements: Add stable `data-page` attributes to maintained page bodies. Prefix local selectors with `:where([data-page="…"])`. Keep shared foundation and component styles global in `site-shell.css` and `ui.css`. Preserve existing selector specificity, declarations, media conditions, native state, IDs, links, translations, audio, payment validation, and the frozen legacy converter. Keep the redirect unchanged.
+
+Engineering review and decisions: Scope all selectors in comma-separated lists and media rules. Do not prefix keyframe steps. Give Pitch Shifter keyframes distinct page names and keep their bindings inside the page root. Move homepage-only variables from the document root to the home scope. Keep the studio print rule on the document root with a zero-specificity relationship guard for its page body. The existing shared stylesheet already uses this selector feature. Use explicit allowed page roots for the section-layout stylesheet that serves several pages.
+
+Specimen decision: Tool and studio specimens use the same body root as their live page. The mixed public specimen uses small wrappers with the corresponding page root for each example. Scope specimen-only CSS through a specimen marker. Scope guide-only CSS to its own root. Keep these roots separate from shared domain accent attributes.
+
+Failure behavior and checks: A local rule must not match outside its allowed page roots. The change must not conceal overflow, change control state, or override shared components through added specificity. Review every transformed selector and preserved declaration. Run the existing repository check. Add no build step, dependency, or browser automation. Record unavailable manual browser, keyboard, narrow-screen, and zoom review.
+
+- [x] Add page roots, scope local styles, and update matching specimens.
+- [x] Document the convention, refresh asset hashes, and pass relevant checks.
+- [ ] Review and commit the package, then reconcile Todoist.
+
+Verification evidence: `./scripts/check.sh` passed all seven test files. A separate source comparison checked 222 scoped selectors in 204 rule blocks across all 10 local stylesheets. Declarations, media conditions, and keyframe steps match the prior source, apart from the two matching animation-name prefixes. All 18 maintained documents have matching roots, balanced markup, unchanged text, unchanged original elements and control attributes, unchanged IDs and destinations, and valid label and accessibility references. Every loaded local stylesheet has a corresponding root in its document. Shared CSS, application JavaScript, the redirect, financial conversion, audio engines, and frozen legacy files did not change.
+
+Review evidence: Reviewed the complete diff, including selector lists, pseudo-elements, media rules, hidden states, inherited home variables, the guarded studio print rule, and the mixed public specimen wrappers. Documented the convention in `AGENTS.md`, the README, and the UI audit. Refreshed local stylesheet hashes. Updated the existing pitch source checks for the renamed keyframes. Added no permanent tests that mirror static selectors, dependencies, build steps, or browser tooling. Manual browser, keyboard, narrow-screen, print, and 200 percent zoom review did not run.

@@ -58,6 +58,8 @@ Preserve the required ABA record width. Test byte length as well as character le
 ## Source rules
 
 - Prefer plain HTML, CSS, and JavaScript.
+- Put a stable `data-page` attribute on each maintained page body. Scope local CSS selectors with `:where([data-page="page-name"])`. Use matching roots in page specimens. Keep shared rules in `assets/site-shell.css` and `assets/ui.css` global.
+- Scope every selector in a local selector list and media rule. Give local animation names a page prefix. Keep the legacy converter unchanged.
 - Keep JavaScript free of implicit global variables.
 - Use event listeners instead of inline event handlers.
 - Use semantic HTML controls and explicit labels.

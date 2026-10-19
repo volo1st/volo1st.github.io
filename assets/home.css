@@ -1,11 +1,11 @@
-:root {
+:where([data-page="home"]) {
   --home-display-font: var(--ui-font-body);
   --home-code-font: var(--ui-font-mono);
   --home-link: var(--ui-link);
   --home-link-hover: var(--ui-link-hover);
 }
 
-.home-main {
+:where([data-page="home"]) .home-main {
   display: grid;
   min-height: 100svh;
   align-content: space-between;
@@ -13,11 +13,11 @@
   padding-block: clamp(2rem, 8svh, 4rem);
 }
 
-.home-hero {
+:where([data-page="home"]) .home-hero {
   padding: 0;
 }
 
-.home-hero h1 {
+:where([data-page="home"]) .home-hero h1 {
   max-width: 12ch;
   margin: 0 0 1.15rem;
   font-family: var(--home-display-font);
@@ -27,54 +27,54 @@
   letter-spacing: -0.055em;
 }
 
-.hero-lead {
+:where([data-page="home"]) .hero-lead {
   margin: 0 0 1rem;
   font-family: var(--home-display-font);
   font-size: var(--ui-size-body);
   line-height: var(--ui-leading-body);
 }
 
-.hero-lead a {
+:where([data-page="home"]) .hero-lead a {
   color: inherit;
   text-decoration-color: rgb(23 32 42 / 38%);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.16em;
 }
 
-.hero-lead a:hover {
+:where([data-page="home"]) .hero-lead a:hover {
   color: var(--home-link-hover);
   text-decoration-color: currentcolor;
 }
 
-.hero-handle {
+:where([data-page="home"]) .hero-handle {
   margin: 0;
   color: var(--site-muted);
   font-family: var(--home-code-font);
   font-size: var(--ui-size-supporting);
 }
 
-.hero-handle strong {
+:where([data-page="home"]) .hero-handle strong {
   color: var(--site-text);
 }
 
-.social-directory,
-.social-group {
+:where([data-page="home"]) .social-directory,
+:where([data-page="home"]) .social-group {
   display: flex;
   align-items: center;
 }
 
-.social-directory {
+:where([data-page="home"]) .social-directory {
   gap: 0.55rem;
 }
 
-.social-group {
+:where([data-page="home"]) .social-group {
   gap: 0.15rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.social-link {
+:where([data-page="home"]) .social-link {
   display: grid;
   width: var(--ui-control-min-height);
   height: var(--ui-control-min-height);
@@ -83,24 +83,24 @@
   text-decoration: none;
 }
 
-.social-icon {
+:where([data-page="home"]) .social-icon {
   width: 1.25rem;
   height: 1.25rem;
   fill: currentcolor;
 }
 
-.social-link:hover {
+:where([data-page="home"]) .social-link:hover {
   color: var(--home-link-hover);
 }
 
-.social-separator {
+:where([data-page="home"]) .social-separator {
   width: 1px;
   height: 1.35rem;
   background: var(--site-divider);
 }
 
 @media (min-width: 700px) {
-  .home-main {
+  :where([data-page="home"]) .home-main {
     min-height: clamp(30rem, 65svh, 42rem);
     padding-block: clamp(2.5rem, 6svh, 4rem);
   }

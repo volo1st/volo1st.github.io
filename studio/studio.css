@@ -1,1 +1,1 @@
-.studio-links { margin-block-start: var(--ui-space-6); }
+:where([data-page="studio"]) .studio-links { margin-block-start: var(--ui-space-6); }

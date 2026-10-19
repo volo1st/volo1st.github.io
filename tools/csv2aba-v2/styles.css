@@ -1,10 +1,10 @@
 /* Payment workflow composition. Common components use assets/ui.css. */
-.step-heading, .download-step { display: flex; align-items: flex-start; gap: var(--ui-space-4); }
-.step-heading > div, .download-step > div { min-width: 0; }
-.step-number { display: inline-grid; flex: 0 0 2.125rem; width: 2.125rem; height: 2.125rem; place-items: center; border-radius: 50%; color: var(--tool-on-accent); background: var(--tool-accent); font-weight: var(--ui-weight-bold); }
-.success-number { background: var(--ui-success); }
-.choice-divider { display: flex; align-items: center; gap: var(--ui-space-3); color: var(--site-muted); }
-.choice-divider::before, .choice-divider::after { content: ""; flex: 1; border-top: 1px solid var(--site-divider); }
-.status-message:empty { display: none; }
-.error-panel, .result-card { scroll-margin-top: var(--ui-space-4); }
-.download-step { border-top: 1px solid var(--site-divider); padding-top: var(--ui-space-6); }
+:where([data-page="converter"]) .step-heading, :where([data-page="converter"]) .download-step { display: flex; align-items: flex-start; gap: var(--ui-space-4); }
+:where([data-page="converter"]) .step-heading > div, :where([data-page="converter"]) .download-step > div { min-width: 0; }
+:where([data-page="converter"]) .step-number { display: inline-grid; flex: 0 0 2.125rem; width: 2.125rem; height: 2.125rem; place-items: center; border-radius: 50%; color: var(--tool-on-accent); background: var(--tool-accent); font-weight: var(--ui-weight-bold); }
+:where([data-page="converter"]) .success-number { background: var(--ui-success); }
+:where([data-page="converter"]) .choice-divider { display: flex; align-items: center; gap: var(--ui-space-3); color: var(--site-muted); }
+:where([data-page="converter"]) .choice-divider::before, :where([data-page="converter"]) .choice-divider::after { content: ""; flex: 1; border-top: 1px solid var(--site-divider); }
+:where([data-page="converter"]) .status-message:empty { display: none; }
+:where([data-page="converter"]) .error-panel, :where([data-page="converter"]) .result-card { scroll-margin-top: var(--ui-space-4); }
+:where([data-page="converter"]) .download-step { border-top: 1px solid var(--site-divider); padding-top: var(--ui-space-6); }

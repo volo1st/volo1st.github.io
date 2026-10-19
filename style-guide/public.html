@@ -8,12 +8,12 @@
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=340aa48fa873">
     <link rel="stylesheet" href="../assets/ui.css?v=fe5d73ef3c17">
-    <link rel="stylesheet" href="../assets/home.css?v=40880962f1ce">
-    <link rel="stylesheet" href="../assets/section-index.css?v=47e25c6eddd0">
-    <link rel="stylesheet" href="../studio/studio.css?v=1f33821e6952">
-    <link rel="stylesheet" href="./specimens.css?v=e3193025aa98">
+    <link rel="stylesheet" href="../assets/home.css?v=831cd1ee32b2">
+    <link rel="stylesheet" href="../assets/section-index.css?v=ae9ff075bb4e">
+    <link rel="stylesheet" href="../studio/studio.css?v=38010de38c81">
+    <link rel="stylesheet" href="./specimens.css?v=37d59f177d3b">
   </head>
-  <body>
+  <body data-page="public-specimen" data-specimen>
     <header class="site-header ui-page-header ui-container">
       <nav class="ui-breadcrumb" aria-label="Breadcrumb">
         <ol>
@@ -24,52 +24,62 @@
     </header>
     <main class="site-main specimen-shell ui-container ui-page ui-flow">
       <p class="specimen-caption ui-small">Current source: homepage, section index, studio index, and Sound detail styles. Uses the shared component stylesheet.</p>
-      <section class="home-hero" aria-labelledby="public-heading">
-        <h1 id="public-heading" class="ui-title">Hi, I’m Vincent.</h1>
-        <p class="hero-lead">I <a class="ui-link" href="../code/">code</a>, shape <a class="ui-link" href="../sound/">sound</a>, and make <a class="ui-link" href="../music/">noise</a>.</p>
-        <p class="hero-handle">Online, I’m <strong>volo1st</strong>.</p>
-      </section>
-      <section class="section-destinations" aria-labelledby="public-links">
-        <h2 id="public-links" class="ui-subheading">Section label and navigation</h2>
-        <ul class="section-links">
-          <li>
-            <a class="ui-link" href="../studio/">
-              Studio
-            </a>
-          </li>
-          <li>
-            <a class="ui-link" href="../sound/room-acoustics/">
-              Room acoustics
-            </a>
-          </li>
-          <li>
-            <a class="ui-link" href="../sound/live-sound/">
-              Live sound
-            </a>
-          </li>
-        </ul>
-        <p class="section-status ui-small">Examples coming soon.</p>
-      </section>
-      <div class="specimen-block">
-        <h2 class="studio-name ui-title">Studio title style</h2>
-        <p class="specimen-caption ui-small">Uses the shared heading type scale.</p>
+      <div data-page="home">
+        <section class="home-hero" aria-labelledby="public-heading">
+          <h1 id="public-heading" class="ui-title">Hi, I’m Vincent.</h1>
+          <p class="hero-lead">I <a class="ui-link" href="../code/">code</a>, shape <a class="ui-link" href="../sound/">sound</a>, and make <a class="ui-link" href="../music/">noise</a>.</p>
+          <p class="hero-handle">Online, I’m <strong>volo1st</strong>.</p>
+        </section>
       </div>
-      <div class="sound-detail specimen-block ui-flow">
-        <h2 class="ui-title">Sound reading text</h2>
-        <p>Room measurements and acoustic treatment.</p>
-        <p class="section-status ui-small">Examples coming soon.</p>
+      <div data-page="sound">
+        <section class="section-destinations" aria-labelledby="public-links">
+          <h2 id="public-links" class="ui-subheading">Section label and navigation</h2>
+          <ul class="section-links">
+            <li>
+              <a class="ui-link" href="../studio/">
+                Studio
+              </a>
+            </li>
+            <li>
+              <a class="ui-link" href="../sound/room-acoustics/">
+                Room acoustics
+              </a>
+            </li>
+            <li>
+              <a class="ui-link" href="../sound/live-sound/">
+                Live sound
+              </a>
+            </li>
+          </ul>
+          <p class="section-status ui-small">Examples coming soon.</p>
+        </section>
       </div>
-      <nav class="contact-directory social-directory specimen-block" aria-label="Social link sample">
-        <ul class="social-group">
-          <li>
-            <a class="social-link" href="https://github.com/volo1st" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub">
-              <svg class="social-icon" aria-hidden="true">
-                <use href="../assets/social-icons.svg?v=e6fa9526e547#github"></use>
-              </svg>
-            </a>
-          </li>
-        </ul>
-      </nav>
+      <div data-page="studio">
+        <div class="specimen-block">
+          <h2 class="studio-name ui-title">Studio title style</h2>
+          <p class="specimen-caption ui-small">Uses the shared heading type scale.</p>
+        </div>
+      </div>
+      <div data-page="room-acoustics">
+        <div class="sound-detail specimen-block ui-flow">
+          <h2 class="ui-title">Sound reading text</h2>
+          <p>Room measurements and acoustic treatment.</p>
+          <p class="section-status ui-small">Examples coming soon.</p>
+        </div>
+      </div>
+      <div data-page="home">
+        <nav class="contact-directory social-directory specimen-block" aria-label="Social link sample">
+          <ul class="social-group">
+            <li>
+              <a class="social-link" href="https://github.com/volo1st" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub">
+                <svg class="social-icon" aria-hidden="true">
+                  <use href="../assets/social-icons.svg?v=e6fa9526e547#github"></use>
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </main>
   </body>
 </html>
