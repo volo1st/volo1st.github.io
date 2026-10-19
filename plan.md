@@ -553,6 +553,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 19 October 2026 | Consolidate spacing, panels, and disclosures in the draft guide. | The owner selected this next step. Use the existing spacing scale for content flow, field groups, actions, and sections. Share panel and disclosure padding. Remove ordinary sample frames and the raised panel variant. Keep plain content unboxed. |
 | 19 October 2026 | Make draft controls compact on desktop and inset the select arrow. | The owner found the desktop buttons too large and the select arrow too close to the border. Use a 2.25rem control minimum on wide screens with a fine pointer and hover. Retain the 2.75rem touch minimum. Reserve space for the select arrow and retain native selection behavior. |
 | 19 October 2026 | Consolidate buttons and form controls in the draft guide before migrating apps. | The owner selected this next step. Share control dimensions, typography, focus, and disabled styles. Keep error borders from changing field dimensions. Preserve native field behavior and app-specific state logic. |
 | 19 October 2026 | Try one centered 48rem maximum page width in the draft guide, with 1–2rem side gutters. | The owner wants fewer width variants, a modest desktop width, and responsive mobile pages. Align the header and content. Remove nested guide-specific text-width limits. Review the draft before migrating existing pages. |
@@ -875,3 +876,19 @@ Direction selected on 19 October 2026: Reduce the shared control minimum to 2.25
 Inset the select chevron by 0.75rem. Reserve space between the value and chevron. Keep the native select element and its keyboard and mobile selection behavior. In forced-color mode, restore the browser arrow. Keep the arrow visible on disabled selects. This changes only the draft guide.
 
 Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, responsive tokens, select padding, and disabled background precedence. Refreshed the component stylesheet hash. Manual browser, keyboard, mobile, forced-color, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.
+
+### 21.6 Spacing, panels, and disclosures
+
+Purpose: Give related content, controls, and sections consistent spacing. Apply this iteration only to the draft guide.
+
+Requirements and decisions:
+
+- Reuse the existing spacing scale. Use 0.5rem within action rows and between headings and their content. Use 1rem between text blocks, 1.5rem between field groups, and 2rem for section padding. Reduce section padding to 1.5rem on narrow screens.
+- Add explicit reusable content-flow, field-stack, and action-row classes. Reset direct child block margins within these layouts. Keep hidden content hidden and do not change application state rules.
+- Use one panel surface, 1-pixel border, and panel radius. Share 1.5rem desktop padding and 1rem mobile padding with disclosure bodies. Use the same horizontal inset for disclosure summaries. Retain the native disclosure marker, keyboard behavior, and open state.
+- Remove decorative frames around ordinary guide samples. Show plain content beside a bordered panel. Remove the draft raised-panel variant. Use an unboxed fieldset for related options rather than nesting another panel.
+- Demonstrate paragraph, heading, field, action, list, and disclosure spacing. Include long summaries and Chinese content. Keep specialized app displays and existing pages unchanged.
+
+Failure behavior and engineering review: The guide remains static and needs no script. Explicit layout classes control direct children without global paragraph or section overrides. Native fieldsets retain their legends. Native disclosures retain keyboard and focus behavior. No fixed heights or clipped containers may hide wrapped content or focus outlines. Browser rendering remains an optional manual review for this style change.
+
+Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, direct child margins, responsive padding, disclosure alignment, labels, and linked help text. Refreshed both draft stylesheet hashes. Existing pages and isolated specimen files did not change. Manual browser, keyboard, narrow-screen, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.

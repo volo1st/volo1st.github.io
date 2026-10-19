@@ -21,6 +21,8 @@
   --ui-space-4: 1rem;
   --ui-space-6: 1.5rem;
   --ui-space-8: 2rem;
+  --ui-panel-padding: var(--ui-space-4);
+  --ui-section-padding: var(--ui-space-6);
   --ui-control-min-height: 2.75rem;
   --ui-control-border-width: 1px;
   --ui-control-padding-block: var(--ui-space-2);
@@ -42,6 +44,13 @@
   font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-body);
   letter-spacing: normal;
+}
+
+@media (min-width: 651px) {
+  :root {
+    --ui-panel-padding: var(--ui-space-6);
+    --ui-section-padding: var(--ui-space-8);
+  }
 }
 
 @media (min-width: 651px) and (hover: hover) and (pointer: fine) {
@@ -88,6 +97,18 @@
 .ui-link:hover { color: var(--ui-link-hover); }
 .ui-link--accent { color: var(--tool-accent); }
 .ui-link--accent:hover { color: var(--tool-accent-hover); }
+
+/* Explicit layouts own their children's spacing, including native block margins. */
+.ui-flow > * { margin-block: 0; }
+.ui-flow > * + * { margin-block-start: var(--ui-space-4); }
+.ui-flow > * + :is(.ui-heading, .ui-subheading) { margin-block-start: var(--ui-space-6); }
+.ui-flow > :is(.ui-title, .ui-heading, .ui-subheading) + * { margin-block-start: var(--ui-space-2); }
+.ui-flow > :is(ul, ol) { padding-inline-start: var(--ui-space-6); }
+.ui-flow > :is(ul, ol) > li + li { margin-block-start: var(--ui-space-2); }
+.ui-stack { display: grid; min-width: 0; gap: var(--ui-space-6); }
+.ui-stack > * { margin-block: 0; }
+.ui-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-2); }
+.ui-actions > * { margin-block: 0; }
 
 .ui-button,
 .ui-input,
@@ -141,6 +162,8 @@
 .ui-button--icon svg { width: 1.25rem; height: 1.25rem; fill: currentcolor; }
 
 .ui-field { display: grid; min-width: 0; gap: var(--ui-space-2); }
+.ui-group { min-width: 0; margin: 0; border: 0; padding: 0; }
+.ui-group > legend { margin-bottom: var(--ui-space-2); padding: 0; }
 .ui-label { display: block; font-family: var(--ui-font-control); font-size: var(--ui-size-body); font-weight: var(--ui-weight-bold); line-height: var(--ui-leading-body); }
 .ui-help { margin: 0; color: var(--site-muted); font-family: var(--ui-font-body); font-size: var(--ui-size-supporting); font-weight: var(--ui-weight-regular); line-height: var(--ui-leading-body); }
 .ui-help--error { color: var(--ui-error); }
@@ -210,10 +233,7 @@
 .ui-choice:has(input:disabled) { color: var(--site-muted); cursor: not-allowed; }
 .ui-button[aria-busy="true"]:disabled { cursor: progress; }
 
-.ui-panel { border: 1px solid var(--site-panel-border); border-radius: var(--ui-radius-panel); padding: var(--ui-space-4); background: var(--site-panel-background); }
-.ui-panel--raised { box-shadow: var(--site-panel-shadow); }
-.ui-panel > :first-child { margin-top: 0; }
-.ui-panel > :last-child { margin-bottom: 0; }
+.ui-panel { min-width: 0; border: 1px solid var(--site-panel-border); border-radius: var(--ui-radius-panel); padding: var(--ui-panel-padding); background: var(--site-panel-background); }
 .ui-notice { border-left: 4px solid var(--ui-info); border-radius: 0 var(--ui-radius-control) var(--ui-radius-control) 0; padding: var(--ui-space-3) var(--ui-space-4); background: var(--ui-info-surface); }
 .ui-notice[data-tone="success"] { border-color: var(--ui-success); background: var(--ui-success-surface); }
 .ui-notice[data-tone="warning"] { border-color: var(--ui-warning); background: var(--ui-warning-surface); }
@@ -223,12 +243,11 @@
 .ui-notice ul { margin-bottom: 0; padding-left: var(--ui-space-6); }
 .ui-notice__row { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--ui-space-4); }
 
-.ui-disclosure { border: 1px solid var(--site-panel-border); border-radius: var(--ui-radius-panel); background: var(--site-panel-background); }
-.ui-disclosure > summary { min-height: 2.75rem; padding: 0.75rem 1rem; font-family: var(--ui-font-control); font-weight: var(--ui-weight-bold); cursor: pointer; }
-.ui-disclosure[open] > summary { border-bottom: 1px solid var(--site-divider); }
-.ui-disclosure__body { padding: var(--ui-space-4); }
-.ui-disclosure__body > :first-child { margin-top: 0; }
-.ui-disclosure__body > :last-child { margin-bottom: 0; }
+.ui-disclosure { min-width: 0; border: 1px solid var(--site-panel-border); border-radius: var(--ui-radius-panel); background: var(--site-panel-background); }
+.ui-disclosure > summary { min-height: var(--ui-control-min-height); border-radius: var(--ui-radius-panel); padding: var(--ui-space-3) var(--ui-panel-padding); font-family: var(--ui-font-control); font-weight: var(--ui-weight-bold); cursor: pointer; }
+.ui-disclosure > summary:hover { background: var(--site-hover); }
+.ui-disclosure[open] > summary { border-bottom: 1px solid var(--site-divider); border-radius: var(--ui-radius-panel) var(--ui-radius-panel) 0 0; }
+.ui-disclosure__body { min-width: 0; padding: var(--ui-panel-padding); }
 .ui-table-scroll { max-width: 100%; overflow-x: auto; }
 .ui-table { width: 100%; border-collapse: collapse; font-size: var(--ui-size-body); }
 .ui-table caption { padding-bottom: var(--ui-space-3); font-weight: var(--ui-weight-bold); text-align: left; }
@@ -245,4 +264,5 @@
 .language-switcher button { font-family: var(--ui-font-control); font-size: var(--ui-size-body); font-weight: var(--ui-weight-bold); line-height: var(--ui-leading-body); }
 
 /* This scope belongs to the draft. Do not change existing app state rules. */
-.ui-panel [hidden], .ui-disclosure [hidden] { display: none; }
+.ui-panel [hidden], .ui-disclosure [hidden],
+.ui-flow > [hidden], .ui-stack > [hidden], .ui-actions > [hidden] { display: none; }

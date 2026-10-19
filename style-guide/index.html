@@ -9,8 +9,8 @@
     <title>UI style guide | volo1st</title>
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=73514134a473">
-    <link rel="stylesheet" href="./components.css?v=f60d5b777cd0">
-    <link rel="stylesheet" href="./guide.css?v=2b424392c491">
+    <link rel="stylesheet" href="./components.css?v=eb019b210f55">
+    <link rel="stylesheet" href="./guide.css?v=c3758bcbd3b0">
   </head>
   <body>
     <header class="site-header ui-container">
@@ -27,8 +27,8 @@
       </nav>
     </header>
     <main class="site-main guide-main ui-container">
-      <header class="guide-intro">
-        <p class="guide-eyebrow">Draft 06 · control size and select spacing</p>
+      <header class="guide-intro ui-flow">
+        <p class="guide-eyebrow">Draft 07 · spacing and panels</p>
         <h1 class="ui-title">One site. One shared language.</h1>
         <p class="guide-lead">A working user interface (UI) style guide for type, controls, and common patterns. Compare the current styles. Then refine the shared draft before changing existing pages.</p>
         <p class="ui-small">The draft styles apply only to this guide. Buttons show visual states and do not run app actions. Native fields and disclosures can be used. No input is stored or processed.</p>
@@ -63,33 +63,33 @@
           Review
         </a>
       </nav>
-      <section id="type" class="guide-section" aria-labelledby="type-heading">
+      <section id="type" class="guide-section ui-flow" aria-labelledby="type-heading">
         <p class="guide-eyebrow">01 / Typography</p>
         <h2 id="type-heading" class="ui-heading">Serif by default. Sans-serif for controls.</h2>
         <p>Use one serif family for headings and content. Use sans-serif for interactive controls and their labels. Use monospace for source text and technical values. Inline links keep the surrounding text font.</p>
         <p>Use four sizes and two weights. Keep headings regular. Use bold for emphasis, control labels, and subsection headings. Use normal letter spacing.</p>
         <p class="ui-small">These are local font stacks. The actual fonts depend on the device. Compare English and Chinese before choosing the final set.</p>
         <div class="guide-grid guide-type-grid">
-          <article class="guide-sample">
+          <article class="guide-sample ui-flow">
             <h3 class="guide-caption">Default / serif</h3>
             <p class="guide-font-sample guide-font-body">Recordings, rooms, and live stages.</p>
             <p class="guide-font-sample guide-font-body" lang="zh-Hans">录音、房间声学与现场扩声。</p>
             <p class="ui-small">Headings, prose, notices, help, and table content.</p>
           </article>
-          <article class="guide-sample">
+          <article class="guide-sample ui-flow">
             <h3 class="guide-caption">Controls / system sans-serif</h3>
             <p class="guide-font-sample guide-font-control">Play · Export · Select a file</p>
             <p class="guide-font-sample guide-font-control" lang="zh-Hans">播放 · 导出 · 选择文件</p>
             <p class="ui-small">Buttons, fields, labels, interface navigation, and disclosure summaries.</p>
           </article>
-          <article class="guide-sample">
+          <article class="guide-sample ui-flow">
             <h3 class="guide-caption">Code / monospace</h3>
             <p class="guide-font-sample guide-font-mono">tempo: 100<br>chords: C Am F G</p>
             <p class="guide-font-sample guide-font-mono" lang="zh-Hans">速度：100<br>和弦：C Am F G</p>
             <p class="ui-small">Source text, code, and technical values that need monospace.</p>
           </article>
         </div>
-        <div class="guide-sample guide-follow guide-type-hierarchy">
+        <div class="guide-sample guide-type-hierarchy ui-flow">
           <p class="guide-caption">Page title · 2rem · regular</p>
           <p class="ui-title">A clear starting point.</p>
           <p class="guide-caption">Section heading · 1.5rem · regular</p>
@@ -104,7 +104,7 @@
           <p class="ui-code">00:42 / 03:20 · 100 beats per minute</p>
         </div>
       </section>
-      <section id="layout" class="guide-section" aria-labelledby="layout-heading">
+      <section id="layout" class="guide-section ui-flow" aria-labelledby="layout-heading">
         <p class="guide-eyebrow">02 / Layout</p>
         <h2 id="layout-heading" class="ui-heading">One centered page width.</h2>
         <p>The header and content share one container. On desktop, the page stops growing at 48rem. On mobile, the content fits the available width with visible margins on both sides.</p>
@@ -115,8 +115,11 @@
         <p class="ui-small">At the default 16-pixel base size, the maximum is 768 pixels. Minimum side space follows 4 percent of the viewport width, bounded by 1rem and 2rem. Centering leaves more space on wide screens. The gutter token describes each side.</p>
         <p>Resize the page to compare desktop and mobile layouts. Sample grids use one column on small screens. Content can wrap without a fixed minimum page width.</p>
         <p class="ui-small">The current-style previews below retain the original page widths for comparison.</p>
+        <h3 class="ui-subheading">Space shows the relationship.</h3>
+        <p>Keep a heading close to its content. Separate paragraphs by 1rem and field groups by 1.5rem. Give sections 2rem of padding on desktop and 1.5rem on mobile.</p>
+        <p class="ui-small">Use <code class="ui-code">ui-flow</code> for text, <code class="ui-code">ui-stack</code> for field groups, and <code class="ui-code">ui-actions</code> for wrapping action rows. These classes control their direct children's spacing.</p>
       </section>
-      <section id="foundations" class="guide-section" aria-labelledby="foundations-heading">
+      <section id="foundations" class="guide-section ui-flow" aria-labelledby="foundations-heading">
         <p class="guide-eyebrow">03 / Foundations</p>
         <h2 id="foundations-heading" class="ui-heading">Warm surfaces. Clear accents.</h2>
         <div class="guide-swatches">
@@ -169,29 +172,29 @@
             <code>#777263</code>
           </div>
         </div>
-        <div class="guide-grid guide-follow">
-          <div class="guide-sample">
+        <div class="guide-grid">
+          <div class="guide-sample ui-flow">
             <h3 class="ui-subheading">Spacing scale</h3>
             <div class="guide-space guide-space--1">
-              0.25rem
+              0.25rem · compact control padding
             </div>
             <div class="guide-space guide-space--2">
-              0.5rem
+              0.5rem · headings, labels, and actions
             </div>
             <div class="guide-space guide-space--3">
-              0.75rem
+              0.75rem · control insets
             </div>
             <div class="guide-space guide-space--4">
-              1rem
+              1rem · text blocks and mobile panel padding
             </div>
             <div class="guide-space guide-space--6">
-              1.5rem
+              1.5rem · groups and desktop panel padding
             </div>
             <div class="guide-space guide-space--8">
-              2rem
+              2rem · desktop section padding
             </div>
           </div>
-          <div class="guide-sample">
+          <div class="guide-sample ui-flow">
             <h3 class="ui-subheading">Shape and focus</h3>
             <p>Controls use a 0.4rem radius. Panels use a 0.65rem radius. Controls use a compact desktop size and larger touch targets.</p>
             <p class="ui-small">Press Tab to inspect the existing shared focus outline. Hover samples use the pointer. Do not remove focus when changing the final design.</p>
@@ -201,15 +204,15 @@
           </div>
         </div>
       </section>
-      <section id="actions" class="guide-section" aria-labelledby="actions-heading">
+      <section id="actions" class="guide-section ui-flow" aria-labelledby="actions-heading">
         <p class="guide-eyebrow">04 / Actions</p>
         <h2 id="actions-heading" class="ui-heading">The same button, in each context.</h2>
         <p>Buttons and single-line fields share a 1-pixel border and common padding. The default minimum height is 2.75rem (44 pixels). Above 650 pixels, a fine pointer with hover uses a compact 2.25rem (36-pixel) minimum. Font size stays the same. Long labels can wrap and increase the height.</p>
         <p class="ui-small">Use Tab to compare focus outlines. Hover and press enabled buttons to inspect their styles. Disabled samples remain unavailable. These buttons do not run app actions.</p>
         <div class="guide-grid">
-          <div class="guide-sample">
+          <div class="guide-sample ui-flow">
             <h3 class="guide-caption">General / blue accent</h3>
-            <div class="guide-row">
+            <div class="ui-actions">
               <button type="button" class="ui-button ui-button--primary">
                 Primary action
               </button>
@@ -221,9 +224,9 @@
               </button>
             </div>
           </div>
-          <div class="guide-sample" data-domain="music">
+          <div class="guide-sample ui-flow" data-domain="music">
             <h3 class="guide-caption">Music / green accent</h3>
-            <div class="guide-row">
+            <div class="ui-actions">
               <button type="button" class="ui-button ui-button--primary">
                 Primary action
               </button>
@@ -235,9 +238,9 @@
               </button>
             </div>
           </div>
-          <div class="guide-sample">
+          <div class="guide-sample ui-flow">
             <h3 class="guide-caption">Unavailable and busy</h3>
-            <div class="guide-row">
+            <div class="ui-actions">
               <button type="button" class="ui-button ui-button--primary" disabled>
                 Primary unavailable
               </button>
@@ -250,9 +253,9 @@
             </div>
             <p class="ui-small">Static state examples. No background task is running.</p>
           </div>
-          <div class="guide-sample">
+          <div class="guide-sample ui-flow">
             <h3 class="guide-caption">Selected, icon, and caution</h3>
-            <div class="guide-row">
+            <div class="ui-actions">
               <button type="button" class="ui-button" aria-pressed="true">
                 Loop
               </button>
@@ -269,9 +272,9 @@
               </button>
             </div>
           </div>
-          <div class="guide-sample">
+          <div class="guide-sample ui-flow">
             <h3 class="guide-caption">Icon and text alignment</h3>
-            <div class="guide-row">
+            <div class="ui-actions">
               <button type="button" class="ui-button ui-button--primary">Play sample</button>
               <button type="button" class="ui-button ui-button--primary ui-button--icon" aria-label="Play icon sample">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l14-8z"></path></svg>
@@ -281,18 +284,18 @@
               </button>
             </div>
           </div>
-          <div class="guide-sample" data-domain="music">
+          <div class="guide-sample ui-flow" data-domain="music">
             <h3 class="guide-caption">Long labels and Chinese text</h3>
-            <div class="guide-row">
+            <div class="ui-actions">
               <button type="button" class="ui-button ui-button--primary">Return to the original arrangement</button>
               <button type="button" class="ui-button" lang="zh-Hans">选择音频文件</button>
             </div>
             <p class="ui-small">Text can wrap. The control has a minimum height, without a fixed maximum height.</p>
           </div>
         </div>
-        <div class="guide-sample guide-follow">
+        <div class="guide-sample ui-flow">
           <h3 class="guide-caption">Links / navigation keeps link semantics</h3>
-          <div class="guide-row">
+          <div class="ui-actions">
             <a class="ui-link" href="#review">
               Neutral text link
             </a>
@@ -306,11 +309,11 @@
           <p class="ui-small">These links open the Review section. They do not run an app action.</p>
         </div>
       </section>
-      <section id="fields" class="guide-section" aria-labelledby="fields-heading">
+      <section id="fields" class="guide-section ui-flow" aria-labelledby="fields-heading">
         <p class="guide-eyebrow">05 / Fields</p>
         <h2 id="fields-heading" class="ui-heading">One family of common controls.</h2>
         <p>Fields use the same dimensions and type as buttons. Read-only fields remain focusable and selectable. Error styling adds an inner stroke without changing the field's dimensions.</p>
-        <div class="guide-sample">
+        <div class="guide-sample ui-flow">
           <h3 class="guide-caption">Alignment comparison</h3>
           <div class="guide-grid guide-control-comparison">
             <div class="ui-field">
@@ -329,7 +332,7 @@
         </div>
         <p class="ui-small">The state samples below are static. Editing a value does not clear its sample error or change its read-only or disabled state.</p>
         <div class="guide-grid">
-          <div class="guide-sample guide-stack">
+          <div class="guide-sample ui-stack">
             <div class="ui-field">
               <label class="ui-label" for="example-text">Project name</label>
               <input class="ui-input" id="example-text" type="text" value="Room study" aria-describedby="example-text-help">
@@ -353,7 +356,7 @@
               <p class="ui-help">Native range control. Use arrow keys to change the value.</p>
             </div>
           </div>
-          <div class="guide-sample guide-stack" data-domain="music">
+          <div class="guide-sample ui-stack" data-domain="music">
             <div class="ui-field">
               <label class="ui-label" for="example-invalid">Project name · invalid state</label>
               <input class="ui-input" id="example-invalid" type="text" value="" aria-invalid="true" aria-describedby="example-invalid-help">
@@ -378,7 +381,7 @@
               <input class="ui-range" id="example-disabled-range" type="range" min="0" max="100" value="0" disabled>
             </div>
           </div>
-          <div class="guide-sample guide-stack">
+          <div class="guide-sample ui-stack">
             <div class="ui-field">
               <label class="ui-label" for="example-source">Source text</label>
               <textarea class="ui-textarea ui-code" id="example-source" rows="4" spellcheck="false" aria-describedby="example-source-help">tempo: 100
@@ -391,13 +394,13 @@ chords: C Am F G</textarea>
               <p class="ui-help" id="example-file-help">No file is read, uploaded, or converted by this guide.</p>
             </div>
           </div>
-          <div class="guide-sample guide-stack">
+          <div class="guide-sample ui-stack">
             <div class="ui-field">
               <label class="ui-label" for="example-chinese" lang="zh-Hans">项目名称</label>
               <input class="ui-input" id="example-chinese" type="text" value="房间声学示例" lang="zh-Hans">
               <p class="ui-help" lang="zh-Hans">输入简短的项目名称。</p>
             </div>
-            <fieldset class="ui-panel">
+            <fieldset class="ui-group">
               <legend class="ui-label">Related options</legend>
               <label class="ui-choice"><input type="checkbox" checked> Include a count-in</label>
               <label class="ui-choice"><input type="radio" name="sample-mode" value="original" checked> Original</label>
@@ -406,7 +409,7 @@ chords: C Am F G</textarea>
             </fieldset>
             <p class="ui-small">Checkboxes and radio buttons are native examples for future common controls. Current apps mostly use selects.</p>
           </div>
-          <div class="guide-sample guide-stack">
+          <div class="guide-sample ui-stack">
             <h3 class="guide-caption">Select and textarea states</h3>
             <div class="ui-field">
               <label class="ui-label" for="example-invalid-select">Format · invalid state</label>
@@ -426,7 +429,7 @@ chords: C Am F G</textarea>
 chords: C Am F G</textarea>
             </div>
           </div>
-          <div class="guide-sample guide-stack">
+          <div class="guide-sample ui-stack">
             <h3 class="guide-caption">Unavailable fields</h3>
             <div class="ui-field">
               <label class="ui-label" for="example-disabled-text">Unavailable text field</label>
@@ -443,7 +446,7 @@ chords: C Am F G</textarea>
           </div>
         </div>
       </section>
-      <section id="notices" class="guide-section" aria-labelledby="notices-heading">
+      <section id="notices" class="guide-section ui-flow" aria-labelledby="notices-heading">
         <p class="guide-eyebrow">06 / Notices</p>
         <h2 id="notices-heading" class="ui-heading">Meaning comes before color.</h2>
         <p class="ui-small">These samples are static. Apps should keep their live status and error announcements when adopting the visual styles.</p>
@@ -473,7 +476,7 @@ chords: C Am F G</textarea>
             </ul>
           </aside>
         </div>
-        <div class="guide-grid guide-follow">
+        <div class="guide-grid">
           <div class="ui-notice">
             <div class="ui-notice__row">
               <div>
@@ -486,54 +489,75 @@ chords: C Am F G</textarea>
             </div>
             <p class="ui-small">Static sample. This close button does not dismiss the notice.</p>
           </div>
-          <div class="ui-panel">
+          <div class="ui-panel ui-flow">
             <h3 class="ui-subheading">Empty state</h3>
             <p class="ui-small">No examples are selected.</p>
             <p>Describe the next step instead of showing a blank panel.</p>
           </div>
         </div>
       </section>
-      <section id="patterns" class="guide-section" aria-labelledby="patterns-heading">
+      <section id="patterns" class="guide-section ui-flow" aria-labelledby="patterns-heading">
         <p class="guide-eyebrow">07 / Patterns</p>
         <h2 id="patterns-heading" class="ui-heading">Reusable pieces, distinct pages.</h2>
+        <p>Use plain content for reading. Use a panel when a boundary helps group a task. Panels and disclosure bodies share 1.5rem desktop padding and 1rem mobile padding. They use one border and corner style, without a shadow.</p>
         <div class="guide-grid">
-          <article class="ui-panel ui-panel--raised">
-            <h3 class="ui-subheading">A content panel</h3>
-            <p class="ui-reading">A panel groups related content. Use a plain section when a border and surface do not add meaning.</p>
-            <a class="ui-link" href="#review">
-              Review the draft
-            </a>
+          <article class="ui-flow">
+            <h3 class="ui-subheading">Plain content</h3>
+            <p>Use spacing to group a heading, paragraphs, and a list. A border is optional.</p>
+            <p>This second paragraph uses the same text spacing as a paragraph inside a panel.</p>
+            <h4 class="ui-subheading">Before the next step</h4>
+            <ul>
+              <li>Read the short instructions.</li>
+              <li>Check the example settings.</li>
+            </ul>
+            <p lang="zh-Hans">标题靠近正文。段落之间保留一致的间距。</p>
+            <p><a class="ui-link" href="#review">Review the draft</a></p>
           </article>
-          <div class="ui-panel">
-            <h3 class="ui-subheading">Label and value pairs</h3>
-            <dl class="ui-metrics">
-              <div>
-                <dt>Duration</dt>
-                <dd>3:20</dd>
+          <div class="ui-panel ui-flow">
+            <h3 class="ui-subheading">A settings panel</h3>
+            <p>Keep related fields and actions within one boundary. This sample performs no action.</p>
+            <div class="ui-stack">
+              <div class="ui-field">
+                <label class="ui-label" for="panel-project">Project name</label>
+                <input class="ui-input" id="panel-project" type="text" value="Room study" aria-describedby="panel-project-help">
+                <p class="ui-help" id="panel-project-help">Keep the label, field, and help text together.</p>
               </div>
-              <div>
-                <dt>Sample rate</dt>
-                <dd>48 kHz</dd>
+              <div class="ui-field">
+                <label class="ui-label" for="panel-format">Export format</label>
+                <select class="ui-select" id="panel-format"><option>WAV</option><option>MP3</option></select>
               </div>
-            </dl>
+              <div class="ui-actions">
+                <button class="ui-button ui-button--primary" type="button">Primary action</button>
+                <button class="ui-button" type="button">Secondary action</button>
+              </div>
+            </div>
           </div>
           <details class="ui-disclosure">
-            <summary>Closed disclosure</summary>
-            <div class="ui-disclosure__body">
+            <summary>Closed disclosure · additional instructions for this example</summary>
+            <div class="ui-disclosure__body ui-flow">
               <p>Native HTML provides keyboard behavior and open state.</p>
+              <p>The body uses the same text spacing and padding as a panel.</p>
             </div>
           </details>
           <details class="ui-disclosure" open>
-            <summary>Open disclosure</summary>
-            <div class="ui-disclosure__body">
-              <p>Keep the same border, padding, and type in both states.</p>
-              <a class="ui-link" href="#review">
-                Review this component
-              </a>
+            <summary>Open disclosure · additional instructions for this example</summary>
+            <div class="ui-disclosure__body ui-flow">
+              <p>Long summaries can wrap. Closed disclosures keep their natural height beside open ones.</p>
+              <ul>
+                <li>Keep the native marker and keyboard behavior.</li>
+                <li>Align the summary and body with the panel inset.</li>
+              </ul>
+              <p lang="zh-Hans">展开后，正文与其他面板使用相同的内边距。</p>
+              <p><a class="ui-link" href="#review">Review this component</a></p>
             </div>
           </details>
         </div>
-        <div class="ui-table-scroll guide-table" tabindex="0" role="region" aria-label="Example file table">
+        <h3 class="ui-subheading">Label and value pairs</h3>
+        <dl class="ui-metrics">
+          <div><dt>Duration</dt><dd>3:20</dd></div>
+          <div><dt>Sample rate</dt><dd>48 kHz</dd></div>
+        </dl>
+        <div class="ui-table-scroll" tabindex="0" role="region" aria-label="Example file table">
           <table class="ui-table">
             <caption>Example files · invented data</caption>
             <thead>
@@ -578,47 +602,47 @@ chords: C Am F G</textarea>
         <hr class="ui-divider">
         <p class="ui-small">Breadcrumbs and the language control already have a shared source. Their current variants appear below. Chord cards, pitch symbols, and audio timing remain specialized components.</p>
       </section>
-      <section id="current" class="guide-section" aria-labelledby="current-heading">
+      <section id="current" class="guide-section ui-flow" aria-labelledby="current-heading">
         <p class="guide-eyebrow">08 / Current styles</p>
         <h2 id="current-heading" class="ui-heading">Compare what the site uses today.</h2>
         <p>Each preview loads the current source stylesheets in a separate document. The draft above cannot change them. Open a specimen on its own to check the full page width.</p>
         <details class="ui-disclosure guide-current">
           <summary>Public pages · introduction, links, and headings</summary>
-          <div class="ui-disclosure__body">
+          <div class="ui-disclosure__body ui-flow">
             <p><a class="ui-link" href="./public.html" target="_blank" rel="noopener noreferrer">Open public-page specimen</a></p>
             <iframe title="Current public-page typography and links" src="./public.html" loading="lazy"></iframe>
           </div>
         </details>
         <details class="ui-disclosure guide-current">
           <summary>Studio rates · reading text, service rows, and language choice</summary>
-          <div class="ui-disclosure__body">
+          <div class="ui-disclosure__body ui-flow">
             <p><a class="ui-link" href="./studio.html" target="_blank" rel="noopener noreferrer">Open studio specimen</a></p>
             <iframe title="Current studio rate styles" src="./studio.html" loading="lazy"></iframe>
           </div>
         </details>
         <details class="ui-disclosure guide-current">
           <summary>Converter · primary actions, fields, safety, and errors</summary>
-          <div class="ui-disclosure__body">
+          <div class="ui-disclosure__body ui-flow">
             <p><a class="ui-link" href="./converter.html" target="_blank" rel="noopener noreferrer">Open converter specimen</a></p>
             <iframe title="Current converter controls and notices" src="./converter.html" loading="lazy"></iframe>
           </div>
         </details>
         <details class="ui-disclosure guide-current">
           <summary>Guitar · controls, validation, and the specialized chord card</summary>
-          <div class="ui-disclosure__body">
+          <div class="ui-disclosure__body ui-flow">
             <p><a class="ui-link" href="./guitar.html" target="_blank" rel="noopener noreferrer">Open guitar specimen</a></p>
             <iframe title="Current Guitar Strum Machine controls and chord card" src="./guitar.html" loading="lazy"></iframe>
           </div>
         </details>
         <details class="ui-disclosure guide-current">
           <summary>Pitch Shifter · controls, seek slider, and status tones</summary>
-          <div class="ui-disclosure__body">
+          <div class="ui-disclosure__body ui-flow">
             <p><a class="ui-link" href="./pitch.html" target="_blank" rel="noopener noreferrer">Open pitch specimen</a></p>
             <iframe title="Current Pitch Shifter controls and status" src="./pitch.html" loading="lazy"></iframe>
           </div>
         </details>
       </section>
-      <footer id="review" class="guide-footer">
+      <footer id="review" class="guide-footer ui-flow">
         <p class="guide-eyebrow">09 / Review</p>
         <h2 class="ui-heading">Choose the system before migrating.</h2>
         <ol>
