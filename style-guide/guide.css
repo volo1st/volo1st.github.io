@@ -1,3 +1,4 @@
+.guide-header { padding-block-start: var(--ui-section-padding); }
 .guide-main { padding-block: var(--ui-space-8); }
 .guide-intro { margin-bottom: var(--ui-section-padding); }
 .guide-eyebrow { color: var(--site-muted); font: var(--ui-size-supporting)/var(--ui-leading-body) var(--ui-font-body); }
@@ -11,6 +12,7 @@
 .guide-type-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .guide-grid > * { min-width: 0; }
 .guide-sample { min-width: 0; }
+.guide-narrow-header { width: 100%; max-width: 20rem; border: 1px dashed var(--site-divider); padding: var(--ui-space-4); }
 .guide-caption { color: var(--site-muted); font: var(--ui-size-supporting)/var(--ui-leading-body) var(--ui-font-body); }
 .guide-type-hierarchy > .guide-caption:not(:first-child) { margin-top: var(--ui-space-6); }
 .guide-type-hierarchy > .guide-caption + * { margin-block-start: var(--ui-space-2); }

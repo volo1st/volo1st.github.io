@@ -9,26 +9,21 @@
     <title>UI style guide | volo1st</title>
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=73514134a473">
-    <link rel="stylesheet" href="./components.css?v=058204ab169c">
-    <link rel="stylesheet" href="./guide.css?v=c3758bcbd3b0">
+    <link rel="stylesheet" href="./components.css?v=b159f0847b93">
+    <link rel="stylesheet" href="./guide.css?v=50fd63b6c650">
   </head>
   <body>
-    <header class="site-header ui-container">
-      <nav class="site-breadcrumb" aria-label="Breadcrumb">
-        <a href="../">
-          volo1st
-        </a>
-        <span aria-hidden="true">
-          /
-        </span>
-        <span aria-current="page">
-          UI style guide
-        </span>
+    <header class="ui-page-header ui-container guide-header">
+      <nav class="ui-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a class="ui-link" href="../">volo1st</a></li>
+          <li><span aria-hidden="true">/</span><span aria-current="page">UI style guide</span></li>
+        </ol>
       </nav>
     </header>
     <main class="site-main guide-main ui-container">
       <header class="guide-intro ui-flow">
-        <p class="guide-eyebrow">Draft 10 · optional striped rows</p>
+        <p class="guide-eyebrow">Draft 11 · page headers and navigation</p>
         <h1 class="ui-title">One site. One shared language.</h1>
         <p class="guide-lead">A working user interface (UI) style guide for type, controls, and common patterns. Compare the current styles. Then refine the shared draft before changing existing pages.</p>
         <p class="ui-small">The draft styles apply only to this guide. Buttons show visual states and do not run app actions. Native fields and disclosures can be used. No input is stored or processed.</p>
@@ -58,6 +53,9 @@
         </a>
         <a class="ui-link" href="#data">
           Tables and values
+        </a>
+        <a class="ui-link" href="#headers">
+          Page headers
         </a>
         <a class="ui-link" href="#current">
           Current styles
@@ -579,7 +577,7 @@ chords: C Am F G</textarea>
           </details>
         </div>
         <hr class="ui-divider">
-        <p class="ui-small">Breadcrumbs and the language control already have a shared source. Their current variants appear below. Chord cards, pitch symbols, and audio timing remain specialized components.</p>
+        <p class="ui-small">The header examples below use the draft components. Chord cards, pitch symbols, and audio timing remain specialized components.</p>
       </section>
       <section id="data" class="guide-section ui-flow" aria-labelledby="data-heading">
         <p class="guide-eyebrow">08 / Tables and values</p>
@@ -746,8 +744,77 @@ chords: C Am F G</textarea>
         </div>
         <p class="ui-small">Use <code class="ui-code">ui-table__number</code> on a numeric column's heading and cells. Use <code class="ui-code">ui-table__text</code> for long descriptions that need a 12rem minimum width. Keep native captions, header scopes, and a named <code class="ui-code">ui-table-scroll</code> region. Use <code class="ui-code">ui-metrics</code> on a definition list for summary values. These examples do not sort, calculate, or process files.</p>
       </section>
+      <section id="headers" class="guide-section ui-flow" aria-labelledby="headers-heading">
+        <p class="guide-eyebrow">09 / Page headers</p>
+        <h2 id="headers-heading" class="ui-heading">One page context. Clear navigation.</h2>
+        <p>Keep breadcrumbs in English. Use the page-title style for reading pages. Keep compact tool headers quiet, with a real page heading available to assistive software.</p>
+        <p>Use <span lang="en">EN</span> for English and <span lang="zh-Hans">中文</span> for Simplified Chinese. Keep the language choice to the right of the breadcrumb while space permits. The selected language has an underline. All controls use the common focus outline.</p>
+        <p class="ui-small">Language buttons show static states. They do not translate this guide. Sample titles use level-four headings within the guide. A real page uses a level-one heading.</p>
+        <div class="guide-grid">
+          <div class="guide-sample ui-flow">
+            <h3 class="guide-caption">Reading page / visible title</h3>
+            <div class="ui-page-header">
+              <nav class="ui-breadcrumb" aria-label="Reading page breadcrumb sample" lang="en-AU">
+                <ol>
+                  <li><a class="ui-link" href="../">volo1st</a></li>
+                  <li><span aria-hidden="true">/</span><a class="ui-link" href="../sound/">Sound</a></li>
+                  <li><span aria-hidden="true">/</span><span aria-current="page">Room acoustics</span></li>
+                </ol>
+              </nav>
+              <div class="ui-flow">
+                <h4 class="ui-title">Room measurements and acoustic treatment</h4>
+                <p>A reading page can introduce its subject below the breadcrumb.</p>
+              </div>
+            </div>
+          </div>
+          <div class="guide-sample ui-flow">
+            <h3 class="guide-caption">Compact tool / English selected</h3>
+            <div class="ui-page-header">
+              <div class="ui-context-row">
+                <nav class="ui-breadcrumb" aria-label="Tool breadcrumb sample" lang="en-AU">
+                  <ol>
+                    <li><a class="ui-link" href="../">volo1st</a></li>
+                    <li><span aria-hidden="true">/</span><a class="ui-link" href="../tools/">Tools</a></li>
+                    <li><span aria-hidden="true">/</span><span aria-current="page">Guitar Strum Machine</span></li>
+                  </ol>
+                </nav>
+                <div class="ui-language" role="group" aria-label="Tool language samples">
+                  <button class="ui-button ui-button--quiet" type="button" aria-pressed="true" aria-label="English language sample" lang="en">EN</button>
+                  <button class="ui-button ui-button--quiet" type="button" aria-pressed="false" aria-label="Simplified Chinese language sample" lang="zh-Hans">中文</button>
+                </div>
+              </div>
+              <h4 class="ui-visually-hidden">Guitar Strum Machine</h4>
+              <p class="ui-small">This sample keeps its heading visually hidden. The tool name remains in the breadcrumb.</p>
+            </div>
+          </div>
+        </div>
+        <h3 class="ui-subheading">Narrow layout / Chinese selected</h3>
+        <p>This frame is at most 20rem wide, including its padding. Long breadcrumbs and titles can wrap. At exceptionally narrow widths or zoom, the context row can wrap without clipping the language buttons.</p>
+        <div class="guide-narrow-header">
+          <div class="ui-page-header">
+            <div class="ui-context-row">
+              <nav class="ui-breadcrumb" aria-label="Narrow breadcrumb sample" lang="en-AU">
+                <ol>
+                  <li><a class="ui-link" href="../">volo1st</a></li>
+                  <li><span aria-hidden="true">/</span><a class="ui-link" href="../studio/">Studio</a></li>
+                  <li><span aria-hidden="true">/</span><span aria-current="page">Studio recording and mixing services</span></li>
+                </ol>
+              </nav>
+              <div class="ui-language" role="group" aria-label="Narrow language samples">
+                <button class="ui-button ui-button--quiet" type="button" aria-pressed="false" aria-label="English language sample" lang="en">EN</button>
+                <button class="ui-button ui-button--quiet" type="button" aria-pressed="true" aria-label="Simplified Chinese language sample" lang="zh-Hans">中文</button>
+              </div>
+            </div>
+            <div class="ui-flow" lang="zh-Hans">
+              <h4 class="ui-title">录音与混音服务：工作室预约和准备事项</h4>
+              <p>页面标题和正文可以换行。语言按钮保留统一的尺寸和焦点样式。</p>
+            </div>
+          </div>
+        </div>
+        <p class="ui-small">Use <code class="ui-code">ui-page-header</code> for header spacing, <code class="ui-code">ui-context-row</code> for breadcrumb and language alignment, and <code class="ui-code">ui-breadcrumb</code> for the navigation list. Language buttons reuse <code class="ui-code">ui-button ui-button--quiet</code> inside <code class="ui-code">ui-language</code>. Keep the real app's language state and translation logic during migration.</p>
+      </section>
       <section id="current" class="guide-section ui-flow" aria-labelledby="current-heading">
-        <p class="guide-eyebrow">09 / Current styles</p>
+        <p class="guide-eyebrow">10 / Current styles</p>
         <h2 id="current-heading" class="ui-heading">Compare what the site uses today.</h2>
         <p>Each preview loads the current source stylesheets in a separate document. The draft above cannot change them. Open a specimen on its own to check the full page width.</p>
         <details class="ui-disclosure guide-current">
@@ -787,7 +854,7 @@ chords: C Am F G</textarea>
         </details>
       </section>
       <footer id="review" class="guide-footer ui-flow">
-        <p class="guide-eyebrow">10 / Review</p>
+        <p class="guide-eyebrow">11 / Review</p>
         <h2 class="ui-heading">Choose the system before migrating.</h2>
         <ol>
           <li>
@@ -798,6 +865,9 @@ chords: C Am F G</textarea>
           </li>
           <li>
             Choose notice tones and panel density.
+          </li>
+          <li>
+            Review page headers, breadcrumb wrapping, and selected-language states.
           </li>
           <li>
             Review long labels, Chinese text, keyboard focus, narrow layouts, and 200 percent zoom.

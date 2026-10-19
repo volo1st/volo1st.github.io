@@ -553,6 +553,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 19 October 2026 | Refine page headers, breadcrumbs, and language choice in the draft guide. | The owner selected this last common area before migration review. Share spacing, control sizing, and focus. Keep the quiet language choice and selected underline. Preserve compact tool headers and English breadcrumbs. |
 | 19 October 2026 | Soften striped body rows and distinguish table headings and totals. | The owner found white rows too bright and dark stripes too close to headings and totals. Use the warm subtle surface for light rows. Use a deeper warm surface and stronger boundary lines for headings and totals. |
 | 19 October 2026 | Add optional striped table rows to the draft guide. | The owner requested this option for long tables. Keep the plain table as the default. Alternate neutral body-row surfaces while retaining shared headings, totals, cell spacing, and scrolling. |
 | 19 October 2026 | Refine tables and summary values in the draft guide. | The owner selected this next step. Use one table style and one summary grid. Share serif typography and spacing. Right-align numeric columns and keep wide-table scrolling local. Show missing values explicitly. |
@@ -945,3 +946,20 @@ Purpose and decision: Replace the striped table's white rows with the existing w
 Engineering review and failure behavior: Reuse existing palette tokens. Keep row stripes distinct from structural headings and totals. Change no table layout, semantics, text, or behavior. Existing app pages and specimens remain unchanged.
 
 Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff and the three surface roles. Refreshed the component stylesheet hash. Manual browser, keyboard, narrow-screen, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.
+
+### 21.11 Page headers and navigation
+
+Purpose: Give page context, titles, breadcrumbs, and language choice the accepted typography, spacing, control dimensions, and focus treatment. Change only the draft guide before migration review.
+
+Requirements and decisions:
+
+- Add explicit draft classes for page headers, context rows, breadcrumb navigation, and language choice. Remove the draft's partial font overrides for legacy shell selectors. Keep the shell and current-style specimens unchanged.
+- Use native navigation, an ordered breadcrumb list, linked ancestors, hidden separators, and current-page state. Keep breadcrumb text in English. Reuse the neutral link treatment and shared visible focus outline.
+- Keep the language choice at the right of the breadcrumb at normal desktop and mobile widths. Let breadcrumb text wrap. At exceptionally narrow widths or zoom, allow the context row to wrap rather than clip. Do not force a separate mobile language row.
+- Use `EN` and `中文` as the visible language labels, with full accessible language names. Use native buttons, static `aria-pressed` states, and the shared quiet button geometry. Keep the selected underline. Use the common focus outline instead of reversed focus colors in this draft. This supersedes only the draft focus direction from section 8.1.
+- Use the page-title type token for reading pages. Keep a real page heading when a compact app layout needs it visually hidden. Guide sample headings must fit the guide's own heading hierarchy. Do not add large titles to existing tools.
+- Show reading-page, compact-tool, narrow-width, long-title, and Chinese-title examples. Keep language samples static. Add no translation script, persisted setting, or app state change.
+
+Engineering review and failure behavior: Use native links and buttons for their respective purposes. Preserve the selected language in text and `aria-pressed`. Breadcrumbs identify location and do not replace a document heading. Flexible text can wrap while language controls keep their shared target size. The guide does not translate content when a sample button is pressed. Existing translation keys, language storage, and tool behavior remain unchanged.
+
+Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, breadcrumb destinations and list structure, sample heading hierarchy, selected-language hover precedence, disabled guards, and the narrow-width layout rules. Added the primary breadcrumb reference to `docs/ui-audit.md`. Refreshed both draft stylesheet hashes. Existing pages, shell styles, translation scripts, and current-style specimens did not change. Manual browser, keyboard, narrow-screen, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.
