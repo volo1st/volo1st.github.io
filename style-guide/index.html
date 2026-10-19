@@ -9,8 +9,8 @@
     <title>UI style guide | volo1st</title>
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=73514134a473">
-    <link rel="stylesheet" href="./components.css?v=f6b156d7cdd7">
-    <link rel="stylesheet" href="./guide.css?v=723df1ea3139">
+    <link rel="stylesheet" href="./components.css?v=6862bc3f7f09">
+    <link rel="stylesheet" href="./guide.css?v=2b424392c491">
   </head>
   <body>
     <header class="site-header ui-container">
@@ -28,7 +28,7 @@
     </header>
     <main class="site-main guide-main ui-container">
       <header class="guide-intro">
-        <p class="guide-eyebrow">Draft 04 · page width</p>
+        <p class="guide-eyebrow">Draft 05 · common controls</p>
         <h1 class="ui-title">One site. One shared language.</h1>
         <p class="guide-lead">A working user interface (UI) style guide for type, controls, and common patterns. Compare the current styles. Then refine the shared draft before changing existing pages.</p>
         <p class="ui-small">The draft styles apply only to this guide. Buttons show visual states and do not run app actions. Native fields and disclosures can be used. No input is stored or processed.</p>
@@ -204,6 +204,8 @@
       <section id="actions" class="guide-section" aria-labelledby="actions-heading">
         <p class="guide-eyebrow">04 / Actions</p>
         <h2 id="actions-heading" class="ui-heading">The same button, in each context.</h2>
+        <p>Buttons and single-line fields share a 2.75rem minimum height, 1-pixel border, and common padding. At the default font size, the minimum height is 44 pixels. Long labels can wrap and increase the height.</p>
+        <p class="ui-small">Use Tab to compare focus outlines. Hover and press enabled buttons to inspect their styles. Disabled samples remain unavailable. These buttons do not run app actions.</p>
         <div class="guide-grid">
           <div class="guide-sample">
             <h3 class="guide-caption">General / blue accent</h3>
@@ -267,6 +269,26 @@
               </button>
             </div>
           </div>
+          <div class="guide-sample">
+            <h3 class="guide-caption">Icon and text alignment</h3>
+            <div class="guide-row">
+              <button type="button" class="ui-button ui-button--primary">Play sample</button>
+              <button type="button" class="ui-button ui-button--primary ui-button--icon" aria-label="Play icon sample">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l14-8z"></path></svg>
+              </button>
+              <button type="button" class="ui-button ui-button--icon" aria-label="Unavailable play icon sample" disabled>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l14-8z"></path></svg>
+              </button>
+            </div>
+          </div>
+          <div class="guide-sample" data-domain="music">
+            <h3 class="guide-caption">Long labels and Chinese text</h3>
+            <div class="guide-row">
+              <button type="button" class="ui-button ui-button--primary">Return to the original arrangement</button>
+              <button type="button" class="ui-button" lang="zh-Hans">选择音频文件</button>
+            </div>
+            <p class="ui-small">Text can wrap. The control has a minimum height, without a fixed maximum height.</p>
+          </div>
         </div>
         <div class="guide-sample guide-follow">
           <h3 class="guide-caption">Links / navigation keeps link semantics</h3>
@@ -287,6 +309,25 @@
       <section id="fields" class="guide-section" aria-labelledby="fields-heading">
         <p class="guide-eyebrow">05 / Fields</p>
         <h2 id="fields-heading" class="ui-heading">One family of common controls.</h2>
+        <p>Fields use the same dimensions and type as buttons. Read-only fields remain focusable and selectable. Error styling adds an inner stroke without changing the field's dimensions.</p>
+        <div class="guide-sample">
+          <h3 class="guide-caption">Alignment comparison</h3>
+          <div class="guide-grid guide-control-comparison">
+            <div class="ui-field">
+              <span class="ui-label">Action</span>
+              <button type="button" class="ui-button">Button sample</button>
+            </div>
+            <div class="ui-field">
+              <label class="ui-label" for="aligned-select">Choice</label>
+              <select class="ui-select" id="aligned-select"><option>Dropdown sample</option><option>Another option</option></select>
+            </div>
+            <div class="ui-field">
+              <label class="ui-label" for="aligned-text">Text</label>
+              <input class="ui-input" id="aligned-text" type="text" value="Field sample">
+            </div>
+          </div>
+        </div>
+        <p class="ui-small">The state samples below are static. Editing a value does not clear its sample error or change its read-only or disabled state.</p>
         <div class="guide-grid">
           <div class="guide-sample guide-stack">
             <div class="ui-field">
@@ -361,8 +402,44 @@ chords: C Am F G</textarea>
               <label class="ui-choice"><input type="checkbox" checked> Include a count-in</label>
               <label class="ui-choice"><input type="radio" name="sample-mode" value="original" checked> Original</label>
               <label class="ui-choice"><input type="radio" name="sample-mode" value="preview"> Preview</label>
+              <label class="ui-choice"><input type="checkbox" checked disabled> Unavailable option</label>
             </fieldset>
             <p class="ui-small">Checkboxes and radio buttons are native examples for future common controls. Current apps mostly use selects.</p>
+          </div>
+          <div class="guide-sample guide-stack">
+            <h3 class="guide-caption">Select and textarea states</h3>
+            <div class="ui-field">
+              <label class="ui-label" for="example-invalid-select">Format · invalid state</label>
+              <select class="ui-select" id="example-invalid-select" aria-invalid="true" aria-describedby="example-invalid-select-help">
+                <option value="">Choose a format</option><option>WAV</option><option>MP3</option>
+              </select>
+              <p id="example-invalid-select-help" class="ui-help ui-help--error">Select an output format. This is a static error example.</p>
+            </div>
+            <div class="ui-field">
+              <label class="ui-label" for="example-invalid-source">Source · invalid state</label>
+              <textarea class="ui-textarea ui-code" id="example-invalid-source" rows="3" aria-invalid="true" aria-describedby="example-invalid-source-help">tempo:</textarea>
+              <p id="example-invalid-source-help" class="ui-help ui-help--error">Enter a tempo value. This is a static error example.</p>
+            </div>
+            <div class="ui-field">
+              <label class="ui-label" for="example-readonly-source">Read-only source</label>
+              <textarea class="ui-textarea ui-code" id="example-readonly-source" rows="3" readonly>tempo: 100
+chords: C Am F G</textarea>
+            </div>
+          </div>
+          <div class="guide-sample guide-stack">
+            <h3 class="guide-caption">Unavailable fields</h3>
+            <div class="ui-field">
+              <label class="ui-label" for="example-disabled-text">Unavailable text field</label>
+              <input class="ui-input" id="example-disabled-text" type="text" value="Select an example first" disabled>
+            </div>
+            <div class="ui-field">
+              <label class="ui-label" for="example-disabled-source">Unavailable source</label>
+              <textarea class="ui-textarea ui-code" id="example-disabled-source" rows="3" disabled>Source is unavailable.</textarea>
+            </div>
+            <div class="ui-field">
+              <label class="ui-label" for="example-disabled-file">Unavailable file control</label>
+              <input class="ui-file" id="example-disabled-file" type="file" disabled>
+            </div>
           </div>
         </div>
       </section>

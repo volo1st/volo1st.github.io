@@ -5,6 +5,7 @@
 .guide-nav { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; padding-block: 1rem; border-block: 1px solid var(--site-divider); font-family: var(--ui-font-control); }
 .guide-section { padding-block: 2.5rem; border-bottom: 1px solid var(--site-divider); scroll-margin-top: 1rem; }
 .guide-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; }
+.guide-control-comparison { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .guide-type-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .guide-grid > * { min-width: 0; }
 .guide-stack { display: grid; gap: 1rem; }

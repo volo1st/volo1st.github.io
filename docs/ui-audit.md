@@ -198,6 +198,10 @@ Scale accepted on 19 October 2026: Use four named sizes: supporting text at 0.87
 
 Page-width draft on 19 October 2026: Start with one centered container capped at 48rem. Use side gutters of `clamp(1rem, 4vw, 2rem)` on each side. Header and main content use the same `.ui-container` class. Remove the guide's separate 42rem and 44rem limits. Keep the existing small-screen single-column layout. Widths inside the current-style specimens remain unchanged. Review this draft before selecting any page-width exception for the later migration.
 
+Control draft on 19 October 2026: Buttons, inputs, selects, textareas, and file-selector buttons now share minimum height, border width, padding, radius, and control typography. The minimum is 2.75rem, or 44 pixels at the default font size. Textareas retain a larger minimum and vertical resizing. Long button labels can wrap. Icon buttons use the same minimum dimension as text buttons. Native ranges and choice labels share the target height without replacing the browser widget.
+
+The draft gives common controls one focus outline and neutral disabled styling. Native range and choice rendering retains browser-specific details. Read-only fields remain selectable and focusable. Invalid fields use a fixed border width plus an inset error stroke, with a linked text message. Selected button hover styles retain the selected tone. Disabled styles take precedence over selected or invalid visual styles. Busy samples use disabled buttons and text without animation. The guide includes alignment, long-label, Chinese, read-only, invalid, and disabled examples. No application state logic or existing page styles changed. Browser-specific file, select, and slider appearance still needs manual review.
+
 Do not use `!important` or broad element overrides to make one demo look correct. Do not introduce a framework or content generator for this package. Native range controls in the draft keep browser-specific geometry; their accent and surrounding layout are shared. If a custom track is selected, review both browser engines before migrating it.
 
 ## Review and migration sequence

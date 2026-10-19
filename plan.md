@@ -553,6 +553,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 19 October 2026 | Consolidate buttons and form controls in the draft guide before migrating apps. | The owner selected this next step. Share control dimensions, typography, focus, and disabled styles. Keep error borders from changing field dimensions. Preserve native field behavior and app-specific state logic. |
 | 19 October 2026 | Try one centered 48rem maximum page width in the draft guide, with 1–2rem side gutters. | The owner wants fewer width variants, a modest desktop width, and responsive mobile pages. Align the header and content. Remove nested guide-specific text-width limits. Review the draft before migrating existing pages. |
 | 19 October 2026 | Use four text sizes, two weights, and two line heights in the style guide draft. | The owner accepted supporting text at 0.875rem, body text at 1rem, section headings at 1.5rem, and page titles at 2rem. Use weights 400 and 700, normal letter spacing, body line height 1.6, and heading line height 1.2. Keep the homepage greeting as a later explicit exception. |
 | 17 October 2026 | Start the style guide refinement with serif as the default, sans-serif for interactive controls, and monospace for source text and technical values. | The owner prefers this typography direction. Use one serif family for headings and prose. Keep inline links with their surrounding text. Review the draft before applying the rule to existing pages. |
@@ -843,3 +844,25 @@ Use one gutter token for the space on each side: `clamp(1rem, 4vw, 2rem)`. Subtr
 Add a layout section to the guide that explains the width, gutters, and responsive behavior. This iteration affects only the draft and its documentation. Existing pages will migrate after the guide is accepted.
 
 Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff and the container calculation. Both header and main content use `.ui-container`. The maximum is shared, both minimum gutters are subtracted, and the layout has no fixed desktop minimum. Refreshed both draft stylesheet hashes. Manual browser, mobile, and zoom review remain pending. No tests or browser tools were added for this static style change.
+
+### 21.4 Buttons and form controls
+
+Selection on 19 October 2026: Consolidate common controls in the draft. Existing pages and current-style specimens remain unchanged.
+
+Requirements and decisions:
+
+- Use one control minimum height of 2.75rem, or 44 pixels at the default base size. Share 0.5rem vertical padding, 0.75rem horizontal padding, a 1-pixel border, and the existing control radius.
+- Use the accepted sans-serif body size. Buttons and labels use the bold token. Ordinary field values use the regular token. Source fields retain monospace.
+- Let long button labels wrap and increase the height. Keep textareas multiline and resizable. Do not fix every control to one height.
+- Keep primary, secondary, quiet, icon, selected, and caution variants within one button family. Guard hover and active styles against disabled controls. Keep a selected button recognizable on hover.
+- Use one focus outline for common controls. Use native buttons, inputs, selects, file controls, checkboxes, radio buttons, and ranges.
+- Keep invalid field borders at the same width. Add an inner error stroke without changing layout. Show a linked text error with each invalid sample.
+- Keep read-only fields selectable and focusable. Use one neutral disabled treatment. Disabled controls remain unavailable. Busy samples remain native disabled buttons with text and no decorative animation.
+- Keep native slider geometry, with shared target height, theme accent, focus, and disabled styling. Do not replace the native widget in this pass.
+- Expand the guide's state samples and include a row for comparing button, field, and select alignment. Add no application logic or new dependency.
+
+Failure behavior: The guide continues to show static state samples. It performs no validation, conversion, playback, or file reading. Native disabled and read-only attributes retain their browser behavior. Existing application state rules are outside this iteration.
+
+Engineering review: Shared minimum dimensions and padding address the current icon/text height difference. An inset error stroke avoids a border-width change. Explicit component selectors avoid changing the shell's plain language controls. The existing audit references cover native control semantics. Browser-specific select, file, and range rendering remains for manual review.
+
+Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, shared geometry, state selector precedence, and sample labels. Refreshed both draft stylesheet hashes. No application files, tests, or dependencies changed. Manual keyboard, mobile, zoom, and native-control rendering checks did not run. They remain for the guide review. No browser tools were installed.
