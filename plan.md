@@ -553,6 +553,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 19 October 2026 | Use segmented language controls for tools and quiet `En / 中` choices for reading pages. | The owner finds the filled group intrusive outside tools and prefers one Chinese character. Disable the current language to avoid repeating the same action. Preserve its selected appearance. Reuse native buttons for same-page language switching. |
 | 19 October 2026 | Use a solid selected language segment and remove link styling. | The owner accepted the compact size but found selection unclear. Remove the underline. Use a dark neutral fill with light selected text. Keep unselected segments light and hover separate from selection. |
 | 19 October 2026 | Make the language group compact and keep each label on one line. | The owner found the group too large and reported a wrapped Chinese label. Use natural segment widths, supporting-size text, smaller padding, and a 28-pixel desktop minimum. Retain 44-pixel touch targets. |
 | 19 October 2026 | Join language choices into a segmented button group in the draft. | The owner found the separate choices too far apart. Use adjacent equal-width buttons with a shared border seam, rounded outer corners, and a warm selected fill. Retain the selected underline, native state, common sizing, and visible focus. |
@@ -990,3 +991,13 @@ Purpose and decision: Keep the accepted compact group dimensions. Remove the sel
 Engineering review and failure behavior: Preserve native `aria-pressed` state and the common keyboard focus outline. Keep the selected colors on hover. Do not change font size, padding, label wrapping, or desktop and touch dimensions. The guide's language examples remain static. Existing apps and specimens remain unchanged.
 
 Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, selected and unselected hover precedence, removed decoration rules, and unchanged compact geometry. Refreshed the component stylesheet hash. Manual browser, keyboard, narrow-screen, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.
+
+### 21.15 Language controls by page purpose
+
+Purpose and decision: Reserve the compact segmented language group for tools and similar interfaces. Use the existing quiet buttons in a text-style `En / 中` choice for reading pages, such as studio rates. Use `中` as the visible Chinese label in both variants. Keep full accessible language names. Make the current language natively disabled in both samples because selecting it again has no effect.
+
+Requirements and failure behavior: Keep the current tool segment dark-filled even though it is disabled. This is an explicit exception to neutral disabled styling; use a normal cursor for the current choice. For reading pages, show the current language as plain bold text and the alternative as underlined text. Hide the slash from assistive software. Reuse common button typography, focus, and compact language sizing. Text-style choices have no visible container or background. Their horizontal minimum can be 1.5rem while the touch height remains 2.75rem. Keep the segmented variant's accepted touch dimensions. Preserve no-wrap labels and context-row wrapping.
+
+Scope and migration note: Update the guide examples and component contract only. The guide remains static. During app migration, update the existing language binder to keep `disabled` and `aria-pressed` in step and re-enable the previous language. Do not disable unrelated language controls or change translation persistence in this package. Existing pages and current-style specimens remain unchanged.
+
+Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, native disabled attributes, selected-style exceptions, quiet-button hover and focus rules, hidden separators, compact sizing, and example labels. Refreshed the component stylesheet hash. Manual browser, keyboard, narrow-screen, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.

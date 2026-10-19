@@ -216,7 +216,7 @@
   outline-offset: 3px;
 }
 
-/* Disabled styling wins over selected and invalid styling. Read-only stays usable. */
+/* Disabled styling wins over ordinary selected and invalid styling. Read-only stays usable. */
 .ui-button:disabled,
 .ui-input:disabled,
 .ui-select:disabled,
@@ -297,9 +297,15 @@
 .ui-button-group > .ui-button:focus-visible { z-index: 1; }
 .ui-language { flex: 0 0 auto; margin-inline-start: auto; }
 .ui-language > .ui-button { flex: 0 0 auto; min-width: var(--ui-control-min-height); padding: var(--ui-space-1) var(--ui-space-2); font-size: var(--ui-size-supporting); line-height: var(--ui-leading-heading); white-space: nowrap; overflow-wrap: normal; }
-.ui-language > .ui-button:not(:disabled) { border-color: var(--site-control-border); color: var(--site-muted); background: var(--site-panel-background); }
-.ui-language > .ui-button[aria-pressed="true"]:not(:disabled) { border-color: var(--ui-link); color: var(--site-panel-background); background: var(--ui-link); }
-.ui-language > .ui-button[aria-pressed="false"]:hover:not(:disabled) { color: var(--site-text); background: var(--site-hover); }
+.ui-language--tool > .ui-button:not(:disabled) { border-color: var(--site-control-border); color: var(--site-muted); background: var(--site-panel-background); }
+/* The current language is disabled on purpose and retains its selected appearance. */
+.ui-language--tool > .ui-button[aria-pressed="true"] { border-color: var(--ui-link); color: var(--site-panel-background); background: var(--ui-link); cursor: default; }
+.ui-language--tool > .ui-button[aria-pressed="false"]:hover:not(:disabled) { color: var(--site-text); background: var(--site-hover); }
+.ui-language--text { display: inline-flex; align-items: center; gap: var(--ui-space-1); color: var(--site-muted); font-family: var(--ui-font-control); font-size: var(--ui-size-supporting); line-height: var(--ui-leading-heading); }
+.ui-language--text > .ui-button { min-width: 1.5rem; padding-inline: 0; font-weight: var(--ui-weight-regular); }
+.ui-language--text > .ui-button:not(:disabled) { border-color: transparent; color: var(--ui-link); background: transparent; text-decoration: underline; text-underline-offset: 0.2em; }
+.ui-language--text > .ui-button[aria-pressed="true"] { border-color: transparent; color: var(--site-text); background: transparent; font-weight: var(--ui-weight-bold); text-decoration: none; cursor: default; }
+.ui-language--text > .ui-button:hover:not(:disabled) { color: var(--ui-link-hover); background: transparent; text-decoration-thickness: 2px; }
 
 @media (min-width: 651px) and (hover: hover) and (pointer: fine) {
   .ui-language { --ui-control-min-height: 1.75rem; }
