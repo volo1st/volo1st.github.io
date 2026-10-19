@@ -9,7 +9,7 @@
     <title>UI style guide | volo1st</title>
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=73514134a473">
-    <link rel="stylesheet" href="./components.css?v=a75445bb80a6">
+    <link rel="stylesheet" href="./components.css?v=79ef55e6016f">
     <link rel="stylesheet" href="./guide.css?v=c3758bcbd3b0">
   </head>
   <body>
@@ -28,7 +28,7 @@
     </header>
     <main class="site-main guide-main ui-container">
       <header class="guide-intro ui-flow">
-        <p class="guide-eyebrow">Draft 08 · notices and status text</p>
+        <p class="guide-eyebrow">Draft 09 · tables and summary values</p>
         <h1 class="ui-title">One site. One shared language.</h1>
         <p class="guide-lead">A working user interface (UI) style guide for type, controls, and common patterns. Compare the current styles. Then refine the shared draft before changing existing pages.</p>
         <p class="ui-small">The draft styles apply only to this guide. Buttons show visual states and do not run app actions. Native fields and disclosures can be used. No input is stored or processed.</p>
@@ -55,6 +55,9 @@
         </a>
         <a class="ui-link" href="#patterns">
           Patterns
+        </a>
+        <a class="ui-link" href="#data">
+          Tables and values
         </a>
         <a class="ui-link" href="#current">
           Current styles
@@ -575,58 +578,104 @@ chords: C Am F G</textarea>
             </div>
           </details>
         </div>
-        <h3 class="ui-subheading">Label and value pairs</h3>
+        <hr class="ui-divider">
+        <p class="ui-small">Breadcrumbs and the language control already have a shared source. Their current variants appear below. Chord cards, pitch symbols, and audio timing remain specialized components.</p>
+      </section>
+      <section id="data" class="guide-section ui-flow" aria-labelledby="data-heading">
+        <p class="guide-eyebrow">08 / Tables and values</p>
+        <h2 id="data-heading" class="ui-heading">Clear labels. Comparable values.</h2>
+        <p>Use the same serif text and spacing for tables and summaries. Align numeric table columns to the right. Keep descriptions free to wrap. Use monospace for filenames and source identifiers.</p>
+        <h3 class="ui-subheading">Summary values</h3>
+        <p>Use supporting-size labels and bold body-size values. Keep the unit with the value. Let the grid fit the available width.</p>
         <dl class="ui-metrics">
-          <div><dt>Duration</dt><dd>3:20</dd></div>
-          <div><dt>Sample rate</dt><dd>48 kHz</dd></div>
+          <div><dt>Duration, minutes and seconds</dt><dd>3:20</dd></div>
+          <div><dt>Sample rate</dt><dd>48&nbsp;kHz</dd></div>
+          <div><dt>Channels</dt><dd>2</dd></div>
         </dl>
-        <div class="ui-table-scroll" tabindex="0" role="region" aria-label="Example file table">
+        <div class="guide-grid">
+          <div class="ui-flow">
+            <h3 class="ui-subheading">Long and missing values</h3>
+            <dl class="ui-metrics">
+              <div><dt>Source file selected for this example</dt><dd><code class="ui-code">room-study-example-with-a-long-source-label.wav</code></dd></div>
+              <div><dt>Exported files</dt><dd>0</dd></div>
+              <div><dt>Output duration</dt><dd>Not available</dd></div>
+            </dl>
+            <p class="ui-small">Zero is a known value. Use explicit text when a value is not available.</p>
+          </div>
+          <div class="ui-panel ui-flow" data-domain="music" lang="zh-Hans">
+            <h3 class="ui-subheading">中文示例</h3>
+            <dl class="ui-metrics">
+              <div><dt>时长（分：秒）</dt><dd>3:20</dd></div>
+              <div><dt>采样率</dt><dd>48&nbsp;kHz</dd></div>
+              <div><dt>输出时长</dt><dd>尚无数据</dd></div>
+            </dl>
+            <p class="ui-small">工具的主题色不改变摘要样式。</p>
+          </div>
+        </div>
+        <h3 class="ui-subheading">Table headings, rows, and totals</h3>
+        <p>Sizes use mebibytes (MiB). Times use minutes and seconds. All data below is invented. The displayed totals are static examples.</p>
+        <p id="file-table-help" class="ui-small">If the columns do not fit, scroll within the table. Focus the table region to check keyboard scrolling. Keep the page itself within its normal width.</p>
+        <div class="ui-table-scroll" tabindex="0" role="region" aria-labelledby="file-table-caption" aria-describedby="file-table-help">
           <table class="ui-table">
-            <caption>Example files · invented data</caption>
+            <caption id="file-table-caption">Example files · invented data</caption>
             <thead>
               <tr>
-                <th scope="col">
-                  File
-                </th>
-                <th scope="col">
-                  Format
-                </th>
-                <th scope="col">
-                  State
-                </th>
+                <th scope="col" class="ui-table__number">Item</th>
+                <th scope="col" class="ui-table__text">File</th>
+                <th scope="col">Format</th>
+                <th scope="col" class="ui-table__number">Duration</th>
+                <th scope="col" class="ui-table__number">Size (MiB)</th>
+                <th scope="col">State</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>
-                  room-example.wav
-                </td>
-                <td>
-                  WAV
-                </td>
-                <td>
-                  Ready
-                </td>
+                <td class="ui-table__number">1</td>
+                <th scope="row" class="ui-table__text"><code class="ui-code">room-study-recording-with-a-long-file-name.wav</code></th>
+                <td>WAV</td>
+                <td class="ui-table__number">3:20</td>
+                <td class="ui-table__number">124.50</td>
+                <td>Ready</td>
               </tr>
               <tr>
-                <td>
-                  practice-example.mp3
-                </td>
-                <td>
-                  MP3
-                </td>
-                <td>
-                  Waiting
-                </td>
+                <td class="ui-table__number">2</td>
+                <th scope="row" class="ui-table__text"><code class="ui-code">empty-example.wav</code></th>
+                <td>WAV</td>
+                <td class="ui-table__number">0:00</td>
+                <td class="ui-table__number">0.00</td>
+                <td>Empty</td>
+              </tr>
+              <tr>
+                <td class="ui-table__number">3</td>
+                <th scope="row" class="ui-table__text"><code class="ui-code">practice-example.mp3</code></th>
+                <td>MP3</td>
+                <td class="ui-table__number">0:42</td>
+                <td class="ui-table__number">12.00</td>
+                <td>Ready</td>
               </tr>
             </tbody>
+            <tfoot>
+              <tr>
+                <th scope="row" colspan="3">Total · 3 files</th>
+                <td class="ui-table__number">4:02</td>
+                <td class="ui-table__number">136.50</td>
+                <td>2 ready</td>
+              </tr>
+            </tfoot>
           </table>
         </div>
-        <hr class="ui-divider">
-        <p class="ui-small">Breadcrumbs and the language control already have a shared source. Their current variants appear below. Chord cards, pitch symbols, and audio timing remain specialized components.</p>
+        <h3 class="ui-subheading">Empty table</h3>
+        <div class="ui-table-scroll" tabindex="0" role="region" aria-labelledby="empty-table-caption">
+          <table class="ui-table">
+            <caption id="empty-table-caption">Output files · empty state</caption>
+            <thead><tr><th scope="col">File</th><th scope="col">State</th></tr></thead>
+            <tbody><tr><td colspan="2">No output files are available. Select an example to continue.</td></tr></tbody>
+          </table>
+        </div>
+        <p class="ui-small">Use <code class="ui-code">ui-table__number</code> on a numeric column's heading and cells. Use <code class="ui-code">ui-table__text</code> for long descriptions that need a 12rem minimum width. Keep native captions, header scopes, and a named <code class="ui-code">ui-table-scroll</code> region. Use <code class="ui-code">ui-metrics</code> on a definition list for summary values. These examples do not sort, calculate, or process files.</p>
       </section>
       <section id="current" class="guide-section ui-flow" aria-labelledby="current-heading">
-        <p class="guide-eyebrow">08 / Current styles</p>
+        <p class="guide-eyebrow">09 / Current styles</p>
         <h2 id="current-heading" class="ui-heading">Compare what the site uses today.</h2>
         <p>Each preview loads the current source stylesheets in a separate document. The draft above cannot change them. Open a specimen on its own to check the full page width.</p>
         <details class="ui-disclosure guide-current">
@@ -666,7 +715,7 @@ chords: C Am F G</textarea>
         </details>
       </section>
       <footer id="review" class="guide-footer ui-flow">
-        <p class="guide-eyebrow">09 / Review</p>
+        <p class="guide-eyebrow">10 / Review</p>
         <h2 class="ui-heading">Choose the system before migrating.</h2>
         <ol>
           <li>

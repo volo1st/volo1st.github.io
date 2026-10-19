@@ -553,6 +553,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 19 October 2026 | Refine tables and summary values in the draft guide. | The owner selected this next step. Use one table style and one summary grid. Share serif typography and spacing. Right-align numeric columns and keep wide-table scrolling local. Show missing values explicitly. |
 | 19 October 2026 | Refine shared notice tones, content, and spacing in the draft guide. | The owner selected the next refinement. Keep information, success, warning, and error independent of tool accents. Use explicit text, a shared surface and stripe pattern, and the accepted text spacing. Keep essential errors persistent. |
 | 19 October 2026 | Consolidate spacing, panels, and disclosures in the draft guide. | The owner selected this next step. Use the existing spacing scale for content flow, field groups, actions, and sections. Share panel and disclosure padding. Remove ordinary sample frames and the raised panel variant. Keep plain content unboxed. |
 | 19 October 2026 | Make draft controls compact on desktop and inset the select arrow. | The owner found the desktop buttons too large and the select arrow too close to the border. Use a 2.25rem control minimum on wide screens with a fine pointer and hover. Retain the 2.75rem touch minimum. Reserve space for the select arrow and retain native selection behavior. |
@@ -909,3 +910,20 @@ Requirements and decisions:
 Engineering review and failure behavior: Appearance does not assign announcement urgency. Use the W3C status-message and alert guidance when migrating dynamic app messages. Static notice samples perform no validation or background task. Links may move to existing guide fields. Existing field state samples remain static. Long content must wrap without clipping or shrinking the dismiss button. Retain visible keyboard focus. Missing optional browser review does not block this style iteration.
 
 Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, semantic tone variables, shared content spacing, dismiss-button sizing, and error links. The local contrast calculation gives heading-to-surface ratios of 5.75:1 or higher for all four tones. Recorded the color-pair results and primary references in `docs/ui-audit.md`. Refreshed the component stylesheet hash. Existing apps and specimen files did not change. Manual browser, keyboard, narrow-screen, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.
+
+### 21.8 Tables and summary values
+
+Purpose: Give tabular data and label/value summaries consistent type, spacing, and responsive behavior. Refine only the draft guide.
+
+Requirements and decisions:
+
+- Use one table class with serif body text, bold headings, a subtle header surface, and horizontal row dividers. Reuse the 0.75rem cell-padding token. Give totals the same subtle surface and bold weight.
+- Mark numeric table headers and cells explicitly. Align them to the end and use tabular digits. Keep each numeric value and its unit together. Let descriptive text wrap.
+- Give long descriptive columns an explicit 12rem minimum through a cell class. Preserve normal word wrapping elsewhere. This keeps narrow tables readable while the wrapper scrolls.
+- Keep native table markup, captions, column headings, row headings, and footer totals. Place wide tables in a named, keyboard-focusable scroll region. Keep overflow local rather than widening the page or hiding columns.
+- Use one responsive definition-list grid for summary values. Use supporting-size labels and bold body-size values. Keep the same neutral dividers and spacing across tool accents. Let long values wrap. Add no tile, oversized-number, or compact-row variant in this pass.
+- Add a dedicated guide section. Show long filenames, totals, an empty table, zero values, missing values, and Chinese labels. State units in text or headings. Keep all examples invented and static.
+
+Engineering review and failure behavior: Preserve native table and definition-list relationships. Do not use CSS to turn table rows into cards. Narrow screens can scroll the table region while summaries reflow. Missing data stays explicit and does not become zero. The guide performs no calculation, sorting, file processing, or app state update. Existing app output and financial-file logic remain unchanged.
+
+Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, numeric cell alignment, descriptive-column minimum, captions, header scopes, scroll-region names, definition-list groups, and static example totals. Refreshed the component stylesheet hash. Existing apps and isolated specimens did not change. Manual browser, keyboard scrolling, narrow-screen, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.
