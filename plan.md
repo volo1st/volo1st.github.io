@@ -553,6 +553,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 19 October 2026 | Soften striped body rows and distinguish table headings and totals. | The owner found white rows too bright and dark stripes too close to headings and totals. Use the warm subtle surface for light rows. Use a deeper warm surface and stronger boundary lines for headings and totals. |
 | 19 October 2026 | Add optional striped table rows to the draft guide. | The owner requested this option for long tables. Keep the plain table as the default. Alternate neutral body-row surfaces while retaining shared headings, totals, cell spacing, and scrolling. |
 | 19 October 2026 | Refine tables and summary values in the draft guide. | The owner selected this next step. Use one table style and one summary grid. Share serif typography and spacing. Right-align numeric columns and keep wide-table scrolling local. Show missing values explicitly. |
 | 19 October 2026 | Refine shared notice tones, content, and spacing in the draft guide. | The owner selected the next refinement. Keep information, success, warning, and error independent of tool accents. Use explicit text, a shared surface and stripe pattern, and the accepted text spacing. Keep essential errors persistent. |
@@ -936,3 +937,11 @@ Purpose and decision: Add `.ui-table--striped` as an optional modifier for long 
 Engineering review and failure behavior: Row stripes are a reading aid. They do not indicate selection or status. Keep explicit state text and native table relationships. Do not add hover, sorting, selection, or script behavior. Limit the selectors to direct body rows so headers, totals, and nested tables keep their own styles. This iteration changes only the guide.
 
 Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, selector scope, shared base styles, caption and scroll-region references, and static totals. Refreshed the component stylesheet hash. Manual browser, keyboard scrolling, narrow-screen, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.
+
+### 21.10 Table surface refinement
+
+Purpose and decision: Replace the striped table's white rows with the existing warm subtle surface (`#f8f6ef`). Retain the inset surface (`#f2f0e9`) for alternate rows. Use the deeper warm surface (`#e9e5da`) for all draft table headers and totals. Give header boundaries the same stronger border color as footer boundaries. This supersedes the surface choices in section 21.9.
+
+Engineering review and failure behavior: Reuse existing palette tokens. Keep row stripes distinct from structural headings and totals. Change no table layout, semantics, text, or behavior. Existing app pages and specimens remain unchanged.
+
+Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff and the three surface roles. Refreshed the component stylesheet hash. Manual browser, keyboard, narrow-screen, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.
