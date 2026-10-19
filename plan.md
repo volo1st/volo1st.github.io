@@ -1047,6 +1047,8 @@ Failure behavior and checks: Keep native hidden state and the existing scroll-fo
 
 - [x] Correct grid sizing, chord-view layout, disclaimer markup, and the static specimen.
 - [x] Refresh affected asset hashes and pass the repository check.
-- [ ] Review and commit the correction, then reconcile Todoist.
+- [x] Review and commit the correction, then reconcile Todoist.
 
 Verification evidence: `./scripts/check.sh` passed all seven test files. Reviewed the complete correction diff, shared grid sizing, hidden-state precedence, the chord scroll boundary, whole-button wrapping, disclaimer type, and the three-bar specimen. Guitar page and specimen markup is balanced and IDs are unique. Refreshed shared and guitar stylesheet hashes in every maintained reference. No application JavaScript, playback logic, dependencies, or browser tools changed. Manual rendered scrolling, keyboard, narrow-screen, and 200 percent zoom review did not run. Recorded the migration regression in the ignored experience file.
+
+Completion on 20 October 2026: Commit `703c33c` contains the verified correction. Added the outcome comment to Todoist task `6hpHm7jm2vQXx7F6`, completed the task, and confirmed its completed state. Deferred packages remain unchanged.
