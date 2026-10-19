@@ -13,6 +13,8 @@
   --ui-weight-bold: 700;
   --ui-leading-body: 1.6;
   --ui-leading-heading: 1.2;
+  --ui-page-max: 48rem;
+  --ui-page-gutter: clamp(1rem, 4vw, 2rem);
   --ui-space-1: 0.25rem;
   --ui-space-2: 0.5rem;
   --ui-space-3: 0.75rem;
@@ -36,6 +38,13 @@
   font-weight: var(--ui-weight-regular);
   line-height: var(--ui-leading-body);
   letter-spacing: normal;
+}
+
+.ui-container {
+  width: min(calc(100% - var(--ui-page-gutter) - var(--ui-page-gutter)), var(--ui-page-max));
+  min-width: 0;
+  margin-inline: auto;
+  overflow-wrap: anywhere;
 }
 
 .ui-title {

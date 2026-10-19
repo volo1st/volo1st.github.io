@@ -553,6 +553,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 19 October 2026 | Try one centered 48rem maximum page width in the draft guide, with 1–2rem side gutters. | The owner wants fewer width variants, a modest desktop width, and responsive mobile pages. Align the header and content. Remove nested guide-specific text-width limits. Review the draft before migrating existing pages. |
 | 19 October 2026 | Use four text sizes, two weights, and two line heights in the style guide draft. | The owner accepted supporting text at 0.875rem, body text at 1rem, section headings at 1.5rem, and page titles at 2rem. Use weights 400 and 700, normal letter spacing, body line height 1.6, and heading line height 1.2. Keep the homepage greeting as a later explicit exception. |
 | 17 October 2026 | Start the style guide refinement with serif as the default, sans-serif for interactive controls, and monospace for source text and technical values. | The owner prefers this typography direction. Use one serif family for headings and prose. Keep inline links with their surrounding text. Review the draft before applying the rule to existing pages. |
 | 17 October 2026 | Audit existing HTML and CSS, and build a UI style guide before refactoring the site. | The owner reported style drift. Review common controls together. Preserve app-specific displays, such as chord cards. Approve the shared design before migrating existing pages. |
@@ -832,3 +833,13 @@ Direction accepted on 19 October 2026: Use four named size tokens: supporting te
 Use line height 1.6 for body text and controls. Use line height 1.2 for headings. Use normal letter spacing. Update guide captions, font samples, metrics, and comparison summaries to use these same roles. Keep the current-style specimens and existing pages unchanged. The homepage greeting remains an explicit exception for the later migration.
 
 Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff and confirmed that draft text sizes, weights, and line heights use the named tokens. Refreshed both draft stylesheet hashes. Manual browser review remains pending. No tests or tools were added for this static style iteration.
+
+### 21.3 Page width
+
+Direction selected on 19 October 2026: Keep pages centered and bounded on desktop. Keep visible side margins on mobile. Start the draft at one maximum width of 48rem, or 768 pixels at a 16-pixel base size. Use the same container for the header and main content.
+
+Use one gutter token for the space on each side: `clamp(1rem, 4vw, 2rem)`. Subtract both gutters from the available width before applying the maximum. This gives narrow screens flexible content width without edge-to-edge content or a fixed desktop minimum. Remove the guide's independent 42rem and 44rem limits. Keep its existing single-column small-screen layout. Do not change specialized internal scrolling or the current-style specimens.
+
+Add a layout section to the guide that explains the width, gutters, and responsive behavior. This iteration affects only the draft and its documentation. Existing pages will migrate after the guide is accepted.
+
+Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff and the container calculation. Both header and main content use `.ui-container`. The maximum is shared, both minimum gutters are subtracted, and the layout has no fixed desktop minimum. Refreshed both draft stylesheet hashes. Manual browser, mobile, and zoom review remain pending. No tests or browser tools were added for this static style change.

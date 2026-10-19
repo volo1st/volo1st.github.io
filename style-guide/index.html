@@ -9,11 +9,11 @@
     <title>UI style guide | volo1st</title>
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=73514134a473">
-    <link rel="stylesheet" href="./components.css?v=1788c6df4472">
-    <link rel="stylesheet" href="./guide.css?v=f91a0a5f42ce">
+    <link rel="stylesheet" href="./components.css?v=f6b156d7cdd7">
+    <link rel="stylesheet" href="./guide.css?v=723df1ea3139">
   </head>
   <body>
-    <header class="site-header">
+    <header class="site-header ui-container">
       <nav class="site-breadcrumb" aria-label="Breadcrumb">
         <a href="../">
           volo1st
@@ -26,9 +26,9 @@
         </span>
       </nav>
     </header>
-    <main class="site-main guide-main">
+    <main class="site-main guide-main ui-container">
       <header class="guide-intro">
-        <p class="guide-eyebrow">Draft 03 · typography scale</p>
+        <p class="guide-eyebrow">Draft 04 · page width</p>
         <h1 class="ui-title">One site. One shared language.</h1>
         <p class="guide-lead">A working user interface (UI) style guide for type, controls, and common patterns. Compare the current styles. Then refine the shared draft before changing existing pages.</p>
         <p class="ui-small">The draft styles apply only to this guide. Buttons show visual states and do not run app actions. Native fields and disclosures can be used. No input is stored or processed.</p>
@@ -37,6 +37,9 @@
       <nav class="guide-nav" aria-label="Style guide sections">
         <a class="ui-link" href="#type">
           Typography
+        </a>
+        <a class="ui-link" href="#layout">
+          Layout
         </a>
         <a class="ui-link" href="#foundations">
           Foundations
@@ -101,8 +104,20 @@
           <p class="ui-code">00:42 / 03:20 · 100 beats per minute</p>
         </div>
       </section>
+      <section id="layout" class="guide-section" aria-labelledby="layout-heading">
+        <p class="guide-eyebrow">02 / Layout</p>
+        <h2 id="layout-heading" class="ui-heading">One centered page width.</h2>
+        <p>The header and content share one container. On desktop, the page stops growing at 48rem. On mobile, the content fits the available width with visible margins on both sides.</p>
+        <dl class="ui-metrics">
+          <div><dt>Maximum width</dt><dd>48rem</dd></div>
+          <div><dt>Minimum side space</dt><dd>1–2rem</dd></div>
+        </dl>
+        <p class="ui-small">At the default 16-pixel base size, the maximum is 768 pixels. Minimum side space follows 4 percent of the viewport width, bounded by 1rem and 2rem. Centering leaves more space on wide screens. The gutter token describes each side.</p>
+        <p>Resize the page to compare desktop and mobile layouts. Sample grids use one column on small screens. Content can wrap without a fixed minimum page width.</p>
+        <p class="ui-small">The current-style previews below retain the original page widths for comparison.</p>
+      </section>
       <section id="foundations" class="guide-section" aria-labelledby="foundations-heading">
-        <p class="guide-eyebrow">02 / Foundations</p>
+        <p class="guide-eyebrow">03 / Foundations</p>
         <h2 id="foundations-heading" class="ui-heading">Warm surfaces. Clear accents.</h2>
         <div class="guide-swatches">
           <div class="guide-swatch guide-swatch--page">
@@ -187,7 +202,7 @@
         </div>
       </section>
       <section id="actions" class="guide-section" aria-labelledby="actions-heading">
-        <p class="guide-eyebrow">03 / Actions</p>
+        <p class="guide-eyebrow">04 / Actions</p>
         <h2 id="actions-heading" class="ui-heading">The same button, in each context.</h2>
         <div class="guide-grid">
           <div class="guide-sample">
@@ -270,7 +285,7 @@
         </div>
       </section>
       <section id="fields" class="guide-section" aria-labelledby="fields-heading">
-        <p class="guide-eyebrow">04 / Fields</p>
+        <p class="guide-eyebrow">05 / Fields</p>
         <h2 id="fields-heading" class="ui-heading">One family of common controls.</h2>
         <div class="guide-grid">
           <div class="guide-sample guide-stack">
@@ -352,7 +367,7 @@ chords: C Am F G</textarea>
         </div>
       </section>
       <section id="notices" class="guide-section" aria-labelledby="notices-heading">
-        <p class="guide-eyebrow">05 / Notices</p>
+        <p class="guide-eyebrow">06 / Notices</p>
         <h2 id="notices-heading" class="ui-heading">Meaning comes before color.</h2>
         <p class="ui-small">These samples are static. Apps should keep their live status and error announcements when adopting the visual styles.</p>
         <div class="guide-grid">
@@ -402,7 +417,7 @@ chords: C Am F G</textarea>
         </div>
       </section>
       <section id="patterns" class="guide-section" aria-labelledby="patterns-heading">
-        <p class="guide-eyebrow">06 / Patterns</p>
+        <p class="guide-eyebrow">07 / Patterns</p>
         <h2 id="patterns-heading" class="ui-heading">Reusable pieces, distinct pages.</h2>
         <div class="guide-grid">
           <article class="ui-panel ui-panel--raised">
@@ -487,7 +502,7 @@ chords: C Am F G</textarea>
         <p class="ui-small">Breadcrumbs and the language control already have a shared source. Their current variants appear below. Chord cards, pitch symbols, and audio timing remain specialized components.</p>
       </section>
       <section id="current" class="guide-section" aria-labelledby="current-heading">
-        <p class="guide-eyebrow">07 / Current styles</p>
+        <p class="guide-eyebrow">08 / Current styles</p>
         <h2 id="current-heading" class="ui-heading">Compare what the site uses today.</h2>
         <p>Each preview loads the current source stylesheets in a separate document. The draft above cannot change them. Open a specimen on its own to check the full page width.</p>
         <details class="ui-disclosure guide-current">
@@ -527,7 +542,7 @@ chords: C Am F G</textarea>
         </details>
       </section>
       <footer id="review" class="guide-footer">
-        <p class="guide-eyebrow">08 / Review</p>
+        <p class="guide-eyebrow">09 / Review</p>
         <h2 class="ui-heading">Choose the system before migrating.</h2>
         <ol>
           <li>

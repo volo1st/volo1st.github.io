@@ -91,7 +91,7 @@ Do not infer accessibility compliance from the shared palette. Text, surface, st
 
 | Item | Current variants | Recommended boundary |
 | --- | --- | --- |
-| Content width | Shell `960px`; Guitar `46rem`; Pitch, Studio, and Sound details `48rem`; section content `44rem` | Name wide, reading, and app widths. Allow justified layout variants. |
+| Content width | Shell `960px`; Guitar `46rem`; Pitch, Studio, and Sound details `48rem`; section content `44rem` | Start the draft with one centered 48rem maximum. Add an exception only when a specific layout needs it. |
 | Gutter | Shell `32px`, then `20px` below `560px`; Guitar root `1.5rem`, then `1rem` below `22rem` | One default responsive gutter. App override must be explicit. |
 | Page padding | Header clamp; home viewport-based; studio/details `1.5rem 3rem`; Guitar bottom `3rem`; converter relies on panel margins | Separate page composition from component spacing. |
 | Panel padding | Usually `1rem`; service rows `1.25rem` vertically | Reuse a small spacing scale. Keep service-row composition. |
@@ -195,6 +195,8 @@ Use explicit classes for common appearance. Use native attributes such as `disab
 Typography direction selected on 17 October 2026: The owner prefers serif as the default. The draft now uses the same serif stack for headings, prose, notices, help, and table content. Buttons, inputs, selects, control labels, interface navigation, and disclosure summaries use system sans-serif. Inline content links retain the surrounding font. Code, arrangement source, and suitable technical values use monospace. Chinese serif fallbacks are part of the default stack. Existing page styles and current-style specimens have not been migrated.
 
 Scale accepted on 19 October 2026: Use four named sizes: supporting text at 0.875rem, body text at 1rem, section headings at 1.5rem, and page titles at 2rem. Use weights 400 and 700. Serif headings remain regular. Control labels, buttons, emphasis, and body-size subsection headings use bold. Use line heights 1.6 for text and controls, and 1.2 for headings. Use normal letter spacing. The homepage greeting remains an explicit exception for the later migration. The current-style specimens retain the original declarations for comparison.
+
+Page-width draft on 19 October 2026: Start with one centered container capped at 48rem. Use side gutters of `clamp(1rem, 4vw, 2rem)` on each side. Header and main content use the same `.ui-container` class. Remove the guide's separate 42rem and 44rem limits. Keep the existing small-screen single-column layout. Widths inside the current-style specimens remain unchanged. Review this draft before selecting any page-width exception for the later migration.
 
 Do not use `!important` or broad element overrides to make one demo look correct. Do not introduce a framework or content generator for this package. Native range controls in the draft keep browser-specific geometry; their accent and surrounding layout are shared. If a custom track is selected, review both browser engines before migrating it.
 
