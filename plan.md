@@ -1085,8 +1085,10 @@ Failure behavior and checks: A local rule must not match outside its allowed pag
 
 - [x] Add page roots, scope local styles, and update matching specimens.
 - [x] Document the convention, refresh asset hashes, and pass relevant checks.
-- [ ] Review and commit the package, then reconcile Todoist.
+- [x] Review and commit the package, then reconcile Todoist.
 
 Verification evidence: `./scripts/check.sh` passed all seven test files. A separate source comparison checked 222 scoped selectors in 204 rule blocks across all 10 local stylesheets. Declarations, media conditions, and keyframe steps match the prior source, apart from the two matching animation-name prefixes. All 18 maintained documents have matching roots, balanced markup, unchanged text, unchanged original elements and control attributes, unchanged IDs and destinations, and valid label and accessibility references. Every loaded local stylesheet has a corresponding root in its document. Shared CSS, application JavaScript, the redirect, financial conversion, audio engines, and frozen legacy files did not change.
 
 Review evidence: Reviewed the complete diff, including selector lists, pseudo-elements, media rules, hidden states, inherited home variables, the guarded studio print rule, and the mixed public specimen wrappers. Documented the convention in `AGENTS.md`, the README, and the UI audit. Refreshed local stylesheet hashes. Updated the existing pitch source checks for the renamed keyframes. Added no permanent tests that mirror static selectors, dependencies, build steps, or browser tooling. Manual browser, keyboard, narrow-screen, print, and 200 percent zoom review did not run.
+
+Completion on 20 October 2026: Commit `4b21e89` contains the verified page-root isolation. Added the outcome comment to Todoist task `6hpHr8cGjJvP8Jj6`, completed the task, and confirmed its completed state through a fresh read. The initiative and deferred packages remain unchanged.
