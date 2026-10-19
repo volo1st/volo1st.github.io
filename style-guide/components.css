@@ -44,6 +44,13 @@
   letter-spacing: normal;
 }
 
+@media (min-width: 651px) and (hover: hover) and (pointer: fine) {
+  :root {
+    --ui-control-min-height: 2.25rem;
+    --ui-control-padding-block: var(--ui-space-1);
+  }
+}
+
 .ui-container {
   width: min(calc(100% - var(--ui-page-gutter) - var(--ui-page-gutter)), var(--ui-page-max));
   min-width: 0;
@@ -142,6 +149,24 @@
   color: var(--site-text);
   background: var(--site-surface);
 }
+/* Keep native selection behavior. Reserve space for an inset chevron. */
+.ui-select:not([multiple]):not([size]),
+.ui-select[size="1"]:not([multiple]) {
+  appearance: none;
+  padding-right: calc(var(--ui-control-padding-inline) + 1.5rem);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%234a4a43' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--ui-control-padding-inline) center;
+  background-size: 1rem 1rem;
+}
+@media (forced-colors: active) {
+  .ui-select:not([multiple]):not([size]),
+  .ui-select[size="1"]:not([multiple]) {
+    appearance: auto;
+    padding-right: var(--ui-control-padding-inline);
+    background-image: none;
+  }
+}
 .ui-textarea { display: block; min-height: 8rem; resize: vertical; }
 .ui-input.ui-code, .ui-textarea.ui-code { font-family: var(--ui-font-mono); }
 .ui-input[readonly], .ui-textarea[readonly] { background: var(--site-subtle-surface); }
@@ -176,7 +201,7 @@
 .ui-file:disabled::file-selector-button {
   border-color: var(--site-panel-border);
   color: var(--site-muted);
-  background: var(--site-subtle-surface);
+  background-color: var(--site-subtle-surface);
   box-shadow: none;
   opacity: 1;
   cursor: not-allowed;

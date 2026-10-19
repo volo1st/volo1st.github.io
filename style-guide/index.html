@@ -9,7 +9,7 @@
     <title>UI style guide | volo1st</title>
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=73514134a473">
-    <link rel="stylesheet" href="./components.css?v=6862bc3f7f09">
+    <link rel="stylesheet" href="./components.css?v=f60d5b777cd0">
     <link rel="stylesheet" href="./guide.css?v=2b424392c491">
   </head>
   <body>
@@ -28,7 +28,7 @@
     </header>
     <main class="site-main guide-main ui-container">
       <header class="guide-intro">
-        <p class="guide-eyebrow">Draft 05 · common controls</p>
+        <p class="guide-eyebrow">Draft 06 · control size and select spacing</p>
         <h1 class="ui-title">One site. One shared language.</h1>
         <p class="guide-lead">A working user interface (UI) style guide for type, controls, and common patterns. Compare the current styles. Then refine the shared draft before changing existing pages.</p>
         <p class="ui-small">The draft styles apply only to this guide. Buttons show visual states and do not run app actions. Native fields and disclosures can be used. No input is stored or processed.</p>
@@ -193,7 +193,7 @@
           </div>
           <div class="guide-sample">
             <h3 class="ui-subheading">Shape and focus</h3>
-            <p>Controls use a 0.4rem radius. Panels use a 0.65rem radius. Standard controls are at least 2.75rem high.</p>
+            <p>Controls use a 0.4rem radius. Panels use a 0.65rem radius. Controls use a compact desktop size and larger touch targets.</p>
             <p class="ui-small">Press Tab to inspect the existing shared focus outline. Hover samples use the pointer. Do not remove focus when changing the final design.</p>
             <button type="button" class="ui-button">
               Focus sample
@@ -204,7 +204,7 @@
       <section id="actions" class="guide-section" aria-labelledby="actions-heading">
         <p class="guide-eyebrow">04 / Actions</p>
         <h2 id="actions-heading" class="ui-heading">The same button, in each context.</h2>
-        <p>Buttons and single-line fields share a 2.75rem minimum height, 1-pixel border, and common padding. At the default font size, the minimum height is 44 pixels. Long labels can wrap and increase the height.</p>
+        <p>Buttons and single-line fields share a 1-pixel border and common padding. The default minimum height is 2.75rem (44 pixels). Above 650 pixels, a fine pointer with hover uses a compact 2.25rem (36-pixel) minimum. Font size stays the same. Long labels can wrap and increase the height.</p>
         <p class="ui-small">Use Tab to compare focus outlines. Hover and press enabled buttons to inspect their styles. Disabled samples remain unavailable. These buttons do not run app actions.</p>
         <div class="guide-grid">
           <div class="guide-sample">

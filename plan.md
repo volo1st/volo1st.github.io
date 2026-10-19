@@ -553,6 +553,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 19 October 2026 | Make draft controls compact on desktop and inset the select arrow. | The owner found the desktop buttons too large and the select arrow too close to the border. Use a 2.25rem control minimum on wide screens with a fine pointer and hover. Retain the 2.75rem touch minimum. Reserve space for the select arrow and retain native selection behavior. |
 | 19 October 2026 | Consolidate buttons and form controls in the draft guide before migrating apps. | The owner selected this next step. Share control dimensions, typography, focus, and disabled styles. Keep error borders from changing field dimensions. Preserve native field behavior and app-specific state logic. |
 | 19 October 2026 | Try one centered 48rem maximum page width in the draft guide, with 1–2rem side gutters. | The owner wants fewer width variants, a modest desktop width, and responsive mobile pages. Align the header and content. Remove nested guide-specific text-width limits. Review the draft before migrating existing pages. |
 | 19 October 2026 | Use four text sizes, two weights, and two line heights in the style guide draft. | The owner accepted supporting text at 0.875rem, body text at 1rem, section headings at 1.5rem, and page titles at 2rem. Use weights 400 and 700, normal letter spacing, body line height 1.6, and heading line height 1.2. Keep the homepage greeting as a later explicit exception. |
@@ -866,3 +867,11 @@ Failure behavior: The guide continues to show static state samples. It performs 
 Engineering review: Shared minimum dimensions and padding address the current icon/text height difference. An inset error stroke avoids a border-width change. Explicit component selectors avoid changing the shell's plain language controls. The existing audit references cover native control semantics. Browser-specific select, file, and range rendering remains for manual review.
 
 Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, shared geometry, state selector precedence, and sample labels. Refreshed both draft stylesheet hashes. No application files, tests, or dependencies changed. Manual keyboard, mobile, zoom, and native-control rendering checks did not run. They remain for the guide review. No browser tools were installed.
+
+### 21.5 Desktop control size and select arrow
+
+Direction selected on 19 October 2026: Reduce the shared control minimum to 2.25rem (36 pixels at the default font size) above 650 pixels when the primary pointer is fine and supports hover. Reduce vertical padding to 0.25rem. Keep the default 2.75rem (44-pixel) touch minimum and 0.5rem vertical padding. Preserve the accepted font size and shared alignment. Long labels can still increase control height.
+
+Inset the select chevron by 0.75rem. Reserve space between the value and chevron. Keep the native select element and its keyboard and mobile selection behavior. In forced-color mode, restore the browser arrow. Keep the arrow visible on disabled selects. This changes only the draft guide.
+
+Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, responsive tokens, select padding, and disabled background precedence. Refreshed the component stylesheet hash. Manual browser, keyboard, mobile, forced-color, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.
