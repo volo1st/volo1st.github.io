@@ -553,6 +553,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 20 October 2026 | Correct Guitar layout and use a footer disclaimer. | The owner reported panel overflow, lost chord scrolling, squeezed chord-view labels, and an intrusive notice. Constrain the shared single-column grid. Use wrapping action buttons for chord views. Keep the disclaimer below a divider in small, muted serif text. |
 | 19 October 2026 | Apply the approved guide to maintained pages and tools. | The owner approved the first pass and authorized migration. Promote one component stylesheet, migrate public pages first, and then migrate each maintained tool. Preserve specialized displays, translations, input, audio, and converter safety behavior. |
 | 19 October 2026 | Use segmented language controls for tools and quiet `En / 中` choices for reading pages. | The owner finds the filled group intrusive outside tools and prefers one Chinese character. Disable the current language to avoid repeating the same action. Preserve its selected appearance. Reuse native buttons for same-page language switching. |
 | 19 October 2026 | Use a solid selected language segment and remove link styling. | The owner accepted the compact size but found selection unclear. Remove the underline. Use a dark neutral fill with light selected text. Keep unselected segments light and hover separate from selection. |
@@ -1032,3 +1033,20 @@ Additional source review: All 18 shared-style documents have balanced markup, un
 Manual review remains pending: keyboard use, visible focus, narrow screens, 200 percent zoom, and representative iPhone or iPad audio behavior. A browser and representative device were unavailable for this package. These optional checks do not block the local source migration. No rendered or device result is claimed. The package does not push or deploy the website.
 
 Completion on 20 October 2026: Commit `c855602` contains the verified migration. Added the outcome comment to Todoist task `6hpGXvmQfxcmH6M6`, completed that task, and confirmed its completed state through a fresh read. The initiative and deferred tasks remain open. No next package was selected. This log update records the completed reconciliation.
+
+
+## 23. Correct Guitar Strum Machine layout
+
+Selection on 20 October 2026: The owner reported four issues after migration. Todoist task `6hpHm7jm2vQXx7F6` records this correction package.
+
+Purpose and requirements: Keep the exercise panel within the page width. Restore a bounded chord scroll area so existing automatic following can work. Keep chord-view labels intact and allow whole buttons to wrap on narrow screens. Display the song disclaimer below a horizontal divider in small, muted serif text. Keep the guitar specimen current. Preserve element IDs, translations, playback, chord positioning, and manual scroll controls.
+
+Source findings and decision: `.ui-stack` creates an implicit column with an automatic minimum. The max-content chord timeline can enlarge that column through its grid item. Give this single-column component an explicit `minmax(0, 1fr)` track and let the chord region shrink. Keep overflow on the existing scroll container. The chord-view group divides width equally with a zero flex basis. Use existing `.ui-actions` for natural-width choices and whole-button wrapping. Use existing small text, content flow, and divider classes for the disclaimer. Do not add a new notice variant or hide page overflow.
+
+Failure behavior and checks: Keep native hidden state and the existing scroll-following JavaScript. Do not clip controls or turn off scrolling. Use the repository check and complete diff review. A browser is unavailable; rendered scrolling, keyboard, narrow-screen, and zoom review remain pending. Do not install browser tools for this correction.
+
+- [x] Correct grid sizing, chord-view layout, disclaimer markup, and the static specimen.
+- [x] Refresh affected asset hashes and pass the repository check.
+- [ ] Review and commit the correction, then reconcile Todoist.
+
+Verification evidence: `./scripts/check.sh` passed all seven test files. Reviewed the complete correction diff, shared grid sizing, hidden-state precedence, the chord scroll boundary, whole-button wrapping, disclaimer type, and the three-bar specimen. Guitar page and specimen markup is balanced and IDs are unique. Refreshed shared and guitar stylesheet hashes in every maintained reference. No application JavaScript, playback logic, dependencies, or browser tools changed. Manual rendered scrolling, keyboard, narrow-screen, and 200 percent zoom review did not run. Recorded the migration regression in the ignored experience file.

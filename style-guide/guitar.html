@@ -7,8 +7,8 @@
     <title>Current guitar styles | UI style guide</title>
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=340aa48fa873">
-    <link rel="stylesheet" href="../assets/ui.css?v=7aa00aecd302">
-    <link rel="stylesheet" href="../tools/guitar-strumming/styles.css?v=e4c9ff49d3d4">
+    <link rel="stylesheet" href="../assets/ui.css?v=0a5557ac4308">
+    <link rel="stylesheet" href="../tools/guitar-strumming/styles.css?v=e1b87dbee842">
     <link rel="stylesheet" href="./specimens.css?v=e3193025aa98">
   </head>
   <body>
@@ -75,7 +75,7 @@
       <details class="ui-disclosure" open>
         <summary>Current disclosure and editor</summary>
         <div class="details-content ui-disclosure__body ui-flow">
-          <div class="chord-view-switcher ui-button-group" role="group" aria-label="Chord display state samples">
+          <div class="chord-view-switcher ui-actions" role="group" aria-label="Chord display state samples">
             <button class="ui-button" type="button" aria-pressed="true">
               Shapes
             </button>
@@ -95,7 +95,7 @@ chords: C Am F G</textarea>
       </details>
       <section class="practice-workspace specimen-block ui-panel ui-stack" aria-labelledby="guitar-chord">
         <h2 id="guitar-chord" class="ui-heading">Specialized chord card</h2>
-        <p class="specimen-caption ui-help">Preserve this layout and its app behavior. The fixture supplies timing values that the app normally calculates.</p>
+        <p class="specimen-caption ui-help">The three-bar fixture must scroll within the panel. It supplies timing values that the app normally calculates.</p>
         <div class="chord-guide-scroll" tabindex="0" aria-labelledby="guitar-chord">
           <ol class="chord-timeline">
             <li class="chord-bar-card specimen-chord">
@@ -125,9 +125,68 @@ chords: C Am F G</textarea>
                 <span class="chord-duration-region specimen-second"></span>
               </div>
             </li>
+            <li class="chord-bar-card specimen-chord">
+              <span class="chord-bar-number">
+                Bar 2
+              </span>
+              <div class="chord-label-lanes">
+                <span class="chord-change-label">
+                  <strong class="chord-name">
+                    G
+                  </strong>
+                  <span class="chord-timing-cue">
+                    1
+                  </span>
+                </span>
+                <span class="chord-change-label specimen-second">
+                  <strong class="chord-name">
+                    D7
+                  </strong>
+                  <span class="chord-timing-cue">
+                    3
+                  </span>
+                </span>
+              </div>
+              <div class="chord-duration-band" aria-hidden="true">
+                <span class="chord-duration-region"></span>
+                <span class="chord-duration-region specimen-second"></span>
+              </div>
+            </li>
+            <li class="chord-bar-card specimen-chord">
+              <span class="chord-bar-number">
+                Bar 3
+              </span>
+              <div class="chord-label-lanes">
+                <span class="chord-change-label">
+                  <strong class="chord-name">
+                    F
+                  </strong>
+                  <span class="chord-timing-cue">
+                    1
+                  </span>
+                </span>
+                <span class="chord-change-label specimen-second">
+                  <strong class="chord-name">
+                    G7
+                  </strong>
+                  <span class="chord-timing-cue">
+                    3
+                  </span>
+                </span>
+              </div>
+              <div class="chord-duration-band" aria-hidden="true">
+                <span class="chord-duration-region"></span>
+                <span class="chord-duration-region specimen-second"></span>
+              </div>
+            </li>
           </ol>
         </div>
       </section>
+      <hr class="ui-divider">
+      <aside class="preset-notice ui-small ui-flow" aria-labelledby="guitar-disclaimer-heading">
+        <h2 id="guitar-disclaimer-heading" class="ui-subheading ui-small">Song exercise notice</h2>
+        <p>Song exercises are unofficial user transcriptions for teaching. They contain chord and rhythm data. They do not include lyrics, melody notation, audio, or artwork. The catalog does not claim approval by or affiliation with a rights holder.</p>
+      </aside>
     </main>
   </body>
 </html>

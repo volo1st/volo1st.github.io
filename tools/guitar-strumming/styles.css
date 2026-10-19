@@ -5,6 +5,9 @@
 .playback-toast[hidden] { display: none; }
 #playback-status { flex: 1; min-width: 0; margin: 0; }
 .key-summary { font-weight: var(--ui-weight-bold); }
+/* Keep the max-content timeline inside its scroll viewport. */
+.practice-chord-guide { min-width: 0; }
+.chord-view-switcher > .ui-button { white-space: nowrap; overflow-wrap: normal; }
 .chord-guide-scroll {
   margin-top: 0.5rem;
   overflow-x: auto;
