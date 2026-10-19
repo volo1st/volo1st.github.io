@@ -10,67 +10,68 @@
   >
   <title>CSV to ABA Converter</title>
   <link rel="icon" href="../../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
-  <link rel="stylesheet" href="../../assets/site-shell.css?v=73514134a473">
-  <link rel="stylesheet" href="../../assets/site.css?v=cea4c1783ccb">
-  <link rel="stylesheet" href="./styles.css?v=ae8e8b90ff7a">
+  <link rel="stylesheet" href="../../assets/site-shell.css?v=340aa48fa873">
+  <link rel="stylesheet" href="../../assets/ui.css?v=7aa00aecd302">
+  <link rel="stylesheet" href="./styles.css?v=f6912bfb8b28">
 </head>
 <body>
-  <header class="site-header">
-    <div class="site-context-row">
-      <nav class="site-breadcrumb" aria-label="Breadcrumb">
-        <a href="../../">volo1st</a>
-        <span aria-hidden="true">/</span>
-        <a href="../">Tools</a>
-        <span aria-hidden="true">/</span>
-        <span aria-current="page">CSV to ABA Converter</span>
+  <header class="site-header ui-page-header ui-container">
+    <div class="ui-context-row">
+      <nav class="ui-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a class="ui-link" href="../../">volo1st</a></li>
+          <li><span aria-hidden="true">/</span><a class="ui-link" href="../">Tools</a></li>
+          <li><span aria-hidden="true">/</span><span aria-current="page">CSV to ABA Converter</span></li>
+        </ol>
       </nav>
-      <div class="language-switcher" role="group" data-i18n-aria-label="common.language">
-        <button type="button" data-language="en-AU" data-i18n-aria-label="common.useEnglish">EN</button>
-        <button type="button" data-language="zh-Hans" data-i18n-aria-label="common.useChinese">中文</button>
+      <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="Language" data-i18n-aria-label="common.language">
+        <button class="ui-button" type="button" data-language="en-AU" data-i18n-aria-label="common.useEnglish" data-disable-current="true" aria-pressed="true" disabled aria-label="Use English" lang="en">En</button>
+        <button class="ui-button" type="button" data-language="zh-Hans" data-i18n-aria-label="common.useChinese" data-disable-current="true" aria-pressed="false" aria-label="Use Simplified Chinese" lang="zh-Hans">中</button>
       </div>
     </div>
   </header>
 
-  <main class="site-main">
-    <aside class="panel safety-notice" aria-labelledby="safetyHeading">
-      <h2 id="safetyHeading" data-i18n="v2.safetyHeading">Check every payment file</h2>
+  <main class="site-main ui-container ui-page ui-stack">
+    <h1 class="ui-visually-hidden" data-i18n="v2.title">CSV to ABA Converter</h1>
+    <aside class="safety-notice ui-notice ui-flow" aria-labelledby="safetyHeading" data-tone="warning">
+      <h2 id="safetyHeading" data-i18n="v2.safetyHeading" class="ui-subheading ui-notice__title">Check every payment file</h2>
       <p data-i18n="v2.safetyText">Compare the payment count and total with the source payment report. Upload the ABA file to CBA only when both values match.</p>
       <p>
         <span data-i18n="v2.safetyFallbackBefore">If a result is unexpected, use the</span>
-        <a href="../csv2aba-legacy/" data-i18n="v2.legacyConverter">legacy converter</a>
+        <a class="ui-link" href="../csv2aba-legacy/" data-i18n="v2.legacyConverter">legacy converter</a>
         <span data-i18n="v2.safetyFallbackAfter">and stop the payment process.</span>
       </p>
     </aside>
 
-    <section class="panel intro" aria-labelledby="introHeading">
-      <h2 id="introHeading" data-i18n="v2.introHeading">Create an ABA payment file</h2>
+    <section class="panel intro ui-panel ui-flow" aria-labelledby="introHeading">
+      <h2 id="introHeading" data-i18n="v2.introHeading" class="ui-heading">Create an ABA payment file</h2>
       <p data-i18n="v2.intro">Upload a CSV file or paste its content. The converter checks all payment rows before it creates the ABA file.</p>
-      <p class="privacy-note">
+      <p class="privacy-note ui-notice ui-flow">
         <strong data-i18n="v2.privacyStrong">Your data stays in this browser.</strong>
         <span data-i18n="v2.privacy">This tool does not send CSV or payment data to a server.</span>
       </p>
 
-      <details>
+      <details class="ui-disclosure">
         <summary data-i18n="v2.showFormat">Show the required CSV format</summary>
-        <div class="table-scroll" tabindex="0">
-          <table>
-            <caption data-i18n="v2.exampleCaption">Example payment row with invented data</caption>
+        <div class="table-scroll ui-table-scroll ui-disclosure__body" tabindex="0" role="region" aria-labelledby="csv-example-caption">
+          <table class="ui-table">
+            <caption data-i18n="v2.exampleCaption" id="csv-example-caption">Example payment row with invented data</caption>
             <thead>
               <tr>
                 <th scope="col" data-i18n="field.BSB">BSB</th>
                 <th scope="col" data-i18n="field.Account">Account</th>
-                <th scope="col" data-i18n="field.Name">Name</th>
-                <th scope="col" data-i18n="field.Amount">Amount</th>
-                <th scope="col" data-i18n="field.Reference">Reference</th>
+                <th class="ui-table__text" scope="col" data-i18n="field.Name">Name</th>
+                <th class="ui-table__number" scope="col" data-i18n="field.Amount">Amount</th>
+                <th class="ui-table__text" scope="col" data-i18n="field.Reference">Reference</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>000-000</td>
                 <td>000000001</td>
-                <td data-i18n="v2.exampleName">Example Teacher</td>
-                <td>$63.00</td>
-                <td data-i18n="v2.exampleReference">teacher fee</td>
+                <td class="ui-table__text" data-i18n="v2.exampleName">Example Teacher</td>
+                <td class="ui-table__number">$63.00</td>
+                <td class="ui-table__text" data-i18n="v2.exampleReference">teacher fee</td>
               </tr>
             </tbody>
           </table>
@@ -78,30 +79,31 @@
       </details>
     </section>
 
-    <section class="panel step-card" aria-labelledby="inputHeading">
+    <section class="panel step-card ui-panel ui-flow" aria-labelledby="inputHeading">
       <div class="step-heading">
         <span class="step-number" aria-hidden="true">1</span>
-        <div>
-          <h2 id="inputHeading" data-i18n="v2.addData">Add payment data</h2>
+        <div class="ui-flow">
+          <h2 id="inputHeading" data-i18n="v2.addData" class="ui-heading">Add payment data</h2>
           <p data-i18n="v2.addDataHelp">Choose a CSV file or paste the CSV content.</p>
         </div>
       </div>
 
-      <div class="file-field">
-        <label for="csvFileInput" data-i18n="v2.chooseFile">Choose a CSV file</label>
+      <div class="file-field ui-field">
+        <label class="ui-label" for="csvFileInput" data-i18n="v2.chooseFile">Choose a CSV file</label>
         <input
           type="file"
           id="csvFileInput"
           accept=".csv,text/csv"
           aria-describedby="fileHelp"
+          class="ui-file"
         >
-        <p id="fileHelp" class="field-help" data-i18n="v2.fileHelp">The selected file fills the CSV text field.</p>
+        <p id="fileHelp" class="field-help ui-help" data-i18n="v2.fileHelp">The selected file fills the CSV text field.</p>
       </div>
 
       <div class="choice-divider" aria-hidden="true"><span data-i18n="v2.or">or</span></div>
 
-      <div class="text-field">
-        <label for="csv" data-i18n="v2.pasteCsv">Paste CSV content</label>
+      <div class="text-field ui-field">
+        <label class="ui-label" for="csv" data-i18n="v2.pasteCsv">Paste CSV content</label>
         <textarea
           id="csv"
           rows="14"
@@ -109,41 +111,43 @@
           aria-describedby="csvHelp"
           placeholder="BSB,Account,Name,Amount,Reference"
           data-i18n-placeholder="v2.csvPlaceholder"
+          class="ui-textarea ui-code"
         ></textarea>
-        <p id="csvHelp" class="field-help" data-i18n="v2.csvHelp">Include one header row and one or more payment rows.</p>
+        <p id="csvHelp" class="field-help ui-help" data-i18n="v2.csvHelp">Include one header row and one or more payment rows.</p>
       </div>
 
-      <button id="convert" class="primary-action" type="button" data-i18n="v2.convert">Check and convert</button>
+      <button id="convert" class="primary-action ui-button ui-button--primary" type="button" data-i18n="v2.convert">Check and convert</button>
 
-      <p id="statusMessage" class="status-message" role="status" aria-live="polite"></p>
+      <p id="statusMessage" class="status-message ui-notice" role="status" aria-live="polite"></p>
       <div
         id="errorPanel"
-        class="error-panel"
+        class="error-panel ui-notice ui-flow"
         role="alert"
         tabindex="-1"
         hidden
+        data-tone="error"
       >
-        <p id="errorMessage"></p>
+        <p id="errorMessage" class="ui-subheading ui-notice__title"></p>
         <ul id="errorList"></ul>
       </div>
     </section>
 
     <section
       id="paymentSummary"
-      class="panel step-card result-card"
+      class="panel step-card result-card ui-panel ui-flow"
       aria-labelledby="summaryHeading"
       tabindex="-1"
       hidden
     >
       <div class="step-heading">
         <span class="step-number success-number" aria-hidden="true">2</span>
-        <div>
-          <h2 id="summaryHeading" data-i18n="v2.review">Review the result</h2>
+        <div class="ui-flow">
+          <h2 id="summaryHeading" data-i18n="v2.review" class="ui-heading">Review the result</h2>
           <p data-i18n="v2.reviewHelp">Compare these values with the source payment report.</p>
         </div>
       </div>
 
-      <dl class="payment-totals">
+      <dl class="payment-totals ui-metrics">
         <div>
           <dt data-i18n="v2.paymentCount">Payment count</dt>
           <dd><output id="paymentCount"></output></dd>
@@ -154,23 +158,24 @@
         </div>
       </dl>
 
-      <div class="text-field">
-        <label for="aba" data-i18n="v2.generatedAba">Generated ABA data</label>
+      <div class="text-field ui-field">
+        <label class="ui-label" for="aba" data-i18n="v2.generatedAba">Generated ABA data</label>
         <textarea
           id="aba"
           rows="10"
           wrap="off"
           readonly
           aria-describedby="abaHelp"
+          class="ui-textarea ui-code"
         ></textarea>
-        <p id="abaHelp" class="field-help" data-i18n="v2.abaHelp">This field is read-only. Each ABA record has 120 characters.</p>
+        <p id="abaHelp" class="field-help ui-help" data-i18n="v2.abaHelp">This field is read-only. Each ABA record has 120 characters.</p>
       </div>
 
       <div class="download-step">
         <span class="step-number success-number" aria-hidden="true">3</span>
-        <div>
-          <h3 data-i18n="v2.downloadHeading">Download the checked file</h3>
-          <button id="downloadAba" class="primary-action" type="button" disabled>
+        <div class="ui-flow">
+          <h3 class="ui-subheading" data-i18n="v2.downloadHeading">Download the checked file</h3>
+          <button id="downloadAba" class="primary-action ui-button ui-button--primary" type="button" disabled>
             <span data-i18n="v2.download">Download ABA file</span>
           </button>
         </div>
@@ -178,8 +183,8 @@
     </section>
   </main>
 
-  <script src="../../assets/i18n.js?v=3bafa7de2d71"></script>
+  <script src="../../assets/i18n.js?v=de15867908c9"></script>
   <script src="./core.js?v=da91f9068fe2"></script>
-  <script src="./app.js?v=ae0592a75ed1"></script>
+  <script src="./app.js?v=333fb18aa905"></script>
 </body>
 </html>

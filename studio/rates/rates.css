@@ -1,43 +1,14 @@
-.rates-main { max-width: 48rem; padding-block: 1.5rem 3rem; font-size: .875rem; }
-.rates-header { margin-bottom: 1.75rem; }
-h1, h2, .rate { font-family: var(--site-display-font); font-weight: 400; }
-.rates-year {
-  margin: 0 0 .75rem;
-  color: #655d4c;
-  font-family: var(--site-display-font);
-  font-size: 1.05rem;
-  font-style: italic;
-  font-weight: 400;
-  letter-spacing: .035em;
-}
-/* Keep the same spacing above and below every section divider. */
-.service, .booking, .contact, .rates-footer {
-  margin: 0;
-  padding-block: 1.25rem;
-  border-top: 1px solid var(--site-divider);
-}
-.currency { margin: 0; color: var(--site-muted-soft); font-size: .6875rem; line-height: 1.6; }
-.service-note { color: #706c60; font-size: .75rem; line-height: 1.6; }
-.service { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .35rem 2rem; }
-.service h2 { margin: 0; font-size: 1.125rem; }
-.rate { margin: 0; font-size: 1.125rem; }
-.service-text, .service-note { grid-column: 1 / -1; margin: .35rem 0 0; max-width: 38rem; }
-.service-text, .booking ul {
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Songti SC", "STSong", "SimSun", Georgia, serif;
-  line-height: 1.7;
-}
-.booking h2, .contact h2 { font-size: 1.125rem; margin: 0 0 .75rem; }
-.booking ul { margin: 0; padding-left: 1.25rem; }
-.booking li + li { margin-top: .5rem; }
-.contact-text a { color: #3f3a31; text-underline-offset: .2em; }
-.contact-text a:hover { color: #171512; }
-@media (max-width: 560px) {
-  .site-context-row { flex-wrap: wrap; }
-  .service { gap: .5rem .75rem; }
-  .rate { font-size: 1.125rem; }
-}
+.rates-header { margin-bottom: var(--ui-space-6); }
+.service, .booking, .contact, .rates-footer { margin: 0; padding-block: var(--ui-space-6); border-top: 1px solid var(--site-divider); }
+.service { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: var(--ui-space-2) var(--ui-space-6); }
+.service h2, .rate { margin: 0; }
+.rate { font-weight: var(--ui-weight-bold); }
+.service-text, .service-note { grid-column: 1 / -1; margin: 0; }
+.booking ul { margin: 0; padding-inline-start: var(--ui-space-6); }
+.booking li + li { margin-top: var(--ui-space-2); }
+@media (max-width: 560px) { .service { column-gap: var(--ui-space-3); } }
 @media print {
-  .language-switcher { display: none; }
+  .ui-language { display: none; }
   .rates-main { padding-block: 0; }
   .service, .booking, .contact { break-inside: avoid; }
   :root { color: #000; background: #fff; }

@@ -17,9 +17,10 @@
   <link rel="icon" href="../../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml" />
   <link rel="apple-touch-icon" sizes="180x180" href="../../assets/app-icons/guitar-strum-machine-180.png?v=a607291ddcbb" />
   <link rel="manifest" href="./manifest.webmanifest?v=4a718b053e69" />
-  <link rel="stylesheet" href="../../assets/site-shell.css?v=73514134a473" />
-  <link rel="stylesheet" href="./styles.css?v=8b8d16700dec" />
-  <script src="../../assets/i18n.js?v=3bafa7de2d71" defer></script>
+  <link rel="stylesheet" href="../../assets/site-shell.css?v=340aa48fa873" />
+  <link rel="stylesheet" href="../../assets/ui.css?v=7aa00aecd302">
+  <link rel="stylesheet" href="./styles.css?v=e4c9ff49d3d4" />
+  <script src="../../assets/i18n.js?v=de15867908c9" defer></script>
   <script src="./i18n.js?v=134a7e7f2f8f" defer></script>
   <script src="./domain/chord-catalog.js?v=1fcee5a71a34" defer></script>
   <script src="./domain/harmony.js?v=954aa42a57b9" defer></script>
@@ -32,144 +33,145 @@
   <script src="./browser/share.js?v=3dbf293aff76" defer></script>
   <script src="./presets/data.js?v=b29b91908363" defer></script>
   <script src="./presets/catalog.js?v=5b27bec28c38" defer></script>
-  <script src="./app.js?v=1dee9e8a2be6" defer></script>
+  <script src="./app.js?v=0fb2c381567d" defer></script>
   </head>
 <body>
-  <header class="site-header">
-    <div class="site-context-row">
-      <nav class="site-breadcrumb" aria-label="Breadcrumb">
-        <a href="../../">volo1st</a>
-        <span aria-hidden="true">/</span>
-        <a href="../">Tools</a>
-        <span aria-hidden="true">/</span>
-        <span aria-current="page">Guitar Strum Machine</span>
+  <header class="site-header ui-page-header ui-container">
+    <div class="ui-context-row">
+      <nav class="ui-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a class="ui-link" href="../../">volo1st</a></li>
+          <li><span aria-hidden="true">/</span><a class="ui-link" href="../">Tools</a></li>
+          <li><span aria-hidden="true">/</span><span aria-current="page">Guitar Strum Machine</span></li>
+        </ol>
       </nav>
-      <div class="language-switcher" role="group" data-i18n-aria-label="common.language">
-        <button type="button" data-language="en-AU" data-i18n-aria-label="common.useEnglish">EN</button>
-        <button type="button" data-language="zh-Hans" data-i18n-aria-label="common.useChinese">中文</button>
+      <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="Language" data-i18n-aria-label="common.language">
+        <button class="ui-button" type="button" data-language="en-AU" data-i18n-aria-label="common.useEnglish" data-disable-current="true" aria-pressed="true" disabled aria-label="Use English" lang="en">En</button>
+        <button class="ui-button" type="button" data-language="zh-Hans" data-i18n-aria-label="common.useChinese" data-disable-current="true" aria-pressed="false" aria-label="Use Simplified Chinese" lang="zh-Hans">中</button>
       </div>
     </div>
   </header>
 
-  <main class="site-main">
-    <section class="practice-workspace" aria-labelledby="practice-heading">
-      <h2 id="practice-heading" class="visually-hidden" data-i18n="guitar.practice">Practice</h2>
-      <div class="preset-control">
-        <label for="song-preset" data-i18n="guitar.preset">Exercise</label>
-        <select id="song-preset" aria-describedby="preset-goal">
+  <main class="site-main ui-container ui-page ui-stack">
+    <h1 class="ui-visually-hidden" data-i18n="guitar.title">Guitar Strum Machine</h1>
+    <section class="practice-workspace ui-panel ui-stack" aria-labelledby="practice-heading">
+      <h2 id="practice-heading" class="ui-visually-hidden ui-heading" data-i18n="guitar.practice">Practice</h2>
+      <div class="preset-control ui-field">
+        <label class="ui-label" for="song-preset" data-i18n="guitar.preset">Exercise</label>
+        <select id="song-preset" aria-describedby="preset-goal" class="ui-select">
           <option value="" data-i18n="guitar.customArrangement">Custom arrangement</option>
         </select>
-        <p id="preset-goal" class="preset-goal" role="status" aria-live="polite" data-i18n="guitar.presetPrompt">
+        <p id="preset-goal" class="preset-goal ui-help" role="status" aria-live="polite" data-i18n="guitar.presetPrompt">
           Select an exercise to see its teaching goal.
         </p>
       </div>
 
       <div class="transport-row">
-        <div class="transport-controls">
-          <button id="play-pause" type="button" aria-pressed="false" disabled data-i18n="guitar.play">Play</button>
-          <button id="restart" class="secondary-button" type="button" disabled data-i18n="guitar.startOver">Start over</button>
+        <div class="transport-controls ui-actions">
+          <button id="play-pause" type="button" aria-pressed="false" disabled data-i18n="guitar.play" class="ui-button ui-button--primary">Play</button>
+          <button id="restart" class="secondary-button ui-button" type="button" disabled data-i18n="guitar.startOver">Start over</button>
         </div>
-        <div id="playback-toast" class="playback-toast" data-tone="information" hidden>
+        <div id="playback-toast" class="playback-toast ui-notice" data-tone="information" hidden>
           <p id="playback-status" role="status" aria-live="polite">Preparing the tool.</p>
-          <button id="dismiss-playback-toast" class="toast-dismiss" type="button" aria-label="Dismiss notification" data-i18n-aria-label="guitar.dismissNotification">×</button>
+          <button id="dismiss-playback-toast" class="toast-dismiss ui-button ui-button--icon" type="button" aria-label="Dismiss notification" data-i18n-aria-label="guitar.dismissNotification">×</button>
         </div>
       </div>
 
       <div id="practice-chord-guide-region" class="practice-chord-guide" hidden>
-        <h2 id="chord-guide-heading" data-i18n="guitar.chords">Chords</h2>
+        <h2 id="chord-guide-heading" data-i18n="guitar.chords" class="ui-subheading">Chords</h2>
         <div id="chord-guide-scroll" class="chord-guide-scroll" tabindex="0" aria-labelledby="chord-guide-heading">
           <ol id="chord-guide" class="chord-timeline"></ol>
         </div>
-        <p id="chord-presentation-error" class="context-status" role="status" hidden data-i18n="guitar.presentationUnavailable">The chord chart is unavailable. Check Arrange and share.</p>
+        <p id="chord-presentation-error" class="context-status ui-help" role="status" hidden data-i18n="guitar.presentationUnavailable">The chord chart is unavailable. Check Arrange and share.</p>
       </div>
 
       <div class="tempo-control">
         <div class="tempo-heading">
-          <label id="bpm-number-label" for="bpm-number" data-i18n="guitar.tempo">Tempo</label>
+          <label id="bpm-number-label" for="bpm-number" data-i18n="guitar.tempo" class="ui-label">Tempo</label>
           <div class="bpm-value">
-            <input id="bpm-number" type="number" min="30" max="300" step="1" value="100" inputmode="numeric" />
+            <input id="bpm-number" type="number" min="30" max="300" step="1" value="100" inputmode="numeric" class="ui-input" />
             <span aria-hidden="true">BPM</span>
           </div>
         </div>
-        <label id="bpm-range-label" class="visually-hidden" for="bpm-range" data-i18n="guitar.tempoSlider">Tempo slider</label>
-        <input id="bpm-range" type="range" min="30" max="300" step="1" value="100" />
+        <label id="bpm-range-label" class="ui-visually-hidden ui-label" for="bpm-range" data-i18n="guitar.tempoSlider">Tempo slider</label>
+        <input id="bpm-range" type="range" min="30" max="300" step="1" value="100" class="ui-range" />
       </div>
 
-      <details id="practice-options" class="practice-options">
+      <details id="practice-options" class="practice-options ui-disclosure">
         <summary data-i18n="guitar.practiceOptions">Practice options</summary>
-        <div class="details-content">
+        <div class="details-content ui-disclosure__body ui-flow">
           <div class="practice-options-grid">
-            <div class="setting-field">
-              <label for="count-in" data-i18n="guitar.countIn">Count-in</label>
-              <select id="count-in">
+            <div class="setting-field ui-field">
+              <label class="ui-label" for="count-in" data-i18n="guitar.countIn">Count-in</label>
+              <select id="count-in" class="ui-select">
                 <option value="0" data-i18n="guitar.off">Off</option>
                 <option value="1" selected data-i18n="guitar.oneBar">1 bar</option>
                 <option value="2" data-i18n="guitar.twoBars">2 bars</option>
               </select>
             </div>
 
-            <div class="setting-field tempo-ramp-control">
-              <label for="tempo-ramp-mode" data-i18n="guitar.speedUp">Speed up</label>
-              <select id="tempo-ramp-mode">
+            <div class="setting-field tempo-ramp-control ui-field">
+              <label class="ui-label" for="tempo-ramp-mode" data-i18n="guitar.speedUp">Speed up</label>
+              <select id="tempo-ramp-mode" class="ui-select">
                 <option value="off" data-i18n="guitar.off">Off</option>
                 <option value="increase" data-i18n="guitar.on">On</option>
               </select>
             </div>
           </div>
 
-          <fieldset id="tempo-ramp-fields" class="tempo-ramp-fields" hidden>
-            <legend data-i18n="guitar.speedSettings">Speed-up settings</legend>
+          <fieldset id="tempo-ramp-fields" class="tempo-ramp-fields ui-panel" hidden>
+            <legend class="ui-label" data-i18n="guitar.speedSettings">Speed-up settings</legend>
             <div>
-              <label for="tempo-ramp-step" data-i18n="guitar.increaseBpm">Increase (BPM)</label>
-              <input id="tempo-ramp-step" type="number" min="1" max="20" step="1" inputmode="numeric" />
+              <label class="ui-label" for="tempo-ramp-step" data-i18n="guitar.increaseBpm">Increase (BPM)</label>
+              <input id="tempo-ramp-step" type="number" min="1" max="20" step="1" inputmode="numeric" class="ui-input" />
             </div>
             <div>
-              <label for="tempo-ramp-loops" data-i18n="guitar.afterLoops">After loops</label>
-              <input id="tempo-ramp-loops" type="number" min="1" max="99" step="1" inputmode="numeric" />
+              <label class="ui-label" for="tempo-ramp-loops" data-i18n="guitar.afterLoops">After loops</label>
+              <input id="tempo-ramp-loops" type="number" min="1" max="99" step="1" inputmode="numeric" class="ui-input" />
             </div>
             <div>
-              <label for="tempo-ramp-target" data-i18n="guitar.targetBpm">Target (BPM)</label>
-              <input id="tempo-ramp-target" type="number" min="31" max="300" step="1" inputmode="numeric" />
+              <label class="ui-label" for="tempo-ramp-target" data-i18n="guitar.targetBpm">Target (BPM)</label>
+              <input id="tempo-ramp-target" type="number" min="31" max="300" step="1" inputmode="numeric" class="ui-input" />
             </div>
           </fieldset>
         </div>
       </details>
     </section>
 
-    <details id="arrangement-editor">
+    <details id="arrangement-editor" class="ui-disclosure">
       <summary data-i18n="guitar.arrangeShare">Arrange and share</summary>
-      <div class="details-content">
-        <div id="number-chord-controls" class="number-chord-controls" hidden>
+      <div class="details-content ui-disclosure__body ui-flow">
+        <div id="number-chord-controls" class="number-chord-controls ui-flow" hidden>
           <p id="key-summary" class="key-summary"></p>
 
-          <div class="chord-view-switcher" role="group" data-i18n-aria-label="guitar.chordView">
-            <button type="button" data-chord-view="shapes" aria-pressed="true" data-i18n="guitar.shapes">Shapes</button>
-            <button type="button" data-chord-view="numbers" aria-pressed="false" data-i18n="guitar.numbers">Numbers</button>
-            <button type="button" data-chord-view="sounding" aria-pressed="false" data-i18n="guitar.sounding">Sounding</button>
+          <div class="chord-view-switcher ui-button-group" role="group" data-i18n-aria-label="guitar.chordView">
+            <button class="ui-button" type="button" data-chord-view="shapes" aria-pressed="true" data-i18n="guitar.shapes">Shapes</button>
+            <button class="ui-button" type="button" data-chord-view="numbers" aria-pressed="false" data-i18n="guitar.numbers">Numbers</button>
+            <button class="ui-button" type="button" data-chord-view="sounding" aria-pressed="false" data-i18n="guitar.sounding">Sounding</button>
           </div>
 
           <div class="key-controls-grid">
-            <div class="setting-field">
-              <label for="original-key" data-i18n="guitar.originalKey">Original key</label>
-              <select id="original-key"></select>
+            <div class="setting-field ui-field">
+              <label class="ui-label" for="original-key" data-i18n="guitar.originalKey">Original key</label>
+              <select id="original-key" class="ui-select"></select>
             </div>
-            <div class="setting-field">
-              <label for="playing-key" data-i18n="guitar.playIn">Play in</label>
-              <select id="playing-key"></select>
+            <div class="setting-field ui-field">
+              <label class="ui-label" for="playing-key" data-i18n="guitar.playIn">Play in</label>
+              <select id="playing-key" class="ui-select"></select>
             </div>
-            <div class="setting-field">
-              <label for="guitar-configuration" data-i18n="guitar.playWith">Play with</label>
-              <select id="guitar-configuration"></select>
+            <div class="setting-field ui-field">
+              <label class="ui-label" for="guitar-configuration" data-i18n="guitar.playWith">Play with</label>
+              <select id="guitar-configuration" class="ui-select"></select>
             </div>
-            <button id="return-original-key" class="secondary-button" type="button" data-i18n="guitar.returnOriginalKey">Return to original key</button>
-            <p id="key-shapes-status" class="context-status" role="status" aria-live="polite"></p>
+            <button id="return-original-key" class="secondary-button ui-button" type="button" data-i18n="guitar.returnOriginalKey">Return to original key</button>
+            <p id="key-shapes-status" class="context-status ui-help" role="status" aria-live="polite"></p>
           </div>
         </div>
 
         <div class="arrangement-settings-grid">
-          <div id="legacy-capo-control" class="setting-field capo-control">
-            <label for="capo-fret" data-i18n="guitar.capo">Capo</label>
-            <select id="capo-fret">
+          <div id="legacy-capo-control" class="setting-field capo-control ui-field">
+            <label class="ui-label" for="capo-fret" data-i18n="guitar.capo">Capo</label>
+            <select id="capo-fret" class="ui-select">
               <option value="0" data-i18n="guitar.off">Off</option>
               <option value="1" data-i18n="guitar.fret1">Fret 1</option>
               <option value="2" data-i18n="guitar.fret2">Fret 2</option>
@@ -186,9 +188,9 @@
             </select>
           </div>
 
-          <div class="setting-field swing-control">
-            <label for="swing-feel" data-i18n="guitar.swing">Swing</label>
-            <select id="swing-feel">
+          <div class="setting-field swing-control ui-field">
+            <label class="ui-label" for="swing-feel" data-i18n="guitar.swing">Swing</label>
+            <select id="swing-feel" class="ui-select">
               <option value="off" data-i18n="guitar.off">Off</option>
               <option value="55" data-i18n="guitar.swingLight">Light (55%)</option>
               <option value="60" data-i18n="guitar.swingMedium">Medium (60%)</option>
@@ -198,35 +200,37 @@
           </div>
         </div>
 
-        <label for="song-source" data-i18n="guitar.arrangementText">Arrangement text</label>
-        <textarea id="song-source" aria-describedby="validation-summary" spellcheck="false"></textarea>
+        <div class="ui-field">
+          <label class="ui-label" for="song-source" data-i18n="guitar.arrangementText">Arrangement text</label>
+          <textarea id="song-source" aria-describedby="validation-summary" spellcheck="false" class="ui-textarea ui-code"></textarea>
+        </div>
 
         <div class="validation-panel">
-          <p id="validation-summary" class="validation-summary" role="status" aria-live="polite" data-i18n="guitar.validation.validating">
+          <p id="validation-summary" class="validation-summary ui-notice" role="status" aria-live="polite" data-i18n="guitar.validation.validating">
             Validating input.
           </p>
           <ul id="validation-errors" class="validation-errors" hidden></ul>
         </div>
 
-        <div class="button-group">
-          <button id="copy-share-link" type="button" disabled data-i18n="guitar.copyShare">Copy share link</button>
-          <button id="copy-source" class="secondary-button" type="button" data-i18n="guitar.copySource">Copy source</button>
+        <div class="button-group ui-actions">
+          <button id="copy-share-link" type="button" disabled data-i18n="guitar.copyShare" class="ui-button ui-button--primary">Copy share link</button>
+          <button id="copy-source" class="secondary-button ui-button" type="button" data-i18n="guitar.copySource">Copy source</button>
         </div>
-        <p id="share-status" class="context-status" role="status" aria-live="polite" data-i18n="guitar.share.preparing">
+        <p id="share-status" class="context-status ui-help" role="status" aria-live="polite" data-i18n="guitar.share.preparing">
           Preparing share controls.
         </p>
-        <div id="manual-share-copy" class="manual-copy" hidden>
-          <label for="manual-share-link" data-i18n="guitar.manualShare">Share link for manual copy</label>
-          <input id="manual-share-link" type="text" readonly />
+        <div id="manual-share-copy" class="manual-copy ui-notice ui-flow" hidden data-tone="warning">
+          <label class="ui-label" for="manual-share-link" data-i18n="guitar.manualShare">Share link for manual copy</label>
+          <input id="manual-share-link" type="text" readonly class="ui-input ui-code" />
           <p data-i18n="guitar.manualCopy">Copy the selected link manually.</p>
         </div>
       </div>
     </details>
 
-    <details id="help">
+    <details id="help" class="ui-disclosure">
       <summary data-i18n="guitar.help">Help</summary>
-      <div class="details-content help-content">
-        <h2 data-i18n="guitar.helpPractice">Practice controls</h2>
+      <div class="details-content help-content ui-disclosure__body ui-flow">
+        <h2 class="ui-heading" data-i18n="guitar.helpPractice">Practice controls</h2>
         <p data-i18n="guitar.helpPreset">Select a preset to replace the arrangement. The tool asks before it replaces your edits.</p>
         <p data-i18n="guitar.helpTempo">A manual tempo change during playback starts at the next bar. A speed-up change starts at a loop boundary.</p>
         <p data-i18n="guitar.helpCountIn">The count-in plays before a fresh start. It does not repeat with the loop.</p>
@@ -234,7 +238,7 @@
         <p data-i18n="guitar.helpSwing">Select a common Swing value. Edit swing: in the arrangement for another value.</p>
         <p data-i18n="guitar.helpSpeed">Speed up starts at half of the current tempo, rounded to the nearest 5 BPM. It uses the current tempo as the target.</p>
 
-        <h2 data-i18n="guitar.helpFormat">Arrangement format</h2>
+        <h2 class="ui-heading" data-i18n="guitar.helpFormat">Arrangement format</h2>
         <p data-i18n="guitar.helpBars">Use one chord bar and one strum bar for each bar after repeat expansion.</p>
         <p data-i18n="guitar.helpCountDirective">Use count-in: 0, 1, or 2 after the BPM directive.</p>
         <p data-i18n="guitar.helpRampDirective">Use tempo-ramp: off after the count-in directive. To increase the tempo, use a value such as tempo-ramp: +5/2/120. This value adds 5 BPM after every 2 completed loops until it reaches 120 BPM.</p>
@@ -247,11 +251,11 @@
         <p data-i18n="guitar.helpChordChange">Use Chord@N for a chord change at slot N. The change occurs before a strum at the same slot.</p>
         <p data-i18n="guitar.helpRepeat">Use xN after one bar to repeat that bar N times in total.</p>
 
-        <h2 data-i18n="guitar.helpNumbersHeading">Number notation</h2>
+        <h2 class="ui-heading" data-i18n="guitar.helpNumbersHeading">Number notation</h2>
         <p data-i18n="guitar.helpNumbersKeys">A number arrangement requires original-key:, key:, and notation: numbers before capo:. The original key is a reference. The key directive sets the sounding key.</p>
         <p data-i18n="guitar.helpNumbersQuality">Use mode-relative degrees from 1 through 7. Add a colon and quality when required, such as 6:m or 5:7. Use 1/3 for a numbered bass note.</p>
         <p data-i18n="guitar.helpNumbersCapo">In number notation, changing Play with changes the guitar shapes. It does not change the sounding key.</p>
-        <pre class="format-example"><code>original-key: Bb major
+        <pre class="format-example"><code class="ui-code">original-key: Bb major
 key: Bb major
 notation: numbers
 capo: 3
@@ -260,59 +264,59 @@ chords:
 | 1 | 5:7 | 6:m | 4:add9 |</code></pre>
 
         <p data-i18n="guitar.supportedChords">Supported chords:</p>
-        <p class="chord-list"><code>A Am Bb Bm C Cm D Dm Em F F#m G Am7 C7 Cmaj7 D7 G7 Cadd9 Dsus4 G5 Am/G C/E D/F# G/B</code></p>
+        <p class="chord-list"><code class="ui-code">A Am Bb Bm C Cm D Dm Em F F#m G Am7 C7 Cmaj7 D7 G7 Cadd9 Dsus4 G5 Am/G C/E D/F# G/B</code></p>
 
-        <h2 data-i18n="guitar.sharing">Sharing</h2>
+        <h2 class="ui-heading" data-i18n="guitar.sharing">Sharing</h2>
         <p data-i18n="guitar.helpSharing">A share link contains the complete arrangement text. Anyone who receives the link can read the text.</p>
         <p data-i18n="guitar.helpAudioLocal">Audio stays on this device.</p>
 
-        <h2 data-i18n="guitar.soundTest">Sound test</h2>
+        <h2 class="ui-heading" data-i18n="guitar.soundTest">Sound test</h2>
         <p data-i18n="guitar.helpSoundTest">Each button plays one isolated G chord. A sound test pauses song playback. It does not change the arrangement.</p>
 
-        <details id="strum-sound-test">
+        <details id="strum-sound-test" class="ui-disclosure">
           <summary data-i18n="guitar.strumSoundTest">Strum sound test</summary>
-          <div class="details-content">
+          <div class="details-content ui-disclosure__body ui-flow">
             <div class="sound-test-group">
-              <h3 data-i18n="guitar.downRange">Downstroke range</h3>
-              <div class="sound-test-buttons">
-                <button type="button" data-strum-token="D">D</button>
-                <button type="button" data-strum-token="D4">D4</button>
-                <button type="button" data-strum-token="D3">D3</button>
-                <button type="button" data-strum-token="D2">D2</button>
+              <h3 class="ui-subheading" data-i18n="guitar.downRange">Downstroke range</h3>
+              <div class="sound-test-buttons ui-actions">
+                <button class="ui-button ui-button--primary" type="button" data-strum-token="D">D</button>
+                <button class="ui-button ui-button--primary" type="button" data-strum-token="D4">D4</button>
+                <button class="ui-button ui-button--primary" type="button" data-strum-token="D3">D3</button>
+                <button class="ui-button ui-button--primary" type="button" data-strum-token="D2">D2</button>
               </div>
             </div>
 
             <div class="sound-test-group">
-              <h3 data-i18n="guitar.upRange">Upstroke range</h3>
-              <div class="sound-test-buttons">
-                <button type="button" data-strum-token="U">U</button>
-                <button type="button" data-strum-token="U4">U4</button>
-                <button type="button" data-strum-token="U3">U3</button>
-                <button type="button" data-strum-token="U2">U2</button>
+              <h3 class="ui-subheading" data-i18n="guitar.upRange">Upstroke range</h3>
+              <div class="sound-test-buttons ui-actions">
+                <button class="ui-button ui-button--primary" type="button" data-strum-token="U">U</button>
+                <button class="ui-button ui-button--primary" type="button" data-strum-token="U4">U4</button>
+                <button class="ui-button ui-button--primary" type="button" data-strum-token="U3">U3</button>
+                <button class="ui-button ui-button--primary" type="button" data-strum-token="U2">U2</button>
               </div>
             </div>
 
             <div class="sound-test-group">
-              <h3 data-i18n="guitar.downSound">Downstroke sound</h3>
-              <div class="sound-test-buttons">
-                <button type="button" data-strum-token="D3">D3</button>
-                <button type="button" data-strum-token="D3P">D3P</button>
-                <button type="button" data-strum-token="D3X">D3X</button>
-                <button type="button" data-strum-token="D3!">D3!</button>
-                <button type="button" data-strum-token="D3P!">D3P!</button>
-                <button type="button" data-strum-token="D3X!">D3X!</button>
+              <h3 class="ui-subheading" data-i18n="guitar.downSound">Downstroke sound</h3>
+              <div class="sound-test-buttons ui-actions">
+                <button class="ui-button ui-button--primary" type="button" data-strum-token="D3">D3</button>
+                <button class="ui-button ui-button--primary" type="button" data-strum-token="D3P">D3P</button>
+                <button class="ui-button ui-button--primary" type="button" data-strum-token="D3X">D3X</button>
+                <button class="ui-button ui-button--primary" type="button" data-strum-token="D3!">D3!</button>
+                <button class="ui-button ui-button--primary" type="button" data-strum-token="D3P!">D3P!</button>
+                <button class="ui-button ui-button--primary" type="button" data-strum-token="D3X!">D3X!</button>
               </div>
             </div>
 
             <div class="sound-test-group">
-              <h3 data-i18n="guitar.upSound">Upstroke sound</h3>
-              <div class="sound-test-buttons">
-                <button type="button" data-strum-token="U3">U3</button>
-                <button type="button" data-strum-token="U3P">U3P</button>
-                <button type="button" data-strum-token="U3X">U3X</button>
-                <button type="button" data-strum-token="U3!">U3!</button>
-                <button type="button" data-strum-token="U3P!">U3P!</button>
-                <button type="button" data-strum-token="U3X!">U3X!</button>
+              <h3 class="ui-subheading" data-i18n="guitar.upSound">Upstroke sound</h3>
+              <div class="sound-test-buttons ui-actions">
+                <button class="ui-button ui-button--primary" type="button" data-strum-token="U3">U3</button>
+                <button class="ui-button ui-button--primary" type="button" data-strum-token="U3P">U3P</button>
+                <button class="ui-button ui-button--primary" type="button" data-strum-token="U3X">U3X</button>
+                <button class="ui-button ui-button--primary" type="button" data-strum-token="U3!">U3!</button>
+                <button class="ui-button ui-button--primary" type="button" data-strum-token="U3P!">U3P!</button>
+                <button class="ui-button ui-button--primary" type="button" data-strum-token="U3X!">U3X!</button>
               </div>
             </div>
           </div>
@@ -320,8 +324,8 @@ chords:
       </div>
     </details>
 
-    <aside class="preset-notice" aria-labelledby="preset-notice-heading">
-      <h2 id="preset-notice-heading" data-i18n="guitar.noticeHeading">Song exercise notice</h2>
+    <aside class="preset-notice ui-notice ui-flow" aria-labelledby="preset-notice-heading">
+      <h2 id="preset-notice-heading" data-i18n="guitar.noticeHeading" class="ui-subheading ui-notice__title">Song exercise notice</h2>
       <p data-i18n="guitar.noticeText">
         Song exercises are unofficial user transcriptions for teaching.
         They contain chord and rhythm data. They do not include lyrics, melody notation, audio, or artwork.

@@ -1794,7 +1794,7 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.equal(soundTestTokens.length, 20);
   assert.ok(soundTestTokens.every((token) => parser.parseStrumTokenValue(token).ok));
   assert.match(html, /<title>Guitar Strum Machine<\/title>/);
-  assert.match(html, /<section class="practice-workspace"/);
+  assert.match(html, /<section class="practice-workspace ui-panel ui-stack"/);
   assert.match(html, /data-i18n="guitar\.preset">Exercise<\/label>/);
   assert.match(html, /data-i18n="guitar\.startOver">Start over<\/button>/);
   assert.match(html, /id="playback-toast"[^>]*hidden/);
@@ -1805,17 +1805,17 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.match(html, /id="chord-presentation-error"[^>]*hidden/);
   assert.match(html, /<details id="practice-options"/);
   assert.match(html, /<summary[^>]*>Practice options<\/summary>/);
-  assert.match(html, /<details id="arrangement-editor">/);
+  assert.match(html, /<details id="arrangement-editor"[^>]*>/);
   assert.match(html, /<summary[^>]*>Arrange and share<\/summary>/);
-  assert.match(html, /<details id="help">/);
+  assert.match(html, /<details id="help"[^>]*>/);
   assert.doesNotMatch(
     html,
     /<details id="(?:practice-options|arrangement-editor|help|strum-sound-test)"[^>]*\sopen(?:\s|>)/,
   );
-  assert.ok(html.indexOf('class="practice-workspace"') < html.indexOf('id="arrangement-editor"'));
-  assert.match(html, /<details id="strum-sound-test">/);
+  assert.ok(html.indexOf('class="practice-workspace ui-panel ui-stack"') < html.indexOf('id="arrangement-editor"'));
+  assert.match(html, /<details id="strum-sound-test"[^>]*>/);
   assert.ok(html.indexOf('id="help"') < html.indexOf('id="strum-sound-test"'));
-  assert.ok(html.indexOf('id="strum-sound-test"') < html.indexOf('class="preset-notice"'));
+  assert.ok(html.indexOf('id="strum-sound-test"') < html.indexOf('class="preset-notice ui-notice ui-flow"'));
   assert.match(html, /id="tempo-ramp-mode"/);
   assert.match(html, /id="tempo-ramp-fields"[^>]*hidden/);
   assert.match(html, /for="tempo-ramp-step"/);
@@ -1859,14 +1859,10 @@ test('the page contains the mobile practice interface and valid sound-test token
     path.join(__dirname, '..', 'assets', 'site-shell.css'),
     'utf8',
   );
-  assert.match(shellCss, /\.language-switcher button\[aria-pressed="false"\]:hover/);
-  assert.doesNotMatch(`${shellCss}\n${css}`, /\.language-switcher button:hover:not\(:disabled\)/);
   assert.match(shellCss, /button,\s*select,\s*summary,\s*a\s*\{[^}]*touch-action:\s*manipulation/s);
   assert.doesNotMatch(html, /user-scalable\s*=\s*no|maximum-scale\s*=\s*1/i);
   assert.match(css, /\.tempo-ramp-fields\s*\{[^}]*grid-template-columns/s);
   assert.match(css, /\.practice-options-grid,[\s\S]*grid-template-columns:\s*repeat\(2/);
-  assert.match(css, /#play-pause\[aria-pressed="true"\]/);
-  assert.match(shellCss, /\.language-switcher button\[aria-pressed="true"\]/);
   assert.match(css, /\.chord-guide-scroll\s*\{[^}]*overflow-x:\s*auto/s);
   assert.match(css, /\.chord-guide-scroll\s*\{[^}]*scroll-snap-type:\s*x mandatory/s);
   assert.match(css, /\.chord-bar-card\s*\{[^}]*scroll-snap-align:\s*start/s);
@@ -1883,9 +1879,7 @@ test('the page contains the mobile practice interface and valid sound-test token
     /\.chord-duration-region \+ \.chord-duration-region\s*\{[^}]*border-left:/s,
   );
   assert.doesNotMatch(css, /\.chord-duration-region\s*\{[^}]*border-right:/s);
-  assert.match(css, /\.chord-view-switcher button\[aria-pressed="false"\]:hover/);
   assert.match(css, /\.key-controls-grid\s*\{[^}]*grid-template-columns/s);
-  assert.match(css, /\.setting-field select\s*\{[^}]*width:/s);
   assert.match(css, /@media \(max-width: 38rem\)/);
 
   const app = fs.readFileSync(

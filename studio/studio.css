@@ -1,4 +1,1 @@
-.studio-main { max-width: 48rem; padding-block: 1.5rem 3rem; }
-.studio-name { margin: 0; font-family: var(--site-display-font); font-size: 1.6rem; font-weight: 400; line-height: 1.2; }
-
-.studio-links { margin-top: 1.5rem; }
+.studio-links { margin-block-start: var(--ui-space-6); }

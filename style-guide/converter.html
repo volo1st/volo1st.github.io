@@ -6,71 +6,66 @@
     <meta name="robots" content="noindex">
     <title>Current converter styles | UI style guide</title>
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
-    <link rel="stylesheet" href="../assets/site-shell.css?v=73514134a473">
-    <link rel="stylesheet" href="../assets/site.css?v=cea4c1783ccb">
-    <link rel="stylesheet" href="../tools/csv2aba-v2/styles.css?v=ae8e8b90ff7a">
-    <link rel="stylesheet" href="./specimens.css?v=458d210c7d38">
+    <link rel="stylesheet" href="../assets/site-shell.css?v=340aa48fa873">
+    <link rel="stylesheet" href="../assets/ui.css?v=7aa00aecd302">
+    <link rel="stylesheet" href="../tools/csv2aba-v2/styles.css?v=f6912bfb8b28">
+    <link rel="stylesheet" href="./specimens.css?v=e3193025aa98">
   </head>
   <body>
-    <header class="site-header">
-      <div class="site-context-row">
-        <nav class="site-breadcrumb" aria-label="Breadcrumb">
-          <a href="./">
-            UI style guide
-          </a>
-          <span aria-hidden="true">
-            /
-          </span>
-          <span aria-current="page">
-            Current converter styles
-          </span>
+    <header class="site-header ui-page-header ui-container">
+      <div class="ui-context-row">
+        <nav class="ui-breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a class="ui-link" href="./">UI style guide</a></li>
+            <li><span aria-hidden="true">/</span><span aria-current="page">Current converter styles</span></li>
+          </ol>
         </nav>
-        <div class="language-switcher" role="group" aria-label="Language state samples">
-          <button type="button" aria-pressed="true">
-            EN
-          </button>
-          <button type="button" aria-pressed="false" lang="zh-Hans">
-            中文
-          </button>
+        <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="Language state samples">
+          <button class="ui-button" type="button" aria-pressed="true" data-disable-current="true" disabled aria-label="English sample">En</button>
+          <button class="ui-button" type="button" aria-pressed="false" lang="zh-Hans" data-disable-current="true" aria-label="Simplified Chinese sample">中</button>
         </div>
       </div>
     </header>
-    <main class="site-main specimen-shell">
-      <h1>Converter component samples</h1>
-      <p class="specimen-caption">Current source: shared tool styles and converter styles. No payment data or conversion logic. Buttons show states only.</p>
-      <aside class="panel safety-notice" aria-labelledby="converter-safety">
-        <h2 id="converter-safety">Safety notice sample</h2>
+    <main class="site-main specimen-shell ui-container ui-page ui-stack">
+      <h1 class="ui-title">Converter component samples</h1>
+      <p class="specimen-caption ui-help">Current source: shared tool styles and converter styles. No payment data or conversion logic. Buttons show states only.</p>
+      <aside class="safety-notice ui-notice ui-flow" aria-labelledby="converter-safety" data-tone="warning">
+        <h2 id="converter-safety" class="ui-subheading ui-notice__title">Safety notice sample</h2>
         <p>A persistent instruction uses a stronger border and warm surface.</p>
       </aside>
-      <section class="panel step-card" aria-labelledby="converter-input">
+      <section class="panel step-card ui-panel ui-flow" aria-labelledby="converter-input">
         <div class="step-heading">
           <span class="step-number" aria-hidden="true">
             1
           </span>
-          <div>
-            <h2 id="converter-input">Example input</h2>
+          <div class="ui-flow">
+            <h2 id="converter-input" class="ui-heading">Example input</h2>
             <p>Compare the label, field, and help styles.</p>
           </div>
         </div>
-        <label for="converter-file">Choose an example file</label>
-        <input id="converter-file" type="file">
+        <div class="ui-field">
+          <label class="ui-label" for="converter-file">Choose an example file</label>
+          <input id="converter-file" type="file" class="ui-file">
+        </div>
         <div class="choice-divider" aria-hidden="true">
           or
         </div>
-        <label for="converter-source">Example source</label>
-        <textarea id="converter-source" rows="4" aria-describedby="converter-help">Example source text</textarea>
-        <p class="field-help" id="converter-help">This text is not a payment file.</p>
+        <div class="ui-field">
+          <label class="ui-label" for="converter-source">Example source</label>
+          <textarea id="converter-source" rows="4" aria-describedby="converter-help" class="ui-textarea ui-code">Example source text</textarea>
+          <p class="field-help ui-help" id="converter-help">This text is not a payment file.</p>
+        </div>
         <div class="specimen-row">
-          <button type="button" class="primary-action">
+          <button type="button" class="primary-action ui-button ui-button--primary">
             Primary action
           </button>
-          <button type="button" class="primary-action" disabled>
+          <button type="button" class="primary-action ui-button ui-button--primary" disabled>
             Download unavailable
           </button>
         </div>
-        <p class="status-message">Success status sample.</p>
-        <div class="error-panel">
-          <p>Error summary sample</p>
+        <p class="status-message ui-notice" data-tone="success">Success status sample.</p>
+        <div class="error-panel ui-notice ui-flow" data-tone="error">
+          <p class="ui-subheading ui-notice__title">Error summary sample</p>
           <ul>
             <li>
               Example row 2: enter a required value.
@@ -78,15 +73,17 @@
           </ul>
         </div>
       </section>
-      <section class="panel result-card specimen-block" aria-labelledby="converter-result">
-        <h2 id="converter-result">Result styles</h2>
-        <p class="privacy-note"><strong>Privacy notice sample.</strong> No file is read by this specimen.</p>
-        <label for="converter-output">Read-only output</label>
-        <textarea id="converter-output" rows="3" readonly>Example output text</textarea>
-        <details>
+      <section class="panel result-card specimen-block ui-panel ui-flow" aria-labelledby="converter-result">
+        <h2 id="converter-result" class="ui-heading">Result styles</h2>
+        <p class="privacy-note ui-notice ui-flow"><strong>Privacy notice sample.</strong> No file is read by this specimen.</p>
+        <div class="ui-field">
+          <label class="ui-label" for="converter-output">Read-only output</label>
+          <textarea id="converter-output" rows="3" readonly class="ui-textarea ui-code">Example output text</textarea>
+        </div>
+        <details class="ui-disclosure">
           <summary>Table and disclosure sample</summary>
-          <div class="table-scroll" tabindex="0" role="region" aria-label="Example result table">
-            <table>
+          <div class="table-scroll ui-table-scroll ui-disclosure__body" tabindex="0" role="region" aria-label="Example result table">
+            <table class="ui-table">
               <caption>Invented example values</caption>
               <thead>
                 <tr>

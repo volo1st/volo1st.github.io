@@ -2,7 +2,7 @@
 
 Date: 17 October 2026. Source revision: `ec8eadf`.
 
-This report supports the active user interface (UI) style guide package in [plan.md](../plan.md). HTML means Hypertext Markup Language. CSS means Cascading Style Sheets. The report records the current source and the proposed migration boundary. It does not replace the plan.
+This report supports the active user interface (UI) style guide package in [plan.md](../plan.md). HTML means Hypertext Markup Language. CSS means Cascading Style Sheets. The inventory records the source before migration and the proposed migration boundary. See the migration result below for the current implementation. It does not replace the plan.
 
 ## Scope and method
 
@@ -10,7 +10,7 @@ Reviewed all 14 existing HTML documents and all 11 stylesheets. These include 12
 
 This is a source audit. No browser rendering, computed-style capture, screen reader review, device-font comparison, or zoom review ran. Sizes below are declared CSS values. They are not measured rendered sizes. The legacy converter remains unchanged.
 
-The [UI style guide](../style-guide/index.html) contains a draft shared system and isolated specimens of the current styles. The draft is for owner review. Existing pages do not load it.
+The [UI style guide](../style-guide/index.html) and its isolated specimens now load the same shared stylesheet as the maintained pages. The inventory below records the original source. Dated design decisions record the review sequence.
 
 ## Main finding
 
@@ -183,7 +183,7 @@ The shell subtracts `--site-gutter` once from the total width. A `32px` value pr
 
 ## Proposed shared system
 
-Review the draft in `style-guide/components.css` before promoting it to shared assets.
+The approved source is now `assets/ui.css`. The dated notes below record its review before promotion.
 
 1. **Foundations:** One serif family for default content and headings, one sans-serif family for interactive controls, and one monospace family for source text; a small text scale; semantic colors; spacing; radii; border roles; widths; and focus.
 2. **Common components:** Button, link-button, icon button, field, select, range, label/help, notice, panel, disclosure, table, metrics, language choice, and visually hidden text.
@@ -249,3 +249,18 @@ The later migration is not authorized by completion of this audit alone. The own
 - [Mozilla cascade and specificity guidance](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics/Handling_conflicts): Selector precedence explains why local rules can override common styles.
 
 These references support component semantics and the cascade analysis. They do not establish that this site's rendered interface passes an accessibility review.
+
+## Migration result · 19 October 2026
+
+The owner approved application after the guide review. See section 22 in [plan.md](../plan.md) for completion evidence.
+
+- `assets/site-shell.css` supplies the palette, domain accents, base box sizing, and focus outline.
+- `assets/ui.css` supplies shared typography, containers, spacing, controls, notices, disclosures, tables, summaries, breadcrumbs, and language choices. It replaces `style-guide/components.css`.
+- All maintained public pages, studio rates, and the three current tools load these shared assets. The guide and all five specimens load the same assets. The redirect and frozen legacy converter are excluded.
+- Page styles retain composition and specialized displays. The homepage greeting remains an explicit type exception. Guitar chord timing, pitch glyphs, seek progress, busy feedback, and the drop overlay remain specialized.
+- Reading pages use `En / 中`. Tools use the compact segmented group. Each choice has a full accessible name. Language buttons use `data-disable-current="true"`. The binder updates both selected and disabled state and re-enables the previous choice.
+- Existing validation, live-region announcements, native controls, focus targets, hidden state, and download gates remain in use. Common notices use shared semantic tones. Guitar keeps its existing Play/Pause action and announcement behavior; a separate semantics review can change that behavior later.
+
+For new pages, load `site-shell.css`, then `ui.css`, then the local composition stylesheet. Use `.ui-container` for page width. Use `.ui-flow`, `.ui-stack`, `.ui-field`, and `.ui-actions` for spacing. Apply component classes to native elements. Do not copy common declarations into page CSS. Use the guide to review a shared change before applying a new exception. The five specimens contain static, invented examples and run no app engines.
+
+Source checks do not establish rendered or device behavior. Manual keyboard, focus, narrow-screen, 200 percent zoom, and representative iPhone or iPad audio checks remain pending. This package adds no browser automation or dependencies.

@@ -1417,7 +1417,8 @@
     if (errors.length === 0) {
       elements.validationErrors.hidden = true;
       elements.validationSummary.textContent = t('guitar.validation.valid');
-      elements.validationSummary.className = 'validation-summary valid';
+      elements.validationSummary.className = 'validation-summary ui-notice valid';
+      elements.validationSummary.dataset.tone = 'success';
       return;
     }
 
@@ -1431,7 +1432,8 @@
     elements.validationSummary.textContent = errors.length === 1
       ? t('guitar.validation.one')
       : t('guitar.validation.many', { count: errors.length });
-    elements.validationSummary.className = 'validation-summary invalid';
+    elements.validationSummary.className = 'validation-summary ui-notice invalid';
+    elements.validationSummary.dataset.tone = 'error';
   }
 
   function renderPracticeDisplay() {
@@ -1821,7 +1823,8 @@
     fatalValidationStatus = { key, parameters };
     elements.editor.open = true;
     elements.validationSummary.textContent = t(key, parameters);
-    elements.validationSummary.className = 'validation-summary invalid';
+    elements.validationSummary.className = 'validation-summary ui-notice invalid';
+    elements.validationSummary.dataset.tone = 'error';
     elements.playPause.disabled = true;
     elements.restart.disabled = true;
     elements.bpmNumber.disabled = true;

@@ -6,63 +6,58 @@
     <meta name="robots" content="noindex">
     <title>Current public styles | UI style guide</title>
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
-    <link rel="stylesheet" href="../assets/site-shell.css?v=73514134a473">
-    <link rel="stylesheet" href="../assets/home.css?v=11c057c38e04">
-    <link rel="stylesheet" href="../assets/section-index.css?v=0e5a169919d0">
-    <link rel="stylesheet" href="../studio/studio.css?v=55766afb8e68">
-    <link rel="stylesheet" href="../sound/details.css?v=56e650c50210">
-    <link rel="stylesheet" href="./specimens.css?v=458d210c7d38">
+    <link rel="stylesheet" href="../assets/site-shell.css?v=340aa48fa873">
+    <link rel="stylesheet" href="../assets/ui.css?v=7aa00aecd302">
+    <link rel="stylesheet" href="../assets/home.css?v=40880962f1ce">
+    <link rel="stylesheet" href="../assets/section-index.css?v=47e25c6eddd0">
+    <link rel="stylesheet" href="../studio/studio.css?v=1f33821e6952">
+    <link rel="stylesheet" href="./specimens.css?v=e3193025aa98">
   </head>
   <body>
-    <header class="site-header">
-      <nav class="site-breadcrumb" aria-label="Breadcrumb">
-        <a href="./">
-          UI style guide
-        </a>
-        <span aria-hidden="true">
-          /
-        </span>
-        <span aria-current="page">
-          Current public styles
-        </span>
+    <header class="site-header ui-page-header ui-container">
+      <nav class="ui-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a class="ui-link" href="./">UI style guide</a></li>
+          <li><span aria-hidden="true">/</span><span aria-current="page">Current public styles</span></li>
+        </ol>
       </nav>
     </header>
-    <main class="site-main specimen-shell">
-      <p class="specimen-caption">Current source: homepage, section index, studio index, and Sound detail styles. No draft component CSS.</p>
+    <main class="site-main specimen-shell ui-container ui-page ui-flow">
+      <p class="specimen-caption ui-small">Current source: homepage, section index, studio index, and Sound detail styles. Uses the shared component stylesheet.</p>
       <section class="home-hero" aria-labelledby="public-heading">
-        <h1 id="public-heading">Hi, I’m Vincent.</h1>
-        <p class="hero-lead">I <a href="../code/">code</a>, shape <a href="../sound/">sound</a>, and make <a href="../music/">noise</a>.</p>
+        <h1 id="public-heading" class="ui-title">Hi, I’m Vincent.</h1>
+        <p class="hero-lead">I <a class="ui-link" href="../code/">code</a>, shape <a class="ui-link" href="../sound/">sound</a>, and make <a class="ui-link" href="../music/">noise</a>.</p>
         <p class="hero-handle">Online, I’m <strong>volo1st</strong>.</p>
       </section>
       <section class="section-destinations" aria-labelledby="public-links">
-        <h2 id="public-links">Section label and navigation</h2>
+        <h2 id="public-links" class="ui-subheading">Section label and navigation</h2>
         <ul class="section-links">
           <li>
-            <a href="../studio/">
+            <a class="ui-link" href="../studio/">
               Studio
             </a>
           </li>
           <li>
-            <a href="../sound/room-acoustics/">
+            <a class="ui-link" href="../sound/room-acoustics/">
               Room acoustics
             </a>
           </li>
           <li>
-            <a href="../sound/live-sound/">
+            <a class="ui-link" href="../sound/live-sound/">
               Live sound
             </a>
           </li>
         </ul>
-        <p class="section-status">Examples coming soon.</p>
+        <p class="section-status ui-small">Examples coming soon.</p>
       </section>
       <div class="specimen-block">
-        <h2 class="studio-name">Studio title style</h2>
-        <p class="specimen-caption">Same 1.6rem serif title pattern as the Sound detail pages.</p>
+        <h2 class="studio-name ui-title">Studio title style</h2>
+        <p class="specimen-caption ui-small">Uses the shared heading type scale.</p>
       </div>
-      <div class="sound-detail specimen-block">
-        <h2>Sound reading text</h2>
+      <div class="sound-detail specimen-block ui-flow">
+        <h2 class="ui-title">Sound reading text</h2>
         <p>Room measurements and acoustic treatment.</p>
-        <p class="section-status">Examples coming soon.</p>
+        <p class="section-status ui-small">Examples coming soon.</p>
       </div>
       <nav class="contact-directory social-directory specimen-block" aria-label="Social link sample">
         <ul class="social-group">

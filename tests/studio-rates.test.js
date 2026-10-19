@@ -29,11 +29,11 @@ test('studio catalogs cover the page and English fallback matches the catalog', 
   }
 });
 
-test('language buttons change page language, title, content and pressed state', () => {
+test('language buttons change page language, title, content, selected state, and disabled state', () => {
   const api = loadLanguage();
   const heading = { dataset: { i18n: 'studio.heading' }, textContent: '' };
   const buttons = ['en-AU', 'zh-Hans'].map((language) => ({
-    dataset: { language }, attributes: {},
+    dataset: { language, disableCurrent: 'true' }, attributes: {},
     setAttribute(name, value) { this.attributes[name] = value; },
     addEventListener(name, handler) { this[name] = handler; },
   }));
@@ -52,15 +52,22 @@ test('language buttons change page language, title, content and pressed state', 
     CustomEvent: class {}, dispatchEvent() {},
   };
   api.initialize(document, window);
+  assert.equal(buttons[0].disabled, true);
+  assert.equal(buttons[1].disabled, false);
   buttons[1].click();
   assert.equal(document.documentElement.lang, 'zh-Hans');
   assert.equal(document.title, api.translate('studio.title', {}, 'zh-Hans'));
   assert.equal(heading.textContent, '2026 录音棚收费标准');
   assert.equal(buttons[1].attributes['aria-pressed'], 'true');
   assert.equal(storage.get('siteLanguage'), 'zh-Hans');
+  assert.equal(buttons[0].disabled, false);
+  assert.equal(buttons[1].disabled, true);
   buttons[0].click();
   assert.equal(heading.textContent, '2026 Studio Rates');
   assert.equal(buttons[1].attributes['aria-pressed'], 'false');
+  assert.equal(buttons[0].disabled, true);
+  assert.equal(buttons[1].disabled, false);
+  assert.equal(storage.get('siteLanguage'), 'en-AU');
 });
 
 test('studio interface assets use current content hashes', () => {
@@ -71,7 +78,7 @@ test('studio interface assets use current content hashes', () => {
 });
 
 test('studio breadcrumb remains English and both languages use EP', () => {
-  const breadcrumb = html.match(/<nav class="site-breadcrumb"[^>]*>[\s\S]*?<\/nav>/)[0];
+  const breadcrumb = html.match(/<nav class="ui-breadcrumb"[^>]*>[\s\S]*?<\/nav>/)[0];
   assert.doesNotMatch(breadcrumb, /data-i18n/);
   assert.match(breadcrumb, /lang="en-AU"/);
   const api = loadLanguage();
@@ -82,11 +89,11 @@ test('studio breadcrumb remains English and both languages use EP', () => {
 
 test('studio index and rates page express the studio hierarchy', () => {
   const index = fs.readFileSync(path.join(directory, '../index.html'), 'utf8');
-  assert.match(index, /<h1 class="studio-name">Bits &amp; Beats Studio<\/h1>/);
+  assert.match(index, /<h1 class="studio-name [^"]*">Bits &amp; Beats Studio<\/h1>/);
   assert.match(index, /href="\.\/rates\/">Studio rates<\/a>/);
   assert.match(index, /instagram\.com\/bits\.n\.beats/);
   assert.match(index, /xiaohongshu\.com\/user\/profile\/5e7818aa0000000001006bf7/);
-  assert.match(html, /<h1 data-i18n="studio.heading" class="rates-year">2026 Studio Rates<\/h1>/);
+  assert.match(html, /<h1 data-i18n="studio.heading" class="rates-year [^"]*">2026 Studio Rates<\/h1>/);
   assert.doesNotMatch(html, /class="studio-name"/);
   assert.match(html, /href="\.\.\/">studio<\/a>/);
   assert.match(html, /aria-current="page">rates<\/span>/);

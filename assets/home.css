@@ -1,8 +1,8 @@
 :root {
-  --home-display-font: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
-  --home-code-font: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-  --home-link: #3f3a31;
-  --home-link-hover: #171512;
+  --home-display-font: var(--ui-font-body);
+  --home-code-font: var(--ui-font-mono);
+  --home-link: var(--ui-link);
+  --home-link-hover: var(--ui-link-hover);
 }
 
 .home-main {
@@ -30,8 +30,8 @@
 .hero-lead {
   margin: 0 0 1rem;
   font-family: var(--home-display-font);
-  font-size: clamp(1.15rem, 2.5vw, 1.4rem);
-  line-height: 1.35;
+  font-size: var(--ui-size-body);
+  line-height: var(--ui-leading-body);
 }
 
 .hero-lead a {
@@ -46,17 +46,11 @@
   text-decoration-color: currentcolor;
 }
 
-.hero-lead a:focus-visible {
-  outline: 0;
-  color: var(--site-background);
-  background: var(--home-link);
-}
-
 .hero-handle {
   margin: 0;
   color: var(--site-muted);
   font-family: var(--home-code-font);
-  font-size: 0.95rem;
+  font-size: var(--ui-size-supporting);
 }
 
 .hero-handle strong {
@@ -82,8 +76,8 @@
 
 .social-link {
   display: grid;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: var(--ui-control-min-height);
+  height: var(--ui-control-min-height);
   place-items: center;
   color: var(--home-link);
   text-decoration: none;
@@ -97,12 +91,6 @@
 
 .social-link:hover {
   color: var(--home-link-hover);
-}
-
-.social-link:focus-visible {
-  outline: 0;
-  color: var(--site-background);
-  background: var(--home-link);
 }
 
 .social-separator {

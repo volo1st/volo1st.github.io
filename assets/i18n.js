@@ -208,7 +208,9 @@
       element.setAttribute('aria-label', translate(element.dataset.i18nAriaLabel));
     }
     for (const button of document.querySelectorAll('[data-language]')) {
-      button.setAttribute('aria-pressed', String(button.dataset.language === language));
+      const selected = button.dataset.language === language;
+      button.setAttribute('aria-pressed', String(selected));
+      if (button.dataset.disableCurrent === 'true') button.disabled = selected;
     }
     const titleKey = document.documentElement.dataset.i18nTitle;
     if (titleKey) document.title = translate(titleKey);

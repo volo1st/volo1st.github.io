@@ -31,6 +31,9 @@
     let currentError = null;
 
     function renderStatus() {
+      statusMessage.dataset.tone = currentStatus && ['status.complete', 'status.downloaded'].includes(currentStatus.key)
+        ? 'success'
+        : 'information';
       statusMessage.textContent = currentStatus
         ? SiteI18n.translate(currentStatus.key, currentStatus.parameters)
         : '';

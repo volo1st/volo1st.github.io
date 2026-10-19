@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex">
     <meta name="theme-color" content="#f4f1e8">
-    <meta name="description" content="Draft UI style guide and current component comparisons for volo1st.">
+    <meta name="description" content="Shared UI style guide and component examples for volo1st.">
     <title>UI style guide | volo1st</title>
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
-    <link rel="stylesheet" href="../assets/site-shell.css?v=73514134a473">
-    <link rel="stylesheet" href="./components.css?v=7c616e6238a3">
+    <link rel="stylesheet" href="../assets/site-shell.css?v=340aa48fa873">
+    <link rel="stylesheet" href="../assets/ui.css?v=7aa00aecd302">
     <link rel="stylesheet" href="./guide.css?v=50fd63b6c650">
   </head>
   <body>
@@ -23,10 +23,10 @@
     </header>
     <main class="site-main guide-main ui-container">
       <header class="guide-intro ui-flow">
-        <p class="guide-eyebrow">Draft 15 · tool and reading language choices</p>
+        <p class="guide-eyebrow">Shared styles · approved first pass</p>
         <h1 class="ui-title">One site. One shared language.</h1>
-        <p class="guide-lead">A working user interface (UI) style guide for type, controls, and common patterns. Compare the current styles. Then refine the shared draft before changing existing pages.</p>
-        <p class="ui-small">The draft styles apply only to this guide. Buttons show visual states and do not run app actions. Native fields and disclosures can be used. No input is stored or processed.</p>
+        <p class="guide-lead">A working user interface (UI) style guide for type, controls, and common patterns. Use the component examples to review changes to shared styles.</p>
+        <p class="ui-small">Maintained pages and these examples use the same shared stylesheet. Buttons show visual states and do not run app actions. Native fields and disclosures can be used. No input is stored or processed.</p>
         <p><a class="ui-link" href="../docs/ui-audit.md">Read the HTML and CSS audit</a></p>
       </header>
       <nav class="guide-nav" aria-label="Style guide sections">
@@ -535,7 +535,7 @@ chords: C Am F G</textarea>
               <li>Check the example settings.</li>
             </ul>
             <p lang="zh-Hans">标题靠近正文。段落之间保留一致的间距。</p>
-            <p><a class="ui-link" href="#review">Review the draft</a></p>
+            <p><a class="ui-link" href="#review">Review the shared styles</a></p>
           </article>
           <div class="ui-panel ui-flow">
             <h3 class="ui-subheading">A settings panel</h3>
@@ -577,7 +577,7 @@ chords: C Am F G</textarea>
           </details>
         </div>
         <hr class="ui-divider">
-        <p class="ui-small">The header examples below use the draft components. Chord cards, pitch symbols, and audio timing remain specialized components.</p>
+        <p class="ui-small">The header examples below use the shared components. Chord cards, pitch symbols, and audio timing remain specialized components.</p>
       </section>
       <section id="data" class="guide-section ui-flow" aria-labelledby="data-heading">
         <p class="guide-eyebrow">08 / Tables and values</p>
@@ -820,12 +820,12 @@ chords: C Am F G</textarea>
             </div>
           </div>
         </div>
-        <p class="ui-small">Use <code class="ui-code">ui-page-header</code> for header spacing, <code class="ui-code">ui-context-row</code> for breadcrumb and language alignment, and <code class="ui-code">ui-breadcrumb</code> for the navigation list. Tools use <code class="ui-code">ui-button-group ui-language ui-language--tool</code>. Reading pages reuse quiet buttons inside <code class="ui-code">ui-language ui-language--text</code>. During migration, update <code class="ui-code">disabled</code> with <code class="ui-code">aria-pressed</code> and re-enable the previous language. Keep the existing translation logic.</p>
+        <p class="ui-small">Use <code class="ui-code">ui-page-header</code> for header spacing, <code class="ui-code">ui-context-row</code> for breadcrumb and language alignment, and <code class="ui-code">ui-breadcrumb</code> for the navigation list. Tools use <code class="ui-code">ui-button-group ui-language ui-language--tool</code>. Reading pages reuse quiet buttons inside <code class="ui-code">ui-language ui-language--text</code>. Language buttons use <code class="ui-code">data-disable-current="true"</code>. The shared language binder updates <code class="ui-code">disabled</code> with <code class="ui-code">aria-pressed</code> and re-enables the previous language.</p>
       </section>
       <section id="current" class="guide-section ui-flow" aria-labelledby="current-heading">
         <p class="guide-eyebrow">10 / Current styles</p>
         <h2 id="current-heading" class="ui-heading">Compare what the site uses today.</h2>
-        <p>Each preview loads the current source stylesheets in a separate document. The draft above cannot change them. Open a specimen on its own to check the full page width.</p>
+        <p>Each preview loads the shared stylesheet and the applicable page styles in a separate document. Open a specimen on its own to check the full page width.</p>
         <details class="ui-disclosure guide-current">
           <summary>Public pages · introduction, links, and headings</summary>
           <div class="ui-disclosure__body ui-flow">
@@ -864,16 +864,16 @@ chords: C Am F G</textarea>
       </section>
       <footer id="review" class="guide-footer ui-flow">
         <p class="guide-eyebrow">11 / Review</p>
-        <h2 class="ui-heading">Choose the system before migrating.</h2>
+        <h2 class="ui-heading">Review the shared system.</h2>
         <ol>
           <li>
-            Choose the fonts and text sizes.
+            Review fonts and text sizes.
           </li>
           <li>
-            Choose control borders, heights, spacing, and disabled treatment.
+            Review control borders, heights, spacing, and disabled treatment.
           </li>
           <li>
-            Choose notice tones and panel density.
+            Review notice tones and panel density.
           </li>
           <li>
             Review page headers, breadcrumb wrapping, and selected-language states.
@@ -882,10 +882,10 @@ chords: C Am F G</textarea>
             Review long labels, Chinese text, keyboard focus, narrow layouts, and 200 percent zoom.
           </li>
           <li>
-            Approve the draft. Then migrate one page or app at a time.
+            Use shared classes for common components. Keep specialized app displays in their local stylesheets.
           </li>
         </ol>
-        <p class="ui-small">Source review and the existing repository checks cover this first draft. Browser review remains for the visual iteration. No browser tooling is installed for this package.</p>
+        <p class="ui-small">Source review and the existing repository checks cover the shared components. Browser review remains for the visual iteration. No browser tooling is installed for this package.</p>
         <p><a class="ui-link" href="../docs/ui-audit.md">Component inventory and migration boundaries</a></p>
       </footer>
     </main>

@@ -8,61 +8,63 @@
   <meta name="description" data-i18n-content="studio.description" content="Recording and mixing rates for Bits &amp; Beats Studio. Acoustic, instrumental, and traditional Chinese music.">
   <link rel="canonical" href="https://volo1st.com/studio/rates/">
   <link rel="icon" href="../../assets/favicon.svg?v=fd8de8ff0d96">
-  <link rel="stylesheet" href="../../assets/site-shell.css?v=73514134a473">
-  <link rel="stylesheet" href="rates.css?v=3db8b78e0657">
-  <script src="../../assets/i18n.js?v=3bafa7de2d71" defer></script>
+  <link rel="stylesheet" href="../../assets/site-shell.css?v=340aa48fa873">
+  <link rel="stylesheet" href="../../assets/ui.css?v=7aa00aecd302">
+  <link rel="stylesheet" href="rates.css?v=c18bc5a4eec7">
+  <script src="../../assets/i18n.js?v=de15867908c9" defer></script>
   <script src="i18n.js?v=9659a5fd8bee" defer></script>
 </head>
 <body>
-  <header class="site-header">
-    <div class="site-context-row">
-      <nav class="site-breadcrumb" aria-label="Breadcrumb" lang="en-AU">
-        <a href="../../" aria-label="Site home">volo1st</a>
-        <span aria-hidden="true">/</span>
-        <a href="../">studio</a>
-        <span aria-hidden="true">/</span>
-        <span aria-current="page">rates</span>
+  <header class="site-header ui-page-header ui-container">
+    <div class="ui-context-row">
+      <nav class="ui-breadcrumb" aria-label="Breadcrumb" lang="en-AU">
+        <ol>
+          <li><a class="ui-link" href="../../" aria-label="Site home">volo1st</a></li>
+          <li><span aria-hidden="true">/</span><a class="ui-link" href="../">studio</a></li>
+          <li><span aria-hidden="true">/</span><span aria-current="page">rates</span></li>
+        </ol>
       </nav>
-      <div class="language-switcher" role="group" aria-label="Language" data-i18n-aria-label="studio.language">
-        <button type="button" data-language="en-AU" aria-pressed="true" aria-label="Use English" data-i18n-aria-label="studio.english" lang="en">English</button>
-        <button type="button" data-language="zh-Hans" aria-pressed="false" aria-label="Use Simplified Chinese" data-i18n-aria-label="studio.chinese" lang="zh-Hans">简体中文</button>
+      <div class="ui-language ui-language--text" role="group" aria-label="Language" data-i18n-aria-label="studio.language">
+        <button class="ui-button ui-button--quiet" type="button" data-language="en-AU" aria-pressed="true" aria-label="Use English" data-i18n-aria-label="studio.english" lang="en" data-disable-current="true" disabled>En</button>
+        <span aria-hidden="true">/</span>
+        <button class="ui-button ui-button--quiet" type="button" data-language="zh-Hans" aria-pressed="false" aria-label="Use Simplified Chinese" data-i18n-aria-label="studio.chinese" lang="zh-Hans" data-disable-current="true">中</button>
       </div>
     </div>
   </header>
-  <main class="site-main rates-main">
+  <main class="site-main rates-main ui-container ui-page ui-flow">
     <header class="rates-header">
-      <h1 data-i18n="studio.heading" class="rates-year">2026 Studio Rates</h1>
+      <h1 data-i18n="studio.heading" class="rates-year ui-title">2026 Studio Rates</h1>
     </header>
     <section class="service" aria-labelledby="recording-heading">
-      <h2 data-i18n="studio.recording" id="recording-heading">Studio Recording</h2>
+      <h2 data-i18n="studio.recording" id="recording-heading" class="ui-heading">Studio Recording</h2>
       <p data-i18n="studio.recordingRate" class="rate">$100/hr</p>
       <p data-i18n="studio.recordingText" class="service-text">Professional recording for vocals, acoustic and electric instruments, piano, and traditional Chinese instruments.</p>
-      <p data-i18n="studio.recordingNote" class="service-note">Includes recording engineer and studio equipment. Minimum 2-hour booking.</p>
+      <p data-i18n="studio.recordingNote" class="service-note ui-small">Includes recording engineer and studio equipment. Minimum 2-hour booking.</p>
     </section>
     <section class="service" aria-labelledby="mixing-heading">
-      <h2 data-i18n="studio.mixing" id="mixing-heading">Mixing &amp; Editing</h2>
+      <h2 data-i18n="studio.mixing" id="mixing-heading" class="ui-heading">Mixing &amp; Editing</h2>
       <p data-i18n="studio.mixingRate" class="rate">$90/hr</p>
       <p data-i18n="studio.mixingText" class="service-text">Multitrack mixing, audio editing, and post-production tailored to your music.</p>
     </section>
     <section class="service" aria-labelledby="packages-heading">
-      <h2 data-i18n="studio.packages" id="packages-heading">Song &amp; Album Packages</h2>
+      <h2 data-i18n="studio.packages" id="packages-heading" class="ui-heading">Song &amp; Album Packages</h2>
       <p data-i18n="studio.packagesRate" class="rate">Custom Quote</p>
       <p data-i18n="studio.packagesText" class="service-text">Tailored recording and mixing packages for singles, covers, EPs, and albums.</p>
-      <p data-i18n="studio.packagesNote" class="service-note">Package pricing is available for projects with an agreed scope and recording schedule.</p>
+      <p data-i18n="studio.packagesNote" class="service-note ui-small">Package pricing is available for projects with an agreed scope and recording schedule.</p>
     </section>
-    <section class="booking" aria-labelledby="booking-heading">
-      <h2 data-i18n="studio.booking" id="booking-heading">Additional Information</h2>
+    <section class="booking ui-flow" aria-labelledby="booking-heading">
+      <h2 data-i18n="studio.booking" id="booking-heading" class="ui-heading">Additional Information</h2>
       <ul>
         <li data-i18n="studio.bookingRevisions">Fixed-price packages include an agreed number of revisions.</li>
         <li data-i18n="studio.bookingExtra">Additional recording, editing, and production work may incur extra charges.</li>
       </ul>
     </section>
-    <section class="contact" aria-labelledby="contact-heading">
-      <h2 data-i18n="studio.contactHeading" id="contact-heading">Contact Me</h2>
-      <p class="service-text contact-text"><span data-i18n="studio.contactBefore">Send me a message on </span><a data-i18n="studio.instagram" href="https://www.instagram.com/bits.n.beats/" target="_blank" rel="noopener noreferrer">Instagram</a><span data-i18n="studio.contactBetween"> or </span><a data-i18n="studio.rednote" href="https://www.xiaohongshu.com/user/profile/5e7818aa0000000001006bf7" target="_blank" rel="noopener noreferrer">小红书</a><span data-i18n="studio.contactAfter"> to discuss your project and get a tailored quote.</span></p>
+    <section class="contact ui-flow" aria-labelledby="contact-heading">
+      <h2 data-i18n="studio.contactHeading" id="contact-heading" class="ui-heading">Contact Me</h2>
+      <p class="service-text contact-text"><span data-i18n="studio.contactBefore">Send me a message on </span><a class="ui-link" data-i18n="studio.instagram" href="https://www.instagram.com/bits.n.beats/" target="_blank" rel="noopener noreferrer">Instagram</a><span data-i18n="studio.contactBetween"> or </span><a class="ui-link" data-i18n="studio.rednote" href="https://www.xiaohongshu.com/user/profile/5e7818aa0000000001006bf7" target="_blank" rel="noopener noreferrer">小红书</a><span data-i18n="studio.contactAfter"> to discuss your project and get a tailored quote.</span></p>
     </section>
-    <footer class="rates-footer">
-      <p data-i18n="studio.currency" class="currency">All prices are in Australian dollars (AUD). No GST is charged.</p>
+    <footer class="rates-footer ui-flow">
+      <p data-i18n="studio.currency" class="currency ui-small">All prices are in Australian dollars (AUD). No GST is charged.</p>
     </footer>
   </main>
 </body>

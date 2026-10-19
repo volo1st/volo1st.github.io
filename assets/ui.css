@@ -1,4 +1,4 @@
-/* Draft shared components. Existing pages do not load this file. */
+/* Shared typography, layout, and components. Page styles own composition only. */
 :root {
   --ui-font-body: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, "Songti SC", "STSong", "SimSun", Georgia, serif;
   --ui-font-control: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -311,6 +311,12 @@
   .ui-language { --ui-control-min-height: 1.75rem; }
 }
 
-/* This scope belongs to the draft. Do not change existing app state rules. */
+/* Preserve native hidden state when a component defines a display layout. */
 .ui-panel [hidden], .ui-disclosure [hidden], .ui-notice [hidden],
 .ui-flow > [hidden], .ui-stack > [hidden], .ui-actions > [hidden] { display: none; }
+
+.ui-page { padding-block: var(--ui-space-6) var(--ui-space-8); }
+.site-header.ui-page-header { padding-block: var(--ui-section-padding) var(--ui-space-3); }
+.ui-panel[hidden], .ui-notice[hidden], .ui-disclosure[hidden], .ui-metrics[hidden],
+.ui-button[hidden], .ui-range[hidden], .ui-choice[hidden], .ui-button-group[hidden],
+.ui-container[hidden], .ui-stack[hidden], .ui-actions[hidden], .ui-field[hidden] { display: none; }

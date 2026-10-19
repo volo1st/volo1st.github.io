@@ -444,6 +444,7 @@ function loadAppForTest() {
   function makeElement(properties = {}) {
     return {
       children: [],
+      dataset: {},
       disabled: false,
       files: [],
       hidden: false,
@@ -569,6 +570,7 @@ test('the interface shows a summary only after successful conversion', () => {
   assert.equal(elements.paymentTotal.textContent, '$88.00');
   assert.equal(elements.downloadAba.disabled, false);
   assert.match(elements.statusMessage.textContent, /Review the summary/);
+  assert.equal(elements.statusMessage.dataset.tone, 'success');
   assert.equal(elements.errorMessage.textContent, '');
   assert.equal(elements.errorPanel.hidden, true);
   assert.equal(elements.paymentSummary.focused, true);

@@ -553,6 +553,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 19 October 2026 | Apply the approved guide to maintained pages and tools. | The owner approved the first pass and authorized migration. Promote one component stylesheet, migrate public pages first, and then migrate each maintained tool. Preserve specialized displays, translations, input, audio, and converter safety behavior. |
 | 19 October 2026 | Use segmented language controls for tools and quiet `En / 中` choices for reading pages. | The owner finds the filled group intrusive outside tools and prefers one Chinese character. Disable the current language to avoid repeating the same action. Preserve its selected appearance. Reuse native buttons for same-page language switching. |
 | 19 October 2026 | Use a solid selected language segment and remove link styling. | The owner accepted the compact size but found selection unclear. Remove the underline. Use a dark neutral fill with light selected text. Keep unselected segments light and hover separate from selection. |
 | 19 October 2026 | Make the language group compact and keep each label on one line. | The owner found the group too large and reported a wrapped Chinese label. Use natural segment widths, supporting-size text, smaller padding, and a 28-pixel desktop minimum. Retain 44-pixel touch targets. |
@@ -1001,3 +1002,31 @@ Requirements and failure behavior: Keep the current tool segment dark-filled eve
 Scope and migration note: Update the guide examples and component contract only. The guide remains static. During app migration, update the existing language binder to keep `disabled` and `aria-pressed` in step and re-enable the previous language. Do not disable unrelated language controls or change translation persistence in this package. Existing pages and current-style specimens remain unchanged.
 
 Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, native disabled attributes, selected-style exceptions, quiet-button hover and focus rules, hidden separators, compact sizing, and example labels. Refreshed the component stylesheet hash. Manual browser, keyboard, narrow-screen, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.
+
+## 22. Apply the approved shared styles
+
+Selection on 19 October 2026: The owner approved the guide and authorized application across maintained pages. Todoist task `6hpGXvmQfxcmH6M6` records this package. The older project-model and content-system tasks remain deferred.
+
+Purpose and requirements: Promote the approved component source to `assets/ui.css`. The guide and maintained pages must load that same file. Keep page CSS for composition and specialized app displays only. Preserve addresses, content, translation keys, element IDs, event bindings, user input, download gates, financial validation, and audio behavior. Keep legacy converter files unchanged. Preserve the homepage greeting as the agreed display exception. Use real document headings, including hidden headings on compact pages. Apply quiet language choices to reading pages and segmented choices to tools. Keep language selection, disabled state, storage, and return switching consistent.
+
+Engineering review and failure behavior: Use explicit component classes rather than copying component declarations into each page stylesheet. Remove broad local control rules that compete with shared classes. Preserve native controls, focus outlines, local table overflow, and hidden application state. Use the existing functional checks for each tool and add meaningful assertions for changed language-switch behavior. No browser downloads or system-library installation. Record unavailable manual keyboard, narrow-screen, zoom, and device audio review without treating a source check as a rendered review.
+
+Implementation sequence and completion gates:
+
+- [x] Promote the stylesheet and migrate public pages, studio rates, and their examples.
+- [x] Migrate Guitar Strum Machine controls and wrappers while preserving chord and playback displays.
+- [x] Migrate Pitch Shifter controls and wrappers while preserving pitch symbols, seek progress, processing, and audio state.
+- [x] Migrate converter version 2 common visuals while preserving all financial-file behavior and legacy fallback.
+- [x] Reconcile the guide, page examples, documentation, asset hashes, and remaining local style rules.
+- [x] Pass the repository check and review the complete diff.
+- [ ] Commit the verified package and reconcile Todoist.
+
+Authorization: Apply the local repository changes and commit verified stages. Do not push or deploy in this package.
+
+Implementation evidence: The 12 maintained live documents, the guide, and all five specimens load `assets/ui.css`. The shared component source retains the approved design. Added page padding and explicit hidden-state guards support live app layouts. Removed competing local control, panel, type, width, notice, table, and metrics declarations. Removed the unused Sound detail stylesheet. Public pages and the tools directory use quiet language links. Current tools use segmented controls. Native disabled state is opt-in through `data-disable-current="true"` so unrelated controls retain their own behavior.
+
+Verification evidence: `./scripts/check.sh` passed for all seven test files. Existing tests cover payment validation, exact record lengths, error recovery, download gates, guitar parsing and scheduling, sharing, presets, pitch processing, local references, asset hashes, translations, and frozen legacy hashes. Extended the existing language test to verify selection, disabled state, return switching, and stored choice. The converter status test also checks the success tone. Updated source assertions for shared markup and removed assertions for superseded local appearance. The asset check reads actual local references instead of maintaining a second asset list.
+
+Additional source review: All 18 shared-style documents have balanced markup, unique IDs, and valid label and accessibility references. Maintained live pages preserve prior IDs, field constraints, hidden and disabled application state, and link destinations. Guitar chord presentation rules match the prior source. Changes to JavaScript are limited to language disabled state and notice classes or tones. Audio engines, pitch processing, financial conversion, and legacy files did not change. Reviewed the complete diff and stylesheet precedence. No dependencies, browser automation, or network calls were added.
+
+Manual review remains pending: keyboard use, visible focus, narrow screens, 200 percent zoom, and representative iPhone or iPad audio behavior. A browser and representative device were unavailable for this package. These optional checks do not block the local source migration. No rendered or device result is claimed. The package does not push or deploy the website.

@@ -1,6 +1,6 @@
-/* Specimen layout only. Component appearance comes from the current page CSS. */
-.specimen-shell { padding-block: 1rem 3rem; }
-.specimen-caption { margin: 0 0 1rem; color: var(--site-muted); font: 0.8rem/1.5 system-ui, sans-serif; }
+/* Specimen layout only. Component appearance comes from assets/ui.css and specialized app CSS. */
+
+.specimen-caption { margin: 0 0 1rem; color: var(--site-muted); font-size: var(--ui-size-supporting); }
 .specimen-block { margin-block: 1.5rem; }
 .specimen-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
 .specimen-stack { display: grid; gap: 0.75rem; }

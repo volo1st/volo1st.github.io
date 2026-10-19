@@ -172,7 +172,7 @@ test('the home page presents the approved public identity and contact links', ()
   assert.doesNotMatch(html, /csv2aba/i);
   assert.match(html, /href="https:\/\/github\.com\/volo1st"/);
   assert.match(html, /href="https:\/\/www\.instagram\.com\/bits\.n\.beats\/"/);
-  assert.match(html, /I <a href="\.\/code\/">code<\/a>, shape <a href="\.\/sound\/">sound<\/a>, and make <a href="\.\/music\/">noise<\/a>\./);
+  assert.match(html, /I <a class="ui-link" href="\.\/code\/">code<\/a>, shape <a class="ui-link" href="\.\/sound\/">sound<\/a>, and make <a class="ui-link" href="\.\/music\/">noise<\/a>\./);
   assert.doesNotMatch(html, /instagram\.com\/volo1st/);
   assert.doesNotMatch(html, /data-i18n|language-switcher|assets\/i18n\.js/);
   assert.doesNotMatch(html, /<header\b|class="site-mark"|class="site-name"/);
@@ -214,14 +214,14 @@ test('the public section indexes provide useful destinations', () => {
       path.join(repositoryRoot, section.directory, 'index.html'),
       'utf8',
     );
-    assert.doesNotMatch(html, /<h1\b/);
+    assert.match(html, /<h1 class="ui-visually-hidden"/);
     assert.match(html, new RegExp(`<span aria-current="page">${section.heading}<\\/span>`));
     assert.doesNotMatch(html, /breadcrumb-summary/);
-    assert.match(html, /class="site-breadcrumb"/);
+    assert.match(html, /class="ui-breadcrumb"/);
     if (section.directory === 'sound') {
       assert.match(html, /href="\.\.\/studio\/">Studio<\/a>/);
     } else {
-      assert.match(html, /<p class="section-status">More when there’s something worth showing\.<\/p>/);
+      assert.match(html, /<p class="section-status [^"]*">More when there’s something worth showing\.<\/p>/);
     }
     assert.doesNotMatch(html, /class="section-intro"/);
     assert.match(html, /href="\.\.\/">volo1st<\/a>/);
@@ -248,7 +248,7 @@ test('the public section indexes provide useful destinations', () => {
 test('the tools directory links to each available tool', () => {
   const html = fs.readFileSync(path.join(repositoryRoot, 'tools', 'index.html'), 'utf8');
   const converterCard = html.match(
-    /<article class="panel tool-card">([\s\S]*?tools\.converterTitle[\s\S]*?)<\/article>/,
+    /<article class="panel tool-card [^"]*">([\s\S]*?tools\.converterTitle[\s\S]*?)<\/article>/,
   )[1];
 
   assert.match(html, /href="\.\/csv2aba-v2\/"/);
@@ -257,7 +257,7 @@ test('the tools directory links to each available tool', () => {
   assert.doesNotMatch(html, /href="\.\/csv2aba\/"/);
   assert.doesNotMatch(html, /song_order/);
   assert.doesNotMatch(html, />Trial</);
-  assert.equal([...converterCard.matchAll(/class="button-link"/g)].length, 1);
+  assert.equal([...converterCard.matchAll(/class="button-link [^"]*"/g)].length, 1);
   assert.doesNotMatch(converterCard, /trial-link|badge/);
   assert.match(html, /href="\.\.\/assets\/site\.css\?v=[a-f0-9]{12}"/);
 });
@@ -309,115 +309,16 @@ test('converter examples use explicit invented identities', () => {
 });
 
 test('versioned interface assets use their current content hash', () => {
-  const pages = [
-    ...fs.readdirSync(path.join(repositoryRoot, 'style-guide'))
-      .filter((filename) => filename.endsWith('.html'))
-      .map((filename) => {
-        const file = path.join(repositoryRoot, 'style-guide', filename);
-        const html = fs.readFileSync(file, 'utf8');
-        const references = [...html.matchAll(/<link\b[^>]*href="([^"]+)"/g)]
-          .map((match) => match[1].split(/[?#]/, 1)[0]);
-        return { file, references };
-      }),
-    {
-      file: path.join(repositoryRoot, 'index.html'),
-      references: [
-        './assets/favicon.svg',
-        './assets/site-shell.css',
-        './assets/home.css',
-        './assets/social-icons.svg',
-      ],
-    },
-    {
-      file: path.join(repositoryRoot, 'tools', 'index.html'),
-      references: [
-        '../assets/favicon.svg',
-        '../assets/site-shell.css',
-        '../assets/site.css',
-        '../assets/i18n.js',
-      ],
-    },
-    ...['code', 'sound', 'music'].map((directory) => ({
-      file: path.join(repositoryRoot, directory, 'index.html'),
-      references: [
-        '../assets/favicon.svg',
-        '../assets/site-shell.css',
-        '../assets/section-index.css',
-      ],
-    })),
-    ...['room-acoustics', 'live-sound'].map((directory) => ({
-      file: path.join(repositoryRoot, 'sound', directory, 'index.html'),
-      references: [
-        '../../assets/favicon.svg',
-        '../../assets/site-shell.css',
-        '../../assets/section-index.css',
-        '../details.css',
-      ],
-    })),
-    {
-      file: path.join(repositoryRoot, 'tools', 'csv2aba-v2', 'index.html'),
-      references: [
-        '../../assets/favicon.svg',
-        '../../assets/site-shell.css',
-        '../../assets/site.css',
-        '../../assets/i18n.js',
-        './styles.css',
-        './core.js',
-        './app.js',
-      ],
-    },
-    {
-      file: path.join(repositoryRoot, 'tools', 'guitar-strumming', 'index.html'),
-      references: [
-        '../../assets/favicon.svg',
-        '../../assets/app-icons/guitar-strum-machine-180.png',
-        '../../assets/site-shell.css',
-        './manifest.webmanifest',
-        './styles.css',
-        '../../assets/i18n.js',
-        './i18n.js',
-        './domain/chord-catalog.js',
-        './domain/harmony.js',
-        './ui/presentation.js',
-        './ui/notifications.js',
-        './browser/screen-wake-lock.js',
-        './domain/parser.js',
-        './domain/core.js',
-        './browser/audio-engine.js',
-        './browser/share.js',
-        './presets/data.js',
-        './presets/catalog.js',
-        './app.js',
-      ],
-    },
-    {
-      file: path.join(repositoryRoot, 'tools', 'pitch-shifter', 'index.html'),
-      references: [
-        '../../assets/favicon.svg',
-        '../../assets/app-icons/pitch-key-512.png',
-        '../../assets/site-shell.css',
-        './manifest.webmanifest',
-        './styles.css',
-        '../../assets/i18n.js',
-        './i18n.js',
-        './bootstrap.js',
-      ],
-    },
-  ];
-
-  for (const page of pages) {
-    const html = fs.readFileSync(page.file, 'utf8');
-    for (const reference of page.references) {
-      const assetPath = path.resolve(path.dirname(page.file), reference);
-      const contentHash = crypto
-        .createHash('sha256')
-        .update(fs.readFileSync(assetPath))
-        .digest('hex')
-        .slice(0, 12);
-      assert.ok(
-        html.includes(`${reference}?v=${contentHash}`),
-        `${path.relative(repositoryRoot, page.file)} has a stale hash for ${reference}`,
-      );
+  for (const file of findHtmlFiles(repositoryRoot)) {
+    if (file.includes(`${path.sep}csv2aba-legacy${path.sep}`)) continue;
+    const html = fs.readFileSync(file, 'utf8');
+    for (const match of html.matchAll(/\b(?:href|src)="([^"?#]+)([^"]*)"/g)) {
+      const reference = match[1];
+      if (!/\.(?:css|js|svg|png|webmanifest)$/.test(reference)) continue;
+      const assetPath = resolveLocalReference(file, reference);
+      if (!assetPath) continue;
+      const hash = crypto.createHash('sha256').update(fs.readFileSync(assetPath)).digest('hex').slice(0, 12);
+      assert.ok(match[2].startsWith(`?v=${hash}`), `${path.relative(repositoryRoot, file)} has a stale hash for ${reference}`);
     }
   }
 });
@@ -543,21 +444,21 @@ test('maintained bilingual pages use the shared site shell', () => {
   ];
   for (const htmlFile of pages) {
     const html = fs.readFileSync(htmlFile, 'utf8');
-    assert.match(html, /<header class="site-header">/);
+    assert.match(html, /<header class="site-header [^"]*">/);
     assert.match(html, /<main class="site-main(?: [^"]*)?">/);
-    assert.match(html, /class="site-context-row"/);
-    assert.match(html, /class="site-breadcrumb"/);
-    assert.match(html, /class="site-breadcrumb" aria-label="Breadcrumb"/);
-    assert.doesNotMatch(html.match(/<nav class="site-breadcrumb"[\s\S]*?<\/nav>/)[0], /data-i18n/);
+    assert.match(html, /class="ui-context-row"/);
+    assert.match(html, /class="ui-breadcrumb"/);
+    assert.match(html, /class="ui-breadcrumb" aria-label="Breadcrumb"/);
+    assert.doesNotMatch(html.match(/<nav class="ui-breadcrumb"[\s\S]*?<\/nav>/)[0], /data-i18n/);
     assert.match(html, /href="(?:\.\.\/)+">volo1st<\/a>/);
     assert.doesNotMatch(html, /<footer\b/);
     assert.doesNotMatch(html, /class="(?:page-title|site-mark|site-footer)/);
-    assert.doesNotMatch(html, /<h1\b/);
+    assert.match(html, /<h1 class="ui-visually-hidden"/);
     assert.doesNotMatch(html, /common\.browserLocal|home\.subtitle/);
     assert.match(html, /assets\/site-shell\.css\?v=[a-f0-9]{12}/);
     assert.match(html, /assets\/favicon\.svg\?v=[a-f0-9]{12}/);
-    assert.match(html, /data-language="en-AU"[^>]*>EN<\/button>/);
-    assert.match(html, /data-language="zh-Hans"[^>]*>中文<\/button>/);
+    assert.match(html, /data-language="en-AU"[^>]*>En<\/button>/);
+    assert.match(html, /data-language="zh-Hans"[^>]*>中<\/button>/);
     assert.match(html, /data-i18n-aria-label="common\.useEnglish"/);
     assert.match(html, /data-i18n-aria-label="common\.useChinese"/);
   }
@@ -581,31 +482,14 @@ test('the shared shell uses warm neutral tokens and domain accent tokens', () =>
   assert.match(shellCss, /--site-inset-surface:\s*#f2f0e9/);
   assert.match(shellCss, /--site-subtle-surface:\s*#f8f6ef/);
   assert.match(shellCss, /--site-focus:\s*#9b5c00/);
-  assert.match(
-    shellCss,
-    /\.language-switcher button\s*\{[^}]*font-weight:\s*600/s,
-  );
-  assert.match(
-    shellCss,
-    /\.language-switcher button\[aria-pressed="true"\]\s*\{[^}]*text-decoration:\s*underline/s,
-  );
-  assert.match(
-    shellCss,
-    /\.language-switcher button:focus-visible\s*\{[^}]*background:\s*var\(--site-text\)/s,
-  );
   assert.match(shellCss, /--tool-accent:\s*#075a9c/);
   assert.match(
     shellCss,
     /\[data-domain="guitar"\],\s*\[data-domain="music"\]\s*\{[^}]*--tool-accent:\s*#27644e/s,
   );
   assert.match(homeHtml, /class="contact-directory social-directory"/);
-  assert.match(homeCss, /--home-link:\s*#3f3a31/);
   assert.match(homeCss, /\.social-icon\s*\{[^}]*fill:\s*currentcolor/s);
   assert.match(homeCss, /\.social-separator\s*\{[^}]*width:\s*1px/s);
-  assert.match(
-    homeCss,
-    /\.social-link:focus-visible\s*\{[^}]*outline:\s*0[^}]*background:\s*var\(--home-link\)/s,
-  );
   assert.match(guitarHtml, /<html[^>]*data-domain="guitar"/);
   assert.doesNotMatch(guitarCss, /--tool-accent:/);
   assert.doesNotMatch(guitarCss, /--site-background:/);

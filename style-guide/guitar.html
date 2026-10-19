@@ -6,102 +6,96 @@
     <meta name="robots" content="noindex">
     <title>Current guitar styles | UI style guide</title>
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
-    <link rel="stylesheet" href="../assets/site-shell.css?v=73514134a473">
-    <link rel="stylesheet" href="../tools/guitar-strumming/styles.css?v=8b8d16700dec">
-    <link rel="stylesheet" href="./specimens.css?v=458d210c7d38">
+    <link rel="stylesheet" href="../assets/site-shell.css?v=340aa48fa873">
+    <link rel="stylesheet" href="../assets/ui.css?v=7aa00aecd302">
+    <link rel="stylesheet" href="../tools/guitar-strumming/styles.css?v=e4c9ff49d3d4">
+    <link rel="stylesheet" href="./specimens.css?v=e3193025aa98">
   </head>
   <body>
-    <header class="site-header">
-      <div class="site-context-row">
-        <nav class="site-breadcrumb" aria-label="Breadcrumb">
-          <a href="./">
-            UI style guide
-          </a>
-          <span aria-hidden="true">
-            /
-          </span>
-          <span aria-current="page">
-            Current guitar styles
-          </span>
+    <header class="site-header ui-page-header ui-container">
+      <div class="ui-context-row">
+        <nav class="ui-breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a class="ui-link" href="./">UI style guide</a></li>
+            <li><span aria-hidden="true">/</span><span aria-current="page">Current guitar styles</span></li>
+          </ol>
         </nav>
-        <div class="language-switcher" role="group" aria-label="Language state samples">
-          <button type="button" aria-pressed="true">
-            EN
-          </button>
-          <button type="button" aria-pressed="false" lang="zh-Hans">
-            中文
-          </button>
+        <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="Language state samples">
+          <button class="ui-button" type="button" aria-pressed="true" data-disable-current="true" disabled aria-label="English sample">En</button>
+          <button class="ui-button" type="button" aria-pressed="false" lang="zh-Hans" data-disable-current="true" aria-label="Simplified Chinese sample">中</button>
         </div>
       </div>
     </header>
-    <main class="site-main specimen-shell">
-      <h1>Guitar component samples</h1>
-      <p class="specimen-caption">Current source: Guitar Strum Machine. No audio, preset, or arrangement logic. Buttons show states only.</p>
-      <section class="practice-workspace" aria-labelledby="guitar-controls">
-        <h2 id="guitar-controls">Common controls</h2>
-        <div class="preset-control">
-          <label for="guitar-select">Exercise</label>
-          <select id="guitar-select">
+    <main class="site-main specimen-shell ui-container ui-page ui-stack">
+      <h1 class="ui-title">Guitar component samples</h1>
+      <p class="specimen-caption ui-help">Current source: Guitar Strum Machine. No audio, preset, or arrangement logic. Buttons show states only.</p>
+      <section class="practice-workspace ui-panel ui-stack" aria-labelledby="guitar-controls">
+        <h2 id="guitar-controls" class="ui-heading">Common controls</h2>
+        <div class="preset-control ui-field">
+          <label class="ui-label" for="guitar-select">Exercise</label>
+          <select id="guitar-select" class="ui-select">
             <option>Example arrangement</option>
             <option>A longer example option</option>
           </select>
-          <p class="preset-goal">Supporting text uses the current small-text style.</p>
+          <p class="preset-goal ui-help">Supporting text uses the current small-text style.</p>
         </div>
-        <div class="button-group">
-          <button type="button">
+        <div class="button-group ui-actions">
+          <button class="ui-button ui-button--primary" type="button">
             Primary action
           </button>
-          <button type="button" class="secondary-button">
+          <button type="button" class="secondary-button ui-button">
             Secondary
           </button>
-          <button type="button" disabled>
+          <button class="ui-button ui-button--primary" type="button" disabled>
             Unavailable
           </button>
         </div>
         <div class="tempo-control">
           <div class="tempo-heading">
-            <label for="guitar-number">Tempo</label>
+            <label class="ui-label" for="guitar-number">Tempo</label>
             <div class="bpm-value">
-              <input id="guitar-number" type="number" min="30" max="300" value="100">
+              <input id="guitar-number" type="number" min="30" max="300" value="100" class="ui-input">
               <span aria-hidden="true">
                 BPM
               </span>
             </div>
           </div>
-          <label class="visually-hidden" for="guitar-range">Tempo slider sample</label>
-          <input id="guitar-range" type="range" min="30" max="300" value="100">
+          <label class="ui-visually-hidden ui-label" for="guitar-range">Tempo slider sample</label>
+          <input id="guitar-range" type="range" min="30" max="300" value="100" class="ui-range">
         </div>
-        <p class="specimen-caption">The sample number and range are independent. The app synchronizes them.</p>
-        <p class="validation-summary valid">Valid example.</p>
-        <p class="validation-summary invalid">Invalid example.</p>
+        <p class="specimen-caption ui-help">The sample number and range are independent. The app synchronizes them.</p>
+        <p class="validation-summary valid ui-notice" data-tone="success">Valid example.</p>
+        <p class="validation-summary invalid ui-notice" data-tone="error">Invalid example.</p>
         <ul class="validation-errors">
           <li>
             Enter a required value.
           </li>
         </ul>
       </section>
-      <details open>
+      <details class="ui-disclosure" open>
         <summary>Current disclosure and editor</summary>
-        <div class="details-content">
-          <div class="chord-view-switcher" role="group" aria-label="Chord display state samples">
-            <button type="button" aria-pressed="true">
+        <div class="details-content ui-disclosure__body ui-flow">
+          <div class="chord-view-switcher ui-button-group" role="group" aria-label="Chord display state samples">
+            <button class="ui-button" type="button" aria-pressed="true">
               Shapes
             </button>
-            <button type="button" aria-pressed="false">
+            <button class="ui-button" type="button" aria-pressed="false">
               Numbers
             </button>
-            <button type="button" aria-pressed="false">
+            <button class="ui-button" type="button" aria-pressed="false">
               Sounding
             </button>
           </div>
-          <label for="guitar-source">Arrangement text sample</label>
-          <textarea id="guitar-source" rows="4" spellcheck="false">tempo: 100
+          <div class="ui-field">
+            <label class="ui-label" for="guitar-source">Arrangement text sample</label>
+            <textarea id="guitar-source" rows="4" spellcheck="false" class="ui-textarea ui-code">tempo: 100
 chords: C Am F G</textarea>
+          </div>
         </div>
       </details>
-      <section class="practice-workspace specimen-block" aria-labelledby="guitar-chord">
-        <h2 id="guitar-chord">Specialized chord card</h2>
-        <p class="specimen-caption">Preserve this layout and its app behavior. The fixture supplies timing values that the app normally calculates.</p>
+      <section class="practice-workspace specimen-block ui-panel ui-stack" aria-labelledby="guitar-chord">
+        <h2 id="guitar-chord" class="ui-heading">Specialized chord card</h2>
+        <p class="specimen-caption ui-help">Preserve this layout and its app behavior. The fixture supplies timing values that the app normally calculates.</p>
         <div class="chord-guide-scroll" tabindex="0" aria-labelledby="guitar-chord">
           <ol class="chord-timeline">
             <li class="chord-bar-card specimen-chord">
