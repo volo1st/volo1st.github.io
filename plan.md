@@ -553,6 +553,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 19 October 2026 | Join language choices into a segmented button group in the draft. | The owner found the separate choices too far apart. Use adjacent equal-width buttons with a shared border seam, rounded outer corners, and a warm selected fill. Retain the selected underline, native state, common sizing, and visible focus. |
 | 19 October 2026 | Refine page headers, breadcrumbs, and language choice in the draft guide. | The owner selected this last common area before migration review. Share spacing, control sizing, and focus. Keep the quiet language choice and selected underline. Preserve compact tool headers and English breadcrumbs. |
 | 19 October 2026 | Soften striped body rows and distinguish table headings and totals. | The owner found white rows too bright and dark stripes too close to headings and totals. Use the warm subtle surface for light rows. Use a deeper warm surface and stronger boundary lines for headings and totals. |
 | 19 October 2026 | Add optional striped table rows to the draft guide. | The owner requested this option for long tables. Keep the plain table as the default. Alternate neutral body-row surfaces while retaining shared headings, totals, cell spacing, and scrolling. |
@@ -963,3 +964,11 @@ Requirements and decisions:
 Engineering review and failure behavior: Use native links and buttons for their respective purposes. Preserve the selected language in text and `aria-pressed`. Breadcrumbs identify location and do not replace a document heading. Flexible text can wrap while language controls keep their shared target size. The guide does not translate content when a sample button is pressed. Existing translation keys, language storage, and tool behavior remain unchanged.
 
 Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, breadcrumb destinations and list structure, sample heading hierarchy, selected-language hover precedence, disabled guards, and the narrow-width layout rules. Added the primary breadcrumb reference to `docs/ui-audit.md`. Refreshed both draft stylesheet hashes. Existing pages, shell styles, translation scripts, and current-style specimens did not change. Manual browser, keyboard, narrow-screen, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.
+
+### 21.12 Segmented language choice
+
+Purpose and decision: Replace the draft's separate quiet language buttons with one compact segmented group. Add reusable `.ui-button-group` geometry. Join adjacent borders, round only the outer corners, and give segments equal widths. Keep the existing button type, padding, and desktop/touch minimum heights. Use a neutral panel surface for unselected language segments and a warm fill with an underline for the selected language. This supersedes the separate quiet-button treatment in section 21.11.
+
+Engineering review and failure behavior: Keep native buttons and explicit `aria-pressed` states. This changes appearance only. Preserve the shared focus outline and raise the focused segment above adjacent borders. Do not clip focus with an overflow rule. Guard inactive hover styling so selection remains visible. The guide remains static and adds no translation or toggle logic. Existing pages and specimens remain unchanged.
+
+Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, joined-border geometry, outer corner rules, selected and hover precedence, disabled guards, and focus stacking. Refreshed the component stylesheet hash. Manual browser, keyboard, narrow-screen, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.

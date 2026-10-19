@@ -289,10 +289,16 @@
 .ui-breadcrumb li > [aria-hidden="true"] { flex: 0 0 auto; }
 .ui-breadcrumb a, .ui-breadcrumb [aria-current="page"] { min-width: 0; overflow-wrap: anywhere; }
 .ui-breadcrumb [aria-current="page"] { color: var(--site-text); }
-.ui-language { display: flex; flex: 0 0 auto; align-items: center; gap: var(--ui-space-2); margin-inline-start: auto; }
-.ui-language > .ui-button:not(:disabled) { border-color: transparent; color: var(--site-muted); background: transparent; }
-.ui-language > .ui-button[aria-pressed="true"]:not(:disabled) { color: var(--site-text); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
-.ui-language > .ui-button:hover:not(:disabled) { color: var(--site-text); background: var(--site-hover); }
+.ui-button-group { display: inline-flex; max-width: 100%; gap: 0; }
+.ui-button-group > .ui-button { position: relative; flex: 1 1 0; border-radius: 0; }
+.ui-button-group > .ui-button + .ui-button { margin-inline-start: calc(0px - var(--ui-control-border-width)); }
+.ui-button-group > .ui-button:first-child { border-start-start-radius: var(--ui-radius-control); border-end-start-radius: var(--ui-radius-control); }
+.ui-button-group > .ui-button:last-child { border-start-end-radius: var(--ui-radius-control); border-end-end-radius: var(--ui-radius-control); }
+.ui-button-group > .ui-button:focus-visible { z-index: 1; }
+.ui-language { flex: 0 0 auto; margin-inline-start: auto; }
+.ui-language > .ui-button:not(:disabled) { border-color: var(--site-control-border); color: var(--site-muted); background: var(--site-panel-background); }
+.ui-language > .ui-button[aria-pressed="true"]:not(:disabled) { color: var(--site-text); background: var(--site-hover); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
+.ui-language > .ui-button[aria-pressed="false"]:hover:not(:disabled) { color: var(--site-text); background: var(--site-subtle-surface); }
 
 /* This scope belongs to the draft. Do not change existing app state rules. */
 .ui-panel [hidden], .ui-disclosure [hidden], .ui-notice [hidden],
