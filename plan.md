@@ -1052,3 +1052,12 @@ Failure behavior and checks: Keep native hidden state and the existing scroll-fo
 Verification evidence: `./scripts/check.sh` passed all seven test files. Reviewed the complete correction diff, shared grid sizing, hidden-state precedence, the chord scroll boundary, whole-button wrapping, disclaimer type, and the three-bar specimen. Guitar page and specimen markup is balanced and IDs are unique. Refreshed shared and guitar stylesheet hashes in every maintained reference. No application JavaScript, playback logic, dependencies, or browser tools changed. Manual rendered scrolling, keyboard, narrow-screen, and 200 percent zoom review did not run. Recorded the migration regression in the ignored experience file.
 
 Completion on 20 October 2026: Commit `703c33c` contains the verified correction. Added the outcome comment to Todoist task `6hpHm7jm2vQXx7F6`, completed the task, and confirmed its completed state. Deferred packages remain unchanged.
+
+
+### 23.1 Visible horizontal divider
+
+Purpose and decision on 20 October 2026: The owner reported that the horizontal divider was difficult to see. Use the existing darker panel-border color for `.ui-divider`. Set its width to 100 percent so native automatic side margins cannot collapse the rule inside a grid. Apply the same shared rule to the guide and specimens. This is a routine visual refinement and does not select another tracked package.
+
+Failure behavior: Keep the one-pixel rule, existing spacing, and native horizontal-rule semantics. Change no app behavior. Refresh all references to the shared stylesheet.
+
+Verification evidence: `./scripts/check.sh` passed all seven test files. Reviewed the shared rule and refreshed asset hashes. Manual browser and zoom review did not run. No tests, dependencies, or browser tools were added.
