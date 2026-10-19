@@ -132,7 +132,8 @@
 
 .ui-button,
 .ui-file::file-selector-button {
-  color: var(--site-text);
+  border-color: var(--tool-accent-border);
+  color: var(--tool-accent-strong);
   background: var(--site-panel-background);
   font-weight: var(--ui-weight-bold);
   cursor: pointer;
