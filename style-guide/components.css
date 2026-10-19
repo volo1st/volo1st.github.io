@@ -296,9 +296,14 @@
 .ui-button-group > .ui-button:last-child { border-start-end-radius: var(--ui-radius-control); border-end-end-radius: var(--ui-radius-control); }
 .ui-button-group > .ui-button:focus-visible { z-index: 1; }
 .ui-language { flex: 0 0 auto; margin-inline-start: auto; }
+.ui-language > .ui-button { flex: 0 0 auto; min-width: var(--ui-control-min-height); padding: var(--ui-space-1) var(--ui-space-2); font-size: var(--ui-size-supporting); line-height: var(--ui-leading-heading); white-space: nowrap; overflow-wrap: normal; }
 .ui-language > .ui-button:not(:disabled) { border-color: var(--site-control-border); color: var(--site-muted); background: var(--site-panel-background); }
 .ui-language > .ui-button[aria-pressed="true"]:not(:disabled) { color: var(--site-text); background: var(--site-hover); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
 .ui-language > .ui-button[aria-pressed="false"]:hover:not(:disabled) { color: var(--site-text); background: var(--site-subtle-surface); }
+
+@media (min-width: 651px) and (hover: hover) and (pointer: fine) {
+  .ui-language { --ui-control-min-height: 1.75rem; }
+}
 
 /* This scope belongs to the draft. Do not change existing app state rules. */
 .ui-panel [hidden], .ui-disclosure [hidden], .ui-notice [hidden],

@@ -553,6 +553,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 
 | Date | Decision | Reason |
 | --- | --- | --- |
+| 19 October 2026 | Make the language group compact and keep each label on one line. | The owner found the group too large and reported a wrapped Chinese label. Use natural segment widths, supporting-size text, smaller padding, and a 28-pixel desktop minimum. Retain 44-pixel touch targets. |
 | 19 October 2026 | Join language choices into a segmented button group in the draft. | The owner found the separate choices too far apart. Use adjacent equal-width buttons with a shared border seam, rounded outer corners, and a warm selected fill. Retain the selected underline, native state, common sizing, and visible focus. |
 | 19 October 2026 | Refine page headers, breadcrumbs, and language choice in the draft guide. | The owner selected this last common area before migration review. Share spacing, control sizing, and focus. Keep the quiet language choice and selected underline. Preserve compact tool headers and English breadcrumbs. |
 | 19 October 2026 | Soften striped body rows and distinguish table headings and totals. | The owner found white rows too bright and dark stripes too close to headings and totals. Use the warm subtle surface for light rows. Use a deeper warm surface and stronger boundary lines for headings and totals. |
@@ -972,3 +973,11 @@ Purpose and decision: Replace the draft's separate quiet language buttons with o
 Engineering review and failure behavior: Keep native buttons and explicit `aria-pressed` states. This changes appearance only. Preserve the shared focus outline and raise the focused segment above adjacent borders. Do not clip focus with an overflow rule. Guard inactive hover styling so selection remains visible. The guide remains static and adds no translation or toggle logic. Existing pages and specimens remain unchanged.
 
 Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, joined-border geometry, outer corner rules, selected and hover precedence, disabled guards, and focus stacking. Refreshed the component stylesheet hash. Manual browser, keyboard, narrow-screen, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.
+
+### 21.13 Compact language group correction
+
+Purpose and decision: The owner reported that the equal-width language segments wrapped `中文` and made the group too tall. Give language segments natural widths, prevent label wrapping and shrinking, and reduce padding to 0.25rem vertically and 0.5rem horizontally. Use the existing 0.875rem supporting size and 1.2 line height. Above 650 pixels with a fine pointer and hover, use a 1.75rem (28-pixel) minimum height. Retain the 2.75rem (44-pixel) minimum height and width for touch targets. This is an explicit compact language-control exception. General buttons keep their accepted sizing.
+
+Engineering review and failure behavior: Use minimum dimensions rather than a fixed height. Keep the selected state, joined borders, full language names, and visible focus. Let the context row wrap when necessary. Do not wrap a language label to force the group into a row. Keep generic button groups unchanged. This supersedes the equal-width language rule in section 21.12 and changes only the guide.
+
+Verification evidence: `./scripts/check.sh` passed for all seven test files. Reviewed the complete diff, language-specific flex override, no-wrap rule, compact geometry, and pointer-based minimum dimensions. Refreshed the component stylesheet hash. Recorded the wrapping mistake in the ignored local experience file. Manual browser, keyboard, narrow-screen, and 200 percent zoom checks did not run. No tests, dependencies, or browser tools were added.
