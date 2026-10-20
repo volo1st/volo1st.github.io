@@ -9,7 +9,7 @@
     <title>UI style guide | volo1st</title>
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=340aa48fa873">
-    <link rel="stylesheet" href="../assets/ui.css?v=ee273f95fda1">
+    <link rel="stylesheet" href="../assets/ui.css?v=6a08d530a696">
     <link rel="stylesheet" href="./guide.css?v=76f055cc3800">
   </head>
   <body data-page="style-guide">
@@ -26,7 +26,7 @@
         <p class="guide-eyebrow">Shared styles · approved first pass</p>
         <h1 class="ui-title">One site. One shared language.</h1>
         <p class="guide-lead">A working user interface (UI) style guide for type, controls, and common patterns. Use the component examples to review changes to shared styles.</p>
-        <p class="ui-small">Maintained pages and these examples use the same shared stylesheet. Buttons show visual states and do not run app actions. Native fields and disclosures can be used. No input is stored or processed.</p>
+        <p class="ui-small ui-muted">Maintained pages and these examples use the same shared stylesheet. Buttons show visual states and do not run app actions. Native fields and disclosures can be used. No input is stored or processed.</p>
         <p><a class="ui-link" href="../docs/ui-audit.md">Read the HTML and CSS audit</a></p>
       </header>
       <nav class="guide-nav" aria-label="Style guide sections">
@@ -69,25 +69,25 @@
         <h2 id="type-heading" class="ui-heading">Serif by default. Sans-serif for controls.</h2>
         <p>Use one serif family for headings and content. Use sans-serif for interactive controls and their labels. Use monospace for source text and technical values. Inline links keep the surrounding text font.</p>
         <p>Use four sizes and two weights. Keep headings regular. Use bold for emphasis, control labels, and subsection headings. Use normal letter spacing.</p>
-        <p class="ui-small">These are local font stacks. The actual fonts depend on the device. Compare English and Chinese before choosing the final set.</p>
+        <p class="ui-small ui-muted">These are local font stacks. The actual fonts depend on the device. Compare English and Chinese before choosing the final set.</p>
         <div class="guide-grid guide-type-grid">
           <article class="guide-sample ui-flow">
             <h3 class="guide-caption">Default / serif</h3>
             <p class="guide-font-sample guide-font-body">Recordings, rooms, and live stages.</p>
             <p class="guide-font-sample guide-font-body" lang="zh-Hans">录音、房间声学与现场扩声。</p>
-            <p class="ui-small">Headings, prose, notices, help, and table content.</p>
+            <p class="ui-small ui-muted">Headings, prose, notices, help, and table content.</p>
           </article>
           <article class="guide-sample ui-flow">
             <h3 class="guide-caption">Controls / system sans-serif</h3>
             <p class="guide-font-sample guide-font-control">Play · Export · Select a file</p>
             <p class="guide-font-sample guide-font-control" lang="zh-Hans">播放 · 导出 · 选择文件</p>
-            <p class="ui-small">Buttons, fields, labels, interface navigation, and disclosure summaries.</p>
+            <p class="ui-small ui-muted">Buttons, fields, labels, and disclosure summaries. Breadcrumbs use the body serif font.</p>
           </article>
           <article class="guide-sample ui-flow">
             <h3 class="guide-caption">Code / monospace</h3>
             <p class="guide-font-sample guide-font-mono">tempo: 100<br>chords: C Am F G</p>
             <p class="guide-font-sample guide-font-mono" lang="zh-Hans">速度：100<br>和弦：C Am F G</p>
-            <p class="ui-small">Source text, code, and technical values that need monospace.</p>
+            <p class="ui-small ui-muted">Source text, code, and technical values that need monospace.</p>
           </article>
         </div>
         <div class="guide-sample guide-type-hierarchy ui-flow">
@@ -99,8 +99,10 @@
           <p class="ui-subheading">A useful group of controls</p>
           <p class="guide-caption">Body · 1rem · regular, with bold emphasis</p>
           <p>Body text explains what happens next. <strong>Use the same term for the same item.</strong></p>
-          <p class="guide-caption">Supporting text · 0.875rem · regular</p>
-          <p class="ui-small">Supporting text adds a limit or a short instruction.</p>
+          <p class="guide-caption">Size and color are independent · 0.875rem small text</p>
+          <p class="ui-small">Small text keeps the normal text color.</p>
+          <p class="ui-muted">Muted text keeps the normal body size.</p>
+          <p class="ui-small ui-muted">Small, muted text combines both classes.</p>
           <p class="guide-caption">Source and technical values · 1rem · regular</p>
           <p class="ui-code">00:42 / 03:20 · 100 beats per minute</p>
         </div>
@@ -113,12 +115,12 @@
           <div><dt>Maximum width</dt><dd>48rem</dd></div>
           <div><dt>Minimum side space</dt><dd>1–2rem</dd></div>
         </dl>
-        <p class="ui-small">At the default 16-pixel base size, the maximum is 768 pixels. Minimum side space follows 4 percent of the viewport width, bounded by 1rem and 2rem. Centering leaves more space on wide screens. The gutter token describes each side.</p>
+        <p class="ui-small ui-muted">At the default 16-pixel base size, the maximum is 768 pixels. Minimum side space follows 4 percent of the viewport width, bounded by 1rem and 2rem. Centering leaves more space on wide screens. The gutter token describes each side.</p>
         <p>Resize the page to compare desktop and mobile layouts. Sample grids use one column on small screens. Content can wrap without a fixed minimum page width.</p>
-        <p class="ui-small">The current-style previews below retain the original page widths for comparison.</p>
+        <p class="ui-small ui-muted">The page specimens below use the same shared width as the maintained pages.</p>
         <h3 class="ui-subheading">Space shows the relationship.</h3>
         <p>Keep a heading close to its content. Separate paragraphs by 1rem and field groups by 1.5rem. Give sections 2rem of padding on desktop and 1.5rem on mobile.</p>
-        <p class="ui-small">Use <code class="ui-code">ui-flow</code> for text, <code class="ui-code">ui-stack</code> for field groups, and <code class="ui-code">ui-actions</code> for wrapping action rows. These classes control their direct children's spacing.</p>
+        <p class="ui-small ui-muted">Use <code class="ui-code">ui-flow</code> for text, <code class="ui-code">ui-stack</code> for field groups, and <code class="ui-code">ui-actions</code> for wrapping action rows. These classes control their direct children's spacing.</p>
       </section>
       <section id="foundations" class="guide-section ui-flow" aria-labelledby="foundations-heading">
         <p class="guide-eyebrow">03 / Foundations</p>
@@ -198,7 +200,7 @@
           <div class="guide-sample ui-flow">
             <h3 class="ui-subheading">Shape and focus</h3>
             <p>Controls use a 0.4rem radius. Panels use a 0.65rem radius. Controls use a compact desktop size and larger touch targets.</p>
-            <p class="ui-small">Press Tab to inspect the existing shared focus outline. Hover samples use the pointer. Do not remove focus when changing the final design.</p>
+            <p class="ui-small ui-muted">Press Tab to inspect the existing shared focus outline. Hover samples use the pointer. Do not remove focus when changing the final design.</p>
             <button type="button" class="ui-button">
               Focus sample
             </button>
@@ -209,7 +211,7 @@
         <p class="guide-eyebrow">04 / Actions</p>
         <h2 id="actions-heading" class="ui-heading">The same button, in each context.</h2>
         <p>Buttons and single-line fields share a 1-pixel border and common padding. The default minimum height is 2.75rem (44 pixels). Above 650 pixels, a fine pointer with hover uses a compact 2.25rem (36-pixel) minimum. Font size stays the same. Long labels can wrap and increase the height.</p>
-        <p class="ui-small">Use Tab to compare focus outlines. Hover and press enabled buttons to inspect their styles. Disabled samples remain unavailable. These buttons do not run app actions.</p>
+        <p class="ui-small ui-muted">Use Tab to compare focus outlines. Hover and press enabled buttons to inspect their styles. Disabled samples remain unavailable. These buttons do not run app actions.</p>
         <div class="guide-grid">
           <div class="guide-sample ui-flow">
             <h3 class="guide-caption">General / blue accent</h3>
@@ -252,7 +254,7 @@
                 Processing…
               </button>
             </div>
-            <p class="ui-small">Static state examples. No background task is running.</p>
+            <p class="ui-small ui-muted">Static state examples. No background task is running.</p>
           </div>
           <div class="guide-sample ui-flow">
             <h3 class="guide-caption">Selected, icon, and caution</h3>
@@ -291,7 +293,7 @@
               <button type="button" class="ui-button ui-button--primary">Return to the original arrangement</button>
               <button type="button" class="ui-button" lang="zh-Hans">选择音频文件</button>
             </div>
-            <p class="ui-small">Text can wrap. The control has a minimum height, without a fixed maximum height.</p>
+            <p class="ui-small ui-muted">Text can wrap. The control has a minimum height, without a fixed maximum height.</p>
           </div>
         </div>
         <div class="guide-sample ui-flow">
@@ -307,7 +309,7 @@
               Link styled as a button
             </a>
           </div>
-          <p class="ui-small">These links open the Review section. They do not run an app action.</p>
+          <p class="ui-small ui-muted">These links open the Review section. They do not run an app action.</p>
         </div>
       </section>
       <section id="fields" class="guide-section ui-flow" aria-labelledby="fields-heading">
@@ -331,7 +333,7 @@
             </div>
           </div>
         </div>
-        <p class="ui-small">The state samples below are static. Editing a value does not clear its sample error or change its read-only or disabled state.</p>
+        <p class="ui-small ui-muted">The state samples below are static. Editing a value does not clear its sample error or change its read-only or disabled state.</p>
         <div class="guide-grid">
           <div class="guide-sample ui-stack">
             <div class="ui-field">
@@ -408,7 +410,7 @@ chords: C Am F G</textarea>
               <label class="ui-choice"><input type="radio" name="sample-mode" value="preview"> Preview</label>
               <label class="ui-choice"><input type="checkbox" checked disabled> Unavailable option</label>
             </fieldset>
-            <p class="ui-small">Checkboxes and radio buttons are native examples for future common controls. Current apps mostly use selects.</p>
+            <p class="ui-small ui-muted">Checkboxes and radio buttons are native examples for future common controls. Current apps mostly use selects.</p>
           </div>
           <div class="guide-sample ui-stack">
             <h3 class="guide-caption">Select and textarea states</h3>
@@ -451,7 +453,7 @@ chords: C Am F G</textarea>
         <p class="guide-eyebrow">06 / Notices</p>
         <h2 id="notices-heading" class="ui-heading">Meaning comes before color.</h2>
         <p>Use blue for information, green for success, gold for warnings, and red for errors. Keep these meanings across tools. State the meaning and the next step in text. Use dark body text and a colored heading.</p>
-        <p class="ui-small">All samples are static. No validation or background task runs here. Existing apps keep their live announcements and error focus rules until migration.</p>
+        <p class="ui-small ui-muted">All samples are static. No validation or background task runs here. Existing apps keep their live announcements and error focus rules until migration.</p>
         <div class="guide-grid">
           <aside class="ui-notice ui-flow" aria-labelledby="notice-info">
             <h3 id="notice-info" class="ui-subheading ui-notice__title">Information</h3>
@@ -472,7 +474,7 @@ chords: C Am F G</textarea>
               <li><a class="ui-link" href="#example-invalid">Enter a project name.</a></li>
               <li><a class="ui-link" href="#example-invalid-select">Select an output format.</a></li>
             </ul>
-            <p class="ui-small">The links lead to static invalid-field samples. Editing a sample does not clear its error.</p>
+            <p class="ui-small ui-muted">The links lead to static invalid-field samples. Editing a sample does not clear its error.</p>
           </aside>
         </div>
         <h3 class="ui-subheading">Short status messages</h3>
@@ -510,15 +512,15 @@ chords: C Am F G</textarea>
                 ×
               </button>
             </div>
-            <p class="ui-small">Static sample. This close button does not dismiss the notice.</p>
+            <p class="ui-small ui-muted">Static sample. This close button does not dismiss the notice.</p>
           </aside>
           <div class="ui-panel ui-flow">
             <h3 class="ui-subheading">Empty state</h3>
-            <p class="ui-small">No examples are selected.</p>
+            <p class="ui-small ui-muted">No examples are selected.</p>
             <p>Describe the next step instead of showing a blank panel.</p>
           </div>
         </div>
-        <p class="ui-small">Use <code class="ui-code">ui-notice ui-flow</code> for message content and <code class="ui-code">ui-notice__title</code> for its heading. Set <code class="ui-code">data-tone</code> to <code class="ui-code">success</code>, <code class="ui-code">warning</code>, or <code class="ui-code">error</code>. The default tone is information. Appearance does not assign live-region behavior.</p>
+        <p class="ui-small ui-muted">Use <code class="ui-code">ui-notice ui-flow</code> for message content and <code class="ui-code">ui-notice__title</code> for its heading. Set <code class="ui-code">data-tone</code> to <code class="ui-code">success</code>, <code class="ui-code">warning</code>, or <code class="ui-code">error</code>. The default tone is information. Appearance does not assign live-region behavior.</p>
       </section>
       <section id="patterns" class="guide-section ui-flow" aria-labelledby="patterns-heading">
         <p class="guide-eyebrow">07 / Patterns</p>
@@ -577,7 +579,7 @@ chords: C Am F G</textarea>
           </details>
         </div>
         <hr class="ui-divider">
-        <p class="ui-small">The header examples below use the shared components. Chord cards, pitch symbols, and audio timing remain specialized components.</p>
+        <p class="ui-small ui-muted">The header examples below use the shared components. Chord cards, pitch symbols, and audio timing remain specialized components.</p>
       </section>
       <section id="data" class="guide-section ui-flow" aria-labelledby="data-heading">
         <p class="guide-eyebrow">08 / Tables and values</p>
@@ -598,7 +600,7 @@ chords: C Am F G</textarea>
               <div><dt>Exported files</dt><dd>0</dd></div>
               <div><dt>Output duration</dt><dd>Not available</dd></div>
             </dl>
-            <p class="ui-small">Zero is a known value. Use explicit text when a value is not available.</p>
+            <p class="ui-small ui-muted">Zero is a known value. Use explicit text when a value is not available.</p>
           </div>
           <div class="ui-panel ui-flow" data-domain="music" lang="zh-Hans">
             <h3 class="ui-subheading">中文示例</h3>
@@ -607,12 +609,12 @@ chords: C Am F G</textarea>
               <div><dt>采样率</dt><dd>48&nbsp;kHz</dd></div>
               <div><dt>输出时长</dt><dd>尚无数据</dd></div>
             </dl>
-            <p class="ui-small">工具的主题色不改变摘要样式。</p>
+            <p class="ui-small ui-muted">工具的主题色不改变摘要样式。</p>
           </div>
         </div>
         <h3 class="ui-subheading">Table headings, rows, and totals</h3>
         <p>Sizes use mebibytes (MiB). Times use minutes and seconds. All data below is invented. The displayed totals are static examples.</p>
-        <p id="file-table-help" class="ui-small">If the columns do not fit, scroll within the table. Focus the table region to check keyboard scrolling. Keep the page itself within its normal width.</p>
+        <p id="file-table-help" class="ui-small ui-muted">If the columns do not fit, scroll within the table. Focus the table region to check keyboard scrolling. Keep the page itself within its normal width.</p>
         <div class="ui-table-scroll" tabindex="0" role="region" aria-labelledby="file-table-caption" aria-describedby="file-table-help">
           <table class="ui-table">
             <caption id="file-table-caption">Example files · invented data</caption>
@@ -742,15 +744,15 @@ chords: C Am F G</textarea>
             <tbody><tr><td colspan="2">No output files are available. Select an example to continue.</td></tr></tbody>
           </table>
         </div>
-        <p class="ui-small">Use <code class="ui-code">ui-table__number</code> on a numeric column's heading and cells. Use <code class="ui-code">ui-table__text</code> for long descriptions that need a 12rem minimum width. Keep native captions, header scopes, and a named <code class="ui-code">ui-table-scroll</code> region. Use <code class="ui-code">ui-metrics</code> on a definition list for summary values. These examples do not sort, calculate, or process files.</p>
+        <p class="ui-small ui-muted">Use <code class="ui-code">ui-table__number</code> on a numeric column's heading and cells. Use <code class="ui-code">ui-table__text</code> for long descriptions that need a 12rem minimum width. Keep native captions, header scopes, and a named <code class="ui-code">ui-table-scroll</code> region. Use <code class="ui-code">ui-metrics</code> on a definition list for summary values. These examples do not sort, calculate, or process files.</p>
       </section>
       <section id="headers" class="guide-section ui-flow" aria-labelledby="headers-heading">
         <p class="guide-eyebrow">09 / Page headers</p>
         <h2 id="headers-heading" class="ui-heading">One page context. Clear navigation.</h2>
         <p>Keep breadcrumbs in English. Use the page-title style for reading pages. Keep compact tool headers quiet, with a real page heading available to assistive software.</p>
         <p>Use <span lang="en">En</span> for English and <span lang="zh-Hans">中</span> for Simplified Chinese. Tools use a compact segmented group with a dark selected segment. Reading pages use a quiet <span lang="en">En</span> / <span lang="zh-Hans">中</span> choice, with plain bold text for the current language and an underlined alternative. Keep both variants to the right of the breadcrumb while space permits.</p>
-        <p class="ui-small">The current language is disabled because selecting it again has no effect. Its selected appearance remains visible. Language labels stay on one line and use the supporting text size. Both variants retain the compact desktop height, larger touch height, and common focus outline for the alternative language.</p>
-        <p class="ui-small">Language samples do not translate this guide. Sample titles use level-four headings within the guide. A real page uses a level-one heading.</p>
+        <p class="ui-small ui-muted">The current language is disabled because selecting it again has no effect. Its selected appearance remains visible. Language labels stay on one line and use the supporting text size. Both variants retain the compact desktop height, larger touch height, and common focus outline for the alternative language.</p>
+        <p class="ui-small ui-muted">Language samples do not translate this guide. Sample titles use level-four headings within the guide. A real page uses a level-one heading.</p>
         <div class="guide-grid">
           <div class="guide-sample ui-flow">
             <h3 class="guide-caption">Reading page / quiet language choice</h3>
@@ -792,7 +794,7 @@ chords: C Am F G</textarea>
                 </div>
               </div>
               <h4 class="ui-visually-hidden">Guitar Strum Machine</h4>
-              <p class="ui-small">This sample keeps its heading visually hidden. The tool name remains in the breadcrumb.</p>
+              <p class="ui-small ui-muted">This sample keeps its heading visually hidden. The tool name remains in the breadcrumb.</p>
             </div>
           </div>
         </div>
@@ -820,7 +822,7 @@ chords: C Am F G</textarea>
             </div>
           </div>
         </div>
-        <p class="ui-small">Use <code class="ui-code">ui-page-header</code> for header spacing, <code class="ui-code">ui-context-row</code> for breadcrumb and language alignment, and <code class="ui-code">ui-breadcrumb</code> for the navigation list. Tools use <code class="ui-code">ui-button-group ui-language ui-language--tool</code>. Reading pages reuse quiet buttons inside <code class="ui-code">ui-language ui-language--text</code>. Language buttons use <code class="ui-code">data-disable-current="true"</code>. The shared language binder updates <code class="ui-code">disabled</code> with <code class="ui-code">aria-pressed</code> and re-enables the previous language.</p>
+        <p class="ui-small ui-muted">Use <code class="ui-code">ui-page-header</code> for header spacing, <code class="ui-code">ui-context-row</code> for breadcrumb and language alignment, and <code class="ui-code">ui-breadcrumb</code> for the navigation list. Tools use <code class="ui-code">ui-button-group ui-language ui-language--tool</code>. Reading pages reuse quiet buttons inside <code class="ui-code">ui-language ui-language--text</code>. Language buttons use <code class="ui-code">data-disable-current="true"</code>. The shared language binder updates <code class="ui-code">disabled</code> with <code class="ui-code">aria-pressed</code> and re-enables the previous language.</p>
       </section>
       <section id="current" class="guide-section ui-flow" aria-labelledby="current-heading">
         <p class="guide-eyebrow">10 / Current styles</p>
@@ -885,7 +887,7 @@ chords: C Am F G</textarea>
             Use shared classes for common components. Keep specialized app displays in their local stylesheets.
           </li>
         </ol>
-        <p class="ui-small">Source review and the existing repository checks cover the shared components. Browser review remains for the visual iteration. No browser tooling is installed for this package.</p>
+        <p class="ui-small ui-muted">Source review and the existing repository checks cover the shared components. Browser review remains for the visual iteration. No browser tooling is installed for this package.</p>
         <p><a class="ui-link" href="../docs/ui-audit.md">Component inventory and migration boundaries</a></p>
       </footer>
     </main>

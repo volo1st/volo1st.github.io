@@ -1815,7 +1815,7 @@ test('the page contains the mobile practice interface and valid sound-test token
   assert.ok(html.indexOf('class="practice-workspace ui-panel ui-stack"') < html.indexOf('id="arrangement-editor"'));
   assert.match(html, /<details id="strum-sound-test"[^>]*>/);
   assert.ok(html.indexOf('id="help"') < html.indexOf('id="strum-sound-test"'));
-  assert.ok(html.indexOf('id="strum-sound-test"') < html.indexOf('class="preset-notice ui-small ui-flow"'));
+  assert.ok(html.indexOf('id="strum-sound-test"') < html.indexOf('aria-labelledby="preset-notice-heading"'));
   assert.match(html, /id="tempo-ramp-mode"/);
   assert.match(html, /id="tempo-ramp-fields"[^>]*hidden/);
   assert.match(html, /for="tempo-ramp-step"/);

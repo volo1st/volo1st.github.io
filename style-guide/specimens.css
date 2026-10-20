@@ -1,6 +1,6 @@
 /* Specimen layout only. Component appearance comes from assets/ui.css and specialized app CSS. */
 
-:where([data-specimen]) .specimen-caption { margin: 0 0 1rem; color: var(--site-muted); font-size: var(--ui-size-supporting); }
+:where([data-specimen]) .specimen-caption { margin: 0 0 1rem; }
 :where([data-specimen]) .specimen-block { margin-block: 1.5rem; }
 :where([data-specimen]) .specimen-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
 :where([data-specimen]) .specimen-stack { display: grid; gap: 0.75rem; }

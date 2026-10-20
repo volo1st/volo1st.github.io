@@ -285,3 +285,10 @@ Shared palette, typography, components, and layout primitives stay global in `as
 The `:where()` guard adds no selector specificity. Scope every selector in a comma-separated list. Apply the same guard inside media rules. The section-layout stylesheet lists its supported page roots in one guard. Keep page-only variables on the page root. The studio print rule uses a guarded document-root selector to preserve the page background and inherited color. Keep animation bindings inside the scope and give animation names a page prefix. Keyframe steps remain native keyframe selectors.
 
 These guards restrict where a local rule can match. They do not create a separate cascade within the page. Local selectors must still preserve shared component contracts. The frozen legacy converter and redirect remain outside this convention. See section 24 in [plan.md](../plan.md) for checks and completion evidence.
+
+
+## Link and supporting-text refinement · 20 October 2026
+
+Text links use dotted underlines. Reading-language choices use the same decoration for the available language. Button links and social icons keep their own presentation. Breadcrumbs use the body serif family. Disclosure summaries prevent text selection; disclosure content keeps its existing selection behavior.
+
+`.ui-small` controls size and line height. `.ui-muted` controls the lighter warm text color through `--ui-text-muted`. Combine them for quiet supporting text. Use either class alone when size and emphasis differ. `.ui-help` remains a semantic component with its own readable instruction color. Use color rather than element opacity. The guide demonstrates the three combinations. Existing small-text uses now make their color choice explicit.
