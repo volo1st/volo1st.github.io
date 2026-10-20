@@ -450,7 +450,11 @@ test('maintained bilingual pages use the shared site shell', () => {
     assert.match(html, /class="ui-breadcrumb"/);
     assert.match(html, /class="ui-breadcrumb" aria-label="Breadcrumb"/);
     assert.doesNotMatch(html.match(/<nav class="ui-breadcrumb"[\s\S]*?<\/nav>/)[0], /data-i18n/);
-    assert.match(html, /href="(?:\.\.\/)+">volo1st<\/a>/);
+    if (htmlFile === pages[0]) {
+      assert.match(html, /href="(?:\.\.\/)+">volo1st<\/a>/);
+    } else {
+      assert.match(html, /href="\.\.\/">Tools<\/a>/);
+    }
     assert.doesNotMatch(html, /<footer\b/);
     assert.doesNotMatch(html, /class="(?:page-title|site-mark|site-footer)/);
     assert.match(html, /<h1 class="ui-visually-hidden"/);

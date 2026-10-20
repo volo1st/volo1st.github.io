@@ -18,9 +18,9 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../../assets/app-icons/guitar-strum-machine-180.png?v=a607291ddcbb" />
   <link rel="manifest" href="./manifest.webmanifest?v=e29876d28f60" />
   <link rel="stylesheet" href="../../assets/site-shell.css?v=340aa48fa873" />
-  <link rel="stylesheet" href="../../assets/ui.css?v=b54a4bc23455">
+  <link rel="stylesheet" href="../../assets/ui.css?v=0ec558ba28c7">
   <link rel="stylesheet" href="./styles.css?v=97b3108fb5d5" />
-  <script src="../../assets/i18n.js?v=0781a27e9385" defer></script>
+  <script src="../../assets/i18n.js?v=548d5026df12" defer></script>
   <script src="./i18n.js?v=6c417ee45580" defer></script>
   <script src="./domain/chord-catalog.js?v=1fcee5a71a34" defer></script>
   <script src="./domain/harmony.js?v=954aa42a57b9" defer></script>
@@ -34,23 +34,14 @@
   <script src="./presets/data.js?v=b29b91908363" defer></script>
   <script src="./presets/catalog.js?v=5b27bec28c38" defer></script>
   <script src="./app.js?v=0fb2c381567d" defer></script>
-  <script src="../../assets/header-preview.js?v=ad5324798ef1" defer></script>
   </head>
 <body data-page="guitar">
-  <div class="ui-container ui-actions ui-small ui-muted ui-header-preview" data-header-preview hidden>
-    <span id="header-preview-label" data-i18n="common.headerPreview">Header preview</span>
-    <div class="ui-button-group" role="group" aria-labelledby="header-preview-label">
-      <button class="ui-button" type="button" data-header-layout-choice="a" aria-pressed="false" aria-label="A: Compact breadcrumb" data-i18n-aria-label="common.headerPreviewA">A</button>
-      <button class="ui-button" type="button" data-header-layout-choice="b" aria-pressed="false" aria-label="B: Separate full heading" data-i18n-aria-label="common.headerPreviewB">B</button>
-    </div>
-  </div>
-  <header class="site-header ui-page-header ui-container ui-tool-header" data-header-tool data-header-layout="a">
+  <header class="site-header ui-page-header ui-container ui-tool-header">
     <div class="ui-context-row">
       <nav class="ui-breadcrumb" aria-label="Breadcrumb" lang="en-AU">
         <ol>
-          <li data-header-home hidden><a class="ui-link" href="../../">volo1st</a></li>
-          <li><span data-header-parent-separator aria-hidden="true">←</span><a class="ui-link" href="../">Tools</a></li>
-          <li data-header-current><span aria-hidden="true">/</span><span aria-current="page">Guitar strum machine</span></li>
+          <li><span aria-hidden="true">←</span><a class="ui-link" href="../">Tools</a></li>
+          <li><span aria-hidden="true">/</span><span aria-current="page">Guitar strum machine</span></li>
         </ol>
       </nav>
       <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="Language" data-i18n-aria-label="common.language">
@@ -61,7 +52,7 @@
   </header>
 
   <main class="site-main ui-container ui-page ui-stack">
-    <h1 class="ui-visually-hidden" data-header-title data-i18n="guitar.title">Guitar strum machine</h1>
+    <h1 class="ui-visually-hidden" data-i18n="guitar.title">Guitar strum machine</h1>
     <section class="practice-workspace ui-panel ui-stack" aria-labelledby="practice-heading">
       <h2 id="practice-heading" class="ui-visually-hidden ui-heading" data-i18n="guitar.practice">Practice</h2>
       <div class="preset-control ui-field">
