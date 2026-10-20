@@ -1183,8 +1183,10 @@ Failure behavior and verification: Old preview URL parameters have no header beh
 
 - [x] Remove temporary comparison code and update the guide and current documentation.
 - [x] Refresh asset hashes, pass relevant checks, and review the complete diff.
-- [ ] Commit the package and reconcile Todoist.
+- [x] Commit the package and reconcile Todoist.
 
 Verification evidence: `./scripts/check.sh` passed all seven remaining test files. Removed the dedicated preview test with its retired feature. Updated the existing shared-shell source assertion to check the tools parent link instead of the removed hidden home link. The existing checks cover translations, asset hashes, links, IDs, accessibility references, financial validation, playback scheduling, pitch processing, sharing, and frozen legacy hashes. No preview attributes, script references, translation keys, or comparison links remain in maintained site code.
 
 Source and review evidence: Reviewed the complete diff and shared selector precedence. The three accepted header declarations keep their prior values on `.ui-tool-header`. All 19 maintained and redirect documents have balanced markup. A source comparison confirmed that all three app main sections and accepted headers match the prior source after removal of preview attributes and the hidden alternative home link. The guide uses the same shared class, retains narrow and touch-size examples, and documents the accepted header. App engines, payment rules, input controls, language selection, titles, and shared dimensions are unchanged. Refreshed affected asset hashes. Added no dependencies, browser tools, or new tests. The owner previously confirmed that the full names fit. Independent manual browser, keyboard, focus, narrow-screen, and 200 percent zoom checks did not run because a browser was unavailable. This package does not push or deploy.
+
+Completion on 20 October 2026: Commit `77eb814` contains the verified cleanup. Added the outcome comment to Todoist task `6hpRXvgFQqVgwXF6`, verified the comment, completed the task, and confirmed its completed state through a fresh read. The initiative and deferred tasks remain unchanged. No next package was selected.
