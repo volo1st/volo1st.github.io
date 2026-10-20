@@ -1124,8 +1124,10 @@ Engineering review and failure behavior: The current shared context row aligns b
 
 - [x] Add the two mobile header comparisons and naming examples to the guide.
 - [x] Apply consistent English casing, refresh hashes, and pass relevant checks.
-- [ ] Review and commit the package, then reconcile Todoist.
+- [x] Review and commit the package, then reconcile Todoist.
 
 Verification evidence: `./scripts/check.sh` passed all seven test files. Reviewed the complete diff, the six guide-only layout rules, both three-tool comparisons, the narrower fallback, accessible full names, and the naming table. A separate source comparison confirmed balanced markup in all 12 changed HTML documents. Existing documents differ only in casing and asset hashes. Translation catalogs and app manifests differ only in case. Existing tests were updated for the approved names; no new tests were added for static text or styles. Local links, unique IDs, accessibility references, translation key parity, and asset hashes pass the existing repository checks.
 
 Scope and review limits: Updated the maintained directory cards, breadcrumbs, titles, headings, metadata, manifests, current documentation, and specimens. Added the naming rule to `AGENTS.md` and the guide. Kept dated audit and specification text as history. The live header layout, shared styles, application logic, URLs, Chinese text, and frozen legacy converter are unchanged. No dependencies, browser tools, build step, or network behavior were added. A browser was unavailable. Manual rendered, keyboard, focus, narrow-screen, and 200 percent zoom checks did not run. The owner must compare the guide proposals before a live layout is selected.
+
+Completion on 20 October 2026: Commit `09f8e42` contains the verified comparison and casing changes. Added the outcome comment to Todoist task `6hpRJ23H932WvG4c`, verified the comment, completed the task, and confirmed its completed state through a fresh read. Deferred tasks and the initiative remain unchanged. No next package was selected.
