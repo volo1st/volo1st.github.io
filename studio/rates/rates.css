@@ -1,16 +1,23 @@
 :where([data-page="studio-rates"]) .rates-header { margin-bottom: var(--ui-space-6); }
 :where([data-page="studio-rates"]) .service, :where([data-page="studio-rates"]) .booking, :where([data-page="studio-rates"]) .contact, :where([data-page="studio-rates"]) .rates-footer { margin: 0; padding-block: var(--ui-space-6); border-top: 1px solid var(--site-divider); }
-:where([data-page="studio-rates"]) .service { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ui-space-2); }
-:where([data-page="studio-rates"]) .service-header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--ui-space-2) var(--ui-space-8); min-width: 0; }
-:where([data-page="studio-rates"]) .service-header > .ui-subheading { min-width: 0; max-width: 100%; margin: 0; }
-:where([data-page="studio-rates"]) .rate { max-width: 100%; margin: 0; margin-inline-start: auto; font-weight: var(--ui-weight-bold); }
+:where([data-page="studio-rates"]) .service { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: var(--ui-space-2) var(--ui-space-8); }
+:where([data-page="studio-rates"]) .service > .ui-subheading { grid-column: 1; min-width: 0; margin: 0; }
+:where([data-page="studio-rates"]) .rate { grid-column: 2; grid-row: 1; max-width: 100%; margin: 0; margin-inline-start: auto; font-weight: var(--ui-weight-bold); }
 :where([data-page="studio-rates"]) .rate sup { font-size: var(--ui-size-supporting); line-height: 0; }
 :where([data-page="studio-rates"]) .service-text, :where([data-page="studio-rates"]) .service-note { margin: 0; }
+:where([data-page="studio-rates"]) .service > .service-text, :where([data-page="studio-rates"]) .service > .service-note { grid-column: 1; min-width: 0; }
 :where([data-page="studio-rates"]) .service-note > p { margin: 0; }
 :where([data-page="studio-rates"]) .service-note ul { margin: var(--ui-space-1) 0 0; padding-inline-start: var(--ui-space-6); }
 :where([data-page="studio-rates"]) .service-note li + li { margin-top: var(--ui-space-1); }
 :where([data-page="studio-rates"]) .booking ul { margin: 0; padding-inline-start: var(--ui-space-6); }
 :where([data-page="studio-rates"]) .booking li + li { margin-top: var(--ui-space-2); }
+@media (max-width: 560px) {
+  :where([data-page="studio-rates"]) .service { column-gap: var(--ui-space-4); }
+}
+@media (max-width: 279px) {
+  :where([data-page="studio-rates"]) .service { grid-template-columns: minmax(0, 1fr); }
+  :where([data-page="studio-rates"]) .rate { grid-column: 1; grid-row: auto; }
+}
 @media print {
   :where([data-page="studio-rates"]) .ui-language { display: none; }
   :where([data-page="studio-rates"]) .rates-main { padding-block: 0; }

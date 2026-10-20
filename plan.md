@@ -1213,3 +1213,14 @@ Verification evidence: `./scripts/check.sh` passed all seven test files. Existin
 Review limits: A browser was unavailable. Rendered overlap, long-title wrapping, native note-link navigation, visible focus, narrow-screen behavior, and 200 percent zoom did not receive an independent manual check. Source checks do not establish those rendered results. The specimen now includes long headings and text prices for the owner's review. No push or deployment is part of this package.
 
 Completion on 20 October 2026: Commit `fb5e16f` contains the verified studio refinement. Added the outcome comment to Todoist task `6hpRh3FCwjgHmmFc`, verified the comment, completed the task, and confirmed its completed state through a fresh read. The initiative and deferred tasks remain unchanged. No next package was selected.
+
+
+### 31.1 Keep service descriptions clear of the rate column
+
+Purpose and correction on 20 October 2026: The owner clarified that descriptions must stay within the left column, rather than extend below the rate. The previous single-column service body did not meet that requirement. Restore an explicit description and rate grid. Keep headings, descriptions, and notes in column one. Put each rate in column two, row one. Retain a 2rem desktop gap and a 1rem gap on narrow screens. At exceptionally narrow widths below 280 pixels, stack the rate to preserve readable text at zoom. Keep the smaller shared heading style.
+
+Marker decision: The owner permits plain markers. Remove note links, return links, their translation keys, and their focus targets. Retain visible `*` and `†` markers and adjacent note text. Use `aria-describedby` to associate each rate with its notes. Preserve note and rate IDs, prices, translations of content, and the global dotted link style. Update the studio specimen and current documentation. This is a routine correction within the completed studio package.
+
+Checks: Use the existing repository check and review the complete diff. Do not add tests or browser tools for this static correction. Record unavailable manual mobile, keyboard, focus, and zoom review.
+
+Verification evidence: `./scripts/check.sh` passed all seven test files. Reviewed the complete diff, explicit grid placement, desktop and narrow gaps, exceptional-width stacking, plain markers, retained IDs, and `aria-describedby` targets. All 19 maintained and redirect documents have balanced markup. The existing checks pass for translations, English fallbacks, accessibility references, asset hashes, app behavior, and frozen legacy files. Updated the live page and specimen, removed unused note-link translations, and refreshed stylesheet and catalog hashes. Recorded the requirement correction in the ignored experience file. Added no tests, dependencies, or browser tooling. Manual rendered, keyboard, focus, mobile, and 200 percent zoom review did not run because a browser was unavailable.
