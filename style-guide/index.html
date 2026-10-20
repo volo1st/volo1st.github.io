@@ -9,17 +9,19 @@
     <title>UI style guide | volo1st</title>
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=340aa48fa873">
-    <link rel="stylesheet" href="../assets/ui.css?v=463ae6d78eca">
-    <link rel="stylesheet" href="./guide.css?v=581f17c37a96">
+    <link rel="stylesheet" href="../assets/ui.css?v=95ae6daed1f1">
+    <link rel="stylesheet" href="./guide.css?v=c15024ff2b06">
   </head>
   <body data-page="style-guide">
     <header class="ui-page-header ui-container guide-header">
-      <nav class="ui-breadcrumb" aria-label="Breadcrumb">
-        <ol>
-          <li><a class="ui-link" href="../">volo1st</a></li>
-          <li><span aria-hidden="true">/</span><span aria-current="page">UI style guide</span></li>
-        </ol>
-      </nav>
+      <div class="ui-context-row">
+        <nav class="ui-breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a class="ui-link" href="../">volo1st</a></li>
+            <li><span aria-hidden="true">/</span><span aria-current="page">UI style guide</span></li>
+          </ol>
+        </nav>
+      </div>
     </header>
     <main class="site-main guide-main ui-container">
       <header class="guide-intro ui-flow">
@@ -758,6 +760,52 @@ chords: C Am F G</textarea>
         <p>Use <span lang="en">En</span> for English and <span lang="zh-Hans">中</span> for Simplified Chinese. Tools use a compact segmented group with a dark selected segment. Reading pages use a quiet <span lang="en">En</span> / <span lang="zh-Hans">中</span> choice, with plain bold text for the current language and an underlined alternative. Keep both variants to the right of the breadcrumb while space permits.</p>
         <p class="ui-small ui-muted">The current language is disabled because selecting it again has no effect. Its selected appearance remains visible. Language labels stay on one line and use the supporting text size. Both variants retain the compact desktop height, larger touch height, and common focus outline for the alternative language.</p>
         <p class="ui-small ui-muted">Language samples do not translate this guide. Sample titles use level-four headings within the guide. A real page uses a level-one heading.</p>
+        <h3 class="ui-subheading">Consistent breadcrumb row height</h3>
+        <p>Use the same context row with or without a language choice. The shared minimum is 1.75rem for wide screens with a fine pointer and hover, and 2.75rem for touch. Center contents vertically. Longer text can expand the row. These three frames follow the current screen and pointer settings.</p>
+        <div class="guide-sample ui-flow">
+          <p class="guide-caption">No language choice</p>
+          <div class="guide-narrow-header">
+            <div class="ui-context-row">
+              <nav class="ui-breadcrumb" aria-label="Row height / no language choice" lang="en-AU">
+                <ol>
+                  <li><a class="ui-link" href="../">volo1st</a></li>
+                  <li><span aria-hidden="true">/</span><span aria-current="page">Tools</span></li>
+                </ol>
+              </nav>
+            </div>
+          </div>
+          <p class="guide-caption">Quiet text choice</p>
+          <div class="guide-narrow-header">
+            <div class="ui-context-row">
+              <nav class="ui-breadcrumb" aria-label="Row height / text language choice" lang="en-AU">
+                <ol>
+                  <li><a class="ui-link" href="../">volo1st</a></li>
+                  <li><span aria-hidden="true">/</span><span aria-current="page">Tools</span></li>
+                </ol>
+              </nav>
+              <div class="ui-language ui-language--text" role="group" aria-label="Row height / text language samples">
+                <button class="ui-button ui-button--quiet" type="button" aria-pressed="true" disabled aria-label="English language sample" lang="en">En</button>
+                <span aria-hidden="true">/</span>
+                <button class="ui-button ui-button--quiet" type="button" aria-pressed="false" aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
+              </div>
+            </div>
+          </div>
+          <p class="guide-caption">Segmented choice</p>
+          <div class="guide-narrow-header">
+            <div class="ui-context-row">
+              <nav class="ui-breadcrumb" aria-label="Row height / segmented language choice" lang="en-AU">
+                <ol>
+                  <li><a class="ui-link" href="../">volo1st</a></li>
+                  <li><span aria-hidden="true">/</span><span aria-current="page">Tools</span></li>
+                </ol>
+              </nav>
+              <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="Row height / segmented language samples">
+                <button class="ui-button" type="button" aria-pressed="true" disabled aria-label="English language sample" lang="en">En</button>
+                <button class="ui-button" type="button" aria-pressed="false" aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="guide-grid">
           <div class="guide-sample ui-flow">
             <h3 class="guide-caption">Reading page / quiet language choice</h3>

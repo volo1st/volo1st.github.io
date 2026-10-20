@@ -25,6 +25,7 @@
   --ui-panel-padding: var(--ui-space-4);
   --ui-section-padding: var(--ui-space-6);
   --ui-control-min-height: 2.75rem;
+  --ui-context-min-height: 2.75rem;
   --ui-control-border-width: 1px;
   --ui-control-padding-block: var(--ui-space-2);
   --ui-control-padding-inline: var(--ui-space-3);
@@ -59,6 +60,7 @@
 @media (min-width: 651px) and (hover: hover) and (pointer: fine) {
   :root {
     --ui-control-min-height: 2.25rem;
+    --ui-context-min-height: 1.75rem;
     --ui-control-padding-block: var(--ui-space-1);
   }
 }
@@ -289,7 +291,7 @@
 .ui-visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 
 .ui-page-header { display: grid; min-width: 0; gap: var(--ui-space-6); }
-.ui-context-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--ui-space-2) var(--ui-space-4); }
+.ui-context-row { display: flex; flex-wrap: wrap; min-height: var(--ui-context-min-height); align-items: center; justify-content: space-between; gap: var(--ui-space-2) var(--ui-space-4); }
 .ui-context-row > .ui-breadcrumb { flex: 1 1 6rem; }
 .ui-breadcrumb { min-width: 0; color: var(--site-muted); font-family: var(--ui-font-body); font-size: var(--ui-size-body); font-weight: var(--ui-weight-regular); line-height: var(--ui-leading-body); }
 .ui-breadcrumb > ol { display: flex; flex-wrap: wrap; gap: var(--ui-space-2); margin: 0; padding: 0; list-style: none; }
@@ -298,7 +300,6 @@
 .ui-breadcrumb a, .ui-breadcrumb [aria-current="page"] { min-width: 0; overflow-wrap: anywhere; }
 .ui-breadcrumb [aria-current="page"] { color: var(--site-text); }
 .ui-tool-header { gap: var(--ui-space-2); }
-.ui-tool-header > .ui-context-row { align-items: center; }
 .ui-tool-header > .ui-context-row > .ui-breadcrumb { flex: 0 1 auto; }
 .ui-button-group { display: inline-flex; max-width: 100%; gap: 0; }
 .ui-button-group > .ui-button { position: relative; flex: 1 1 0; border-radius: 0; }
@@ -306,7 +307,7 @@
 .ui-button-group > .ui-button:first-child { border-start-start-radius: var(--ui-radius-control); border-end-start-radius: var(--ui-radius-control); }
 .ui-button-group > .ui-button:last-child { border-start-end-radius: var(--ui-radius-control); border-end-end-radius: var(--ui-radius-control); }
 .ui-button-group > .ui-button:focus-visible { z-index: 1; }
-.ui-language { flex: 0 0 auto; margin-inline-start: auto; }
+.ui-language { --ui-control-min-height: var(--ui-context-min-height); flex: 0 0 auto; margin-inline-start: auto; }
 .ui-language > .ui-button { flex: 0 0 auto; min-width: var(--ui-control-min-height); padding: var(--ui-space-1) var(--ui-space-2); font-size: var(--ui-size-supporting); line-height: var(--ui-leading-heading); white-space: nowrap; overflow-wrap: normal; }
 .ui-language--tool > .ui-button:not(:disabled) { border-color: var(--site-control-border); color: var(--site-muted); background: var(--site-panel-background); }
 /* The current language is disabled on purpose and retains its selected appearance. */
@@ -317,10 +318,6 @@
 .ui-language--text > .ui-button:not(:disabled) { border-color: transparent; color: var(--ui-link); background: transparent; text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 0.2em; }
 .ui-language--text > .ui-button[aria-pressed="true"] { border-color: transparent; color: var(--site-text); background: transparent; font-weight: var(--ui-weight-bold); text-decoration: none; cursor: default; }
 .ui-language--text > .ui-button:hover:not(:disabled) { color: var(--ui-link-hover); background: transparent; text-decoration-thickness: 2px; }
-
-@media (min-width: 651px) and (hover: hover) and (pointer: fine) {
-  .ui-language { --ui-control-min-height: 1.75rem; }
-}
 
 /* Preserve native hidden state when a component defines a display layout. */
 .ui-panel [hidden], .ui-disclosure [hidden], .ui-notice [hidden],

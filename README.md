@@ -12,6 +12,8 @@ Each maintained page has a `data-page` root on its body. Scope local selectors w
 
 Use sentence case for generic labels, headings, and descriptive tool names. Preserve proper names and acronyms. Keep English fallback text, catalogs, metadata, and app manifest names consistent. Current tools use a parent link and the full English tool name. The guide's [page-header section](style-guide/#headers) shows the accepted layout and links to the working tools. Use `.ui-tool-header` for shared header spacing and alignment. The header uses static HTML and works without JavaScript.
 
+Put every breadcrumb in `.ui-context-row`, including pages without language controls. The row centers its contents and reserves `--ui-context-min-height`: 1.75rem for wide screens with a fine pointer and hover, or 2.75rem otherwise. Both language variants use the same token. Keep this as a minimum so wrapping and zoom can expand the row. Do not add empty language controls or page-specific height fixes.
+
 The Sound section links to Studio, [Room acoustics](sound/room-acoustics/), and [Live sound](sound/live-sound/). Room acoustics and Live sound have English placeholder pages. Both pages state that examples are coming soon. They do not list prices or confirm service availability.
 
 ## Studio rates

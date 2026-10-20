@@ -1248,3 +1248,22 @@ Color and scope: Use `#716c61` for the softer muted tone. Its calculated contras
 Checks: Use the existing repository check and complete diff review. Refresh affected hashes and keep the studio specimen current. Add no tests, dependencies, or browser tools for this static refinement. Record unavailable manual mobile, keyboard, focus, and zoom review.
 
 Verification evidence: `./scripts/check.sh` passed all seven test files. Reviewed the complete diff, new shared size and color utilities, unchanged existing type tokens, heading placement, shorter labels, English fallbacks, Chinese catalogs, guide samples, and asset hashes. All 19 maintained and redirect documents have balanced markup. The soft-tone contrast calculations above cover its documented reading surfaces. Existing checks pass for catalog parity, accessibility references, and application behavior. Price amounts, service descriptions, conditions, note IDs, and spacing remain unchanged. Refreshed shared and local stylesheet references and the studio catalog reference. Added no tests, dependencies, or browser tooling. Manual mobile, keyboard, focus, and 200 percent zoom review did not run because a browser was unavailable. Shorter labels reduce the requested text, but no rendered fit is claimed.
+
+
+## 32. Stabilize breadcrumb row geometry
+
+Selection on 20 October 2026: The owner approved one shared context row with consistent minimum height and centered vertical alignment. Todoist task `6hpRw3jQRhrQH9qc` records this package.
+
+Purpose and source findings: Breadcrumbs move between pages with no language controls, text-style controls, and segmented controls. The control variants already share minimum button heights. Reading context rows align baselines, tool rows center contents, and eight maintained headers put their breadcrumb directly inside the header without a context-row wrapper. Normalize this structure and its shared geometry.
+
+Decisions: Add `--ui-context-min-height`, using 2.75rem for touch and 1.75rem for wide screens with a fine pointer and hover. Give `.ui-context-row` that minimum height and center its contents. Derive both language variants' control height from the same token. Add the same row wrapper to breadcrumb-only headers. Remove the redundant tool-specific alignment rule. Update the guide's simulated mobile frames to override the context token, not a separate button height. Add matching no-control, text-control, and segmented-control examples.
+
+Failure behavior and scope: Use a minimum height rather than a fixed height. Allow long breadcrumbs, language groups, and zoomed text to expand or wrap. Retain page width, header padding, language appearance, focus outlines, disabled state, and existing navigation destinations. Do not add empty language controls or JavaScript measurements. Keep the homepage introduction, redirect, and frozen legacy converter outside this header change. Keep app content, inputs, playback, sharing, and payment validation unchanged.
+
+Checks: Use the existing repository check and a complete diff review. Verify normalized header structure and preserved content, IDs, and controls through source comparison. Refresh affected asset hashes. Add no dependencies, browser tools, or permanent tests that repeat static layout declarations. Record unavailable manual keyboard, focus, narrow-screen, page-switching, and 200 percent zoom review.
+
+- [x] Normalize shared geometry, header wrappers, guide samples, and current documentation.
+- [x] Refresh hashes, pass relevant checks, and review the complete diff.
+- [ ] Commit the package and reconcile Todoist.
+
+Verification evidence: `./scripts/check.sh` passed all seven test files. Reviewed the complete diff. A temporary source comparison confirmed balanced markup in 18 maintained documents, shared row wrappers for all 27 breadcrumbs, and preserved content and element attributes outside the guide additions, row wrappers, and refreshed asset hashes. The review covered 17 page headers. Both language variants now derive their minimum height from the row token. Existing checks pass for asset hashes, accessibility references, translations, and application behavior. Added no dependencies, browser tools, JavaScript, or permanent tests. Manual keyboard, focus, narrow-screen, page-switching, and 200 percent zoom review did not run because a browser was unavailable. No rendered result is claimed.
