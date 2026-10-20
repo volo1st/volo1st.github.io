@@ -1206,8 +1206,10 @@ Failure behavior and checks: Long English or Chinese text must wrap without cove
 
 - [x] Update the service layout, shared heading classes, translated note links, and studio specimen.
 - [x] Refresh affected hashes, pass relevant checks, and review the complete diff.
-- [ ] Commit the package and reconcile Todoist.
+- [x] Commit the package and reconcile Todoist.
 
 Verification evidence: `./scripts/check.sh` passed all seven test files. Existing studio checks verify identical English and Chinese key sets, English fallbacks, language changes, heading hierarchy, and current asset hashes. All 19 maintained and redirect documents have balanced markup. A separate source review confirmed that all four note and return links in each of the live page and specimen have descriptive link names and existing, focusable fragment targets. Translation bindings stay on rate text spans, outside the marker links. Reviewed the complete diff, local selector scopes, heading classes, wrapping row, marker line height, adjacent notes, print grouping, and updated specimen. Global typography, page widths, prices, app engines, and financial-file code are unchanged. Refreshed rate stylesheet and catalog hashes. Added no tests, dependencies, or browser tooling. Recorded the migration lesson in the ignored experience file.
 
 Review limits: A browser was unavailable. Rendered overlap, long-title wrapping, native note-link navigation, visible focus, narrow-screen behavior, and 200 percent zoom did not receive an independent manual check. Source checks do not establish those rendered results. The specimen now includes long headings and text prices for the owner's review. No push or deployment is part of this package.
+
+Completion on 20 October 2026: Commit `fb5e16f` contains the verified studio refinement. Added the outcome comment to Todoist task `6hpRh3FCwjgHmmFc`, verified the comment, completed the task, and confirmed its completed state through a fresh read. The initiative and deferred tasks remain unchanged. No next package was selected.
