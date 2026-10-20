@@ -20,6 +20,8 @@ The [studio index](studio/) shows the studio name, rates link, and studio social
 
 Update rates and both language catalogs in `studio/rates/i18n.js`. Keep the English fallback text in `studio/rates/index.html` in sync. Refresh content hashes in the HTML after asset changes. Run the repository check before release.
 
+Keep service headings as `h2` elements with the shared `ui-subheading` style. Put the heading and rate in a wrapping `service-header` row. Keep descriptions and notes below it. Rate markers link to the applicable notes and back. Bind translated rate text to its span so a language change preserves the marker link. Keep the static studio specimen current.
+
 ## Tools
 
 - [CSV to ABA converter](tools/csv2aba-v2/) is the current converter. The former address redirects to it. One normal CBA payment run will complete its workflow validation.

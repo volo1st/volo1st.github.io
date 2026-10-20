@@ -10,9 +10,9 @@
   <link rel="icon" href="../../assets/favicon.svg?v=fd8de8ff0d96">
   <link rel="stylesheet" href="../../assets/site-shell.css?v=340aa48fa873">
   <link rel="stylesheet" href="../../assets/ui.css?v=0ec558ba28c7">
-  <link rel="stylesheet" href="rates.css?v=4b9332c803f4">
+  <link rel="stylesheet" href="rates.css?v=cdce6b950094">
   <script src="../../assets/i18n.js?v=548d5026df12" defer></script>
-  <script src="i18n.js?v=6dedaaee6949" defer></script>
+  <script src="i18n.js?v=c76d515e8216" defer></script>
 </head>
 <body data-page="studio-rates">
   <header class="site-header ui-page-header ui-container">
@@ -36,31 +36,44 @@
       <h1 data-i18n="studio.heading" class="rates-year ui-title">2026 studio rates</h1>
     </header>
     <section class="service" aria-labelledby="recording-heading">
-      <h2 data-i18n="studio.recording" id="recording-heading" class="ui-heading">Studio recording</h2>
-      <p data-i18n="studio.recordingRate" class="rate">$100/hr</p>
+      <div class="service-header">
+        <h2 data-i18n="studio.recording" id="recording-heading" class="ui-subheading">Studio recording</h2>
+        <p id="recording-rate" class="rate" tabindex="-1"><span data-i18n="studio.recordingRate">$100/hr</span><sup><a class="ui-link" href="#recording-rate-notes" aria-label="Read recording rate notes" data-i18n-aria-label="studio.recordingNotesLink">*</a></sup></p>
+      </div>
       <p data-i18n="studio.recordingText" class="service-text">Professional recording for vocals, acoustic and electric instruments, piano, and traditional Chinese instruments.</p>
-      <p data-i18n="studio.recordingNote" class="service-note ui-small ui-muted">Includes recording engineer and studio equipment. Minimum 2-hour booking.</p>
+      <div id="recording-rate-notes" class="service-note ui-small ui-muted" tabindex="-1">
+        <p><a class="ui-link" href="#recording-rate" aria-label="Return to recording rate" data-i18n-aria-label="studio.recordingRateReturn">*</a> <span data-i18n="studio.recordingNotesHeading">Recording rate notes</span></p>
+        <ul>
+          <li data-i18n="studio.recordingIncludes">Includes recording engineer and studio equipment.</li>
+          <li data-i18n="studio.recordingMinimum">Minimum 2-hour booking.</li>
+          <li data-i18n="studio.recordingSpecial">Special requirements, such as instrument rental, are quoted individually.</li>
+        </ul>
+      </div>
     </section>
     <section class="service" aria-labelledby="mixing-heading">
-      <h2 data-i18n="studio.mixing" id="mixing-heading" class="ui-heading">Mixing &amp; editing</h2>
-      <p data-i18n="studio.mixingRate" class="rate">$90/hr</p>
+      <div class="service-header">
+        <h2 data-i18n="studio.mixing" id="mixing-heading" class="ui-subheading">Mixing &amp; editing</h2>
+        <p data-i18n="studio.mixingRate" class="rate">$90/hr</p>
+      </div>
       <p data-i18n="studio.mixingText" class="service-text">Multitrack mixing, audio editing, and post-production tailored to your music.</p>
     </section>
     <section class="service" aria-labelledby="packages-heading">
-      <h2 data-i18n="studio.packages" id="packages-heading" class="ui-heading">Song &amp; album packages</h2>
-      <p data-i18n="studio.packagesRate" class="rate">Custom quote</p>
+      <div class="service-header">
+        <h2 data-i18n="studio.packages" id="packages-heading" class="ui-subheading">Song &amp; album packages</h2>
+        <p id="packages-rate" class="rate" tabindex="-1"><span data-i18n="studio.packagesRate">Custom quote</span><sup><a class="ui-link" href="#packages-rate-note" aria-label="Read package pricing note" data-i18n-aria-label="studio.packagesNoteLink">†</a></sup></p>
+      </div>
       <p data-i18n="studio.packagesText" class="service-text">Tailored recording and mixing packages for singles, covers, EPs, and albums.</p>
-      <p data-i18n="studio.packagesNote" class="service-note ui-small ui-muted">Package pricing is available for projects with an agreed scope and recording schedule.</p>
+      <p id="packages-rate-note" class="service-note ui-small ui-muted" tabindex="-1"><a class="ui-link" href="#packages-rate" aria-label="Return to package pricing" data-i18n-aria-label="studio.packagesRateReturn">†</a> <span data-i18n="studio.packagesNote">Package pricing is available for projects with an agreed scope and recording schedule.</span></p>
     </section>
     <section class="booking ui-flow" aria-labelledby="booking-heading">
-      <h2 data-i18n="studio.booking" id="booking-heading" class="ui-heading">Additional information</h2>
+      <h2 data-i18n="studio.booking" id="booking-heading" class="ui-subheading">Additional information</h2>
       <ul>
         <li data-i18n="studio.bookingRevisions">Fixed-price packages include an agreed number of revisions.</li>
         <li data-i18n="studio.bookingExtra">Additional recording, editing, and production work may incur extra charges.</li>
       </ul>
     </section>
     <section class="contact ui-flow" aria-labelledby="contact-heading">
-      <h2 data-i18n="studio.contactHeading" id="contact-heading" class="ui-heading">Contact me</h2>
+      <h2 data-i18n="studio.contactHeading" id="contact-heading" class="ui-subheading">Contact me</h2>
       <p class="service-text contact-text"><span data-i18n="studio.contactBefore">Send me a message on </span><a class="ui-link" data-i18n="studio.instagram" href="https://www.instagram.com/bits.n.beats/" target="_blank" rel="noopener noreferrer">Instagram</a><span data-i18n="studio.contactBetween"> or </span><a class="ui-link" data-i18n="studio.rednote" href="https://www.xiaohongshu.com/user/profile/5e7818aa0000000001006bf7" target="_blank" rel="noopener noreferrer">小红书</a><span data-i18n="studio.contactAfter"> to discuss your project and get a tailored quote.</span></p>
     </section>
     <footer class="rates-footer ui-flow">

@@ -8,7 +8,7 @@
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=340aa48fa873">
     <link rel="stylesheet" href="../assets/ui.css?v=0ec558ba28c7">
-    <link rel="stylesheet" href="../studio/rates/rates.css?v=4b9332c803f4">
+    <link rel="stylesheet" href="../studio/rates/rates.css?v=cdce6b950094">
     <link rel="stylesheet" href="./specimens.css?v=0ddded5e8fa3">
   </head>
   <body data-page="studio-rates" data-specimen>
@@ -33,19 +33,38 @@
         <h1 class="rates-year ui-title">Example studio rates</h1>
       </header>
       <section class="service" aria-labelledby="studio-service">
-        <h2 id="studio-service" class="ui-heading">Example recording</h2>
-        <p class="rate">$80/hr</p>
-        <p class="service-text">A short description of the example service, equipment, and session.</p>
-        <p class="service-note ui-small ui-muted">A supporting note with the current small-text style.</p>
+        <div class="service-header">
+          <h2 id="studio-service" class="ui-subheading">Example recording for acoustic and traditional instruments</h2>
+          <p id="studio-example-rate" class="rate" tabindex="-1">$80/hr<sup><a class="ui-link" href="#studio-example-notes" aria-label="Read example recording rate notes">*</a></sup></p>
+        </div>
+        <p class="service-text">A longer description of the example service, equipment, and session. This stays below the heading and price when either item wraps.</p>
+        <div id="studio-example-notes" class="service-note ui-small ui-muted" tabindex="-1">
+          <p><a class="ui-link" href="#studio-example-rate" aria-label="Return to example recording rate">*</a> Example recording rate notes</p>
+          <ul>
+            <li>Includes an example engineer and equipment.</li>
+            <li>Minimum 2-hour example booking.</li>
+            <li>Special equipment rental is quoted individually.</li>
+          </ul>
+        </div>
       </section>
       <section class="service" aria-labelledby="studio-chinese" lang="zh-Hans">
-        <h2 id="studio-chinese" class="ui-heading">录音示例</h2>
-        <p class="rate">$80/小时</p>
+        <div class="service-header">
+          <h2 id="studio-chinese" class="ui-subheading">原声乐器与中国传统乐器录音服务示例</h2>
+          <p class="rate">$80/小时</p>
+        </div>
         <p class="service-text">示例服务说明。比较中文字体、行距与文字大小。</p>
         <p class="service-note ui-small ui-muted">这是用于比较样式的说明文字。</p>
       </section>
+      <section class="service" aria-labelledby="studio-packages">
+        <div class="service-header">
+          <h2 id="studio-packages" class="ui-subheading">Example song &amp; album packages</h2>
+          <p id="studio-example-package-rate" class="rate" tabindex="-1">Custom quote<sup><a class="ui-link" href="#studio-example-package-note" aria-label="Read example package pricing note">†</a></sup></p>
+        </div>
+        <p class="service-text">An example package description with a longer heading and a text price.</p>
+        <p id="studio-example-package-note" class="service-note ui-small ui-muted" tabindex="-1"><a class="ui-link" href="#studio-example-package-rate" aria-label="Return to example package pricing">†</a> Example quotes depend on the agreed scope and schedule.</p>
+      </section>
       <section class="booking ui-flow" aria-labelledby="studio-booking">
-        <h2 id="studio-booking" class="ui-heading">Additional information</h2>
+        <h2 id="studio-booking" class="ui-subheading">Additional information</h2>
         <ul>
           <li>
             One short example instruction.
@@ -56,7 +75,7 @@
         </ul>
       </section>
       <section class="contact ui-flow" aria-labelledby="studio-contact">
-        <h2 id="studio-contact" class="ui-heading">Contact link style</h2>
+        <h2 id="studio-contact" class="ui-subheading">Contact link style</h2>
         <p class="service-text contact-text">Return to the <a class="ui-link" href="./">UI style guide</a> to review the shared styles.</p>
       </section>
       <footer class="rates-footer ui-flow">
