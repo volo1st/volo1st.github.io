@@ -1154,3 +1154,18 @@ Source review: Reviewed the complete diff, the shared script, default hidden sta
 Review limits: A browser and representative audio device were unavailable. Manual rendered comparison, keyboard use, visible focus, narrow screens, 200 percent zoom, and playback checks did not run. These source and Node checks do not establish rendered or device behavior. The owner can now compare both layouts while using the real apps. This package does not select a permanent layout, push, or deploy.
 
 Completion on 20 October 2026: Commit `446ce9c` contains the verified real-app previews. Added the outcome comment to Todoist task `6hpRQFQCwhgCGxx6`, verified the comment, completed the task, and confirmed its completed state through a fresh read. The initiative and deferred tasks remain unchanged. No next package was selected.
+
+
+## 29. Try header A with full tool names
+
+Selection on 20 October 2026: The owner prefers A and requested full names to assess wrapping. Todoist task `6hpRVpMqw82p48C6` records this package.
+
+Purpose and decisions: Use the parent-link header with the full English tool name in the three current tools. Make this the normal HTML layout so it also works without JavaScript. Keep the existing B preview available during review. Remove the generated short-name span from the preview script. Keep the full browser title and the existing accessible heading. Update the guide and shared-tool specimens to use the same alignment rules.
+
+Wrapping and failure behavior: Keep the shared wrapping layout and centered vertical alignment. Allow the whole language group to move to another row when the full breadcrumb cannot fit beside it. Keep title wrapping available at very narrow widths. Do not truncate names, hide overflow, force a single line, reduce font size, or shrink touch targets. Preserve app controls, input, playback, translations, and sharing. Use existing checks and update the existing preview test for the full-name behavior. Add no browser automation or style-only tests. Manual wrapping, keyboard, focus, and zoom review remains pending when no browser is available.
+
+- [x] Use A with full names in the live HTML, previews, and guide.
+- [x] Refresh affected hashes, pass relevant checks, and review the complete diff.
+- [ ] Commit the package and reconcile Todoist.
+
+Verification evidence: `./scripts/check.sh` passed all eight test files. Updated the existing preview test to check the static full-name A default, unchanged full-name node during A/B switching, retained input, selected state, and unchanged URL data. Reviewed the complete diff, default hidden home link, visible current name, native hidden behavior, accessible heading, shared alignment, guide examples, and specimen classes. Refreshed the preview script hashes in all three tool pages. Shared CSS, application engines, financial validation, app controls, translation catalogs, and browser titles are unchanged. Added no tests, dependencies, or browser tools. Manual rendered wrapping, keyboard, focus, and 200 percent zoom checks did not run because a browser was unavailable. The owner can review the longer names on normal tool URLs or through the existing preview links.

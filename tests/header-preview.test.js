@@ -33,13 +33,16 @@ function loadPreview(query) {
   main.append(heading);
   main.append(input);
   const header = element();
-  header.dataset.headerTool = 'Guitar';
+  header.dataset.headerTool = '';
+  header.dataset.headerLayout = 'a';
   const home = element();
+  home.hidden = true;
   const current = element();
   const fullName = element();
   fullName.textContent = 'Guitar strum machine';
+  current.append(fullName);
   const separator = element();
-  separator.textContent = '/';
+  separator.textContent = '←';
   const controls = element();
   controls.hidden = true;
   const buttons = ['a', 'b'].map((layout) => {
@@ -51,14 +54,13 @@ function loadPreview(query) {
   const selectors = new Map([
     ['[data-header-tool]', header], ['[data-header-preview]', controls],
     ['[data-header-title]', heading], ['[data-header-home]', home],
-    ['[data-header-current]', current], ['[data-header-name]', fullName],
+    ['[data-header-current]', current],
     ['[data-header-parent-separator]', separator],
   ]);
   header.querySelector = (selector) => selectors.get(selector);
   const document = {
     addEventListener(name, listener) { assert.equal(name, 'DOMContentLoaded'); this.ready = listener; },
     querySelector: (selector) => selectors.get(selector),
-    createElement: () => element(),
   };
   const window = {
     location: Object.freeze({ href: `https://example.invalid/tools/guitar-strumming/${query}` }),
@@ -70,14 +72,17 @@ function loadPreview(query) {
   return { header, main, heading, input, home, current, fullName, separator, controls, buttons, window };
 }
 
-test('normal and invalid preview URLs keep the existing header and app unchanged', () => {
+test('normal and invalid preview URLs keep the full-name A header and app unchanged', () => {
   for (const query of ['', '?header=unknown', '?header=', '?song=invented']) {
     const view = loadPreview(query);
     assert.equal(view.controls.hidden, true);
     assert.equal(view.heading.parent, view.main);
-    assert.equal(view.home.hidden, false);
+    assert.equal(view.header.dataset.headerLayout, 'a');
+    assert.equal(view.home.hidden, true);
     assert.equal(view.current.hidden, false);
-    assert.equal(view.separator.textContent, '/');
+    assert.equal(view.current.children[0], view.fullName);
+    assert.equal(view.fullName.classList.contains('ui-visually-hidden'), false);
+    assert.equal(view.separator.textContent, '←');
     assert.equal(view.header.children.length, 0);
     assert.equal(view.input.value, 'Invented practice input');
   }
@@ -95,11 +100,12 @@ test('A/B switching reuses the full heading and preserves input, focus targets, 
       assert.equal(view.header.dataset.headerLayout, mode);
       assert.equal(view.home.hidden, mode === 'a');
       assert.equal(view.current.hidden, mode === 'b');
-      assert.equal(view.fullName.classList.contains('ui-visually-hidden'), mode === 'a');
+      assert.equal(view.fullName.classList.contains('ui-visually-hidden'), false);
       assert.equal(view.heading.classList.contains('ui-visually-hidden'), mode === 'a');
       assert.equal(view.heading.classList.contains('ui-subheading'), mode === 'b');
-      assert.equal(view.current.children[0].textContent, 'Guitar');
-      assert.equal(view.current.children[0].attributes['aria-hidden'], 'true');
+      assert.equal(view.current.children.length, 1);
+      assert.equal(view.current.children[0], view.fullName);
+      assert.equal(view.current.children[0].textContent, 'Guitar strum machine');
       assert.equal(view.header.children.filter((child) => child === view.heading).length, 1);
       assert.equal(view.heading.textContent, 'Guitar strum machine');
       assert.equal(view.main.children[0], view.input);
