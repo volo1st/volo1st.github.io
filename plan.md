@@ -1166,6 +1166,8 @@ Wrapping and failure behavior: Keep the shared wrapping layout and centered vert
 
 - [x] Use A with full names in the live HTML, previews, and guide.
 - [x] Refresh affected hashes, pass relevant checks, and review the complete diff.
-- [ ] Commit the package and reconcile Todoist.
+- [x] Commit the package and reconcile Todoist.
 
 Verification evidence: `./scripts/check.sh` passed all eight test files. Updated the existing preview test to check the static full-name A default, unchanged full-name node during A/B switching, retained input, selected state, and unchanged URL data. Reviewed the complete diff, default hidden home link, visible current name, native hidden behavior, accessible heading, shared alignment, guide examples, and specimen classes. Refreshed the preview script hashes in all three tool pages. Shared CSS, application engines, financial validation, app controls, translation catalogs, and browser titles are unchanged. Added no tests, dependencies, or browser tools. Manual rendered wrapping, keyboard, focus, and 200 percent zoom checks did not run because a browser was unavailable. The owner can review the longer names on normal tool URLs or through the existing preview links.
+
+Completion on 20 October 2026: Commit `1bff0cb` contains the verified full-name trial. Added the outcome comment to Todoist task `6hpRVpMqw82p48C6`, verified the comment, completed the task, and confirmed its completed state through a fresh read. The initiative and deferred tasks remain unchanged. No next package was selected.
