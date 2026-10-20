@@ -9,7 +9,7 @@
     <title>UI style guide | volo1st</title>
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=340aa48fa873">
-    <link rel="stylesheet" href="../assets/ui.css?v=0ec558ba28c7">
+    <link rel="stylesheet" href="../assets/ui.css?v=463ae6d78eca">
     <link rel="stylesheet" href="./guide.css?v=581f17c37a96">
   </head>
   <body data-page="style-guide">
@@ -68,7 +68,7 @@
         <p class="guide-eyebrow">01 / Typography</p>
         <h2 id="type-heading" class="ui-heading">Serif by default. Sans-serif for controls.</h2>
         <p>Use one serif family for headings and content. Use sans-serif for interactive controls and their labels. Use monospace for source text and technical values. Inline links keep the surrounding text font.</p>
-        <p>Use four sizes and two weights. Keep headings regular. Use bold for emphasis, control labels, and subsection headings. Use normal letter spacing.</p>
+        <p>Use five named sizes and two weights. Reserve the smallest size for fine print. Keep headings regular. Use bold for emphasis, control labels, and subsection headings. Use normal letter spacing.</p>
         <p class="ui-small ui-muted">These are local font stacks. The actual fonts depend on the device. Compare English and Chinese before choosing the final set.</p>
         <div class="guide-grid guide-type-grid">
           <article class="guide-sample ui-flow">
@@ -103,6 +103,11 @@
           <p class="ui-small">Small text keeps the normal text color.</p>
           <p class="ui-muted">Muted text keeps the normal body size.</p>
           <p class="ui-small ui-muted">Small, muted text combines both classes.</p>
+          <p class="guide-caption">Fine print · 0.75rem · softer muted color</p>
+          <p class="ui-fineprint">Fine print keeps the normal text color when used alone.</p>
+          <p class="ui-fineprint ui-muted ui-muted--soft">Quiet notes use a smaller size and a softer tone.</p>
+          <p class="ui-fineprint ui-muted ui-muted--soft" lang="zh-Hans">补充说明使用更小的字号和更柔和的文字颜色。</p>
+          <p class="ui-small ui-muted">Use <code class="ui-code">ui-fineprint</code> for size. Add <code class="ui-code">ui-muted ui-muted--soft</code> for quieter notes on the page, panel, or subtle reading surface. Keep controls and notices at their existing text colors.</p>
           <p class="guide-caption">Source and technical values · 1rem · regular</p>
           <p class="ui-code">00:42 / 03:20 · 100 beats per minute</p>
         </div>

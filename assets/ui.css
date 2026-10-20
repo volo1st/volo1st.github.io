@@ -5,6 +5,7 @@
   --ui-font-display: var(--ui-font-body);
   --ui-font-reading: var(--ui-font-body);
   --ui-font-mono: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --ui-size-fineprint: 0.75rem;
   --ui-size-supporting: 0.875rem;
   --ui-size-body: 1rem;
   --ui-size-section: 1.5rem;
@@ -32,6 +33,7 @@
   --ui-link: #3f3a31;
   --ui-link-hover: #171512;
   --ui-text-muted: #6b665b;
+  --ui-text-muted-soft: #716c61;
   --ui-info: #075a9c;
   --ui-info-surface: #e8f3fb;
   --ui-success: #24613e;
@@ -94,7 +96,9 @@
 .ui-reading { font-family: var(--ui-font-reading); line-height: var(--ui-leading-body); }
 .ui-code { font-family: var(--ui-font-mono); }
 .ui-small { font-size: var(--ui-size-supporting); line-height: var(--ui-leading-body); }
+.ui-fineprint { font-size: var(--ui-size-fineprint); line-height: var(--ui-leading-body); }
 .ui-muted { color: var(--ui-text-muted); }
+.ui-muted--soft { color: var(--ui-text-muted-soft); }
 .ui-link { color: var(--ui-link); text-decoration-line: underline; text-decoration-style: dotted; text-underline-offset: 0.18em; }
 .ui-link:hover { color: var(--ui-link-hover); }
 .ui-link--accent { color: var(--tool-accent); }
