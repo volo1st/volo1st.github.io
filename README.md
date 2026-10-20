@@ -20,7 +20,7 @@ The [studio index](studio/) shows the studio name, rates link, and studio social
 
 Update rates and both language catalogs in `studio/rates/i18n.js`. Keep the English fallback text in `studio/rates/index.html` in sync. Refresh content hashes in the HTML after asset changes. Run the repository check before release.
 
-Keep service headings as `h2` elements with the shared `ui-subheading` style. Put headings, descriptions, and notes in the service grid's left column. Keep the right column clear for the rate. Exceptionally narrow layouts stack the rate. Use plain note markers and associate rates with their notes through `aria-describedby`. Bind translated rate text to its span so a language change preserves the marker. Keep the static studio specimen current.
+Keep service headings as `h2` elements with the shared `ui-subheading` style. Put the heading and rate on the first grid row. Descriptions and notes use the full width below it. Use `ui-small` for descriptions and add `ui-muted` for notes. Leave 1.5rem below the heading row and 1rem between descriptions and notes. Exceptionally narrow layouts stack the rate. Use plain note markers and associate rates with their notes through `aria-describedby`. Bind translated rate text to its span so a language change preserves the marker. Keep the static studio specimen current.
 
 ## Tools
 
