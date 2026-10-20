@@ -1,4 +1,4 @@
-# volo1st's Website
+# volo1st's website
 
 This repository contains volo1st's public website and static browser tools. GitHub Pages hosts the website.
 
@@ -10,6 +10,8 @@ The [UI style guide](style-guide/) demonstrates the shared design and isolated p
 
 Each maintained page has a `data-page` root on its body. Scope local selectors with `:where([data-page="page-name"])`. Use the same root in its specimen. Keep shared selectors in `site-shell.css` and `ui.css` global. Use `ui-small` for supporting text size and `ui-muted` for quieter text color. Combine the classes when both are needed.
 
+Use sentence case for generic labels, headings, and descriptive tool names. Preserve proper names and acronyms. Keep English fallback text, catalogs, metadata, and app manifest names consistent. The guide's [page-header section](style-guide/#headers) compares two proposed mobile tool layouts. The live header layout remains unchanged until a layout is selected.
+
 The Sound section links to Studio, [Room acoustics](sound/room-acoustics/), and [Live sound](sound/live-sound/). Room acoustics and Live sound have English placeholder pages. Both pages state that examples are coming soon. They do not list prices or confirm service availability.
 
 ## Studio rates
@@ -20,12 +22,12 @@ Update rates and both language catalogs in `studio/rates/i18n.js`. Keep the Engl
 
 ## Tools
 
-- [CSV to ABA Converter](tools/csv2aba-v2/) is the current converter. The former address redirects to it. One normal CBA payment run will complete its workflow validation.
-- [Legacy CSV to ABA Converter](tools/csv2aba-legacy/) is the fallback. Its conversion logic remains unchanged.
-- [Guitar Strum Machine](tools/guitar-strumming/) makes a looping guitar backing track from plain-text input. The tools directory links to this tool.
-- [Pitch Shifter](tools/pitch-shifter/) shifts a local mono or stereo song without changing its duration. One transport compares the original and shifted audio. The tool exports a 16-bit pulse-code modulation (PCM) Waveform Audio File Format (WAV) file or a 320 kbit/s MP3 file.
+- [CSV to ABA converter](tools/csv2aba-v2/) is the current converter. The former address redirects to it. One normal CBA payment run will complete its workflow validation.
+- [Legacy CSV to ABA converter](tools/csv2aba-legacy/) is the fallback. Its conversion logic remains unchanged.
+- [Guitar strum machine](tools/guitar-strumming/) makes a looping guitar backing track from plain-text input. The tools directory links to this tool.
+- [Pitch shifter](tools/pitch-shifter/) shifts a local mono or stereo song without changing its duration. One transport compares the original and shifted audio. The tool exports a 16-bit pulse-code modulation (PCM) Waveform Audio File Format (WAV) file or a 320 kbit/s MP3 file.
 
-The home page uses English. The tools directory, version 2 converter, Guitar Strum Machine, and Pitch Shifter support English and Simplified Chinese. The site stores the selected tool language in browser local storage. A language change does not change guitar arrangement text, playback state, share-link data, or selected audio.
+The home page uses English. The tools directory, version 2 converter, Guitar strum machine, and Pitch shifter support English and Simplified Chinese. The site stores the selected tool language in browser local storage. A language change does not change guitar arrangement text, playback state, share-link data, or selected audio.
 
 The maintained pages use `assets/site-shell.css` for shared identity, breadcrumb, language control, and design tokens. The home page uses `assets/home.css` for its namecard layout. The public section indexes use `assets/section-index.css` for their content lists. The shared shell maps a semantic `data-domain` value to each tool accent. The original pixel-art `V` block is the browser icon. The legacy CSV-to-ABA conversion logic remains unchanged.
 
@@ -35,15 +37,15 @@ The home page uses local SVG paths from Simple Icons version 16 for its social l
 
 Maintained HTML pages reference interface assets with a short SHA-256 content hash. Update the hash when a CSS or JavaScript file changes. The repository check rejects a stale hash. Legacy assets remain unversioned because the legacy fallback is frozen except for a critical fix.
 
-Pitch Shifter keeps audio on the user's device. It does not upload the file or send audio over the network. It supports files that the browser can decode, mono or stereo audio, sample rates from 8 kHz through 192 kHz, a maximum duration of 30 minutes, and up to 128 MiB of decoded 32-bit PCM. It exports 16-bit PCM WAV or 320 kbit/s MP3. An MP3 source defaults to MP3 output. Every other source defaults to WAV output. The encoder preserves the rendered level and clamps samples outside the output range. Processing statistics show the pre-encode peak and clipped-sample proportion. MP3 export can add a short codec delay. The tool does not preserve source metadata. On iOS and iPadOS, the tool uses the optional Audio Session API to recover silent built-in-speaker output. Other browsers use the normal playback path. The tool uses pinned local Signalsmith Stretch and LAME WebAssembly (Wasm) modules. See its [dependency record](tools/pitch-shifter/docs/DEPENDENCIES.md) for source commits, licences, artifact hashes, and reproduction steps.
+Pitch shifter keeps audio on the user's device. It does not upload the file or send audio over the network. It supports files that the browser can decode, mono or stereo audio, sample rates from 8 kHz through 192 kHz, a maximum duration of 30 minutes, and up to 128 MiB of decoded 32-bit PCM. It exports 16-bit PCM WAV or 320 kbit/s MP3. An MP3 source defaults to MP3 output. Every other source defaults to WAV output. The encoder preserves the rendered level and clamps samples outside the output range. Processing statistics show the pre-encode peak and clipped-sample proportion. MP3 export can add a short codec delay. The tool does not preserve source metadata. On iOS and iPadOS, the tool uses the optional Audio Session API to recover silent built-in-speaker output. Other browsers use the normal playback path. The tool uses pinned local Signalsmith Stretch and LAME WebAssembly (Wasm) modules. See its [dependency record](tools/pitch-shifter/docs/DEPENDENCIES.md) for source commits, licences, artifact hashes, and reproduction steps.
 
-Use HTTPS for Pitch Shifter performance tests on iOS and iPadOS. WebKit Enhanced Security can disable just-in-time compilation for JavaScript and Wasm on a plain HTTP local-area-network origin. This restriction can make local tests much slower than the deployed site. Record `window.isSecureContext` with each device measurement. See [WebKit issue 324968](https://bugs.webkit.org/show_bug.cgi?id=324968).
+Use HTTPS for Pitch shifter performance tests on iOS and iPadOS. WebKit Enhanced Security can disable just-in-time compilation for JavaScript and Wasm on a plain HTTP local-area-network origin. This restriction can make local tests much slower than the deployed site. Record `window.isSecureContext` with each device measurement. See [WebKit issue 324968](https://bugs.webkit.org/show_bug.cgi?id=324968).
 
 The guitar tool can put the complete source in a share URL. Anyone who receives the URL can read the source. A browser sends the URL query to the website host when it opens the link. A URL-shortener service also receives the URL. A generated share URL must not exceed 750 characters. Decoded source must not exceed 65,536 UTF-8 bytes.
 
 The guitar page has a generic Open Graph preview. The preview does not include a fixed Open Graph URL, so an arrangement query remains in the shared link. Static metadata cannot show a different preview for each arrangement. Run `node scripts/generate-share-card.js` to regenerate the preview image.
 
-The Guitar Strum Machine provides a local home-screen icon and web app manifest. The installed app starts at the normal Guitar Strum Machine address. Installation does not add offline support. The other files in `assets/app-icons/` record the approved visual direction for possible future music tools.
+The Guitar strum machine provides a local home-screen icon and web app manifest. The installed app starts at the normal Guitar strum machine address. Installation does not add offline support. The other files in `assets/app-icons/` record the approved visual direction for possible future music tools.
 
 The guitar tool includes a local catalog of reviewed practice exercises. The catalog can include a short user transcription when it contains only chord and rhythm teaching data and has a clear unofficial notice. It does not include lyrics, melody notation, audio, or artwork. A preset does not make a network request. A preset URL uses a stable versioned slug. Before the owner declares version 1.0.0, preset sources can change in place. After that release, published preset source does not change. A source revision then uses a new slug.
 
@@ -101,4 +103,4 @@ Domain recovery needs access to GitHub and the DNS provider. Restore the custom 
 
 ## License status
 
-No repository-wide license has been selected. Third-party components retain their own license files and notices. See the [Pitch Shifter dependency record](tools/pitch-shifter/docs/DEPENDENCIES.md) for its bundled components.
+No repository-wide license has been selected. Third-party components retain their own license files and notices. See the [Pitch shifter dependency record](tools/pitch-shifter/docs/DEPENDENCIES.md) for its bundled components.

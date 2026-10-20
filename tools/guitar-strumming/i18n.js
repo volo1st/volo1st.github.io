@@ -16,7 +16,7 @@
 
   const catalogs = {
     'en-AU': {
-      'guitar.title': 'Guitar Strum Machine',
+      'guitar.title': 'Guitar strum machine',
       'guitar.description': 'Create looping guitar strumming backing tracks from plain text.',
       'guitar.practice': 'Practice',
       'guitar.preset': 'Exercise',

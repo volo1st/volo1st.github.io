@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Keep the Guitar Strum Machine source easy to find and change.
+Keep the Guitar strum machine source easy to find and change.
 
 Preserve direct browser loading without a build step.
 

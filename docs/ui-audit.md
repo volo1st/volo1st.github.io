@@ -292,3 +292,10 @@ These guards restrict where a local rule can match. They do not create a separat
 Text links use dotted underlines. Reading-language choices use the same decoration for the available language. Button links and social icons keep their own presentation. Breadcrumbs use the body serif family. Disclosure summaries prevent text selection; disclosure content keeps its existing selection behavior.
 
 `.ui-small` controls size and line height. `.ui-muted` controls the lighter warm text color through `--ui-text-muted`. Combine them for quiet supporting text. Use either class alone when size and emphasis differ. `.ui-help` remains a semantic component with its own readable instruction color. Use color rather than element opacity. The guide demonstrates the three combinations. Existing small-text uses now make their color choice explicit.
+
+
+## Mobile header comparison and casing · 20 October 2026
+
+The guide compares two proposed mobile tool headers. Option A uses a parent link and a short tool label. Option B uses a parent breadcrumb and a separate full heading. Both use shared serif text and existing segmented language controls. Guide-only rules center the row contents and retain touch target height. A narrower example shows the whole language group on a separate row. The live header layout remains unchanged pending selection.
+
+Use sentence case for generic labels and descriptive tool names. The full names are `Guitar strum machine`, `Pitch shifter`, and `CSV to ABA converter`. Proposed short navigation labels are `Guitar`, `Pitch`, and `CSV to ABA`. A short label must retain the full browser title and accessible heading. Preserve proper names and acronyms. Use `Studio / Rates` for breadcrumb levels and `2026 studio rates` for the page heading. Keep the intended case in source text. Do not use CSS capitalization. Dated audit findings above retain the original names. See section 27 in [plan.md](../plan.md) for the current decision and verification evidence.

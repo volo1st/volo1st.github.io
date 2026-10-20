@@ -1793,7 +1793,7 @@ test('the page contains the mobile practice interface and valid sound-test token
     .map((tokenMatch) => tokenMatch[1]);
   assert.equal(soundTestTokens.length, 20);
   assert.ok(soundTestTokens.every((token) => parser.parseStrumTokenValue(token).ok));
-  assert.match(html, /<title>Guitar Strum Machine<\/title>/);
+  assert.match(html, /<title>Guitar strum machine<\/title>/);
   assert.match(html, /<section class="practice-workspace ui-panel ui-stack"/);
   assert.match(html, /data-i18n="guitar\.preset">Exercise<\/label>/);
   assert.match(html, /data-i18n="guitar\.startOver">Start over<\/button>/);

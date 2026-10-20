@@ -1,6 +1,6 @@
 {
-  "name": "Guitar Strum Machine",
-  "short_name": "Strum Machine",
+  "name": "Guitar strum machine",
+  "short_name": "Strum machine",
   "description": "Practise chord changes and strumming patterns with a looping guitar track.",
   "start_url": "./",
   "scope": "./",

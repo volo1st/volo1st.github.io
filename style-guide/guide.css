@@ -13,6 +13,12 @@
 :where([data-page="style-guide"]) .guide-grid > * { min-width: 0; }
 :where([data-page="style-guide"]) .guide-sample { min-width: 0; }
 :where([data-page="style-guide"]) .guide-narrow-header { width: 100%; max-width: 20rem; border: 1px dashed var(--site-divider); padding: var(--ui-space-4); }
+:where([data-page="style-guide"]) .guide-mobile-header { display: grid; min-width: 0; gap: var(--ui-space-2); }
+:where([data-page="style-guide"]) .guide-mobile-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-2) var(--ui-space-4); }
+:where([data-page="style-guide"]) .guide-mobile-row > .ui-breadcrumb { flex: 0 1 auto; }
+:where([data-page="style-guide"]) .guide-mobile-header .ui-language { --ui-control-min-height: 2.75rem; }
+:where([data-page="style-guide"]) .guide-mobile-header > .ui-subheading { margin: 0; }
+:where([data-page="style-guide"]) .guide-narrow-header--tight { max-width: 14rem; }
 :where([data-page="style-guide"]) .guide-caption { color: var(--site-muted); font: var(--ui-size-supporting)/var(--ui-leading-body) var(--ui-font-body); }
 :where([data-page="style-guide"]) .guide-type-hierarchy > .guide-caption:not(:first-child) { margin-top: var(--ui-space-6); }
 :where([data-page="style-guide"]) .guide-type-hierarchy > .guide-caption + * { margin-block-start: var(--ui-space-2); }

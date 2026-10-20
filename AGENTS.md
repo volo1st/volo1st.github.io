@@ -23,6 +23,7 @@ Use ASD-STE100-style controlled English for user text and project documents.
 - Give one main instruction in each sentence.
 - Use active voice when possible.
 - Use the same term for the same item.
+- Use sentence case for generic labels, headings, and descriptive tool names. Preserve proper names and acronyms. Use `Guitar strum machine`, `Pitch shifter`, and `CSV to ABA converter` as the full English tool names. Do not change case with CSS.
 - Use the Oxford comma in English lists of three or more items when appropriate.
 - Define an abbreviation at its first use.
 - Do not use an abbreviation if it is not necessary.

@@ -168,7 +168,7 @@ test('the home page presents the approved public identity and contact links', ()
   const html = fs.readFileSync(path.join(repositoryRoot, 'index.html'), 'utf8');
 
   assert.doesNotMatch(html, /href="\.\/tools\/"/);
-  assert.doesNotMatch(html, /guitar-strumming|Guitar Strum Machine/);
+  assert.doesNotMatch(html, /guitar-strumming|Guitar strum machine/);
   assert.doesNotMatch(html, /csv2aba/i);
   assert.match(html, /href="https:\/\/github\.com\/volo1st"/);
   assert.match(html, /href="https:\/\/www\.instagram\.com\/bits\.n\.beats\/"/);
@@ -366,8 +366,8 @@ test('the guitar page provides local home-screen metadata', () => {
 
   assert.match(html, /<meta name="theme-color" content="#f4f1e8" \/>/);
   assert.match(html, /<link rel="apple-touch-icon" sizes="180x180" href="[^"]+" \/>/);
-  assert.equal(manifest.name, 'Guitar Strum Machine');
-  assert.equal(manifest.short_name, 'Strum Machine');
+  assert.equal(manifest.name, 'Guitar strum machine');
+  assert.equal(manifest.short_name, 'Strum machine');
   assert.equal(manifest.start_url, './');
   assert.equal(manifest.scope, './');
   assert.equal(manifest.display, 'standalone');
@@ -419,7 +419,7 @@ test('the guitar page provides a generic Open Graph preview without replacing ar
   const imageHash = crypto.createHash('sha256').update(image).digest('hex').slice(0, 12);
 
   assert.match(html, /<meta property="og:type" content="website" \/>/);
-  assert.match(html, /<meta property="og:title" content="Guitar Strum Machine" \/>/);
+  assert.match(html, /<meta property="og:title" content="Guitar strum machine" \/>/);
   assert.match(html, /<meta property="og:description" content="[^"]+" \/>/);
   assert.match(
     html,

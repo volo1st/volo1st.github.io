@@ -63,7 +63,7 @@ test('language buttons change page language, title, content, selected state, and
   assert.equal(buttons[0].disabled, false);
   assert.equal(buttons[1].disabled, true);
   buttons[0].click();
-  assert.equal(heading.textContent, '2026 Studio Rates');
+  assert.equal(heading.textContent, '2026 studio rates');
   assert.equal(buttons[1].attributes['aria-pressed'], 'false');
   assert.equal(buttons[0].disabled, true);
   assert.equal(buttons[1].disabled, false);
@@ -93,10 +93,10 @@ test('studio index and rates page express the studio hierarchy', () => {
   assert.match(index, /href="\.\/rates\/">Studio rates<\/a>/);
   assert.match(index, /instagram\.com\/bits\.n\.beats/);
   assert.match(index, /xiaohongshu\.com\/user\/profile\/5e7818aa0000000001006bf7/);
-  assert.match(html, /<h1 data-i18n="studio.heading" class="rates-year [^"]*">2026 Studio Rates<\/h1>/);
+  assert.match(html, /<h1 data-i18n="studio.heading" class="rates-year [^"]*">2026 studio rates<\/h1>/);
   assert.doesNotMatch(html, /class="studio-name"/);
-  assert.match(html, /href="\.\.\/">studio<\/a>/);
-  assert.match(html, /aria-current="page">rates<\/span>/);
+  assert.match(html, /href="\.\.\/">Studio<\/a>/);
+  assert.match(html, /aria-current="page">Rates<\/span>/);
   for (const match of index.matchAll(/(?:href|src)="([^"?]+)\?v=([a-f0-9]+)"/g)) {
     const hash = crypto.createHash('sha256').update(fs.readFileSync(path.resolve(directory, '..', match[1]))).digest('hex').slice(0, 12);
     assert.equal(match[2], hash, match[1]);

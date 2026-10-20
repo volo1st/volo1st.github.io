@@ -16,7 +16,7 @@
 
   const catalogs = {
     'en-AU': {
-      'pitch.title': 'Pitch Shifter',
+      'pitch.title': 'Pitch shifter',
       'pitch.description': 'Shift the pitch of a local song without changing its speed.',
       'pitch.workspace': 'Pitch-shifting workspace',
       'pitch.localStrong': 'Your audio stays in this browser.',

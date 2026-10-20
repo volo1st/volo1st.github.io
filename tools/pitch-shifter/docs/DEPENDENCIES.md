@@ -1,6 +1,6 @@
-# Pitch Shifter dependencies
+# Pitch shifter dependencies
 
-Pitch Shifter uses three local Signalsmith Stretch modules and one local LAME MP3 encoder. The page does not request code from a third party. It requests the MP3 Wasm file from the same site only when the user selects MP3 output.
+Pitch shifter uses three local Signalsmith Stretch modules and one local LAME MP3 encoder. The page does not request code from a third party. It requests the MP3 Wasm file from the same site only when the user selects MP3 output.
 
 ## Pinned source
 

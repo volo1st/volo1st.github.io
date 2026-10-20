@@ -10,7 +10,7 @@
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=340aa48fa873">
     <link rel="stylesheet" href="../assets/ui.css?v=6a08d530a696">
-    <link rel="stylesheet" href="./guide.css?v=76f055cc3800">
+    <link rel="stylesheet" href="./guide.css?v=41e84746a00e">
   </head>
   <body data-page="style-guide">
     <header class="ui-page-header ui-container guide-header">
@@ -785,7 +785,7 @@ chords: C Am F G</textarea>
                   <ol>
                     <li><a class="ui-link" href="../">volo1st</a></li>
                     <li><span aria-hidden="true">/</span><a class="ui-link" href="../tools/">Tools</a></li>
-                    <li><span aria-hidden="true">/</span><span aria-current="page">Guitar Strum Machine</span></li>
+                    <li><span aria-hidden="true">/</span><span aria-current="page">Guitar strum machine</span></li>
                   </ol>
                 </nav>
                 <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="Tool language samples">
@@ -793,11 +793,143 @@ chords: C Am F G</textarea>
                   <button class="ui-button" type="button" aria-pressed="false" aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
                 </div>
               </div>
-              <h4 class="ui-visually-hidden">Guitar Strum Machine</h4>
+              <h4 class="ui-visually-hidden">Guitar strum machine</h4>
               <p class="ui-small ui-muted">This sample keeps its heading visually hidden. The tool name remains in the breadcrumb.</p>
             </div>
           </div>
         </div>
+        <h3 id="mobile-header-options" class="ui-subheading">Mobile tool headers / compare two options</h3>
+        <p>These are proposals for review. Live tools still use the current header above. Each frame is at most 20rem wide, including 1rem padding on each side. Language buttons keep the 44-pixel touch height in these samples, including on desktop.</p>
+        <div class="guide-grid">
+          <div class="guide-sample ui-flow">
+            <p class="guide-caption">A / Parent link and short tool label</p>
+            <p class="ui-small ui-muted">Keep the header compact. Show the full name in the browser title and accessible heading. Center the breadcrumb and language group vertically.</p>
+            <div class="guide-narrow-header guide-mobile-header">
+              <div class="guide-mobile-row">
+                <nav class="ui-breadcrumb" aria-label="Option A / Guitar breadcrumb sample" lang="en-AU">
+                  <ol>
+                    <li><a class="ui-link" href="../tools/"><span aria-hidden="true">← </span>Tools</a></li>
+                    <li><span aria-hidden="true">/</span><span aria-current="page"><span class="ui-visually-hidden">Guitar strum machine</span><span aria-hidden="true">Guitar</span></span></li>
+                  </ol>
+                </nav>
+                <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="Option A / Guitar language samples">
+                  <button class="ui-button" type="button" aria-pressed="true" disabled aria-label="English language sample" lang="en">En</button>
+                  <button class="ui-button" type="button" aria-pressed="false" aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
+                </div>
+              </div>
+              <h4 class="ui-visually-hidden">Guitar strum machine</h4>
+            </div>
+            <div class="guide-narrow-header guide-mobile-header">
+              <div class="guide-mobile-row">
+                <nav class="ui-breadcrumb" aria-label="Option A / Pitch breadcrumb sample" lang="en-AU">
+                  <ol>
+                    <li><a class="ui-link" href="../tools/"><span aria-hidden="true">← </span>Tools</a></li>
+                    <li><span aria-hidden="true">/</span><span aria-current="page"><span class="ui-visually-hidden">Pitch shifter</span><span aria-hidden="true">Pitch</span></span></li>
+                  </ol>
+                </nav>
+                <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="Option A / Pitch language samples">
+                  <button class="ui-button" type="button" aria-pressed="true" disabled aria-label="English language sample" lang="en">En</button>
+                  <button class="ui-button" type="button" aria-pressed="false" aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
+                </div>
+              </div>
+              <h4 class="ui-visually-hidden">Pitch shifter</h4>
+            </div>
+            <div class="guide-narrow-header guide-mobile-header">
+              <div class="guide-mobile-row">
+                <nav class="ui-breadcrumb" aria-label="Option A / CSV to ABA breadcrumb sample" lang="en-AU">
+                  <ol>
+                    <li><a class="ui-link" href="../tools/"><span aria-hidden="true">← </span>Tools</a></li>
+                    <li><span aria-hidden="true">/</span><span aria-current="page"><span class="ui-visually-hidden">CSV to ABA converter</span><span aria-hidden="true">CSV to ABA</span></span></li>
+                  </ol>
+                </nav>
+                <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="Option A / CSV to ABA language samples">
+                  <button class="ui-button" type="button" aria-pressed="true" disabled aria-label="English language sample" lang="en">En</button>
+                  <button class="ui-button" type="button" aria-pressed="false" aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
+                </div>
+              </div>
+              <h4 class="ui-visually-hidden">CSV to ABA converter</h4>
+            </div>
+          </div>
+          <div class="guide-sample ui-flow">
+            <p class="guide-caption">B / Parent breadcrumb and separate title</p>
+            <p class="ui-small ui-muted">Show the full tool name on its own line in the body-size serif heading. This uses more vertical space.</p>
+            <div class="guide-narrow-header guide-mobile-header">
+              <div class="guide-mobile-row">
+                <nav class="ui-breadcrumb" aria-label="Option B / Guitar breadcrumb sample" lang="en-AU">
+                  <ol>
+                    <li><a class="ui-link" href="../">volo1st</a></li>
+                    <li><span aria-hidden="true">/</span><a class="ui-link" href="../tools/">Tools</a></li>
+                  </ol>
+                </nav>
+                <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="Option B / Guitar language samples">
+                  <button class="ui-button" type="button" aria-pressed="true" disabled aria-label="English language sample" lang="en">En</button>
+                  <button class="ui-button" type="button" aria-pressed="false" aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
+                </div>
+              </div>
+              <h4 class="ui-subheading">Guitar strum machine</h4>
+            </div>
+            <div class="guide-narrow-header guide-mobile-header">
+              <div class="guide-mobile-row">
+                <nav class="ui-breadcrumb" aria-label="Option B / Pitch breadcrumb sample" lang="en-AU">
+                  <ol>
+                    <li><a class="ui-link" href="../">volo1st</a></li>
+                    <li><span aria-hidden="true">/</span><a class="ui-link" href="../tools/">Tools</a></li>
+                  </ol>
+                </nav>
+                <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="Option B / Pitch language samples">
+                  <button class="ui-button" type="button" aria-pressed="true" disabled aria-label="English language sample" lang="en">En</button>
+                  <button class="ui-button" type="button" aria-pressed="false" aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
+                </div>
+              </div>
+              <h4 class="ui-subheading">Pitch shifter</h4>
+            </div>
+            <div class="guide-narrow-header guide-mobile-header">
+              <div class="guide-mobile-row">
+                <nav class="ui-breadcrumb" aria-label="Option B / CSV to ABA breadcrumb sample" lang="en-AU">
+                  <ol>
+                    <li><a class="ui-link" href="../">volo1st</a></li>
+                    <li><span aria-hidden="true">/</span><a class="ui-link" href="../tools/">Tools</a></li>
+                  </ol>
+                </nav>
+                <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="Option B / CSV to ABA language samples">
+                  <button class="ui-button" type="button" aria-pressed="true" disabled aria-label="English language sample" lang="en">En</button>
+                  <button class="ui-button" type="button" aria-pressed="false" aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
+                </div>
+              </div>
+              <h4 class="ui-subheading">CSV to ABA converter</h4>
+            </div>
+          </div>
+        </div>
+        <p class="ui-small ui-muted">When the row cannot fit, move the whole language group to the next row. Keep every control available. The frame below is at most 14rem wide to show this fallback. These layout rules are scoped to the guide.</p>
+        <div class="guide-narrow-header guide-mobile-header guide-narrow-header--tight">
+          <div class="guide-mobile-row">
+            <nav class="ui-breadcrumb" aria-label="Option A / CSV to ABA / narrow fallback breadcrumb sample" lang="en-AU">
+              <ol>
+                <li><a class="ui-link" href="../tools/"><span aria-hidden="true">← </span>Tools</a></li>
+                <li><span aria-hidden="true">/</span><span aria-current="page"><span class="ui-visually-hidden">CSV to ABA converter</span><span aria-hidden="true">CSV to ABA</span></span></li>
+              </ol>
+            </nav>
+            <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="Option A / CSV to ABA / narrow fallback language samples">
+              <button class="ui-button" type="button" aria-pressed="true" disabled aria-label="English language sample" lang="en">En</button>
+              <button class="ui-button" type="button" aria-pressed="false" aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
+            </div>
+          </div>
+          <h4 class="ui-visually-hidden">CSV to ABA converter</h4>
+        </div>
+        <h3 class="ui-subheading">Names and casing</h3>
+        <p>Use sentence case for generic labels and descriptive tool names. Preserve proper names, including <span lang="en">Bits &amp; Beats Studio</span>, <span lang="en">volo1st</span>, and <span lang="en">YouTube</span>. Preserve acronyms such as CSV and ABA. Write the case in the source text. Do not change case with CSS.</p>
+        <div class="ui-table-scroll" tabindex="0" role="region" aria-labelledby="tool-names-caption">
+          <table class="ui-table">
+            <caption id="tool-names-caption">Canonical tool names and proposed short navigation labels</caption>
+            <thead><tr><th scope="col">Full name</th><th scope="col">Short label</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Guitar strum machine</th><td>Guitar</td></tr>
+              <tr><th scope="row">Pitch shifter</th><td>Pitch</td></tr>
+              <tr><th scope="row">CSV to ABA converter</th><td>CSV to ABA</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="ui-small ui-muted">Breadcrumb levels use <span lang="en">Studio / Rates</span>. A page heading uses <span lang="en">2026 studio rates</span>. A navigation link can omit the year: <span lang="en">Studio rates</span>. Use the full tool names in directory cards, page titles, accessible headings, and sharing metadata.</p>
         <h3 class="ui-subheading">Narrow layout / Chinese selected</h3>
         <p>This frame is at most 20rem wide, including its padding. Long breadcrumbs and titles can wrap. At exceptionally narrow widths or zoom, the context row can wrap without clipping the language buttons.</p>
         <div class="guide-narrow-header">
@@ -853,14 +985,14 @@ chords: C Am F G</textarea>
           <summary>Guitar · controls, validation, and the specialized chord card</summary>
           <div class="ui-disclosure__body ui-flow">
             <p><a class="ui-link" href="./guitar.html" target="_blank" rel="noopener noreferrer">Open guitar specimen</a></p>
-            <iframe title="Current Guitar Strum Machine controls and chord card" src="./guitar.html" loading="lazy"></iframe>
+            <iframe title="Current Guitar strum machine controls and chord card" src="./guitar.html" loading="lazy"></iframe>
           </div>
         </details>
         <details class="ui-disclosure guide-current">
-          <summary>Pitch Shifter · controls, seek slider, and status tones</summary>
+          <summary>Pitch shifter · controls, seek slider, and status tones</summary>
           <div class="ui-disclosure__body ui-flow">
             <p><a class="ui-link" href="./pitch.html" target="_blank" rel="noopener noreferrer">Open pitch specimen</a></p>
-            <iframe title="Current Pitch Shifter controls and status" src="./pitch.html" loading="lazy"></iframe>
+            <iframe title="Current Pitch shifter controls and status" src="./pitch.html" loading="lazy"></iframe>
           </div>
         </details>
       </section>

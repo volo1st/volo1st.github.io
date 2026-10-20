@@ -7,11 +7,11 @@ These icons use the shared music-app visual language.
 - Use one abstract line or bar symbol.
 - Keep the symbol clear at 32 pixels.
 
-The Guitar Strum Machine uses its icon for home-screen installation. The other icons record the approved direction for possible future tools. They do not indicate that those tools are available.
+The Guitar strum machine uses its icon for home-screen installation. The other icons record the approved direction for possible future tools. They do not indicate that those tools are available.
 
 | File | Intended tool |
 | --- | --- |
-| `guitar-strum-machine-512.png` | Guitar Strum Machine |
+| `guitar-strum-machine-512.png` | Guitar strum machine |
 | `metronome-512.png` | Metronome concept |
 | `tuner-512.png` | Tuner concept |
 | `pitch-key-512.png` | Song pitch and key concept |

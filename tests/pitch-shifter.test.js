@@ -10,7 +10,7 @@ const repositoryRoot = path.join(__dirname, '..');
 const toolRoot = path.join(repositoryRoot, 'tools', 'pitch-shifter');
 const pitchI18n = require('../tools/pitch-shifter/i18n.js');
 
-test('Pitch Shifter translations use identical English and Chinese keys', () => {
+test('Pitch shifter translations use identical English and Chinese keys', () => {
   assert.deepEqual(
     Object.keys(pitchI18n.catalogs['en-AU']).sort(),
     Object.keys(pitchI18n.catalogs['zh-Hans']).sort(),
@@ -470,7 +470,7 @@ test('the pinned MP3 encoder artifacts and licences match the dependency record'
   }
 });
 
-test('Pitch Shifter module references use current content hashes', () => {
+test('Pitch shifter module references use current content hashes', () => {
   const references = [
     ['bootstrap.js', './app.mjs'],
     ['app.mjs', './worker-client.mjs'],
@@ -510,12 +510,12 @@ test('Pitch Shifter module references use current content hashes', () => {
   }
 });
 
-test('Pitch Shifter provides local home-screen metadata', () => {
+test('Pitch shifter provides local home-screen metadata', () => {
   const html = fs.readFileSync(path.join(toolRoot, 'index.html'), 'utf8');
   const manifest = JSON.parse(fs.readFileSync(path.join(toolRoot, 'manifest.webmanifest'), 'utf8'));
 
   assert.match(html, /<link rel="apple-touch-icon" href="[^"]+pitch-key-512\.png/);
-  assert.equal(manifest.name, 'Pitch Shifter');
+  assert.equal(manifest.name, 'Pitch shifter');
   assert.equal(manifest.start_url, './');
   assert.equal(manifest.scope, './');
   assert.equal(manifest.display, 'standalone');

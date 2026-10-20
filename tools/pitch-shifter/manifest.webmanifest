@@ -1,6 +1,6 @@
 {
-  "name": "Pitch Shifter",
-  "short_name": "Pitch Shifter",
+  "name": "Pitch shifter",
+  "short_name": "Pitch shifter",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
