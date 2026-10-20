@@ -1264,6 +1264,8 @@ Checks: Use the existing repository check and a complete diff review. Verify nor
 
 - [x] Normalize shared geometry, header wrappers, guide samples, and current documentation.
 - [x] Refresh hashes, pass relevant checks, and review the complete diff.
-- [ ] Commit the package and reconcile Todoist.
+- [x] Commit the package and reconcile Todoist.
 
 Verification evidence: `./scripts/check.sh` passed all seven test files. Reviewed the complete diff. A temporary source comparison confirmed balanced markup in 18 maintained documents, shared row wrappers for all 27 breadcrumbs, and preserved content and element attributes outside the guide additions, row wrappers, and refreshed asset hashes. The review covered 17 page headers. Both language variants now derive their minimum height from the row token. Existing checks pass for asset hashes, accessibility references, translations, and application behavior. Added no dependencies, browser tools, JavaScript, or permanent tests. Manual keyboard, focus, narrow-screen, page-switching, and 200 percent zoom review did not run because a browser was unavailable. No rendered result is claimed.
+
+Completion on 20 October 2026: Local commit `8d3356d` contains the package. Added and verified the outcome comment on Todoist task `6hpRw3jQRhrQH9qc`. Completed the task and verified its completed state through a fresh read. The two deferred website packages remain deferred. No push or deployment ran.
