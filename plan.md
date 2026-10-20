@@ -1279,7 +1279,11 @@ Deployment decision: Use the confirmed GitHub Pages source, `master` at the repo
 Review limits: Use HTTP content checks for public delivery. Browser rendering, keyboard, narrow-screen, zoom, and representative device workflows remain unverified when no browser is available. Do not install browser automation for this release.
 
 - [x] Pass release checks and record the release revision.
-- [ ] Publish through the confirmed source and verify Pages and public delivery.
-- [ ] Record completion evidence and reconcile Todoist.
+- [x] Publish through the confirmed source and verify Pages and public delivery.
+- [x] Record completion evidence and reconcile Todoist.
 
 Pre-deployment evidence: Origin was refreshed. Its `master` is an ancestor of the release branch. The 43 reviewed commits through `1ba8354` contain the approved website changes. `./scripts/check.sh` passed all seven test files. The aggregate diff passed whitespace checks. The working tree was clean before the release record was added. Individual package records contain the source review and owner feedback. Include this release record in the publishing commit.
+
+Deployment evidence on 20 October 2026: Pushed release `607f48c430a859cc738867cf9e29986902fe3c47` to `origin/master`. GitHub Pages [run 39387705393](https://github.com/volo1st/volo1st.github.io/actions/runs/39387705393) completed successfully for that revision. Verified 50 public files at `https://volo1st.com/`: 19 HTML pages, 12 stylesheets, and 19 scripts. All returned HTTP 200 and matched the local release bytes. This includes the homepage, directories, Sound placeholders, studio rates, all three maintained tools, the converter redirect, and guide specimens. HTTP checks confirm delivery, not browser rendering or interactive device behavior. The manual review limits above remain.
+
+Completion: Added and verified the release outcome comment on Todoist task `6hpRxwgvGxhHXRGc`. Completed the task and confirmed its completed state through a fresh read. Kept both deferred website packages deferred. The follow-up completion commit changes this record only.
