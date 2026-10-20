@@ -1145,10 +1145,12 @@ Checks: Add a small Node test for the preview's functional behavior. Check that 
 
 - [x] Add shared preview behavior, tool integration, and guide links.
 - [x] Pass relevant checks and review the complete diff.
-- [ ] Commit the package and reconcile Todoist.
+- [x] Commit the package and reconcile Todoist.
 
 Verification evidence: `./scripts/check.sh` passed all eight test files. The new small Node test covers absent and invalid preview parameters, both initial options, repeated switching, the single reused heading, selected button state, retained focus targets, unchanged input objects and values, unchanged query data, and no history or storage access. Existing financial, audio-processing, scheduling, sharing, translation, markup-reference, asset-hash, and frozen-legacy checks pass. Adjusted an existing source assertion to allow attributes after the header class.
 
 Source review: Reviewed the complete diff, the shared script, default hidden state, scoped component selectors, language updates, and deferred initialization. All 19 maintained and redirect documents have balanced markup. The three app main sections are unchanged apart from the heading marker. Each app has one complete set of preview hooks. Existing app scripts, input controls, audio engines, converter validation, download gates, and share preparation are unchanged. The guide now reuses the same shared header rules; only frame sizing and touch-size simulation stay local. Refreshed every affected asset hash. No dependency, build step, browser automation, or network service was added.
 
 Review limits: A browser and representative audio device were unavailable. Manual rendered comparison, keyboard use, visible focus, narrow screens, 200 percent zoom, and playback checks did not run. These source and Node checks do not establish rendered or device behavior. The owner can now compare both layouts while using the real apps. This package does not select a permanent layout, push, or deploy.
+
+Completion on 20 October 2026: Commit `446ce9c` contains the verified real-app previews. Added the outcome comment to Todoist task `6hpRQFQCwhgCGxx6`, verified the comment, completed the task, and confirmed its completed state through a fresh read. The initiative and deferred tasks remain unchanged. No next package was selected.
