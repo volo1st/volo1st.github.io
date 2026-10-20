@@ -293,6 +293,12 @@
 .ui-breadcrumb li > [aria-hidden="true"] { flex: 0 0 auto; }
 .ui-breadcrumb a, .ui-breadcrumb [aria-current="page"] { min-width: 0; overflow-wrap: anywhere; }
 .ui-breadcrumb [aria-current="page"] { color: var(--site-text); }
+.ui-tool-header[data-header-layout] { gap: var(--ui-space-2); }
+.ui-tool-header[data-header-layout] > .ui-context-row { align-items: center; }
+.ui-tool-header[data-header-layout] > .ui-context-row > .ui-breadcrumb { flex: 0 1 auto; }
+.ui-tool-header[data-header-layout] > .ui-subheading { margin: 0; }
+.ui-header-preview { padding-block-start: var(--ui-space-3); }
+.ui-header-preview .ui-button { min-width: var(--ui-control-min-height); font-size: var(--ui-size-supporting); }
 .ui-button-group { display: inline-flex; max-width: 100%; gap: 0; }
 .ui-button-group > .ui-button { position: relative; flex: 1 1 0; border-radius: 0; }
 .ui-button-group > .ui-button + .ui-button { margin-inline-start: calc(0px - var(--ui-control-border-width)); }
@@ -317,7 +323,7 @@
 
 /* Preserve native hidden state when a component defines a display layout. */
 .ui-panel [hidden], .ui-disclosure [hidden], .ui-notice [hidden],
-.ui-flow > [hidden], .ui-stack > [hidden], .ui-actions > [hidden] { display: none; }
+.ui-flow > [hidden], .ui-stack > [hidden], .ui-actions > [hidden], .ui-breadcrumb [hidden] { display: none; }
 
 .ui-page { padding-block: var(--ui-space-6) var(--ui-space-8); }
 .site-header.ui-page-header { padding-block: var(--ui-section-padding) var(--ui-space-3); }

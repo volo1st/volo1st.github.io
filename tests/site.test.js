@@ -444,7 +444,7 @@ test('maintained bilingual pages use the shared site shell', () => {
   ];
   for (const htmlFile of pages) {
     const html = fs.readFileSync(htmlFile, 'utf8');
-    assert.match(html, /<header class="site-header [^"]*">/);
+    assert.match(html, /<header class="site-header [^"]*"[^>]*>/);
     assert.match(html, /<main class="site-main(?: [^"]*)?">/);
     assert.match(html, /class="ui-context-row"/);
     assert.match(html, /class="ui-breadcrumb"/);

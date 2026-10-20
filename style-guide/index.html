@@ -9,8 +9,8 @@
     <title>UI style guide | volo1st</title>
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=340aa48fa873">
-    <link rel="stylesheet" href="../assets/ui.css?v=6a08d530a696">
-    <link rel="stylesheet" href="./guide.css?v=41e84746a00e">
+    <link rel="stylesheet" href="../assets/ui.css?v=b54a4bc23455">
+    <link rel="stylesheet" href="./guide.css?v=581f17c37a96">
   </head>
   <body data-page="style-guide">
     <header class="ui-page-header ui-container guide-header">
@@ -799,16 +799,17 @@ chords: C Am F G</textarea>
           </div>
         </div>
         <h3 id="mobile-header-options" class="ui-subheading">Mobile tool headers / compare two options</h3>
-        <p>These are proposals for review. Live tools still use the current header above. Each frame is at most 20rem wide, including 1rem padding on each side. Language buttons keep the 44-pixel touch height in these samples, including on desktop.</p>
+        <p>These are proposals for review. The links open each working tool with an A/B switch above its header. Switch without reloading the app. Normal tool links retain the current header above. Each frame is at most 20rem wide, including 1rem padding on each side. Language buttons keep the 44-pixel touch height in these samples, including on desktop.</p>
         <div class="guide-grid">
           <div class="guide-sample ui-flow">
             <p class="guide-caption">A / Parent link and short tool label</p>
+            <p>Try A in a working tool: <a class="ui-link" href="../tools/guitar-strumming/?header=a">Guitar</a> · <a class="ui-link" href="../tools/pitch-shifter/?header=a">Pitch</a> · <a class="ui-link" href="../tools/csv2aba-v2/?header=a">CSV to ABA</a>.</p>
             <p class="ui-small ui-muted">Keep the header compact. Show the full name in the browser title and accessible heading. Center the breadcrumb and language group vertically.</p>
-            <div class="guide-narrow-header guide-mobile-header">
-              <div class="guide-mobile-row">
+            <div class="ui-page-header ui-tool-header guide-narrow-header guide-mobile-header" data-header-layout="a">
+              <div class="ui-context-row">
                 <nav class="ui-breadcrumb" aria-label="Option A / Guitar breadcrumb sample" lang="en-AU">
                   <ol>
-                    <li><a class="ui-link" href="../tools/"><span aria-hidden="true">← </span>Tools</a></li>
+                    <li><span aria-hidden="true">←</span><a class="ui-link" href="../tools/">Tools</a></li>
                     <li><span aria-hidden="true">/</span><span aria-current="page"><span class="ui-visually-hidden">Guitar strum machine</span><span aria-hidden="true">Guitar</span></span></li>
                   </ol>
                 </nav>
@@ -819,11 +820,11 @@ chords: C Am F G</textarea>
               </div>
               <h4 class="ui-visually-hidden">Guitar strum machine</h4>
             </div>
-            <div class="guide-narrow-header guide-mobile-header">
-              <div class="guide-mobile-row">
+            <div class="ui-page-header ui-tool-header guide-narrow-header guide-mobile-header" data-header-layout="a">
+              <div class="ui-context-row">
                 <nav class="ui-breadcrumb" aria-label="Option A / Pitch breadcrumb sample" lang="en-AU">
                   <ol>
-                    <li><a class="ui-link" href="../tools/"><span aria-hidden="true">← </span>Tools</a></li>
+                    <li><span aria-hidden="true">←</span><a class="ui-link" href="../tools/">Tools</a></li>
                     <li><span aria-hidden="true">/</span><span aria-current="page"><span class="ui-visually-hidden">Pitch shifter</span><span aria-hidden="true">Pitch</span></span></li>
                   </ol>
                 </nav>
@@ -834,11 +835,11 @@ chords: C Am F G</textarea>
               </div>
               <h4 class="ui-visually-hidden">Pitch shifter</h4>
             </div>
-            <div class="guide-narrow-header guide-mobile-header">
-              <div class="guide-mobile-row">
+            <div class="ui-page-header ui-tool-header guide-narrow-header guide-mobile-header" data-header-layout="a">
+              <div class="ui-context-row">
                 <nav class="ui-breadcrumb" aria-label="Option A / CSV to ABA breadcrumb sample" lang="en-AU">
                   <ol>
-                    <li><a class="ui-link" href="../tools/"><span aria-hidden="true">← </span>Tools</a></li>
+                    <li><span aria-hidden="true">←</span><a class="ui-link" href="../tools/">Tools</a></li>
                     <li><span aria-hidden="true">/</span><span aria-current="page"><span class="ui-visually-hidden">CSV to ABA converter</span><span aria-hidden="true">CSV to ABA</span></span></li>
                   </ol>
                 </nav>
@@ -852,9 +853,10 @@ chords: C Am F G</textarea>
           </div>
           <div class="guide-sample ui-flow">
             <p class="guide-caption">B / Parent breadcrumb and separate title</p>
+            <p>Try B in a working tool: <a class="ui-link" href="../tools/guitar-strumming/?header=b">Guitar</a> · <a class="ui-link" href="../tools/pitch-shifter/?header=b">Pitch</a> · <a class="ui-link" href="../tools/csv2aba-v2/?header=b">CSV to ABA</a>.</p>
             <p class="ui-small ui-muted">Show the full tool name on its own line in the body-size serif heading. This uses more vertical space.</p>
-            <div class="guide-narrow-header guide-mobile-header">
-              <div class="guide-mobile-row">
+            <div class="ui-page-header ui-tool-header guide-narrow-header guide-mobile-header" data-header-layout="b">
+              <div class="ui-context-row">
                 <nav class="ui-breadcrumb" aria-label="Option B / Guitar breadcrumb sample" lang="en-AU">
                   <ol>
                     <li><a class="ui-link" href="../">volo1st</a></li>
@@ -868,8 +870,8 @@ chords: C Am F G</textarea>
               </div>
               <h4 class="ui-subheading">Guitar strum machine</h4>
             </div>
-            <div class="guide-narrow-header guide-mobile-header">
-              <div class="guide-mobile-row">
+            <div class="ui-page-header ui-tool-header guide-narrow-header guide-mobile-header" data-header-layout="b">
+              <div class="ui-context-row">
                 <nav class="ui-breadcrumb" aria-label="Option B / Pitch breadcrumb sample" lang="en-AU">
                   <ol>
                     <li><a class="ui-link" href="../">volo1st</a></li>
@@ -883,8 +885,8 @@ chords: C Am F G</textarea>
               </div>
               <h4 class="ui-subheading">Pitch shifter</h4>
             </div>
-            <div class="guide-narrow-header guide-mobile-header">
-              <div class="guide-mobile-row">
+            <div class="ui-page-header ui-tool-header guide-narrow-header guide-mobile-header" data-header-layout="b">
+              <div class="ui-context-row">
                 <nav class="ui-breadcrumb" aria-label="Option B / CSV to ABA breadcrumb sample" lang="en-AU">
                   <ol>
                     <li><a class="ui-link" href="../">volo1st</a></li>
@@ -900,12 +902,12 @@ chords: C Am F G</textarea>
             </div>
           </div>
         </div>
-        <p class="ui-small ui-muted">When the row cannot fit, move the whole language group to the next row. Keep every control available. The frame below is at most 14rem wide to show this fallback. These layout rules are scoped to the guide.</p>
-        <div class="guide-narrow-header guide-mobile-header guide-narrow-header--tight">
-          <div class="guide-mobile-row">
+        <p class="ui-small ui-muted">When the row cannot fit, move the whole language group to the next row. Keep every control available. The frame below is at most 14rem wide to show this fallback. These samples use the same shared header rules as the working previews.</p>
+        <div class="ui-page-header ui-tool-header guide-narrow-header guide-mobile-header guide-narrow-header--tight" data-header-layout="a">
+          <div class="ui-context-row">
             <nav class="ui-breadcrumb" aria-label="Option A / CSV to ABA / narrow fallback breadcrumb sample" lang="en-AU">
               <ol>
-                <li><a class="ui-link" href="../tools/"><span aria-hidden="true">← </span>Tools</a></li>
+                <li><span aria-hidden="true">←</span><a class="ui-link" href="../tools/">Tools</a></li>
                 <li><span aria-hidden="true">/</span><span aria-current="page"><span class="ui-visually-hidden">CSV to ABA converter</span><span aria-hidden="true">CSV to ABA</span></span></li>
               </ol>
             </nav>

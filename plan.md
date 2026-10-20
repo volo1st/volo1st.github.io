@@ -1131,3 +1131,24 @@ Verification evidence: `./scripts/check.sh` passed all seven test files. Reviewe
 Scope and review limits: Updated the maintained directory cards, breadcrumbs, titles, headings, metadata, manifests, current documentation, and specimens. Added the naming rule to `AGENTS.md` and the guide. Kept dated audit and specification text as history. The live header layout, shared styles, application logic, URLs, Chinese text, and frozen legacy converter are unchanged. No dependencies, browser tools, build step, or network behavior were added. A browser was unavailable. Manual rendered, keyboard, focus, narrow-screen, and 200 percent zoom checks did not run. The owner must compare the guide proposals before a live layout is selected.
 
 Completion on 20 October 2026: Commit `09f8e42` contains the verified comparison and casing changes. Added the outcome comment to Todoist task `6hpRJ23H932WvG4c`, verified the comment, completed the task, and confirmed its completed state through a fresh read. Deferred tasks and the initiative remain unchanged. No next package was selected.
+
+
+## 28. Compare headers in the working tools
+
+Selection on 20 October 2026: The owner found the static comparison difficult to assess and requested both layouts in real apps. Todoist task `6hpRQFQCwhgCGxx6` records this package.
+
+Purpose and requirements: Add opt-in previews to the working guitar, pitch, and version 2 converter pages. Open a tool with `?header=a` or `?header=b`. Show a small translated A/B switch above the header. Switch the header in place without navigation, reload, or application state changes. Use short English breadcrumb labels for A. Use the parent breadcrumb and a separate translated full heading for B. Keep one real level-one heading and the full browser title. Keep native language controls and touch sizes.
+
+Decision and failure behavior: Reuse the existing page and application engines. Do not copy the tools or embed them in frames. Put shared header rules in `assets/ui.css` and use one small local script for all three apps. Keep the default header when the preview parameter is absent or invalid, or when JavaScript is unavailable. Move only the existing heading during an active preview. Keep the A/B buttons focusable after a change. Do not update history, URL parameters, browser storage, input, playback, financial data, download state, or share-link preparation when switching. A reload starts from the option in the original URL. Add guide links for each tool and option. The owner has not selected a permanent live layout.
+
+Checks: Add a small Node test for the preview's functional behavior. Check that default loads remain unchanged, switching preserves app state, only one heading is used, and unrelated query data remains intact. Use the existing repository checks for translations, asset hashes, semantics, and application regressions. Review the complete diff. Do not install browser tools. Record unavailable manual browser, keyboard, focus, narrow-screen, and 200 percent zoom checks.
+
+- [x] Add shared preview behavior, tool integration, and guide links.
+- [x] Pass relevant checks and review the complete diff.
+- [ ] Commit the package and reconcile Todoist.
+
+Verification evidence: `./scripts/check.sh` passed all eight test files. The new small Node test covers absent and invalid preview parameters, both initial options, repeated switching, the single reused heading, selected button state, retained focus targets, unchanged input objects and values, unchanged query data, and no history or storage access. Existing financial, audio-processing, scheduling, sharing, translation, markup-reference, asset-hash, and frozen-legacy checks pass. Adjusted an existing source assertion to allow attributes after the header class.
+
+Source review: Reviewed the complete diff, the shared script, default hidden state, scoped component selectors, language updates, and deferred initialization. All 19 maintained and redirect documents have balanced markup. The three app main sections are unchanged apart from the heading marker. Each app has one complete set of preview hooks. Existing app scripts, input controls, audio engines, converter validation, download gates, and share preparation are unchanged. The guide now reuses the same shared header rules; only frame sizing and touch-size simulation stay local. Refreshed every affected asset hash. No dependency, build step, browser automation, or network service was added.
+
+Review limits: A browser and representative audio device were unavailable. Manual rendered comparison, keyboard use, visible focus, narrow screens, 200 percent zoom, and playback checks did not run. These source and Node checks do not establish rendered or device behavior. The owner can now compare both layouts while using the real apps. This package does not select a permanent layout, push, or deploy.
