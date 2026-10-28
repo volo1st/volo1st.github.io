@@ -10,7 +10,7 @@ This repository contains Vincent's public website and static browser tools. GitH
 
 - `index.html` is the current tools home page. The plan will replace it with a personal home page.
 - `tools/csv2aba/` redirects to the current CSV-to-ABA converter.
-- `tools/csv2aba-legacy/` contains the legacy CSV-to-ABA converter.
+- `tools/csv2aba-legacy/` redirects to the current converter after version 1 retirement.
 - `plan.md` is the source of truth for audit work and long-term website development.
 
 Keep the site usable without a build step unless the task requires a build system.
@@ -45,14 +45,17 @@ Treat the CSV-to-ABA converter as financial-file software.
 - Use integer arithmetic for money. Do not use binary floating-point arithmetic.
 - Do not enable download until validation and conversion are successful.
 - Keep old output unavailable after an input change or an error.
-- Keep the legacy converter at `tools/csv2aba-legacy/` unchanged unless a critical fix is necessary.
+- Keep the retired converter address at `tools/csv2aba-legacy/` as a redirect to version 2.
+- Keep the legacy test fixture unchanged. Use it only for compatibility tests.
 - Develop the safer converter at `tools/csv2aba-v2/`.
 - For known valid input, version 2 must make the same payment data as version 1.
 - Version 2 must reject invalid or ambiguous input with a clear error.
 - Confirm bank-specific behavior with an authoritative source before implementation.
 - Do not state that a generated file is bank-approved without recorded validation evidence.
 
-Version 1 has operational evidence. CBA has accepted files from the current monthly payment process for nearly one year. This evidence applies only to that process. It does not prove that all input or settings are valid.
+On 29 October 2026, the owner confirmed several successful version 2 payment runs over the past two months and authorized version 1 retirement. This evidence applies only to the established workflow.
+
+Version 1 has historical operational evidence. CBA has accepted files from the current monthly payment process for nearly one year. This evidence applies only to that process. It does not prove that all input or settings are valid.
 
 Preserve the required ABA record width. Test byte length as well as character length when the permitted character set can affect encoding.
 
@@ -60,7 +63,7 @@ Preserve the required ABA record width. Test byte length as well as character le
 
 - Prefer plain HTML, CSS, and JavaScript.
 - Put a stable `data-page` attribute on each maintained page body. Scope local CSS selectors with `:where([data-page="page-name"])`. Use matching roots in page specimens. Keep shared rules in `assets/site-shell.css` and `assets/ui.css` global.
-- Scope every selector in a local selector list and media rule. Give local animation names a page prefix. Keep the legacy converter unchanged.
+- Scope every selector in a local selector list and media rule. Give local animation names a page prefix. Keep the legacy test fixture unchanged.
 - Keep JavaScript free of implicit global variables.
 - Use event listeners instead of inline event handlers.
 - Use semantic HTML controls and explicit labels.

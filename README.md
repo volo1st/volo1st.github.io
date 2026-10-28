@@ -26,20 +26,20 @@ Keep service headings as `h2` elements with the shared `ui-heading` style. Put t
 
 ## Tools
 
-- [CSV to ABA converter](tools/csv2aba-v2/) is the current converter. The former address redirects to it. One normal CBA payment run will complete its workflow validation.
-- [Legacy CSV to ABA converter](tools/csv2aba-legacy/) is the fallback. Its conversion logic remains unchanged.
+- [CSV to ABA converter](tools/csv2aba-v2/) is the current converter. The former address redirects to it. The owner confirmed successful use in the established Commonwealth Bank of Australia (CBA) workflow on 29 October 2026.
+- The retired converter address at `tools/csv2aba-legacy/` also redirects to the current converter. Git history retains the former interface.
 - [Guitar strum machine](tools/guitar-strumming/) makes a looping guitar backing track from plain-text input. The tools directory links to this tool.
 - [Pitch shifter](tools/pitch-shifter/) shifts a local mono or stereo song without changing its duration. One transport compares the original and shifted audio. The tool exports a 16-bit pulse-code modulation (PCM) Waveform Audio File Format (WAV) file or a 320 kbit/s MP3 file.
 
 The home page uses English. The tools directory, version 2 converter, Guitar strum machine, and Pitch shifter support English and Simplified Chinese. The site stores the selected tool language in browser local storage. A language change does not change guitar arrangement text, playback state, share-link data, or selected audio.
 
-The maintained pages use `assets/site-shell.css` for shared identity, breadcrumb, language control, and design tokens. The home page uses `assets/home.css` for its namecard layout. The public section indexes use `assets/section-index.css` for their content lists. The shared shell maps a semantic `data-domain` value to each tool accent. The original pixel-art `V` block is the browser icon. The legacy CSV-to-ABA conversion logic remains unchanged.
+The maintained pages use `assets/site-shell.css` for shared identity, breadcrumb, language control, and design tokens. The home page uses `assets/home.css` for its namecard layout. The public section indexes use `assets/section-index.css` for their content lists. The shared shell maps a semantic `data-domain` value to each tool accent. The original pixel-art `V` block is the browser icon. The unchanged legacy conversion script remains a compatibility-test fixture.
 
 The home page is static. It uses HTML and local CSS without JavaScript.
 
 The home page uses local SVG paths from Simple Icons version 16 for its social links. The paths use the CC0 1.0 Simple Icons collection. Each mark renders in the page text color. The page does not request an icon font, script, or image from a third party.
 
-Maintained HTML pages reference interface assets with a short SHA-256 content hash. Update the hash when a CSS or JavaScript file changes. The repository check rejects a stale hash. Legacy assets remain unversioned because the legacy fallback is frozen except for a critical fix.
+Maintained HTML pages reference interface assets with a short SHA-256 content hash. Update the hash when a CSS or JavaScript file changes. The repository check rejects a stale hash.
 
 Pitch shifter keeps audio on the user's device. It does not upload the file or send audio over the network. It supports files that the browser can decode, mono or stereo audio, sample rates from 8 kHz through 192 kHz, a maximum duration of 30 minutes, and up to 128 MiB of decoded 32-bit PCM. It exports 16-bit PCM WAV or 320 kbit/s MP3. An MP3 source defaults to MP3 output. Every other source defaults to WAV output. The encoder preserves the rendered level and clamps samples outside the output range. Processing statistics show the pre-encode peak and clipped-sample proportion. MP3 export can add a short codec delay. The tool does not preserve source metadata. On iOS and iPadOS, the tool uses the optional Audio Session API to recover silent built-in-speaker output. Other browsers use the normal playback path. The tool uses pinned local Signalsmith Stretch and LAME WebAssembly (Wasm) modules. See its [dependency record](tools/pitch-shifter/docs/DEPENDENCIES.md) for source commits, licences, artifact hashes, and reproduction steps.
 

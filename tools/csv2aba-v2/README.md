@@ -2,9 +2,9 @@
 
 ## Status
 
-This directory contains the current converter. One normal CBA payment run will complete its workflow validation.
+This directory contains the current converter. On 29 October 2026, the owner confirmed successful use in the established Commonwealth Bank of Australia (CBA) workflow several times over the past two months. The owner accepted validation and authorized version 1 retirement. Exact run dates and bank receipts were not supplied. This evidence applies only to that workflow.
 
-The former address at `/tools/csv2aba/` redirects here. The former version 1 stays at `/tools/csv2aba-legacy/` as a fallback. Its conversion logic remains unchanged.
+Both `/tools/csv2aba/` and `/tools/csv2aba-legacy/` redirect here. Version 1 is retired. Git history retains its interface. The unchanged legacy script remains in `tests/fixtures/csv2aba-v2/legacy-reference.js` for compatibility tests.
 
 Version 2 has independent conversion and interface files. Characterization tests compare its valid output with version 1.
 
@@ -24,11 +24,11 @@ Before a CBA upload, compare these items with the source payment report:
 - total amount; and
 - payment entries.
 
-If a result is unexpected, stop the payment process and use the legacy converter for comparison.
+If a result is unexpected, stop the payment process. Resolve the difference before approval.
 
 The current workflow creates monthly teacher payments for a Sydney music school. CBA has accepted version 1 files from this workflow for nearly one year. This history applies only to this workflow.
 
-Use [`TRIAL-CHECKLIST.md`](TRIAL-CHECKLIST.md) during the next normal payment run.
+The accepted validation result is recorded in `plan.md`, Section 34. Use [`TRIAL-CHECKLIST.md`](TRIAL-CHECKLIST.md) for payment review.
 
 After a successful conversion, version 2 shows the payment count and total amount. Review this summary before download. The summary and download become unavailable after an input change or an error.
 
@@ -43,8 +43,6 @@ The site uses the saved language when one is available. Otherwise, it uses Simpl
 Use the language control to change the language. A language change does not clear CSV input, validation errors, the payment summary, or generated ABA data.
 
 The site stores only the selected language code in local browser storage. It does not store CSV or payment data.
-
-The legacy converter stays in English.
 
 The page uses one vertical workflow on large and small screens. Add payment data first. Then check and convert it. Review the payment summary and ABA data before download. After conversion, keyboard focus moves to the result or the error report.
 

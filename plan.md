@@ -20,19 +20,19 @@ Tool specifications and operating checklists remain with their tools. They do no
 
 ## 3. Current status
 
-Status verified on 5 October 2026.
+Status updated on 29 October 2026.
 
 - The root page is volo1st's public introduction.
 - CSV to ABA Converter version 2 is the current converter.
 - The former converter address redirects to version 2.
-- The legacy converter remains available as a rollback path.
+- Version 1 is retired. Its address redirects to version 2.
 - The tools directory is available at `/tools/`.
 - Guitar Strum Machine is available from the tools directory.
 - The Chinese-English text sorter was removed.
 - The public-homepage source content and privacy boundary are approved.
 - The owner approved the public homepage and section indexes for release.
 - The deployed public foundation passed owner browser review.
-- The CSV-to-ABA workflow validation waits for one normal Commonwealth Bank of Australia (CBA) payment run.
+- The owner confirmed several successful version 2 runs in the established Commonwealth Bank of Australia (CBA) workflow. Workflow validation is complete. See Section 34.
 - Pitch Shifter version 1 and its MP3 export package are complete and deployed.
 
 ## 4. Product direction and boundaries
@@ -86,7 +86,7 @@ Do not move an existing tool only to match this structure. Preserve its address 
 - [x] Keep the former converter address working.
   - Evidence: `/tools/csv2aba/` redirects to `/tools/csv2aba-v2/`.
 - [x] Keep the legacy converter available as a rollback path.
-  - Evidence: `/tools/csv2aba-legacy/` contains the former conversion logic.
+  - Historical evidence: The former converter remained available during validation. Retired by owner decision on 29 October 2026. See Section 34.
 - [x] Replace the legacy page's person and account-like examples with clearly invented values.
   - Evidence: The correction changed only the example table. Tests pin the approved HTML, JavaScript, and CSS hashes.
 - [x] Remove the text sorter when its maintenance cost exceeded its current value.
@@ -125,22 +125,20 @@ Completion gate: Current users can continue their work without exposing confiden
 
 ### 6.3 Normal workflow validation
 
-Use [`tools/csv2aba-v2/TRIAL-CHECKLIST.md`](tools/csv2aba-v2/TRIAL-CHECKLIST.md) during one normal payment run. Do not store payment data in the result record.
+The owner accepted retrospective operational evidence on 29 October 2026. See Section 34 for the report, decision, and evidence limits. The earlier prospective trial checklist is superseded. Do not infer separate payment-comparison records from this report.
 
-- [ ] Generate the normal payment file with the current converter.
-- [ ] Compare the payment entries, count, and total with the source report.
-- [ ] Confirm that CBA accepts the upload.
-- [ ] Compare the payment entries, count, and total shown by CBA with the source report.
-- [ ] Record the date and result without confidential data.
+- [x] Obtain owner confirmation of successful use in the normal payment workflow.
+- [x] Record the accepted result without confidential data.
 
-Completion gate: The current converter matches the source report, and CBA accepts the file during the normal payment procedure.
+Completion gate: The owner accepts the reported normal-workflow result for continued version 2 use. This gate was revised on 29 October 2026 to accept the retrospective report. Routine payment review remains required.
 
 ### 6.4 Audit closure
 
 - [x] Run the automated invalid-input and boundary tests from the initial audit.
 - [x] Link each initial finding to completed work, removed scope, or an accepted product limit.
 - [x] Record that support is limited to the current CBA workflow.
-- [ ] After the normal payment run, record the reviewer, date, deployment, and CBA result.
+- [x] Record the accepted workflow result and its evidence limits.
+  - Evidence: Owner report on 29 October 2026; see Section 34. Exact run dates, deployed revisions, and separate bank records were not supplied.
 
 ## 7. Phase 2: Define the public identity
 
@@ -456,7 +454,7 @@ Do not add a framework or build system only because the site has multiple pages.
 
 | Item | Status | Resume condition |
 | --- | --- | --- |
-| CSV-to-ABA workflow validation | Waiting | The operator runs the normal payment process and records non-confidential evidence. |
+| CSV-to-ABA workflow validation | Complete | Owner confirmation accepted on 29 October 2026. See Section 34. |
 | Project and tool standards | Deferred | Adding or maintaining a tool exposes a specific problem that existing instructions do not address. |
 | Chinese-English text sorter | Removed | A new requirement justifies recovery from Git history. |
 | Authentication for school tools | Deferred | A tool needs confidential configuration, stored data, or restricted access. |
@@ -655,6 +653,8 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 | 5 October 2026 | Defer a custom not-found page and keep the current search-indexing behavior. | GitHub Pages supports a root `404.html`, but the site does not need custom recovery navigation now. A site-wide indexing policy would add maintenance without a current use. Existing page-specific behavior remains unchanged. |
 | 5 October 2026 | Use explicit dot elements for the Pitch Shifter export indicator. | The deployed pseudo-element clipping animation did not visibly cycle during owner testing. Explicit dots use discrete visibility states and keep the accessible button label stable. |
 | 5 October 2026 | Keep unscheduled website-tool ideas in this plan instead of separate Todoist tasks. | The repository preserves product context and references. Todoist stays limited to selected work packages. Pitch Shifter and Guitar Strum Machine are complete. Tuner remains unscheduled. MeTube stays with the Home Lab video-streaming package because it has a different execution and support model. |
+
+Decision on 29 October 2026: Accept the owner’s retrospective version 2 workflow confirmation and retire the live version 1 fallback. Preserve former addresses as redirects and the unchanged script as a compatibility-test fixture. See Section 34 for evidence limits.
 
 ## 16. Verified completion evidence
 
@@ -1287,3 +1287,21 @@ Pre-deployment evidence: Origin was refreshed. Its `master` is an ancestor of th
 Deployment evidence on 20 October 2026: Pushed release `607f48c430a859cc738867cf9e29986902fe3c47` to `origin/master`. GitHub Pages [run 39387705393](https://github.com/volo1st/volo1st.github.io/actions/runs/39387705393) completed successfully for that revision. Verified 50 public files at `https://volo1st.com/`: 19 HTML pages, 12 stylesheets, and 19 scripts. All returned HTTP 200 and matched the local release bytes. This includes the homepage, directories, Sound placeholders, studio rates, all three maintained tools, the converter redirect, and guide specimens. HTTP checks confirm delivery, not browser rendering or interactive device behavior. The manual review limits above remain.
 
 Completion: Added and verified the release outcome comment on Todoist task `6hpRxwgvGxhHXRGc`. Completed the task and confirmed its completed state through a fresh read. Kept both deferred website packages deferred. The follow-up completion commit changes this record only.
+
+## 34. Confirm converter validation and retire version 1
+
+Selection and authorization on 29 October 2026: The owner confirmed that the operator used version 2 successfully several times over the past two months. The owner accepted the workflow validation and authorized retirement of version 1. This report replaces the pending prospective trial. Exact run dates, deployed revisions for those runs, separate comparison records, and bank receipts were not supplied. Do not infer them or request confidential payment data. This evidence applies only to the established CBA workflow. It does not establish general bank approval.
+
+Decision: Accept the owner's retrospective operational confirmation as the completion evidence for the normal-workflow gate. Retire the legacy interface and its fallback link. Preserve both former addresses with static redirects and visible links to version 2. Preserve the unchanged legacy script as a test fixture for valid-output compatibility. Git history retains the retired interface. This decision supersedes the earlier requirement to keep a live legacy fallback. Keep financial conversion, supported settings, and validation unchanged. If a result is unexpected, instruct the operator to stop the payment process.
+
+- [x] Record the accepted workflow result and update current documentation.
+- [x] Retire the legacy interface and retain redirects and compatibility tests.
+- [x] Pass repository checks and review the complete diff.
+- [ ] Publish the retirement and verify public delivery.
+- [ ] Reconcile the waiting operator-trial task after the repository checks pass.
+
+Release scope: Commit and publish the retirement through the existing GitHub Pages source, `master` at the repository root. Verify the public redirects and updated converter notice. Keep hosting settings unchanged.
+
+Historical-reference maintenance: Updated only legacy source-link destinations in the dated audit documents to revision `91ca4989294dbe791f3944ad8d2f3ac70ff25afd`. The audit findings and dated observations are unchanged.
+
+Verification evidence: `./scripts/check.sh` passed all seven test files. Checks cover financial validation, quoted CSV, line endings, byte order marks, invalid and boundary amounts, field and total limits, exact record lengths, error recovery, download state, legacy-output compatibility, redirects, local references, translation parity, and asset hashes. The legacy script fixture retains its approved SHA-256 hash. Reviewed the complete diff, including the unchanged script move, removed legacy interface and stylesheet, bilingual stop instruction, and shared-catalog reference hashes. Financial conversion and interface logic are unchanged. Manual browser, keyboard, focus, narrow-screen, and 200 percent zoom checks did not run.

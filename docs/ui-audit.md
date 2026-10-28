@@ -43,7 +43,7 @@ The shell is [assets/site-shell.css](../assets/site-shell.css). It supplies the 
 | [Guitar Strum Machine](../tools/guitar-strumming/index.html) | `tools/guitar-strumming/styles.css` | Named practice region, source editor, transport, chord timeline, and disclosures. |
 | [Pitch Shifter](../tools/pitch-shifter/index.html) | `tools/pitch-shifter/styles.css` | Named workspace, audio transport, export controls, metrics, and disclosures. |
 | [Former converter address](../tools/csv2aba/index.html) | None; no shell | Redirect with a usable fallback link. Keep it simple. |
-| [Legacy converter](../tools/csv2aba-legacy/index.html) | Only its local `styles.css` | Standalone frozen design. Record differences; do not migrate it. |
+| [Legacy converter](https://github.com/volo1st/volo1st.github.io/blob/91ca4989294dbe791f3944ad8d2f3ac70ff25afd/tools/csv2aba-legacy/index.html) | Only its local `styles.css` | Standalone frozen design. Record differences; do not migrate it. |
 
 The 11 stylesheets contain 1,990 lines at this revision. The largest files are Guitar at 685 lines and Pitch Shifter at 557 lines. Size alone is not a defect. These files combine common components with specialized app layout and state rules.
 

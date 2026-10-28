@@ -17,7 +17,7 @@ const VALID_CSV = [
 ].join('\n');
 
 function loadV1WithFixedDate() {
-  const scriptPath = path.join(__dirname, '../tools/csv2aba-legacy/scripts.js');
+  const scriptPath = path.join(__dirname, 'fixtures/csv2aba-v2/legacy-reference.js');
   const browserMarker = '// --- Browser specific code';
   const source = fs.readFileSync(scriptPath, 'utf8').split(browserMarker)[0];
   const NativeDate = Date;

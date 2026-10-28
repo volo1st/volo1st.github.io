@@ -262,34 +262,25 @@ test('the tools directory links to each available tool', () => {
   assert.match(html, /href="\.\.\/assets\/site\.css\?v=[a-f0-9]{12}"/);
 });
 
-test('the former converter address redirects to version 2 and preserves the legacy fallback', () => {
-  const redirectHtml = fs.readFileSync(
-    path.join(repositoryRoot, 'tools', 'csv2aba', 'index.html'),
-    'utf8',
-  );
-  const currentHtml = fs.readFileSync(
-    path.join(repositoryRoot, 'tools', 'csv2aba-v2', 'index.html'),
-    'utf8',
-  );
-  const legacyHashes = {
-    'index.html': '1a0a210a6b7203ab017a7c0f445914207114301d32b60fd10898afed1ef3c24d',
-    'scripts.js': '867cc50dfaca36e8d5e61d894e63ce1045901e04e698decc3daa0b48c903cc32',
-    'styles.css': 'f63735c377e63f1819197fdb9fd6db34f96b73fd50b7e32888aafc27dfd50964',
-  };
-
-  assert.match(redirectHtml, /http-equiv="refresh" content="0; url=\.\.\/csv2aba-v2\/"/);
-  assert.match(redirectHtml, /href="\.\.\/csv2aba-v2\/"/);
-  assert.match(currentHtml, /href="\.\.\/csv2aba-legacy\/"/);
-  assert.match(currentHtml, /data-i18n="v2\.safetyHeading"/);
-  assert.doesNotMatch(currentHtml, /[Tt]rial|v2\.version/);
-
-  for (const [filename, expectedHash] of Object.entries(legacyHashes)) {
-    const content = fs.readFileSync(
-      path.join(repositoryRoot, 'tools', 'csv2aba-legacy', filename),
+test('retired converter addresses redirect to version 2 without a legacy fallback', () => {
+  for (const directory of ['csv2aba', 'csv2aba-legacy']) {
+    const html = fs.readFileSync(
+      path.join(repositoryRoot, 'tools', directory, 'index.html'), 'utf8',
     );
-    const actualHash = crypto.createHash('sha256').update(content).digest('hex');
-    assert.equal(actualHash, expectedHash, `${filename} does not match the approved legacy baseline`);
+    assert.match(html, /http-equiv="refresh" content="0; url=\.\.\/csv2aba-v2\/"/);
+    assert.match(html, /href="\.\.\/csv2aba-v2\/"/);
+    assert.doesNotMatch(html, /<script|<textarea|<button/);
   }
+  const currentHtml = fs.readFileSync(
+    path.join(repositoryRoot, 'tools', 'csv2aba-v2', 'index.html'), 'utf8',
+  );
+  assert.doesNotMatch(currentHtml, /csv2aba-legacy|[Tt]rial|v2\.version/);
+  assert.match(currentHtml, /data-i18n="v2\.safetyHeading"/);
+  const reference = fs.readFileSync(
+    path.join(repositoryRoot, 'tests/fixtures/csv2aba-v2/legacy-reference.js'),
+  );
+  assert.equal(crypto.createHash('sha256').update(reference).digest('hex'),
+    '867cc50dfaca36e8d5e61d894e63ce1045901e04e698decc3daa0b48c903cc32');
 });
 
 test('converter examples use explicit invented identities', () => {
@@ -310,7 +301,6 @@ test('converter examples use explicit invented identities', () => {
 
 test('versioned interface assets use their current content hash', () => {
   for (const file of findHtmlFiles(repositoryRoot)) {
-    if (file.includes(`${path.sep}csv2aba-legacy${path.sep}`)) continue;
     const html = fs.readFileSync(file, 'utf8');
     for (const match of html.matchAll(/\b(?:href|src)="([^"?#]+)([^"]*)"/g)) {
       const reference = match[1];
