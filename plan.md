@@ -1297,11 +1297,15 @@ Decision: Accept the owner's retrospective operational confirmation as the compl
 - [x] Record the accepted workflow result and update current documentation.
 - [x] Retire the legacy interface and retain redirects and compatibility tests.
 - [x] Pass repository checks and review the complete diff.
-- [ ] Publish the retirement and verify public delivery.
-- [ ] Reconcile the waiting operator-trial task after the repository checks pass.
+- [x] Publish the retirement and verify public delivery.
+- [x] Reconcile the waiting operator-trial task after the repository checks pass.
 
 Release scope: Commit and publish the retirement through the existing GitHub Pages source, `master` at the repository root. Verify the public redirects and updated converter notice. Keep hosting settings unchanged.
 
 Historical-reference maintenance: Updated only legacy source-link destinations in the dated audit documents to revision `91ca4989294dbe791f3944ad8d2f3ac70ff25afd`. The audit findings and dated observations are unchanged.
 
 Verification evidence: `./scripts/check.sh` passed all seven test files. Checks cover financial validation, quoted CSV, line endings, byte order marks, invalid and boundary amounts, field and total limits, exact record lengths, error recovery, download state, legacy-output compatibility, redirects, local references, translation parity, and asset hashes. The legacy script fixture retains its approved SHA-256 hash. Reviewed the complete diff, including the unchanged script move, removed legacy interface and stylesheet, bilingual stop instruction, and shared-catalog reference hashes. Financial conversion and interface logic are unchanged. Manual browser, keyboard, focus, narrow-screen, and 200 percent zoom checks did not run.
+
+Deployment evidence on 29 October 2026: Published `e678d12f6c8375aad115f015172f3447d0f41727` to `origin/master`. GitHub Pages [run 40786692680](https://github.com/volo1st/volo1st.github.io/actions/runs/40786692680) completed successfully. Both former converter pages, the current converter page, and the shared language catalog returned HTTP 200 and matched the release bytes at `https://volo1st.com/`. The retired script and stylesheet URLs returned HTTP 404. HTTP checks confirm delivery; they do not verify rendered or interactive browser behavior.
+
+Completion: Added and verified the outcome comment on Todoist task `6hXWVC6pRvrWgMj4`. Completed the task and confirmed its completed state through a fresh read. No next package was selected. The follow-up completion commit changes this record only.
