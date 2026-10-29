@@ -1331,3 +1331,6 @@ Verification evidence: `./scripts/check.sh` passed all seven test files. Existin
 Tracker reconciliation: Read the configured Todoist initiative and its open children. No website package has the actionable label. The owner selected this audit directly. Both existing later packages remain deferred. There is no matching task to close or next package to promote.
 
 Release: Publish the guide comparison through the existing GitHub Pages source and verify public content against the committed files. No hosting change is required.
+
+
+Deployment evidence on 30 October 2026: Published `ff5b9a4f14bc2b63dd1a3a8dddbbd9cb2b8387ca`. GitHub Pages [run 40966352555](https://github.com/volo1st/volo1st.github.io/actions/runs/40966352555) completed successfully. The public guide, guide stylesheet, icon README, and four 512-pixel icons returned HTTP 200 and matched local release bytes. The comparison is available at `https://volo1st.com/style-guide/#app-icons`. HTTP checks confirm delivery only. The manual browser review limits above remain. The follow-up completion commit changes this record only.
