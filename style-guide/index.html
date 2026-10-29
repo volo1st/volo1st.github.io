@@ -10,7 +10,7 @@
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=340aa48fa873">
     <link rel="stylesheet" href="../assets/ui.css?v=95ae6daed1f1">
-    <link rel="stylesheet" href="./guide.css?v=c15024ff2b06">
+    <link rel="stylesheet" href="./guide.css?v=355d6c1d0017">
   </head>
   <body data-page="style-guide">
     <header class="ui-page-header ui-container guide-header">
@@ -58,6 +58,9 @@
         </a>
         <a class="ui-link" href="#headers">
           Page headers
+        </a>
+        <a class="ui-link" href="#app-icons">
+          App icons
         </a>
         <a class="ui-link" href="#current">
           Current styles
@@ -965,8 +968,81 @@ chords: C Am F G</textarea>
         </div>
         <p class="ui-small ui-muted">Use <code class="ui-code">ui-page-header</code> for header spacing, <code class="ui-code">ui-context-row</code> for breadcrumb and language alignment, and <code class="ui-code">ui-breadcrumb</code> for the navigation list. Tools use <code class="ui-code">ui-button-group ui-language ui-language--tool</code>. Reading pages reuse quiet buttons inside <code class="ui-code">ui-language ui-language--text</code>. Language buttons use <code class="ui-code">data-disable-current="true"</code>. The shared language binder updates <code class="ui-code">disabled</code> with <code class="ui-code">aria-pressed</code> and re-enables the previous language.</p>
       </section>
+      <section id="app-icons" class="guide-section ui-flow" aria-labelledby="app-icons-heading">
+        <p class="guide-eyebrow">10 / App icons</p>
+        <h2 id="app-icons-heading" class="ui-heading">One canvas and palette. Different symbol sizes.</h2>
+        <p>All four source icons are 512 × 512 pixel images with an opaque background. Use cream <code class="ui-code">#f4f1e8</code> for the background and green <code class="ui-code">#173e30</code> for the mark. Edge pixels blend these two colors.</p>
+        <p>The canvas and colors match. Symbol size and visual weight vary. These examples preserve the approved images and their aspect ratios. A shared inner-size rule has not been approved.</p>
+        <p class="ui-small ui-muted">Each row of samples shows the full canvas at 128, 64, and 32 CSS pixels. The thin outline shows the canvas edge. It is not part of the image. Compare apparent size at 32 pixels before revising the artwork.</p>
+        <div class="guide-icon-grid">
+          <figure class="guide-icon-card ui-flow">
+            <figcaption class="ui-flow">
+              <h3 class="ui-subheading"><a class="ui-link" href="../assets/app-icons/guitar-strum-machine-512.png?v=9553c477ff76">Guitar strum machine</a></h3>
+              <p class="ui-small ui-muted">Used by the current tool.</p>
+            </figcaption>
+            <div class="guide-icon-samples">
+              <img class="guide-icon-image guide-icon-image--128" src="../assets/app-icons/guitar-strum-machine-512.png?v=9553c477ff76" width="128" height="128" alt="Guitar pick with three diagonal strings." loading="lazy">
+              <img class="guide-icon-image guide-icon-image--64" src="../assets/app-icons/guitar-strum-machine-512.png?v=9553c477ff76" width="64" height="64" alt="" loading="lazy">
+              <img class="guide-icon-image guide-icon-image--32" src="../assets/app-icons/guitar-strum-machine-512.png?v=9553c477ff76" width="32" height="32" alt="" loading="lazy">
+            </div>
+            <p class="guide-caption">128 / 64 / 32 pixels</p>
+          </figure>
+          <figure class="guide-icon-card ui-flow">
+            <figcaption class="ui-flow">
+              <h3 class="ui-subheading"><a class="ui-link" href="../assets/app-icons/metronome-512.png?v=72dd41b425f9">Metronome</a></h3>
+              <p class="ui-small ui-muted">Concept icon.</p>
+            </figcaption>
+            <div class="guide-icon-samples">
+              <img class="guide-icon-image guide-icon-image--128" src="../assets/app-icons/metronome-512.png?v=72dd41b425f9" width="128" height="128" alt="Four vertical bars with one taller bar." loading="lazy">
+              <img class="guide-icon-image guide-icon-image--64" src="../assets/app-icons/metronome-512.png?v=72dd41b425f9" width="64" height="64" alt="" loading="lazy">
+              <img class="guide-icon-image guide-icon-image--32" src="../assets/app-icons/metronome-512.png?v=72dd41b425f9" width="32" height="32" alt="" loading="lazy">
+            </div>
+            <p class="guide-caption">128 / 64 / 32 pixels</p>
+          </figure>
+          <figure class="guide-icon-card ui-flow">
+            <figcaption class="ui-flow">
+              <h3 class="ui-subheading"><a class="ui-link" href="../assets/app-icons/tuner-512.png?v=1823c441a2b1">Tuner</a></h3>
+              <p class="ui-small ui-muted">Concept icon.</p>
+            </figcaption>
+            <div class="guide-icon-samples">
+              <img class="guide-icon-image guide-icon-image--128" src="../assets/app-icons/tuner-512.png?v=1823c441a2b1" width="128" height="128" alt="Seven rounded vertical bars with a taller center bar." loading="lazy">
+              <img class="guide-icon-image guide-icon-image--64" src="../assets/app-icons/tuner-512.png?v=1823c441a2b1" width="64" height="64" alt="" loading="lazy">
+              <img class="guide-icon-image guide-icon-image--32" src="../assets/app-icons/tuner-512.png?v=1823c441a2b1" width="32" height="32" alt="" loading="lazy">
+            </div>
+            <p class="guide-caption">128 / 64 / 32 pixels</p>
+          </figure>
+          <figure class="guide-icon-card ui-flow">
+            <figcaption class="ui-flow">
+              <h3 class="ui-subheading"><a class="ui-link" href="../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93">Pitch shifter</a></h3>
+              <p class="ui-small ui-muted">Used by the current tool.</p>
+            </figcaption>
+            <div class="guide-icon-samples">
+              <img class="guide-icon-image guide-icon-image--128" src="../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93" width="128" height="128" alt="A waveform beside a sharp sign." loading="lazy">
+              <img class="guide-icon-image guide-icon-image--64" src="../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93" width="64" height="64" alt="" loading="lazy">
+              <img class="guide-icon-image guide-icon-image--32" src="../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93" width="32" height="32" alt="" loading="lazy">
+            </div>
+            <p class="guide-caption">128 / 64 / 32 pixels</p>
+          </figure>
+        </div>
+        <div class="ui-table-scroll" tabindex="0" role="region" aria-labelledby="icon-measurements-caption">
+          <table class="ui-table">
+            <caption id="icon-measurements-caption">Source measurements · 30 October 2026 · pixels on the 512 × 512 canvas</caption>
+            <thead>
+              <tr><th scope="col">Icon</th><th scope="col">Symbol width × height</th><th scope="col">Margins: left / top / right / bottom</th><th scope="col" class="ui-table__number">Foreground coverage</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Guitar strum machine</th><td>387 × 430</td><td>62 / 40 / 63 / 42</td><td class="ui-table__number">16.8%</td></tr>
+              <tr><th scope="row">Metronome</th><td>307 × 290</td><td>103 / 110 / 102 / 112</td><td class="ui-table__number">20.5%</td></tr>
+              <tr><th scope="row">Tuner</th><td>372 × 243</td><td>70 / 130 / 70 / 139</td><td class="ui-table__number">9.6%</td></tr>
+              <tr><th scope="row">Pitch shifter</th><td>433 × 220</td><td>37 / 141 / 42 / 151</td><td class="ui-table__number">12.6%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="ui-small ui-muted">Symbol bounds include every pixel that differs from the background, including antialias pixels. Foreground coverage measures the amount of green after edge blending. It does not measure perceived size. The dense metronome has the most green. The tuner has the least.</p>
+        <p><a class="ui-link" href="../assets/app-icons/README.md">Icon source files, measurement method, and guitar size variants</a></p>
+      </section>
       <section id="current" class="guide-section ui-flow" aria-labelledby="current-heading">
-        <p class="guide-eyebrow">10 / Current styles</p>
+        <p class="guide-eyebrow">11 / Current styles</p>
         <h2 id="current-heading" class="ui-heading">Compare what the site uses today.</h2>
         <p>Each preview loads the shared stylesheet and the applicable page styles in a separate document. Open a specimen on its own to check the full page width.</p>
         <details class="ui-disclosure guide-current">
@@ -1006,7 +1082,7 @@ chords: C Am F G</textarea>
         </details>
       </section>
       <footer id="review" class="guide-footer ui-flow">
-        <p class="guide-eyebrow">11 / Review</p>
+        <p class="guide-eyebrow">12 / Review</p>
         <h2 class="ui-heading">Review the shared system.</h2>
         <ol>
           <li>

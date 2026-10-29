@@ -49,7 +49,7 @@ The guitar tool can put the complete source in a share URL. Anyone who receives 
 
 The guitar page has a generic Open Graph preview. The preview does not include a fixed Open Graph URL, so an arrangement query remains in the shared link. Static metadata cannot show a different preview for each arrangement. Run `node scripts/generate-share-card.js` to regenerate the preview image.
 
-The Guitar strum machine provides a local home-screen icon and web app manifest. The installed app starts at the normal Guitar strum machine address. Installation does not add offline support. The other files in `assets/app-icons/` record the approved visual direction for possible future music tools.
+The Guitar strum machine and Pitch shifter provide local home-screen icons and web app manifests. Each installed app starts at its normal tool address. Installation does not add offline support. The metronome and tuner icons in `assets/app-icons/` are concepts. See the [app icon comparison](style-guide/#app-icons) for equal-size samples and the [icon audit](assets/app-icons/README.md) for measured dimensions, margins, and colors.
 
 The guitar tool includes a local catalog of reviewed practice exercises. The catalog can include a short user transcription when it contains only chord and rhythm teaching data and has a clear unofficial notice. It does not include lyrics, melody notation, audio, or artwork. A preset does not make a network request. A preset URL uses a stable versioned slug. Before the owner declares version 1.0.0, preset sources can change in place. After that release, published preset source does not change. A source revision then uses a new slug.
 

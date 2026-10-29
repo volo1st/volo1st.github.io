@@ -1309,3 +1309,25 @@ Verification evidence: `./scripts/check.sh` passed all seven test files. Checks 
 Deployment evidence on 29 October 2026: Published `e678d12f6c8375aad115f015172f3447d0f41727` to `origin/master`. GitHub Pages [run 40786692680](https://github.com/volo1st/volo1st.github.io/actions/runs/40786692680) completed successfully. Both former converter pages, the current converter page, and the shared language catalog returned HTTP 200 and matched the release bytes at `https://volo1st.com/`. The retired script and stylesheet URLs returned HTTP 404. HTTP checks confirm delivery; they do not verify rendered or interactive browser behavior.
 
 Completion: Added and verified the outcome comment on Todoist task `6hXWVC6pRvrWgMj4`. Completed the task and confirmed its completed state through a fresh read. No next package was selected. The follow-up completion commit changes this record only.
+
+## 35. Audit the music app icons and add guide examples
+
+Selection on 30 October 2026: The owner requested a consistency check for the four approved app icons and examples in the style guide. Todoist has no actionable website child task. Keep deferred packages unchanged.
+
+Purpose and requirements: Measure canvas size, visible symbol bounds, margins, and colors. Compare the four icons at equal display sizes. Add a guide section and record the audit in the icon README. Preserve approved artwork and app behavior. This package is an audit and a comparison page. It does not establish a new icon size rule.
+
+Findings and decision before implementation: All four source images are opaque 512 × 512 RGB PNGs. They use background `#f4f1e8`, mark `#173e30`, and antialias blends between those colors. Symbol bounds differ: guitar 387 × 430, metronome 307 × 290, tuner 372 × 243, and pitch/key 433 × 220 pixels. The canvas and palette are consistent. Inner size and visual weight are not uniform. Preserve each aspect ratio. Show 128-, 64-, and 32-pixel comparisons so a later artwork revision can be judged by apparent size rather than identical width and height. No platform-specific icon compliance is claimed.
+
+Measurement method: Inflate the existing PNG RGB scanlines with Node.js standard modules. Count any pixel that differs from the exact background as part of the symbol, including antialias pixels. Record inclusive bounding-box dimensions. Compute coverage by summing each pixel's foreground blend fraction and dividing by the canvas area. Confirm every color follows the approved blend within one channel value. Inspect all four images directly. The measurements are recorded in `assets/app-icons/README.md`.
+
+- [x] Record dimensions, bounds, margins, colors, and coverage for the current assets.
+- [x] Add equal-size examples and measurement notes to the style guide.
+- [x] Pass repository checks and review the complete diff.
+
+Review limits: The existing static checks are sufficient for this text and style change. Do not install browser tools. Record unavailable rendered, keyboard, focus, narrow-screen, and 200 percent zoom review. Commit the complete package.
+
+Verification evidence: `./scripts/check.sh` passed all seven test files. Existing tests check source dimensions and the exact icon palette, local image and documentation links, asset hashes, unique IDs, and accessibility references. The pixel audit covered all four source icons and both guitar variants. Reviewed all five changed files. The gallery uses the existing images at 128, 64, and 32 CSS pixels, a wrapping layout, descriptive alternatives, and a named keyboard-focusable table region. New CSS selectors are scoped to the style-guide page. No source image, app code, dependency, or test changed. Corrected the icon documentation to identify the pitch/key icon already used by Pitch shifter. No browser is available through the connected tools. Manual rendered, keyboard, focus, narrow-screen, and 200 percent zoom checks did not run.
+
+Tracker reconciliation: Read the configured Todoist initiative and its open children. No website package has the actionable label. The owner selected this audit directly. Both existing later packages remain deferred. There is no matching task to close or next package to promote.
+
+Release: Publish the guide comparison through the existing GitHub Pages source and verify public content against the committed files. No hosting change is required.

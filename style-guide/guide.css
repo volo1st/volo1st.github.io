@@ -51,3 +51,11 @@
 @media (max-width: 650px) {
   :where([data-page="style-guide"]) .guide-grid { grid-template-columns: 1fr; }
 }
+
+:where([data-page="style-guide"]) .guide-icon-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); gap: var(--ui-space-8) var(--ui-space-6); margin-block-start: var(--ui-space-6); }
+:where([data-page="style-guide"]) .guide-icon-card { min-width: 0; margin: 0; }
+:where([data-page="style-guide"]) .guide-icon-samples { display: flex; flex-wrap: wrap; align-items: end; gap: var(--ui-space-4); }
+:where([data-page="style-guide"]) .guide-icon-image { display: block; max-width: 100%; height: auto; aspect-ratio: 1; outline: 1px solid var(--site-divider); }
+:where([data-page="style-guide"]) .guide-icon-image--128 { width: 128px; }
+:where([data-page="style-guide"]) .guide-icon-image--64 { width: 64px; }
+:where([data-page="style-guide"]) .guide-icon-image--32 { width: 32px; }
