@@ -96,8 +96,8 @@ const directory = path.join(root, 'assets/app-icons');
 // Scales are relative to each original source. Centers use the 512-pixel canvas.
 const choices = [
   ['guitar-strum-machine', 0.86, 256, 260],
-  ['metronome', 0.94, 256, 248],
-  ['tuner', 1.12, 256, 256],
+  ['metronome', 1.14, 256, 248],
+  ['tuner', 1.06, 256, 256],
   ['pitch-key', 0.98, 248, 256],
 ];
 for (const [name, scale, centerX, centerY] of choices) {

@@ -62,3 +62,11 @@
 
 :where([data-page="style-guide"]) .guide-icon-comparison .guide-icon-samples { min-width: 16rem; flex-wrap: nowrap; }
 :where([data-page="style-guide"]) .guide-icon-comparison .guide-icon-image { flex-shrink: 0; }
+
+:where([data-page="style-guide"]) .guide-icon-preview { display: block; flex: none; height: auto; aspect-ratio: 1; overflow: hidden; background: #f4f1e8; outline: 1px solid var(--site-divider); }
+:where([data-page="style-guide"]) .guide-icon-preview--128 { width: 128px; }
+:where([data-page="style-guide"]) .guide-icon-preview--64 { width: 64px; }
+:where([data-page="style-guide"]) .guide-icon-preview--32 { width: 32px; }
+:where([data-page="style-guide"]) .guide-icon-preview .guide-icon-image { width: 100%; height: 100%; outline: none; }
+:where([data-page="style-guide"]) .guide-icon-preview[data-active="true"] .guide-icon-image { transform-origin: 0 0; transform: translate(var(--icon-x), var(--icon-y)) scale(var(--icon-scale)); }
+:where([data-page="style-guide"]) .guide-icon-controls { margin-block-start: var(--ui-space-4); }

@@ -1369,3 +1369,26 @@ Local review: An existing server on port 8000 serves this repository. The guide 
 Completion evidence on 2 November 2026: `./scripts/check.sh` passed all seven test files. Extended the existing icon palette and dimension checks to all eight candidates. Regeneration produced identical bytes for all eight files. Confirmed that all six original PNG files match the previous commit. Reviewed the complete source and candidate-image diff, the direct-resize script, adjacent comparison columns, retained original disclosure, accessibility references, and asset hashes. The local guide, stylesheet, and eight candidate images returned HTTP 200 and matched working-file bytes during the local server check. Manual rendered, keyboard, focus, narrow-screen, and 200 percent zoom review remains for the owner. No browser tooling was installed.
 
 Tracker reconciliation: This continues the owner-selected package. No matching actionable website task exists to close. The initiative and deferred packages remain unchanged. Commit this review package locally. Do not push or deploy it.
+
+
+### 36.1 Enlarge the metronome and reduce the tuner
+
+Owner review on 2 November 2026: The apparent-size metronome looks much smaller than the other icons. The tuner looks slightly too large. The first candidate gave filled area too much influence. Treat the owner's side-by-side judgement as the design evidence.
+
+Decision before implementation: Change the metronome scale from 94% to 114% of the original, about 21% larger than the first candidate. Change the tuner from 112% to 106%, about 5% smaller than the first candidate. Preserve positions, guitar, pitch/key, equal-bounds candidates, installed-app icons, and the local-only review boundary. Regenerate the candidates and refresh measurements and image hashes.
+
+
+### 36.2 Add local icon adjustment controls
+
+Owner request on 2 November 2026: Add sliders to fine-tune the apparent-size icons. Provide numbers that the owner can send back after review. Continue the local-only comparison.
+
+Decision before implementation: Keep equal-bounds samples fixed. Give each apparent-size icon a scale slider and horizontal and vertical center sliders. Transform the original image uniformly inside the opaque square preview. Show the same settings at 128, 64, and 32 pixels. Start with the revised metronome and tuner scales from Section 36.1. Include reset controls, a readable settings export, and a Copy settings button. Use a versioned JSON object with scale percent and center coordinates on the 512-pixel canvas. Report clipping. Keep settings only in the current page; instruct the owner to copy them before reload. If clipboard access fails, select the export for manual copying. Without JavaScript, keep static candidates available and controls disabled. Do not change installed-app icons or deploy.
+
+Checks: Add focused tests for coordinate transforms, settings export, independent slider changes, reset, clipping notices, and clipboard failure. Use the existing repository check. Browser previews can differ slightly from the area-resampled PNG edges; the exported settings define the final deterministic resize.
+
+
+Completion evidence for Sections 36.1 and 36.2 on 2 November 2026: Regenerated the revised metronome and tuner candidates. Updated their measurements and hashes. Added per-icon scale and center sliders, uniform previews from the original sources, reset buttons, clipping notices, and a readable versioned settings export. Copy settings reports clipboard success or selects the text after failure. Settings stay in the current page and survive failed copying; reload resets them as stated beside the controls. Static candidates remain available with disabled controls if JavaScript is unavailable.
+
+`./scripts/check.sh` passed all eight test files. The six new focused tests cover coordinate mapping, independent slider changes across all three previews, export values, reset isolation, clipping and recovery, invalid values, clipboard success, changes during copying, and clipboard rejection. Existing palette, dimensions, asset hash, reference, and app checks pass. Reviewed the complete diff, source bounds, original-image transforms, shared control classes, scoped CSS, disabled fallback, copy status, and documentation. The local guide and adjustment script returned HTTP 200 and matched working-file bytes. Browser rendering, real clipboard permissions, keyboard use, narrow screens, and 200 percent zoom remain for owner review. No browser tooling was installed.
+
+The existing local-only instruction still applies. Installed-app icons and manifests are unchanged. Commit locally without pushing or deployment. No tracker task or deferred package changed.

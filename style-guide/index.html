@@ -10,7 +10,7 @@
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=340aa48fa873">
     <link rel="stylesheet" href="../assets/ui.css?v=95ae6daed1f1">
-    <link rel="stylesheet" href="./guide.css?v=684e152e97aa">
+    <link rel="stylesheet" href="./guide.css?v=387b2ba9adcb">
   </head>
   <body data-page="style-guide">
     <header class="ui-page-header ui-container guide-header">
@@ -28,7 +28,7 @@
         <p class="guide-eyebrow">Shared styles · approved first pass</p>
         <h1 class="ui-title">One site. One shared language.</h1>
         <p class="guide-lead">A working user interface (UI) style guide for type, controls, and common patterns. Use the component examples to review changes to shared styles.</p>
-        <p class="ui-small ui-muted">Maintained pages and these examples use the same shared stylesheet. Buttons show visual states and do not run app actions. Native fields and disclosures can be used. No input is stored or processed.</p>
+        <p class="ui-small ui-muted">Maintained pages and these examples use the same shared stylesheet. Component buttons show visual states. Native fields and disclosures can be used. The icon sliders update previews and export settings. Copy those settings before reloading the page.</p>
         <p><a class="ui-link" href="../docs/ui-audit.md">Read the HTML and CSS audit</a></p>
       </header>
       <nav class="guide-nav" aria-label="Style guide sections">
@@ -973,7 +973,9 @@ chords: C Am F G</textarea>
         <h2 id="app-icons-heading" class="ui-heading">Compare equal bounds and apparent size.</h2>
         <p>All four source icons are 512 × 512 pixel images with an opaque background. Use cream <code class="ui-code">#f4f1e8</code> for the background and green <code class="ui-code">#173e30</code> for the mark. Edge pixels blend these two colors.</p>
         <p>Equal bounds fits every symbol inside a centered 384 × 384 pixel square. Each symbol has the same longest edge. Apparent size uses a separate scale and position for each symbol. Both methods preserve the original shapes and aspect ratios.</p>
-        <p class="ui-small ui-muted">Compare each pair at 128, 64, and 32 CSS pixels. On a narrow screen, scroll the comparison horizontally. The original icons remain in use by the tools. These separate candidate files are for review.</p>
+        <p class="ui-small ui-muted">Compare each pair at 128, 64, and 32 CSS pixels. On a narrow screen, scroll the comparison horizontally. Use the sliders to adjust the apparent-size previews. The original icons remain in use by the tools.</p>
+        <p id="icon-adjustment-help">Scale is a percentage of the original symbol. Center positions use the 512-pixel canvas. Larger horizontal values move right. Larger vertical values move down. Copy the settings before closing or reloading this page.</p>
+        <noscript><p class="ui-notice">Enable JavaScript to use the sliders. The static comparison remains available.</p></noscript>
         <div class="ui-table-scroll" tabindex="0" role="region" aria-labelledby="icon-comparison-caption">
           <table class="ui-table guide-icon-comparison">
             <caption id="icon-comparison-caption">Icon size comparison · each cell shows 128, 64, and 32 pixels</caption>
@@ -991,13 +993,31 @@ chords: C Am F G</textarea>
                   </div>
                   <p class="guide-caption">Symbol: 346 × 384 pixels on the source canvas</p>
                 </td>
-                <td>
+                <td data-icon-editor="guitar-strum-machine">
                   <div class="guide-icon-samples">
-                    <img class="guide-icon-image guide-icon-image--128" src="../assets/app-icons/comparison/apparent/guitar-strum-machine-512.png?v=a44925fd9d4e" width="128" height="128" alt="Guitar pick with three diagonal strings." loading="lazy">
-                    <img class="guide-icon-image guide-icon-image--64" src="../assets/app-icons/comparison/apparent/guitar-strum-machine-512.png?v=a44925fd9d4e" width="64" height="64" alt="" loading="lazy">
-                    <img class="guide-icon-image guide-icon-image--32" src="../assets/app-icons/comparison/apparent/guitar-strum-machine-512.png?v=a44925fd9d4e" width="32" height="32" alt="" loading="lazy">
+                    <span class="guide-icon-preview guide-icon-preview--128" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/guitar-strum-machine-512.png?v=9553c477ff76" class="guide-icon-image guide-icon-image--128" src="../assets/app-icons/comparison/apparent/guitar-strum-machine-512.png?v=a44925fd9d4e" width="128" height="128" alt="Guitar pick with three diagonal strings." loading="lazy"></span>
+                    <span class="guide-icon-preview guide-icon-preview--64" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/guitar-strum-machine-512.png?v=9553c477ff76" class="guide-icon-image guide-icon-image--64" src="../assets/app-icons/comparison/apparent/guitar-strum-machine-512.png?v=a44925fd9d4e" width="64" height="64" alt="" loading="lazy"></span>
+                    <span class="guide-icon-preview guide-icon-preview--32" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/guitar-strum-machine-512.png?v=9553c477ff76" class="guide-icon-image guide-icon-image--32" src="../assets/app-icons/comparison/apparent/guitar-strum-machine-512.png?v=a44925fd9d4e" width="32" height="32" alt="" loading="lazy"></span>
                   </div>
-                  <p class="guide-caption">Symbol: 334 × 370 pixels on the source canvas</p>
+                  <p class="guide-caption" data-icon-summary>Symbol: 334 × 370 pixels on the source canvas</p>
+
+                  <fieldset class="ui-group ui-flow guide-icon-controls" disabled>
+                    <legend class="ui-label">Adjust Guitar strum machine</legend>
+                    <div class="ui-field">
+                      <label class="ui-label" for="icon-guitar-strum-machine-scalePercent">Scale, percent: <output for="icon-guitar-strum-machine-scalePercent" data-value="scalePercent">86</output></label>
+                      <input class="ui-range" type="range" id="icon-guitar-strum-machine-scalePercent" data-setting="scalePercent" min="50" max="150" step="1" value="86" aria-describedby="icon-adjustment-help">
+                    </div>
+                    <div class="ui-field">
+                      <label class="ui-label" for="icon-guitar-strum-machine-centerX">Horizontal center: <output for="icon-guitar-strum-machine-centerX" data-value="centerX">256</output></label>
+                      <input class="ui-range" type="range" id="icon-guitar-strum-machine-centerX" data-setting="centerX" min="128" max="384" step="1" value="256" aria-describedby="icon-adjustment-help">
+                    </div>
+                    <div class="ui-field">
+                      <label class="ui-label" for="icon-guitar-strum-machine-centerY">Vertical center: <output for="icon-guitar-strum-machine-centerY" data-value="centerY">260</output></label>
+                      <input class="ui-range" type="range" id="icon-guitar-strum-machine-centerY" data-setting="centerY" min="128" max="384" step="1" value="260" aria-describedby="icon-adjustment-help">
+                    </div>
+                    <button class="ui-button" type="button" data-icon-reset>Reset this icon</button>
+                  </fieldset>
+                  <p class="ui-small" data-icon-warning role="status"></p>
                 </td>
               </tr>
               <tr>
@@ -1010,13 +1030,31 @@ chords: C Am F G</textarea>
                   </div>
                   <p class="guide-caption">Symbol: 384 × 364 pixels on the source canvas</p>
                 </td>
-                <td>
+                <td data-icon-editor="metronome">
                   <div class="guide-icon-samples">
-                    <img class="guide-icon-image guide-icon-image--128" src="../assets/app-icons/comparison/apparent/metronome-512.png?v=7e0cb88c5955" width="128" height="128" alt="Four vertical bars with one taller bar." loading="lazy">
-                    <img class="guide-icon-image guide-icon-image--64" src="../assets/app-icons/comparison/apparent/metronome-512.png?v=7e0cb88c5955" width="64" height="64" alt="" loading="lazy">
-                    <img class="guide-icon-image guide-icon-image--32" src="../assets/app-icons/comparison/apparent/metronome-512.png?v=7e0cb88c5955" width="32" height="32" alt="" loading="lazy">
+                    <span class="guide-icon-preview guide-icon-preview--128" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/metronome-512.png?v=72dd41b425f9" class="guide-icon-image guide-icon-image--128" src="../assets/app-icons/comparison/apparent/metronome-512.png?v=c49e6c0a7a4d" width="128" height="128" alt="Four vertical bars with one taller bar." loading="lazy"></span>
+                    <span class="guide-icon-preview guide-icon-preview--64" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/metronome-512.png?v=72dd41b425f9" class="guide-icon-image guide-icon-image--64" src="../assets/app-icons/comparison/apparent/metronome-512.png?v=c49e6c0a7a4d" width="64" height="64" alt="" loading="lazy"></span>
+                    <span class="guide-icon-preview guide-icon-preview--32" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/metronome-512.png?v=72dd41b425f9" class="guide-icon-image guide-icon-image--32" src="../assets/app-icons/comparison/apparent/metronome-512.png?v=c49e6c0a7a4d" width="32" height="32" alt="" loading="lazy"></span>
                   </div>
-                  <p class="guide-caption">Symbol: 290 × 274 pixels on the source canvas</p>
+                  <p class="guide-caption" data-icon-summary>Symbol: 350 × 332 pixels on the source canvas</p>
+
+                  <fieldset class="ui-group ui-flow guide-icon-controls" disabled>
+                    <legend class="ui-label">Adjust Metronome</legend>
+                    <div class="ui-field">
+                      <label class="ui-label" for="icon-metronome-scalePercent">Scale, percent: <output for="icon-metronome-scalePercent" data-value="scalePercent">114</output></label>
+                      <input class="ui-range" type="range" id="icon-metronome-scalePercent" data-setting="scalePercent" min="50" max="150" step="1" value="114" aria-describedby="icon-adjustment-help">
+                    </div>
+                    <div class="ui-field">
+                      <label class="ui-label" for="icon-metronome-centerX">Horizontal center: <output for="icon-metronome-centerX" data-value="centerX">256</output></label>
+                      <input class="ui-range" type="range" id="icon-metronome-centerX" data-setting="centerX" min="128" max="384" step="1" value="256" aria-describedby="icon-adjustment-help">
+                    </div>
+                    <div class="ui-field">
+                      <label class="ui-label" for="icon-metronome-centerY">Vertical center: <output for="icon-metronome-centerY" data-value="centerY">248</output></label>
+                      <input class="ui-range" type="range" id="icon-metronome-centerY" data-setting="centerY" min="128" max="384" step="1" value="248" aria-describedby="icon-adjustment-help">
+                    </div>
+                    <button class="ui-button" type="button" data-icon-reset>Reset this icon</button>
+                  </fieldset>
+                  <p class="ui-small" data-icon-warning role="status"></p>
                 </td>
               </tr>
               <tr>
@@ -1029,13 +1067,31 @@ chords: C Am F G</textarea>
                   </div>
                   <p class="guide-caption">Symbol: 384 × 252 pixels on the source canvas</p>
                 </td>
-                <td>
+                <td data-icon-editor="tuner">
                   <div class="guide-icon-samples">
-                    <img class="guide-icon-image guide-icon-image--128" src="../assets/app-icons/comparison/apparent/tuner-512.png?v=fa627791fcbe" width="128" height="128" alt="Seven rounded vertical bars with a taller center bar." loading="lazy">
-                    <img class="guide-icon-image guide-icon-image--64" src="../assets/app-icons/comparison/apparent/tuner-512.png?v=fa627791fcbe" width="64" height="64" alt="" loading="lazy">
-                    <img class="guide-icon-image guide-icon-image--32" src="../assets/app-icons/comparison/apparent/tuner-512.png?v=fa627791fcbe" width="32" height="32" alt="" loading="lazy">
+                    <span class="guide-icon-preview guide-icon-preview--128" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/tuner-512.png?v=1823c441a2b1" class="guide-icon-image guide-icon-image--128" src="../assets/app-icons/comparison/apparent/tuner-512.png?v=6f8d2a3d2b36" width="128" height="128" alt="Seven rounded vertical bars with a taller center bar." loading="lazy"></span>
+                    <span class="guide-icon-preview guide-icon-preview--64" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/tuner-512.png?v=1823c441a2b1" class="guide-icon-image guide-icon-image--64" src="../assets/app-icons/comparison/apparent/tuner-512.png?v=6f8d2a3d2b36" width="64" height="64" alt="" loading="lazy"></span>
+                    <span class="guide-icon-preview guide-icon-preview--32" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/tuner-512.png?v=1823c441a2b1" class="guide-icon-image guide-icon-image--32" src="../assets/app-icons/comparison/apparent/tuner-512.png?v=6f8d2a3d2b36" width="32" height="32" alt="" loading="lazy"></span>
                   </div>
-                  <p class="guide-caption">Symbol: 418 × 274 pixels on the source canvas</p>
+                  <p class="guide-caption" data-icon-summary>Symbol: 396 × 258 pixels on the source canvas</p>
+
+                  <fieldset class="ui-group ui-flow guide-icon-controls" disabled>
+                    <legend class="ui-label">Adjust Tuner</legend>
+                    <div class="ui-field">
+                      <label class="ui-label" for="icon-tuner-scalePercent">Scale, percent: <output for="icon-tuner-scalePercent" data-value="scalePercent">106</output></label>
+                      <input class="ui-range" type="range" id="icon-tuner-scalePercent" data-setting="scalePercent" min="50" max="150" step="1" value="106" aria-describedby="icon-adjustment-help">
+                    </div>
+                    <div class="ui-field">
+                      <label class="ui-label" for="icon-tuner-centerX">Horizontal center: <output for="icon-tuner-centerX" data-value="centerX">256</output></label>
+                      <input class="ui-range" type="range" id="icon-tuner-centerX" data-setting="centerX" min="128" max="384" step="1" value="256" aria-describedby="icon-adjustment-help">
+                    </div>
+                    <div class="ui-field">
+                      <label class="ui-label" for="icon-tuner-centerY">Vertical center: <output for="icon-tuner-centerY" data-value="centerY">256</output></label>
+                      <input class="ui-range" type="range" id="icon-tuner-centerY" data-setting="centerY" min="128" max="384" step="1" value="256" aria-describedby="icon-adjustment-help">
+                    </div>
+                    <button class="ui-button" type="button" data-icon-reset>Reset this icon</button>
+                  </fieldset>
+                  <p class="ui-small" data-icon-warning role="status"></p>
                 </td>
               </tr>
               <tr>
@@ -1048,19 +1104,44 @@ chords: C Am F G</textarea>
                   </div>
                   <p class="guide-caption">Symbol: 384 × 196 pixels on the source canvas</p>
                 </td>
-                <td>
+                <td data-icon-editor="pitch-key">
                   <div class="guide-icon-samples">
-                    <img class="guide-icon-image guide-icon-image--128" src="../assets/app-icons/comparison/apparent/pitch-key-512.png?v=54a81e8aea2c" width="128" height="128" alt="A waveform beside a sharp sign." loading="lazy">
-                    <img class="guide-icon-image guide-icon-image--64" src="../assets/app-icons/comparison/apparent/pitch-key-512.png?v=54a81e8aea2c" width="64" height="64" alt="" loading="lazy">
-                    <img class="guide-icon-image guide-icon-image--32" src="../assets/app-icons/comparison/apparent/pitch-key-512.png?v=54a81e8aea2c" width="32" height="32" alt="" loading="lazy">
+                    <span class="guide-icon-preview guide-icon-preview--128" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93" class="guide-icon-image guide-icon-image--128" src="../assets/app-icons/comparison/apparent/pitch-key-512.png?v=54a81e8aea2c" width="128" height="128" alt="A waveform beside a sharp sign." loading="lazy"></span>
+                    <span class="guide-icon-preview guide-icon-preview--64" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93" class="guide-icon-image guide-icon-image--64" src="../assets/app-icons/comparison/apparent/pitch-key-512.png?v=54a81e8aea2c" width="64" height="64" alt="" loading="lazy"></span>
+                    <span class="guide-icon-preview guide-icon-preview--32" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93" class="guide-icon-image guide-icon-image--32" src="../assets/app-icons/comparison/apparent/pitch-key-512.png?v=54a81e8aea2c" width="32" height="32" alt="" loading="lazy"></span>
                   </div>
-                  <p class="guide-caption">Symbol: 426 × 216 pixels on the source canvas</p>
+                  <p class="guide-caption" data-icon-summary>Symbol: 426 × 216 pixels on the source canvas</p>
+
+                  <fieldset class="ui-group ui-flow guide-icon-controls" disabled>
+                    <legend class="ui-label">Adjust Pitch shifter</legend>
+                    <div class="ui-field">
+                      <label class="ui-label" for="icon-pitch-key-scalePercent">Scale, percent: <output for="icon-pitch-key-scalePercent" data-value="scalePercent">98</output></label>
+                      <input class="ui-range" type="range" id="icon-pitch-key-scalePercent" data-setting="scalePercent" min="50" max="150" step="1" value="98" aria-describedby="icon-adjustment-help">
+                    </div>
+                    <div class="ui-field">
+                      <label class="ui-label" for="icon-pitch-key-centerX">Horizontal center: <output for="icon-pitch-key-centerX" data-value="centerX">248</output></label>
+                      <input class="ui-range" type="range" id="icon-pitch-key-centerX" data-setting="centerX" min="128" max="384" step="1" value="248" aria-describedby="icon-adjustment-help">
+                    </div>
+                    <div class="ui-field">
+                      <label class="ui-label" for="icon-pitch-key-centerY">Vertical center: <output for="icon-pitch-key-centerY" data-value="centerY">256</output></label>
+                      <input class="ui-range" type="range" id="icon-pitch-key-centerY" data-setting="centerY" min="128" max="384" step="1" value="256" aria-describedby="icon-adjustment-help">
+                    </div>
+                    <button class="ui-button" type="button" data-icon-reset>Reset this icon</button>
+                  </fieldset>
+                  <p class="ui-small" data-icon-warning role="status"></p>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
-        <p class="ui-small ui-muted">The apparent-size set is a review candidate. It uses a smaller tall guitar, a smaller dense metronome, a larger light tuner, and a small position adjustment for the wide pitch/key mark. The thin outlines show the canvas edges. They are not part of the images.</p>
+        <p class="ui-small ui-muted">The apparent-size set starts with the revised metronome and tuner sizes. Sliders update all three previews for that icon. These are review settings. Browser edge rendering can differ slightly from the final resized PNG files. The thin outlines show the canvas edges. They are not part of the images.</p>
+        <div class="ui-panel ui-flow">
+          <label class="ui-label" for="icon-settings">Icon settings to send back</label>
+          <textarea class="ui-textarea ui-code" id="icon-settings" data-icon-settings rows="12" readonly spellcheck="false" aria-describedby="icon-settings-help"></textarea>
+          <p class="ui-help" id="icon-settings-help">Select Copy settings. Paste the result into the chat. Settings stay in this page only. Reset this icon restores its starting values.</p>
+          <button class="ui-button" type="button" data-icon-copy disabled>Copy settings</button>
+          <p class="ui-small" data-icon-copy-status role="status"></p>
+        </div>
         <details class="ui-disclosure">
           <summary>Original icons and measurements</summary>
           <div class="ui-disclosure__body ui-flow">
@@ -1200,5 +1281,6 @@ chords: C Am F G</textarea>
         <p><a class="ui-link" href="../docs/ui-audit.md">Component inventory and migration boundaries</a></p>
       </footer>
     </main>
+    <script src="./icon-adjuster.js?v=1fcd9c76b68d" defer></script>
   </body>
 </html>

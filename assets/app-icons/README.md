@@ -52,11 +52,11 @@ The apparent-size settings are relative to the original symbols. Positions refer
 | Icon | Scale | Center, x / y | Resulting bounds, pixels | Foreground coverage |
 | --- | --- | --- | --- | --- |
 | Guitar strum machine | 86% | 256 / 260 | 334 × 370 | 12.4% |
-| Metronome | 94% | 256 / 248 | 290 × 274 | 18.1% |
-| Tuner | 112% | 256 / 256 | 418 × 274 | 12.1% |
+| Metronome | 114% | 256 / 248 | 350 × 332 | 26.7% |
+| Tuner | 106% | 256 / 256 | 396 × 258 | 10.8% |
 | Pitch shifter | 98% | 248 / 256 | 426 × 216 | 12.1% |
 
-These settings reduce the tall guitar and the dense metronome. They give the light tuner more space. They keep the wide pitch/key mark near its original size and move it slightly left. Visual review remains necessary. Equal foreground coverage is not the goal.
+Owner review found the first metronome candidate too small and the tuner slightly too large. The revised defaults enlarge the metronome and reduce the tuner. The guitar remains smaller than its original source. They keep the wide pitch/key mark near its original size and move it slightly left. Visual review remains necessary. Equal foreground coverage is not the goal.
 
 To regenerate both sets from the original files, run this command from the repository root:
 
@@ -67,3 +67,14 @@ node scripts/generate-icon-comparison.js
 The script uses only Node.js standard modules. It accepts the current unfiltered, opaque RGB PNG source format. It rejects an unsupported format, a color outside the palette, or a candidate that reaches the canvas edge. It writes only the comparison directories. After regeneration, refresh the image hashes in the guide and run `./scripts/check.sh`.
 
 This comparison is local for owner review. Do not deploy it or replace the installed-app icons before a set is selected.
+
+
+### Adjust the previews
+
+Use each icon's scale, horizontal center, and vertical center sliders in the guide. All three preview sizes update together. The equal-bounds column stays fixed. A warning identifies a symbol that extends beyond the canvas. Each reset button restores that icon's starting values.
+
+Select Copy settings and send the text back in the chat. If automatic copying fails, the guide selects the export for manual copying. Copy before closing or reloading the page. Settings are not saved in browser storage.
+
+The export uses JavaScript Object Notation (JSON) with format `volo1st-icon-settings-v1`, `canvasSize: 512`, and one entry per icon. Each entry contains `scalePercent`, `centerX`, and `centerY`. Apply `scalePercent / 100` as the generator's uniform scale. The two center values map directly to its center coordinates. Browser preview edges can differ slightly from the final area-resampled PNG files.
+
+The static PNG candidates remain available when JavaScript is disabled. The sliders and Copy settings stay disabled in that case. The adjustment script does not change image files, installed-app icons, or manifests.
