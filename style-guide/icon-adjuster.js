@@ -53,12 +53,11 @@
       const name = editor.dataset.iconEditor;
       const fields = [...editor.querySelectorAll('[data-setting]')];
       const warning = editor.querySelector('[data-icon-warning]');
-      const summary = editor.querySelector('[data-icon-summary]');
       for (const image of editor.querySelectorAll('[data-preview-image]')) {
         image.src = image.dataset.originalSrc;
       }
 
-      function render() {
+      function render(editingField = null) {
         const current = settings[name];
         const preview = transform(name, current);
         for (const frame of editor.querySelectorAll('[data-preview-frame]')) {
@@ -69,11 +68,8 @@
         }
         for (const field of fields) {
           const key = field.dataset.setting;
-          field.value = String(current[key]);
-          const value = editor.querySelector(`[data-value="${key}"]`);
-          value.textContent = field.value;
+          if (field !== editingField) field.value = String(current[key]);
         }
-        summary.textContent = `Scale: ${current.scalePercent}%. Center: ${current.centerX} / ${current.centerY} pixels.`;
         const message = preview.clipped
           ? 'Part of the symbol is outside the canvas. Reduce the scale or move it toward the center.' : '';
         if (warning.textContent !== message) warning.textContent = message;
@@ -82,6 +78,14 @@
 
       for (const field of fields) {
         field.addEventListener('input', () => {
+          const key = field.dataset.setting;
+          const number = Number(field.value);
+          if (String(field.value).trim() === '' || !Number.isInteger(number)
+            || normalize(key, field.value, settings[name][key]) !== number) return;
+          settings[name][key] = number;
+          render(field);
+        });
+        field.addEventListener('change', () => {
           const key = field.dataset.setting;
           settings[name][key] = normalize(key, field.value, settings[name][key]);
           render();

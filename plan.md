@@ -1392,3 +1392,15 @@ Completion evidence for Sections 36.1 and 36.2 on 2 November 2026: Regenerated t
 `./scripts/check.sh` passed all eight test files. The six new focused tests cover coordinate mapping, independent slider changes across all three previews, export values, reset isolation, clipping and recovery, invalid values, clipboard success, changes during copying, and clipboard rejection. Existing palette, dimensions, asset hash, reference, and app checks pass. Reviewed the complete diff, source bounds, original-image transforms, shared control classes, scoped CSS, disabled fallback, copy status, and documentation. The local guide and adjustment script returned HTTP 200 and matched working-file bytes. Browser rendering, real clipboard permissions, keyboard use, narrow screens, and 200 percent zoom remain for owner review. No browser tooling was installed.
 
 The existing local-only instruction still applies. Installed-app icons and manifests are unchanged. Commit locally without pushing or deployment. No tracker task or deferred package changed.
+
+
+### 36.3 Compare all four icons in one row
+
+Owner request on 2 November 2026: Remove the equal-bounds comparison. Put all four adjustable icons in one row. Replace sliders with compact integer inputs with native up and down controls below each icon.
+
+Decision before implementation: Use four aligned columns with the same preview sizes and input layout. Keep the row intact inside a named horizontal scroll region on narrow screens and at zoom. Use native number inputs with a step of one for scale and center coordinates. Preserve incomplete typed input while editing; update previews for valid integers and normalize a value when the field change is committed. Keep reset, clipping notices, settings export, original samples, and the local-only boundary. Remove the equal-bounds presentation; leave its earlier source assets unchanged.
+
+
+Completion evidence for Section 36.3 on 2 November 2026: Removed the equal-bounds presentation. All four adjustable icons now share one aligned row. Kept 128-, 64-, and 32-pixel previews with compact native integer inputs below each icon. The row scrolls inside its named region on narrow screens. Preserved reset, clipping notices, copy/export, static fallbacks, original icon files, and the export format.
+
+`./scripts/check.sh` passed all eight test files. Extended the existing adjustment tests to protect incomplete typed values, valid integer updates, and normalization on field change. Reviewed the complete diff, four-column geometry, aligned headings and previews, compact control layout, native number behavior, labels, and asset hashes. A source review confirmed balanced markup, four editor columns, and twelve number inputs. The local guide returned HTTP 200. Browser rendering, native spin-control appearance, keyboard use, narrow-screen behavior, and 200 percent zoom remain for owner review. No browser tooling was installed. Commit locally without pushing or deployment.

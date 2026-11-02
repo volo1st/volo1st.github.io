@@ -20,18 +20,16 @@ function fixture(clipboard) {
   const output = element(), copy = element(), status = element();
   const editors = Object.keys(adjuster.defaults()).map(name => {
     const fields = ['scalePercent', 'centerX', 'centerY'].map(setting => element({ setting }));
-    const values = Object.fromEntries(fields.map(field => [field.dataset.setting, element()]));
     const frames = Array.from({ length: 3 }, () => element());
     const images = Array.from({ length: 3 }, () => element({ originalSrc: `${name}-original.png` }));
-    const reset = element(), warning = element(), summary = element(), fieldset = element();
+    const reset = element(), warning = element(), fieldset = element();
     return {
-      dataset: { iconEditor: name }, fields, frames, images, reset, warning, summary, fieldset, values,
+      dataset: { iconEditor: name }, fields, frames, images, reset, warning, fieldset,
       querySelectorAll(selector) {
         return { '[data-setting]': fields, '[data-preview-frame]': frames, '[data-preview-image]': images }[selector];
       },
       querySelector(selector) {
-        if (selector.startsWith('[data-value=')) return values[selector.split('"')[1]];
-        return { '[data-icon-reset]': reset, '[data-icon-warning]': warning, '[data-icon-summary]': summary, fieldset }[selector];
+        return { '[data-icon-reset]': reset, '[data-icon-warning]': warning, fieldset }[selector];
       },
     };
   });
@@ -54,7 +52,7 @@ test('preview coordinates reproduce source-centered uniform transforms', () => {
   assert.equal(adjuster.transform('metronome', { scalePercent: 150, centerX: 128, centerY: 128 }).clipped, true);
 });
 
-test('one slider updates all three previews and exports independent settings', () => {
+test('one number input updates all three previews and exports independent settings', () => {
   const ui = fixture();
   const metro = ui.editors[1];
   assert.equal(metro.fieldset.disabled, false);
@@ -69,7 +67,7 @@ test('one slider updates all three previews and exports independent settings', (
   assert.equal(saved.format, 'volo1st-icon-settings-v1');
   assert.equal(saved.canvasSize, 512);
   assert.deepEqual(saved.icons, ui.controller.getSettings());
-  assert.equal(metro.values.scalePercent.textContent, '125');
+  assert.equal(metro.fields[0].value, '125');
   metro.fields[1].value = '320';
   metro.fields[1].emit('input');
   assert.equal(ui.controller.getSettings().metronome.centerX, 320);
@@ -123,4 +121,28 @@ test('clipboard rejection selects a usable manual export without losing settings
     assert.match(ui.status.textContent, /settings are selected/);
     assert.equal(ui.copy.disabled, false);
   }
+});
+
+
+test('number fields preserve incomplete typing and commit normalized whole numbers', () => {
+  const ui = fixture();
+  const field = ui.editors[1].fields[0];
+  const originalExport = ui.output.value;
+  for (const draft of ['', '1', '114.5', '999']) {
+    field.value = draft;
+    field.emit('input');
+    assert.equal(field.value, draft);
+    assert.equal(ui.output.value, originalExport);
+  }
+  field.emit('change');
+  assert.equal(field.value, '150');
+  assert.equal(ui.controller.getSettings().metronome.scalePercent, 150);
+  field.value = '';
+  field.emit('input');
+  field.emit('change');
+  assert.equal(field.value, '150');
+  field.value = '110.5';
+  field.emit('change');
+  assert.equal(field.value, '111');
+  assert.equal(ui.controller.getSettings().metronome.scalePercent, 111);
 });
