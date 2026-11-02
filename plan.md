@@ -1334,3 +1334,38 @@ Release: Publish the guide comparison through the existing GitHub Pages source a
 
 
 Deployment evidence on 30 October 2026: Published `ff5b9a4f14bc2b63dd1a3a8dddbbd9cb2b8387ca`. GitHub Pages [run 40966352555](https://github.com/volo1st/volo1st.github.io/actions/runs/40966352555) completed successfully. The public guide, guide stylesheet, icon README, and four 512-pixel icons returned HTTP 200 and matched local release bytes. The comparison is available at `https://volo1st.com/style-guide/#app-icons`. HTTP checks confirm delivery only. The manual browser review limits above remain. The follow-up completion commit changes this record only.
+
+
+## 36. Balance the apparent size of the app icons
+
+Selection on 31 October 2026: The owner requested optical size balancing after the audit. The earlier package measured the originals and did not resize them. Todoist has no actionable website child task. Keep deferred packages unchanged.
+
+Purpose and requirements: Produce balanced variants of the four existing symbols. Preserve each symbol, the opaque square canvas, and the cream and green palette. Keep bounds different when this improves apparent size. Compare at 32, 64, and 128 pixels. Add separate comparison assets and update the guide after visual inspection. Preserve the original set and installed-app assets. Do not deploy this package.
+
+Decision before implementation: Reduce the tall guitar, reduce the dense metronome slightly, enlarge the light tuner, and keep the wide pitch/key mark near its existing width. Use the original images as edit references. Inspect the variants as a family. Coverage and bounding boxes are evidence, not a formula for perceived size. Exact pixel colors and sizes must pass the existing asset checks. No app processing or financial behavior changes.
+
+- [x] Inspect direct-resize candidates and retain the original comparison.
+- [x] Add equal-bounds and apparent-size candidates, guide examples, and current asset hashes.
+- [x] Run repository checks and review the complete diff.
+
+Review limits: Optical balance is a design judgement. Record the chosen variant and leave owner device review explicit. Do not claim identical perceived size for every device or icon mask.
+
+
+Rejected method on 31 October 2026: The generated metronome variant added texture and changed edges. It fails the artwork and palette requirements. Do not replace any source icon with that variant. Requested an explicit owner choice to use direct deterministic resizing of the original PNGs instead. No source image or published asset has changed.
+
+
+Scope revision on 31 October 2026: The owner explicitly approved direct resizing of the original PNGs. Add a side-by-side comparison of equal bounds and apparent size. Keep this package local. Do not push or deploy it. The comparison uses separate candidate files. Existing tool icons and manifests remain unchanged until the owner selects a set.
+
+Comparison rule: Equal bounds means that each symbol fits within a centered 384 × 384 pixel square, with its longest edge at 384 pixels. Preserve aspect ratios; do not stretch every symbol to fill the square. Apparent-size candidates use individual uniform scales and small position offsets. Use 512 × 512 opaque canvases, the original symbols, and the exact palette for both sets. Review the rows at 128, 64, and 32 pixels. This supersedes the earlier instruction to replace installed-app assets in this package.
+
+
+Implementation: Added eight comparison PNG assets and a dependency-free regeneration script. Equal-bounds candidates use a 384-pixel longest edge. Apparent-size candidates use uniform scales of 86%, 94%, 112%, and 98% for guitar, metronome, tuner, and pitch/key. Bound centers are 256/260, 256/248, 256/256, and 248/256. Area resampling retains the original symbol shapes and constrains edge colors to the original palette. No generated edit is used. The guide shows both methods in adjacent columns at 128, 64, and 32 pixels. A named, focusable scroll region retains the comparison on narrow screens. Original samples and audit measurements remain in a disclosure.
+
+Visual evidence: Inspected a raster comparison of all eight candidates at 128, 64, and 32 pixels. The equal-bounds metronome has much more filled area than the other symbols. The apparent-size version reduces that dominance while enlarging the sparse tuner. This is a review candidate. Owner browser and device review will select the final set. No tool icon or manifest changed.
+
+Local review: An existing server on port 8000 serves this repository. The guide is available at `http://localhost:8000/style-guide/#app-icons`. Confirmed that its HTML matches the local guide. No server configuration or deployment setting changed. Keep this package local.
+
+
+Completion evidence on 2 November 2026: `./scripts/check.sh` passed all seven test files. Extended the existing icon palette and dimension checks to all eight candidates. Regeneration produced identical bytes for all eight files. Confirmed that all six original PNG files match the previous commit. Reviewed the complete source and candidate-image diff, the direct-resize script, adjacent comparison columns, retained original disclosure, accessibility references, and asset hashes. The local guide, stylesheet, and eight candidate images returned HTTP 200 and matched working-file bytes during the local server check. Manual rendered, keyboard, focus, narrow-screen, and 200 percent zoom review remains for the owner. No browser tooling was installed.
+
+Tracker reconciliation: This continues the owner-selected package. No matching actionable website task exists to close. The initiative and deferred packages remain unchanged. Commit this review package locally. Do not push or deploy it.

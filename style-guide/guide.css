@@ -59,3 +59,6 @@
 :where([data-page="style-guide"]) .guide-icon-image--128 { width: 128px; }
 :where([data-page="style-guide"]) .guide-icon-image--64 { width: 64px; }
 :where([data-page="style-guide"]) .guide-icon-image--32 { width: 32px; }
+
+:where([data-page="style-guide"]) .guide-icon-comparison .guide-icon-samples { min-width: 16rem; flex-wrap: nowrap; }
+:where([data-page="style-guide"]) .guide-icon-comparison .guide-icon-image { flex-shrink: 0; }

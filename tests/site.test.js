@@ -323,6 +323,11 @@ test('the music app icon family uses one exact site palette', () => {
     ['tuner-512.png', 512],
     ['pitch-key-512.png', 512],
   ];
+  for (const method of ['equal-bounds', 'apparent']) {
+    for (const name of ['guitar-strum-machine', 'metronome', 'tuner', 'pitch-key']) {
+      files.push([`comparison/${method}/${name}-512.png`, 512]);
+    }
+  }
   const background = [244, 241, 232];
   const foreground = [23, 62, 48];
 

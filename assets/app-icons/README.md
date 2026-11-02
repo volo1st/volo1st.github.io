@@ -36,3 +36,34 @@ The metronome occupies a smaller box but has the most green. The tuner has the l
 The guitar variants use the same colors. The 180-pixel image has a 136 × 151 pixel symbol and margins of 22 / 14 / 22 / 15 pixels. The 192-pixel image has a 145 × 161 pixel symbol and margins of 23 / 15 / 24 / 16 pixels. Both retain 16.8% foreground coverage. The proportions match the 512-pixel source within raster rounding.
 
 See the [app icon comparison](../../style-guide/index.html#app-icons) at 128, 64, and 32 CSS pixels. Preserve aspect ratios. Review apparent size at 32 pixels before changing artwork. A shared inner-size rule has not been approved. The audit does not change the source images.
+
+
+## Local size comparison
+
+The [style guide comparison](../../style-guide/index.html#app-icons) now shows two candidate sets side by side. Each pair has 128-, 64-, and 32-pixel samples. The original icons and measurements remain in a disclosure below the comparison.
+
+- `comparison/equal-bounds/` fits each symbol inside a centered 384 × 384 pixel square. The longest edge is 384 pixels. Preserve the aspect ratio. Do not stretch a symbol to fill both dimensions.
+- `comparison/apparent/` uses individual uniform scales and small position adjustments. This is a proposed optical balance, not a measured guarantee of equal perceived size.
+
+Both sets use the same 512 × 512 pixel canvas and exact palette as the originals. Direct area resampling preserves the existing symbols. No generated artwork is used. Edge antialiasing changes with scale. The installed-app icons and manifests still use the original files.
+
+The apparent-size settings are relative to the original symbols. Positions refer to the center of each symbol's bounds on the 512-pixel canvas.
+
+| Icon | Scale | Center, x / y | Resulting bounds, pixels | Foreground coverage |
+| --- | --- | --- | --- | --- |
+| Guitar strum machine | 86% | 256 / 260 | 334 × 370 | 12.4% |
+| Metronome | 94% | 256 / 248 | 290 × 274 | 18.1% |
+| Tuner | 112% | 256 / 256 | 418 × 274 | 12.1% |
+| Pitch shifter | 98% | 248 / 256 | 426 × 216 | 12.1% |
+
+These settings reduce the tall guitar and the dense metronome. They give the light tuner more space. They keep the wide pitch/key mark near its original size and move it slightly left. Visual review remains necessary. Equal foreground coverage is not the goal.
+
+To regenerate both sets from the original files, run this command from the repository root:
+
+```sh
+node scripts/generate-icon-comparison.js
+```
+
+The script uses only Node.js standard modules. It accepts the current unfiltered, opaque RGB PNG source format. It rejects an unsupported format, a color outside the palette, or a candidate that reaches the canvas edge. It writes only the comparison directories. After regeneration, refresh the image hashes in the guide and run `./scripts/check.sh`.
+
+This comparison is local for owner review. Do not deploy it or replace the installed-app icons before a set is selected.
