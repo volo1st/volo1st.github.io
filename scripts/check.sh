@@ -5,7 +5,7 @@ set -euo pipefail
 repository_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$repository_dir"
 
-for command_name in find git node; do
+for command_name in find git node python3; do
   if ! command -v "$command_name" >/dev/null 2>&1; then
     echo "Required command is not available: $command_name" >&2
     exit 1
@@ -24,6 +24,7 @@ done < <(find . -type f -name '*.sh' -not -path './.git/*' -print0)
 
 echo "Run automated tests."
 node --test tests/*.test.js
+python3 -B -m unittest discover -s tests -p 'test_*.py'
 
 echo "Check unstaged whitespace."
 git diff --check

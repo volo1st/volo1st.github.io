@@ -62,6 +62,8 @@ Preserve the required ABA record width. Test byte length as well as character le
 ## Source rules
 
 - Prefer plain HTML, CSS, and JavaScript.
+- Use `style-guide/` as the visual reference for approved components and page patterns. Update its example when a shared component changes. Keep experiments on separate pages.
+- Use `python3 scripts/new-page.py` for new reading or tool page shells. Copy component markup from the guide and keep shared CSS in its shared source. See the README for the workflow.
 - Put a stable `data-page` attribute on each maintained page body. Scope local CSS selectors with `:where([data-page="page-name"])`. Use matching roots in page specimens. Keep shared rules in `assets/site-shell.css` and `assets/ui.css` global.
 - Scope every selector in a local selector list and media rule. Give local animation names a page prefix. Keep the legacy test fixture unchanged.
 - Keep JavaScript free of implicit global variables.
@@ -96,7 +98,7 @@ Run the general repository check before each commit:
 ./scripts/check.sh
 ```
 
-The script uses Bash, Git, Node.js, and standard shell tools. It does not install dependencies.
+The script uses Bash, Git, Node.js, Python 3, and standard shell tools. It does not install dependencies.
 
 For ABA changes, also test:
 

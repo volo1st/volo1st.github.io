@@ -73,9 +73,34 @@ The guitar source requires one `swing:` directive. Use `off` for straight timing
 
 Open `index.html` in a browser. The website does not need a build step.
 
+## Create a page
+
+Use Python 3 and its standard library. No Python packages are needed. Run one of these commands from the repository root:
+
+```sh
+python3 scripts/new-page.py sound/example --template reading --title "Example"
+python3 scripts/new-page.py tools/example --template tool --title "Example tool" --domain music
+```
+
+The script creates `index.html` and `styles.css`. It sets shared stylesheet links, current asset hashes, metadata, breadcrumbs, and a page scope. The reading template shows its heading. The tool template shows the full name in the breadcrumb and keeps a heading available to assistive software. Use `--description` to set the page description. The default accent is general; `--domain music` uses the existing music accent.
+
+Paths are relative to this repository, even when the script runs from another directory. Use lowercase letters, digits, and hyphens in each path segment. The script rejects existing destinations, symbolic-link paths, and support directories. It links to the nearest existing ancestor page. It does not change navigation or existing pages.
+
+Replace the content placeholder. Review the title, description, and breadcrumb. Remove `noindex` when the content is ready. Add navigation links where needed. Refresh a local asset's content hash after editing it. Run `./scripts/check.sh` before committing. Generated pages are ordinary source files that you edit and review; they need no generator at runtime. Do not commit temporary generator test output.
+
+Both templates start in English. For a bilingual page, add complete English and Simplified Chinese catalogs and use the existing `assets/i18n.js` binder. Add language controls only when both translations work. Tool manifests, audio setup, financial validation, and app behavior remain separate work.
+
+## Copy a component
+
+Open [Copy component](style-guide/#review) in the guide. Select an example and enter an ID prefix. Use a different prefix for each copy on the same page. Select Copy HTML, then paste the markup into the new page. If clipboard access fails, copy the selected text manually. Without JavaScript, copy the example from the page source.
+
+The copy panel uses the example markup. It removes guide-only decoration and preserves shared classes, domain context, labels, and accessibility references. It copies the authored sample, not edits made in the demo fields. It reports fragment links and references whose targets are outside the copied component.
+
+Update text, link destinations, and heading levels. Connect actions, language controls, and dynamic status messages to application code. Static examples do not provide application behavior. Keep the shared stylesheet links from the page template. Do not copy shared CSS into the page stylesheet. Shared CSS updates reach existing pages; markup updates require a review of existing uses. Copying sends no data and saves no input.
+
 ## Local checks
 
-Install Bash, Git, and Node.js. Then run this command from the repository root:
+Install Bash, Git, Node.js, and Python 3. Then run this command from the repository root:
 
 ```sh
 ./scripts/check.sh
@@ -86,6 +111,7 @@ Run this command before each commit or deployment. It completes these checks:
 - JavaScript syntax;
 - shell syntax;
 - automated tests;
+- page generator tests in temporary directories;
 - internal links and assets;
 - duplicate HTML IDs;
 - label and ARIA references; and

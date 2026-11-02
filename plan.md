@@ -1422,3 +1422,30 @@ Failure behavior: Static examples remain visible without JavaScript. Native fiel
 Completion evidence on 2 November 2026: `./scripts/check.sh` passed all eight test files and both whitespace checks. Reviewed the complete source diff. Both edited guide documents have balanced markup. Compared the moved icon editor content with the previous guide; controls, previews, settings export, and fallback content are unchanged. The guide has four main navigation groups instead of twelve. Retained critical states, shared styles, approved icon sources, and five linked page specimens. Updated support links. No browser is available through the connected tools. Rendered layout, keyboard use, visible focus, narrow screens, and 200 percent zoom remain for manual review. No browser tooling was installed.
 
 Tracker reconciliation: The configured initiative has no actionable child or matching task to close. Both deferred tasks remain unchanged. This package is complete for local review. The next owner-authorized package is Python scaffolding and component copying.
+
+## 38. Python page scaffolding and component copying
+
+Selection on 2 November 2026: Continue the accepted workflow after completing Section 37 in commit `0dc6dec`. Use Python rather than Node.js for page creation. The two deferred Todoist tasks remain outside this package.
+
+Purpose and requirements: Create ordinary editable reading and tool pages from small local templates. Set correct relative paths, current asset hashes, metadata, breadcrumbs, a real heading, a stable page scope, and local CSS. Keep component markup available from the visual guide without a separate snippet library. No site build step or external dependency is needed.
+
+Decision before implementation: Use Python standard-library modules and two header templates with one document shell. Start with English pages; language controls require complete translations and the existing language binder. Do not generate inactive language controls. A domain option selects the existing general or music accent. New pages start with a clear content placeholder and noindex until reviewed. Reject invalid paths, symbolic-link paths, existing destinations, and duplicate page scopes before writing. Remove only files created by the current attempt if a write fails. Do not modify navigation automatically.
+
+Copying design: Add one closed Copy component disclosure. Populate its choices from marked live examples. Capture authored markup before field editing. Remove guide-only attributes and classes. Preserve shared classes, domain context, labels, and accessibility references. A user-selected identifier prefix prevents collisions when adding a second copy. Document that links, heading levels, and application behavior need page-specific work. Clipboard failures select the code for manual copying. No input is sent or saved.
+
+Engineering review: Python pathlib provides local path inspection and file operations; use explicit validation rather than path normalization that could conceal invalid input. Clipboard writing can be unavailable or rejected; keep a selectable text fallback. References: [Python pathlib](https://docs.python.org/3/library/pathlib.html) and [Clipboard writeText](https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/writeText). Keep live examples visible without JavaScript.
+
+- [x] Add Python scaffolding, templates, and usage instructions.
+- [x] Add component copying from the guide examples.
+- [x] Test nested paths, escaping, hashes, overwrite rejection, cleanup after failure, and copying recovery.
+- [x] Run repository checks and review the complete diff.
+
+Verification: Use temporary directories for generator tests. Do not commit generated sample pages. Include Python tests in the repository check and document the added Python requirement. Keep this package local; do not deploy.
+
+Completion evidence on 2 November 2026: `./scripts/check.sh` passed all nine JavaScript test files, eight Python generator tests, and both whitespace checks. Six focused component-copy tests cover labels and accessibility references, domain inheritance, guide-decoration removal, repeated-copy prefixes, radio groups, fragment links, authored snapshots, invalid-prefix recovery, clipboard success, pending-copy controls, and missing or rejected clipboard access. Python tests create files only in temporary directories. They cover reading and music tool pages, nested asset and breadcrumb paths, current hashes, escaped metadata, unique scopes, existing-page preservation, invalid and symbolic-link paths, missing assets, write-failure cleanup, and command use from another working directory.
+
+Reviewed the complete diff, all templates, generator paths and writes, component source selection, fallback states, and documentation. Added the workflow to README and AGENTS.md. Both page types remain plain static files. The copier uses one closed disclosure and the guide's actual examples. No generated sample page, dependency, app behavior change, or build system was added.
+
+Review limits: No browser tool is available. Rendered layout, keyboard use, visible focus, narrow screens, 200 percent zoom, and real clipboard permission behavior remain for manual review. The automated DOM adapter checks copy behavior; it does not replace a browser review. Keep the work local and do not deploy.
+
+Tracker reconciliation: This is the second owner-authorized package. There is no matching actionable Todoist child to complete. The initiative and two deferred tasks remain unchanged. No further work package was selected.

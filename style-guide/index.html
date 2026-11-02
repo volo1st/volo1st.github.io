@@ -119,7 +119,7 @@
         <div class="guide-grid">
           <div class="guide-sample ui-flow">
             <h4 class="guide-caption">General / blue accent</h4>
-            <div class="ui-actions">
+            <div data-snippet="General buttons" class="ui-actions">
               <button type="button" class="ui-button ui-button--primary">
                 Primary action
               </button>
@@ -133,7 +133,7 @@
           </div>
           <div class="guide-sample ui-flow" data-domain="music">
             <h4 class="guide-caption">Music / green accent</h4>
-            <div class="ui-actions">
+            <div data-snippet="Music buttons" class="ui-actions">
               <button type="button" class="ui-button ui-button--primary">
                 Primary action
               </button>
@@ -147,7 +147,7 @@
           </div>
           <div class="guide-sample ui-flow">
             <h4 class="guide-caption">Unavailable and busy</h4>
-            <div class="ui-actions">
+            <div data-snippet="Disabled and busy buttons" class="ui-actions">
               <button type="button" class="ui-button ui-button--primary" disabled>
                 Primary unavailable
               </button>
@@ -161,7 +161,7 @@
           </div>
           <div class="guide-sample ui-flow">
             <h4 class="guide-caption">Selected, icon, and caution</h4>
-            <div class="ui-actions">
+            <div data-snippet="Selected, icon, and danger buttons" class="ui-actions">
               <button type="button" class="ui-button" aria-pressed="true">
                 Loop
               </button>
@@ -180,7 +180,7 @@
           </div>
           <div class="guide-sample ui-flow" data-domain="music">
             <h4 class="guide-caption">Long labels and Chinese text</h4>
-            <div class="ui-actions">
+            <div data-snippet="Long button labels" class="ui-actions">
               <button type="button" class="ui-button ui-button--primary">Return to the original arrangement</button>
               <button type="button" class="ui-button" lang="zh-Hans">选择音频文件</button>
             </div>
@@ -199,11 +199,11 @@
               <span class="ui-label">Action</span>
               <button type="button" class="ui-button">Button sample</button>
             </div>
-            <div class="ui-field">
+            <div class="ui-field" data-snippet="Field: Choice">
               <label class="ui-label" for="aligned-select">Choice</label>
               <select class="ui-select" id="aligned-select"><option>Dropdown sample</option><option>Another option</option></select>
             </div>
-            <div class="ui-field">
+            <div class="ui-field" data-snippet="Field: Text">
               <label class="ui-label" for="aligned-text">Text</label>
               <input class="ui-input" id="aligned-text" type="text" value="Field sample">
             </div>
@@ -211,16 +211,16 @@
         </div>
         <div class="guide-grid">
           <div class="guide-sample ui-stack">
-            <div class="ui-field">
+            <div class="ui-field" data-snippet="Field: Project name">
               <label class="ui-label" for="example-text">Project name</label>
               <input class="ui-input" id="example-text" type="text" value="Room study" aria-describedby="example-text-help">
               <p class="ui-help" id="example-text-help">A short label for this example.</p>
             </div>
-            <div class="ui-field">
+            <div class="ui-field" data-snippet="Field: Tempo, in beats per minute">
               <label class="ui-label" for="example-number">Tempo, in beats per minute</label>
               <input class="ui-input" id="example-number" type="number" min="30" max="300" step="1" value="100">
             </div>
-            <div class="ui-field">
+            <div class="ui-field" data-snippet="Field: Export format">
               <label class="ui-label" for="example-select">Export format</label>
               <select class="ui-select" id="example-select">
                 <option>WAV</option>
@@ -228,57 +228,57 @@
                 <option>A longer option to check available space</option>
               </select>
             </div>
-            <div class="ui-field">
+            <div class="ui-field" data-snippet="Field: Level">
               <label class="ui-label" for="example-range">Level</label>
               <input class="ui-range" id="example-range" type="range" min="0" max="100" value="42">
               <p class="ui-help">Use arrow keys to change the value.</p>
             </div>
           </div>
           <div class="guide-sample ui-stack" data-domain="music">
-            <div class="ui-field">
+            <div class="ui-field" data-snippet="Field: Project name · invalid state">
               <label class="ui-label" for="example-invalid">Project name · invalid state</label>
               <input class="ui-input" id="example-invalid" type="text" value="" aria-invalid="true" aria-describedby="example-invalid-help">
               <p id="example-invalid-help" class="ui-help ui-help--error">Enter a project name.</p>
             </div>
-            <div class="ui-field">
+            <div class="ui-field" data-snippet="Field: Read-only result">
               <label class="ui-label" for="example-readonly">Read-only result</label>
               <input class="ui-input ui-code" id="example-readonly" type="text" value="Example result" readonly>
             </div>
-            <div class="ui-field">
+            <div class="ui-field" data-snippet="Field: Unavailable format">
               <label class="ui-label" for="example-disabled">Unavailable format</label>
               <select class="ui-select" id="example-disabled" disabled>
                 <option>Select a file first</option>
               </select>
             </div>
-            <div class="ui-field">
+            <div class="ui-field" data-snippet="Field: Music accent">
               <label class="ui-label" for="example-music-range">Music accent</label>
               <input class="ui-range" id="example-music-range" type="range" min="30" max="300" value="100">
             </div>
-            <div class="ui-field">
+            <div class="ui-field" data-snippet="Field: Unavailable slider">
               <label class="ui-label" for="example-disabled-range">Unavailable slider</label>
               <input class="ui-range" id="example-disabled-range" type="range" min="0" max="100" value="0" disabled>
             </div>
           </div>
           <div class="guide-sample ui-stack">
-            <div class="ui-field">
+            <div class="ui-field" data-snippet="Field: Source text">
               <label class="ui-label" for="example-source">Source text</label>
               <textarea class="ui-textarea ui-code" id="example-source" rows="4" spellcheck="false" aria-describedby="example-source-help">tempo: 100
 chords: C Am F G</textarea>
               <p id="example-source-help" class="ui-help">This field does not change an arrangement.</p>
             </div>
-            <div class="ui-field">
+            <div class="ui-field" data-snippet="Field: File control">
               <label class="ui-label" for="example-file">File control</label>
               <input class="ui-file" id="example-file" type="file" aria-describedby="example-file-help">
               <p class="ui-help" id="example-file-help">No file is read, uploaded, or converted by this guide.</p>
             </div>
           </div>
           <div class="guide-sample ui-stack">
-            <div class="ui-field">
+            <div class="ui-field" data-snippet="Field: 项目名称">
               <label class="ui-label" for="example-chinese" lang="zh-Hans">项目名称</label>
               <input class="ui-input" id="example-chinese" type="text" value="房间声学示例" lang="zh-Hans">
               <p class="ui-help" lang="zh-Hans">输入简短的项目名称。</p>
             </div>
-            <fieldset class="ui-group">
+            <fieldset class="ui-group" data-snippet="Checkboxes and radio buttons">
               <legend class="ui-label">Related options</legend>
               <label class="ui-choice"><input type="checkbox" checked> Include a count-in</label>
               <label class="ui-choice"><input type="radio" name="sample-mode" value="original" checked> Original</label>
@@ -288,19 +288,19 @@ chords: C Am F G</textarea>
           </div>
           <div class="guide-sample ui-stack">
             <h4 class="guide-caption">Select and textarea states</h4>
-            <div class="ui-field">
+            <div class="ui-field" data-snippet="Field: Format · invalid state">
               <label class="ui-label" for="example-invalid-select">Format · invalid state</label>
               <select class="ui-select" id="example-invalid-select" aria-invalid="true" aria-describedby="example-invalid-select-help">
                 <option value="">Choose a format</option><option>WAV</option><option>MP3</option>
               </select>
               <p id="example-invalid-select-help" class="ui-help ui-help--error">Select an output format.</p>
             </div>
-            <div class="ui-field">
+            <div class="ui-field" data-snippet="Field: Source · invalid state">
               <label class="ui-label" for="example-invalid-source">Source · invalid state</label>
               <textarea class="ui-textarea ui-code" id="example-invalid-source" rows="3" aria-invalid="true" aria-describedby="example-invalid-source-help">tempo:</textarea>
               <p id="example-invalid-source-help" class="ui-help ui-help--error">Enter a tempo value.</p>
             </div>
-            <div class="ui-field">
+            <div class="ui-field" data-snippet="Field: Read-only source">
               <label class="ui-label" for="example-readonly-source">Read-only source</label>
               <textarea class="ui-textarea ui-code" id="example-readonly-source" rows="3" readonly>tempo: 100
 chords: C Am F G</textarea>
@@ -308,15 +308,15 @@ chords: C Am F G</textarea>
           </div>
           <div class="guide-sample ui-stack">
             <h4 class="guide-caption">Unavailable fields</h4>
-            <div class="ui-field">
+            <div class="ui-field" data-snippet="Field: Unavailable text field">
               <label class="ui-label" for="example-disabled-text">Unavailable text field</label>
               <input class="ui-input" id="example-disabled-text" type="text" value="Select an example first" disabled>
             </div>
-            <div class="ui-field">
+            <div class="ui-field" data-snippet="Field: Unavailable source">
               <label class="ui-label" for="example-disabled-source">Unavailable source</label>
               <textarea class="ui-textarea ui-code" id="example-disabled-source" rows="3" disabled>Source is unavailable.</textarea>
             </div>
-            <div class="ui-field">
+            <div class="ui-field" data-snippet="Field: Unavailable file control">
               <label class="ui-label" for="example-disabled-file">Unavailable file control</label>
               <input class="ui-file" id="example-disabled-file" type="file" disabled>
             </div>
@@ -327,19 +327,19 @@ chords: C Am F G</textarea>
 <h2 id="content-heading" class="ui-heading">Content</h2>
 <h3 id="notices" class="ui-subheading">Notices</h3>
         <div class="guide-grid">
-          <aside class="ui-notice ui-flow" aria-labelledby="notice-info">
+          <aside data-snippet="Notice: info" class="ui-notice ui-flow" aria-labelledby="notice-info">
             <h4 id="notice-info" class="ui-subheading ui-notice__title">Information</h4>
             <p>Select an example to continue.</p>
           </aside>
-          <aside class="ui-notice ui-flow" data-tone="success" aria-labelledby="notice-success">
+          <aside data-snippet="Notice: success" class="ui-notice ui-flow" data-tone="success" aria-labelledby="notice-success">
             <h4 id="notice-success" class="ui-subheading ui-notice__title">Success</h4>
             <p>The example is ready to review.</p>
           </aside>
-          <aside class="ui-notice ui-flow" data-tone="warning" aria-labelledby="notice-warning">
+          <aside data-snippet="Notice: warning" class="ui-notice ui-flow" data-tone="warning" aria-labelledby="notice-warning">
             <h4 id="notice-warning" class="ui-subheading ui-notice__title">Warning</h4>
             <p>Review the source before you continue.</p>
           </aside>
-          <aside class="ui-notice ui-flow" data-tone="error" aria-labelledby="notice-error">
+          <aside data-snippet="Notice: error" class="ui-notice ui-flow" data-tone="error" aria-labelledby="notice-error">
             <h4 id="notice-error" class="ui-subheading ui-notice__title">Error</h4>
             <p>Correct these two sample fields.</p>
             <ul>
@@ -381,7 +381,7 @@ chords: C Am F G</textarea>
         <div class="guide-grid">
           <div class="guide-sample ui-flow">
             <h3 class="guide-caption">Reading page / quiet language choice</h3>
-            <div class="ui-page-header">
+            <div class="ui-page-header" data-snippet="Reading header">
               <div class="ui-context-row">
                 <nav class="ui-breadcrumb" aria-label="Reading page breadcrumb sample" lang="en-AU">
                   <ol>
@@ -404,7 +404,7 @@ chords: C Am F G</textarea>
           </div>
           <div class="guide-sample ui-flow">
             <h3 class="guide-caption">Narrow tool / Chinese selected</h3>
-            <div class="ui-page-header ui-tool-header guide-narrow-header guide-mobile-header">
+            <div class="ui-page-header ui-tool-header guide-narrow-header guide-mobile-header" data-snippet="Tool header">
               <div class="ui-context-row">
                 <nav class="ui-breadcrumb" aria-label="Tool breadcrumb sample" lang="en-AU">
                   <ol>
@@ -437,7 +437,28 @@ chords: C Am F G</textarea>
 <li><a class="ui-link" href="./guitar.html">Guitar strum machine · Chord display</a></li>
 <li><a class="ui-link" href="./pitch.html">Pitch shifter · Audio controls</a></li></ul>
 </section>
-<footer id="review" class="guide-footer ui-flow"><p class="ui-small"><a class="ui-link" href="../README.md">Implementation notes</a> · <a class="ui-link" href="../docs/ui-audit.md">Initial style audit</a></p></footer>
+<footer id="review" class="guide-footer ui-flow"><details class="ui-disclosure" data-component-copy>
+  <summary>Copy component</summary>
+  <div class="ui-disclosure__body ui-stack">
+    <p class="ui-small">Copy markup from an example. Use a different ID prefix for each copy. Update text, links, and heading levels. Add application behavior where needed.</p>
+    <div class="ui-field">
+      <label class="ui-label" for="component-choice">Component</label>
+      <select class="ui-select" id="component-choice" data-component-choice disabled></select>
+    </div>
+    <div class="ui-field">
+      <label class="ui-label" for="component-prefix">ID prefix</label>
+      <input class="ui-input" id="component-prefix" data-component-prefix value="example-1" disabled aria-describedby="component-copy-status">
+    </div>
+    <div class="ui-field">
+      <label class="ui-label" for="component-code">HTML</label>
+      <textarea class="ui-textarea ui-code" id="component-code" data-component-code rows="10" readonly spellcheck="false"></textarea>
+    </div>
+    <div class="ui-actions"><button class="ui-button" type="button" data-component-button disabled>Copy HTML</button></div>
+    <p class="ui-help" id="component-copy-status" data-component-status role="status">Enable JavaScript to select a component here. You can also copy examples from the page source.</p>
+  </div>
+</details>
+<p class="ui-small"><a class="ui-link" href="../README.md">Implementation notes</a> · <a class="ui-link" href="../docs/ui-audit.md">Initial style audit</a></p></footer>
     </main>
+    <script src="./copy-component.js?v=b1a0f4206c63" defer></script>
   </body>
 </html>
