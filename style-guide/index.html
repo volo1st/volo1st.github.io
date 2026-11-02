@@ -10,7 +10,7 @@
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=340aa48fa873">
     <link rel="stylesheet" href="../assets/ui.css?v=95ae6daed1f1">
-    <link rel="stylesheet" href="./guide.css?v=3ad52a7739e8">
+    <link rel="stylesheet" href="./guide.css?v=f8b5a57f9dfb">
   </head>
   <body data-page="style-guide">
     <header class="ui-page-header ui-container guide-header">
@@ -24,117 +24,30 @@
       </div>
     </header>
     <main class="site-main guide-main ui-container">
-      <header class="guide-intro ui-flow">
-        <p class="guide-eyebrow">Shared styles · approved first pass</p>
-        <h1 class="ui-title">One site. One shared language.</h1>
-        <p class="guide-lead">A working user interface (UI) style guide for type, controls, and common patterns. Use the component examples to review changes to shared styles.</p>
-        <p class="ui-small ui-muted">Maintained pages and these examples use the same shared stylesheet. Component buttons show visual states. Native fields and disclosures can be used. The icon controls update previews and export settings. Copy those settings before reloading the page.</p>
-        <p><a class="ui-link" href="../docs/ui-audit.md">Read the HTML and CSS audit</a></p>
-      </header>
-      <nav class="guide-nav" aria-label="Style guide sections">
-        <a class="ui-link" href="#type">
-          Typography
-        </a>
-        <a class="ui-link" href="#layout">
-          Layout
-        </a>
-        <a class="ui-link" href="#foundations">
-          Foundations
-        </a>
-        <a class="ui-link" href="#actions">
-          Actions
-        </a>
-        <a class="ui-link" href="#fields">
-          Fields
-        </a>
-        <a class="ui-link" href="#notices">
-          Notices
-        </a>
-        <a class="ui-link" href="#patterns">
-          Patterns
-        </a>
-        <a class="ui-link" href="#data">
-          Tables and values
-        </a>
-        <a class="ui-link" href="#headers">
-          Page headers
-        </a>
-        <a class="ui-link" href="#app-icons">
-          App icons
-        </a>
-        <a class="ui-link" href="#current">
-          Current styles
-        </a>
-        <a class="ui-link" href="#review">
-          Review
-        </a>
-      </nav>
-      <section id="type" class="guide-section ui-flow" aria-labelledby="type-heading">
-        <p class="guide-eyebrow">01 / Typography</p>
-        <h2 id="type-heading" class="ui-heading">Serif by default. Sans-serif for controls.</h2>
-        <p>Use one serif family for headings and content. Use sans-serif for interactive controls and their labels. Use monospace for source text and technical values. Inline links keep the surrounding text font.</p>
-        <p>Use five named sizes and two weights. Reserve the smallest size for fine print. Keep headings regular. Use bold for emphasis, control labels, and subsection headings. Use normal letter spacing.</p>
-        <p class="ui-small ui-muted">These are local font stacks. The actual fonts depend on the device. Compare English and Chinese before choosing the final set.</p>
-        <div class="guide-grid guide-type-grid">
-          <article class="guide-sample ui-flow">
-            <h3 class="guide-caption">Default / serif</h3>
-            <p class="guide-font-sample guide-font-body">Recordings, rooms, and live stages.</p>
-            <p class="guide-font-sample guide-font-body" lang="zh-Hans">录音、房间声学与现场扩声。</p>
-            <p class="ui-small ui-muted">Headings, prose, notices, help, and table content.</p>
-          </article>
-          <article class="guide-sample ui-flow">
-            <h3 class="guide-caption">Controls / system sans-serif</h3>
-            <p class="guide-font-sample guide-font-control">Play · Export · Select a file</p>
-            <p class="guide-font-sample guide-font-control" lang="zh-Hans">播放 · 导出 · 选择文件</p>
-            <p class="ui-small ui-muted">Buttons, fields, labels, and disclosure summaries. Breadcrumbs use the body serif font.</p>
-          </article>
-          <article class="guide-sample ui-flow">
-            <h3 class="guide-caption">Code / monospace</h3>
-            <p class="guide-font-sample guide-font-mono">tempo: 100<br>chords: C Am F G</p>
-            <p class="guide-font-sample guide-font-mono" lang="zh-Hans">速度：100<br>和弦：C Am F G</p>
-            <p class="ui-small ui-muted">Source text, code, and technical values that need monospace.</p>
-          </article>
-        </div>
-        <div class="guide-sample guide-type-hierarchy ui-flow">
-          <p class="guide-caption">Page title · 2rem · regular</p>
-          <p class="ui-title">A clear starting point.</p>
-          <p class="guide-caption">Section heading · 1.5rem · regular</p>
-          <p class="ui-heading">A section worth reading.</p>
-          <p class="guide-caption">Subsection heading · 1rem · bold</p>
-          <p class="ui-subheading">A useful group of controls</p>
-          <p class="guide-caption">Body · 1rem · regular, with bold emphasis</p>
-          <p>Body text explains what happens next. <strong>Use the same term for the same item.</strong></p>
-          <p class="guide-caption">Size and color are independent · 0.875rem small text</p>
-          <p class="ui-small">Small text keeps the normal text color.</p>
-          <p class="ui-muted">Muted text keeps the normal body size.</p>
-          <p class="ui-small ui-muted">Small, muted text combines both classes.</p>
-          <p class="guide-caption">Fine print · 0.75rem · softer muted color</p>
-          <p class="ui-fineprint">Fine print keeps the normal text color when used alone.</p>
-          <p class="ui-fineprint ui-muted ui-muted--soft">Quiet notes use a smaller size and a softer tone.</p>
-          <p class="ui-fineprint ui-muted ui-muted--soft" lang="zh-Hans">补充说明使用更小的字号和更柔和的文字颜色。</p>
-          <p class="ui-small ui-muted">Use <code class="ui-code">ui-fineprint</code> for size. Add <code class="ui-code">ui-muted ui-muted--soft</code> for quieter notes on the page, panel, or subtle reading surface. Keep controls and notices at their existing text colors.</p>
-          <p class="guide-caption">Source and technical values · 1rem · regular</p>
-          <p class="ui-code">00:42 / 03:20 · 100 beats per minute</p>
-        </div>
-      </section>
-      <section id="layout" class="guide-section ui-flow" aria-labelledby="layout-heading">
-        <p class="guide-eyebrow">02 / Layout</p>
-        <h2 id="layout-heading" class="ui-heading">One centered page width.</h2>
-        <p>The header and content share one container. On desktop, the page stops growing at 48rem. On mobile, the content fits the available width with visible margins on both sides.</p>
-        <dl class="ui-metrics">
-          <div><dt>Maximum width</dt><dd>48rem</dd></div>
-          <div><dt>Minimum side space</dt><dd>1–2rem</dd></div>
-        </dl>
-        <p class="ui-small ui-muted">At the default 16-pixel base size, the maximum is 768 pixels. Minimum side space follows 4 percent of the viewport width, bounded by 1rem and 2rem. Centering leaves more space on wide screens. The gutter token describes each side.</p>
-        <p>Resize the page to compare desktop and mobile layouts. Sample grids use one column on small screens. Content can wrap without a fixed minimum page width.</p>
-        <p class="ui-small ui-muted">The page specimens below use the same shared width as the maintained pages.</p>
-        <h3 class="ui-subheading">Space shows the relationship.</h3>
-        <p>Keep a heading close to its content. Separate paragraphs by 1rem and field groups by 1.5rem. Give sections 2rem of padding on desktop and 1.5rem on mobile.</p>
-        <p class="ui-small ui-muted">Use <code class="ui-code">ui-flow</code> for text, <code class="ui-code">ui-stack</code> for field groups, and <code class="ui-code">ui-actions</code> for wrapping action rows. These classes control their direct children's spacing.</p>
-      </section>
-      <section id="foundations" class="guide-section ui-flow" aria-labelledby="foundations-heading">
-        <p class="guide-eyebrow">03 / Foundations</p>
-        <h2 id="foundations-heading" class="ui-heading">Warm surfaces. Clear accents.</h2>
+<header class="guide-intro ui-flow"><h1 class="ui-title">UI style guide</h1>
+<p class="ui-small ui-muted">Approved styles. Examples use the live shared CSS. Buttons and errors show fixed states. Fields and disclosures are usable.</p></header>
+<nav class="guide-nav" aria-label="Style guide sections"><a class="ui-link" href="#foundations">Foundations</a><a class="ui-link" href="#controls">Controls</a><a class="ui-link" href="#content">Content</a><a class="ui-link" href="#pages">Page composition</a></nav>
+<section id="foundations" class="guide-section ui-flow" aria-labelledby="foundations-heading">
+<h2 id="foundations-heading" class="ui-heading">Foundations</h2>
+<div id="type" class="guide-grid">
+<div class="guide-sample ui-flow"><h3 class="guide-caption">Type scale</h3>
+<div data-snippet="Type scale" class="ui-flow">
+<p class="ui-title">Page title · 标题</p>
+<p class="ui-heading">Section · 章节</p>
+<p class="ui-subheading">Subsection · 小节</p>
+<p>Body text · 正文 <strong>Bold · 粗体</strong></p>
+<p class="ui-small">Small text · 辅助文字</p>
+<p class="ui-muted">Muted text · 次要文字</p>
+<p class="ui-small ui-muted">Small and muted · 辅助说明</p>
+<p class="ui-fineprint ui-muted ui-muted--soft">Fine print · 补充说明</p>
+</div>
+</div><div class="guide-sample ui-flow"><h3 class="guide-caption">Fonts</h3>
+<div class="ui-flow">
+<p class="guide-font-body">Serif · Recordings and rooms.<br><span lang="zh-Hans">录音与房间声学。</span></p>
+<p class="guide-font-control">Controls · Play · Export<br><span lang="zh-Hans">播放 · 导出 · 选择文件</span></p>
+<p class="ui-code">Monospace · tempo: 100<br><span lang="zh-Hans">速度：100</span></p>
+</div>
+</div></div>
         <div class="guide-swatches">
           <div class="guide-swatch guide-swatch--page">
             <span>
@@ -185,46 +98,27 @@
             <code>#777263</code>
           </div>
         </div>
+<div id="layout" class="guide-grid">
+<div class="ui-flow"><h3 class="guide-caption">Width and spacing</h3>
+<p class="ui-small">Page: 48rem maximum · Side space: 1–2rem</p>
+<div class="guide-space guide-space--1">0.25rem</div>
+<div class="guide-space guide-space--2">0.5rem</div>
+<div class="guide-space guide-space--3">0.75rem</div>
+<div class="guide-space guide-space--4">1rem</div>
+<div class="guide-space guide-space--6">1.5rem</div>
+<div class="guide-space guide-space--8">2rem</div>
+</div><div class="ui-flow"><h3 class="guide-caption">Shape and focus</h3>
+<p class="ui-small">Control radius: 0.4rem · Panel radius: 0.65rem</p>
+<button type="button" class="ui-button">Keyboard focus sample</button>
+<p class="ui-small ui-muted">Use Tab, hover, and press to inspect control states.</p>
+</div></div>
+</section>
+<section id="controls" class="guide-section ui-flow" aria-labelledby="controls-heading">
+<h2 id="controls-heading" class="ui-heading">Controls</h2>
+<h3 id="actions" class="ui-subheading">Actions</h3>
         <div class="guide-grid">
           <div class="guide-sample ui-flow">
-            <h3 class="ui-subheading">Spacing scale</h3>
-            <div class="guide-space guide-space--1">
-              0.25rem · compact control padding
-            </div>
-            <div class="guide-space guide-space--2">
-              0.5rem · headings, labels, and actions
-            </div>
-            <div class="guide-space guide-space--3">
-              0.75rem · control insets
-            </div>
-            <div class="guide-space guide-space--4">
-              1rem · text blocks and mobile panel padding
-            </div>
-            <div class="guide-space guide-space--6">
-              1.5rem · groups and desktop panel padding
-            </div>
-            <div class="guide-space guide-space--8">
-              2rem · desktop section padding
-            </div>
-          </div>
-          <div class="guide-sample ui-flow">
-            <h3 class="ui-subheading">Shape and focus</h3>
-            <p>Controls use a 0.4rem radius. Panels use a 0.65rem radius. Controls use a compact desktop size and larger touch targets.</p>
-            <p class="ui-small ui-muted">Press Tab to inspect the existing shared focus outline. Hover samples use the pointer. Do not remove focus when changing the final design.</p>
-            <button type="button" class="ui-button">
-              Focus sample
-            </button>
-          </div>
-        </div>
-      </section>
-      <section id="actions" class="guide-section ui-flow" aria-labelledby="actions-heading">
-        <p class="guide-eyebrow">04 / Actions</p>
-        <h2 id="actions-heading" class="ui-heading">The same button, in each context.</h2>
-        <p>Buttons and single-line fields share a 1-pixel border and common padding. The default minimum height is 2.75rem (44 pixels). Above 650 pixels, a fine pointer with hover uses a compact 2.25rem (36-pixel) minimum. Font size stays the same. Long labels can wrap and increase the height.</p>
-        <p class="ui-small ui-muted">Use Tab to compare focus outlines. Hover and press enabled buttons to inspect their styles. Disabled samples remain unavailable. These buttons do not run app actions.</p>
-        <div class="guide-grid">
-          <div class="guide-sample ui-flow">
-            <h3 class="guide-caption">General / blue accent</h3>
+            <h4 class="guide-caption">General / blue accent</h4>
             <div class="ui-actions">
               <button type="button" class="ui-button ui-button--primary">
                 Primary action
@@ -238,7 +132,7 @@
             </div>
           </div>
           <div class="guide-sample ui-flow" data-domain="music">
-            <h3 class="guide-caption">Music / green accent</h3>
+            <h4 class="guide-caption">Music / green accent</h4>
             <div class="ui-actions">
               <button type="button" class="ui-button ui-button--primary">
                 Primary action
@@ -252,7 +146,7 @@
             </div>
           </div>
           <div class="guide-sample ui-flow">
-            <h3 class="guide-caption">Unavailable and busy</h3>
+            <h4 class="guide-caption">Unavailable and busy</h4>
             <div class="ui-actions">
               <button type="button" class="ui-button ui-button--primary" disabled>
                 Primary unavailable
@@ -264,10 +158,9 @@
                 Processing…
               </button>
             </div>
-            <p class="ui-small ui-muted">Static state examples. No background task is running.</p>
           </div>
           <div class="guide-sample ui-flow">
-            <h3 class="guide-caption">Selected, icon, and caution</h3>
+            <h4 class="guide-caption">Selected, icon, and caution</h4>
             <div class="ui-actions">
               <button type="button" class="ui-button" aria-pressed="true">
                 Loop
@@ -285,49 +178,22 @@
               </button>
             </div>
           </div>
-          <div class="guide-sample ui-flow">
-            <h3 class="guide-caption">Icon and text alignment</h3>
-            <div class="ui-actions">
-              <button type="button" class="ui-button ui-button--primary">Play sample</button>
-              <button type="button" class="ui-button ui-button--primary ui-button--icon" aria-label="Play icon sample">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l14-8z"></path></svg>
-              </button>
-              <button type="button" class="ui-button ui-button--icon" aria-label="Unavailable play icon sample" disabled>
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l14-8z"></path></svg>
-              </button>
-            </div>
-          </div>
           <div class="guide-sample ui-flow" data-domain="music">
-            <h3 class="guide-caption">Long labels and Chinese text</h3>
+            <h4 class="guide-caption">Long labels and Chinese text</h4>
             <div class="ui-actions">
               <button type="button" class="ui-button ui-button--primary">Return to the original arrangement</button>
               <button type="button" class="ui-button" lang="zh-Hans">选择音频文件</button>
             </div>
-            <p class="ui-small ui-muted">Text can wrap. The control has a minimum height, without a fixed maximum height.</p>
           </div>
         </div>
+<div class="ui-actions" data-snippet="Links">
+<a class="ui-link" href="#foundations">Neutral link</a>
+<a class="ui-link ui-link--accent" href="#foundations">Accent link</a>
+<a class="ui-button ui-button--primary" href="#foundations">Navigation button</a>
+</div>
+<h3 id="fields" class="ui-subheading">Fields</h3>
         <div class="guide-sample ui-flow">
-          <h3 class="guide-caption">Links / navigation keeps link semantics</h3>
-          <div class="ui-actions">
-            <a class="ui-link" href="#review">
-              Neutral text link
-            </a>
-            <a class="ui-link ui-link--accent" href="#review">
-              Accent text link
-            </a>
-            <a class="ui-button ui-button--primary" href="#review">
-              Link styled as a button
-            </a>
-          </div>
-          <p class="ui-small ui-muted">These links open the Review section. They do not run an app action.</p>
-        </div>
-      </section>
-      <section id="fields" class="guide-section ui-flow" aria-labelledby="fields-heading">
-        <p class="guide-eyebrow">05 / Fields</p>
-        <h2 id="fields-heading" class="ui-heading">One family of common controls.</h2>
-        <p>Fields use the same dimensions and type as buttons. Read-only fields remain focusable and selectable. Error styling adds an inner stroke without changing the field's dimensions.</p>
-        <div class="guide-sample ui-flow">
-          <h3 class="guide-caption">Alignment comparison</h3>
+          <h4 class="guide-caption">Alignment comparison</h4>
           <div class="guide-grid guide-control-comparison">
             <div class="ui-field">
               <span class="ui-label">Action</span>
@@ -343,7 +209,6 @@
             </div>
           </div>
         </div>
-        <p class="ui-small ui-muted">The state samples below are static. Editing a value does not clear its sample error or change its read-only or disabled state.</p>
         <div class="guide-grid">
           <div class="guide-sample ui-stack">
             <div class="ui-field">
@@ -366,14 +231,14 @@
             <div class="ui-field">
               <label class="ui-label" for="example-range">Level</label>
               <input class="ui-range" id="example-range" type="range" min="0" max="100" value="42">
-              <p class="ui-help">Native range control. Use arrow keys to change the value.</p>
+              <p class="ui-help">Use arrow keys to change the value.</p>
             </div>
           </div>
           <div class="guide-sample ui-stack" data-domain="music">
             <div class="ui-field">
               <label class="ui-label" for="example-invalid">Project name · invalid state</label>
               <input class="ui-input" id="example-invalid" type="text" value="" aria-invalid="true" aria-describedby="example-invalid-help">
-              <p id="example-invalid-help" class="ui-help ui-help--error">Enter a project name. This is a static error example.</p>
+              <p id="example-invalid-help" class="ui-help ui-help--error">Enter a project name.</p>
             </div>
             <div class="ui-field">
               <label class="ui-label" for="example-readonly">Read-only result</label>
@@ -420,21 +285,20 @@ chords: C Am F G</textarea>
               <label class="ui-choice"><input type="radio" name="sample-mode" value="preview"> Preview</label>
               <label class="ui-choice"><input type="checkbox" checked disabled> Unavailable option</label>
             </fieldset>
-            <p class="ui-small ui-muted">Checkboxes and radio buttons are native examples for future common controls. Current apps mostly use selects.</p>
           </div>
           <div class="guide-sample ui-stack">
-            <h3 class="guide-caption">Select and textarea states</h3>
+            <h4 class="guide-caption">Select and textarea states</h4>
             <div class="ui-field">
               <label class="ui-label" for="example-invalid-select">Format · invalid state</label>
               <select class="ui-select" id="example-invalid-select" aria-invalid="true" aria-describedby="example-invalid-select-help">
                 <option value="">Choose a format</option><option>WAV</option><option>MP3</option>
               </select>
-              <p id="example-invalid-select-help" class="ui-help ui-help--error">Select an output format. This is a static error example.</p>
+              <p id="example-invalid-select-help" class="ui-help ui-help--error">Select an output format.</p>
             </div>
             <div class="ui-field">
               <label class="ui-label" for="example-invalid-source">Source · invalid state</label>
               <textarea class="ui-textarea ui-code" id="example-invalid-source" rows="3" aria-invalid="true" aria-describedby="example-invalid-source-help">tempo:</textarea>
-              <p id="example-invalid-source-help" class="ui-help ui-help--error">Enter a tempo value. This is a static error example.</p>
+              <p id="example-invalid-source-help" class="ui-help ui-help--error">Enter a tempo value.</p>
             </div>
             <div class="ui-field">
               <label class="ui-label" for="example-readonly-source">Read-only source</label>
@@ -443,7 +307,7 @@ chords: C Am F G</textarea>
             </div>
           </div>
           <div class="guide-sample ui-stack">
-            <h3 class="guide-caption">Unavailable fields</h3>
+            <h4 class="guide-caption">Unavailable fields</h4>
             <div class="ui-field">
               <label class="ui-label" for="example-disabled-text">Unavailable text field</label>
               <input class="ui-input" id="example-disabled-text" type="text" value="Select an example first" disabled>
@@ -458,357 +322,62 @@ chords: C Am F G</textarea>
             </div>
           </div>
         </div>
-      </section>
-      <section id="notices" class="guide-section ui-flow" aria-labelledby="notices-heading">
-        <p class="guide-eyebrow">06 / Notices</p>
-        <h2 id="notices-heading" class="ui-heading">Meaning comes before color.</h2>
-        <p>Use blue for information, green for success, gold for warnings, and red for errors. Keep these meanings across tools. State the meaning and the next step in text. Use dark body text and a colored heading.</p>
-        <p class="ui-small ui-muted">All samples are static. No validation or background task runs here. Existing apps keep their live announcements and error focus rules until migration.</p>
+</section>
+<section id="content" class="guide-section ui-flow" aria-labelledby="content-heading">
+<h2 id="content-heading" class="ui-heading">Content</h2>
+<h3 id="notices" class="ui-subheading">Notices</h3>
         <div class="guide-grid">
           <aside class="ui-notice ui-flow" aria-labelledby="notice-info">
-            <h3 id="notice-info" class="ui-subheading ui-notice__title">Information</h3>
+            <h4 id="notice-info" class="ui-subheading ui-notice__title">Information</h4>
             <p>Select an example to continue.</p>
           </aside>
           <aside class="ui-notice ui-flow" data-tone="success" aria-labelledby="notice-success">
-            <h3 id="notice-success" class="ui-subheading ui-notice__title">Success</h3>
+            <h4 id="notice-success" class="ui-subheading ui-notice__title">Success</h4>
             <p>The example is ready to review.</p>
           </aside>
           <aside class="ui-notice ui-flow" data-tone="warning" aria-labelledby="notice-warning">
-            <h3 id="notice-warning" class="ui-subheading ui-notice__title">Warning</h3>
+            <h4 id="notice-warning" class="ui-subheading ui-notice__title">Warning</h4>
             <p>Review the source before you continue.</p>
           </aside>
           <aside class="ui-notice ui-flow" data-tone="error" aria-labelledby="notice-error">
-            <h3 id="notice-error" class="ui-subheading ui-notice__title">Error</h3>
+            <h4 id="notice-error" class="ui-subheading ui-notice__title">Error</h4>
             <p>Correct these two sample fields.</p>
             <ul>
               <li><a class="ui-link" href="#example-invalid">Enter a project name.</a></li>
               <li><a class="ui-link" href="#example-invalid-select">Select an output format.</a></li>
             </ul>
-            <p class="ui-small ui-muted">The links lead to static invalid-field samples. Editing a sample does not clear its error.</p>
           </aside>
         </div>
-        <h3 class="ui-subheading">Short status messages</h3>
-        <p>Use the same notice for a single paragraph. The music accent does not change the meanings below.</p>
-        <div class="guide-grid" data-domain="music">
-          <div class="ui-notice ui-flow">
-            <p><strong>Information:</strong> Preparing the example.</p>
-          </div>
-          <div class="ui-notice ui-flow" data-tone="success">
-            <p><strong>Success:</strong> The example is ready.</p>
-          </div>
-        </div>
-        <aside class="ui-notice ui-flow" data-tone="warning" aria-labelledby="notice-long-warning">
-          <h3 id="notice-long-warning" class="ui-subheading ui-notice__title">Warning · review the source settings</h3>
-          <p>The source label <code class="ui-code">room-study-example-with-a-long-source-label-and-review-notes.wav</code> is longer than the available space on a narrow screen. It must remain readable.</p>
-          <p>Keep the message available while the user checks the source. Put the required steps in a list.</p>
-          <ul>
-            <li>Check the project name and output format.</li>
-            <li>Keep the source available until the review is complete.</li>
-          </ul>
-          <p lang="zh-Hans">警告：请先检查源文件设置。完成检查前，请保留这条提示。</p>
-          <p><a class="ui-link" href="#fields">Review the field samples</a></p>
-        </aside>
-        <h3 class="ui-subheading">Optional dismissal</h3>
-        <p>Allow dismissal for nonessential feedback. Keep required instructions and actionable errors visible. Empty content uses a neutral panel.</p>
-        <div class="guide-grid">
-          <aside class="ui-notice ui-flow" data-tone="success" aria-labelledby="notice-dismissible">
-            <div class="ui-notice__row">
-              <div class="ui-flow">
-                <h3 id="notice-dismissible" class="ui-subheading ui-notice__title">Success · dismissible sample</h3>
-                <p>The content wraps while the close button keeps its size.</p>
-                <p lang="zh-Hans">成功：示例已准备好，可以查看。</p>
-              </div>
-              <button type="button" class="ui-button ui-button--quiet ui-button--icon" aria-label="Dismiss sample notice">
-                ×
-              </button>
-            </div>
-            <p class="ui-small ui-muted">Static sample. This close button does not dismiss the notice.</p>
-          </aside>
-          <div class="ui-panel ui-flow">
-            <h3 class="ui-subheading">Empty state</h3>
-            <p class="ui-small ui-muted">No examples are selected.</p>
-            <p>Describe the next step instead of showing a blank panel.</p>
-          </div>
-        </div>
-        <p class="ui-small ui-muted">Use <code class="ui-code">ui-notice ui-flow</code> for message content and <code class="ui-code">ui-notice__title</code> for its heading. Set <code class="ui-code">data-tone</code> to <code class="ui-code">success</code>, <code class="ui-code">warning</code>, or <code class="ui-code">error</code>. The default tone is information. Appearance does not assign live-region behavior.</p>
-      </section>
-      <section id="patterns" class="guide-section ui-flow" aria-labelledby="patterns-heading">
-        <p class="guide-eyebrow">07 / Patterns</p>
-        <h2 id="patterns-heading" class="ui-heading">Reusable pieces, distinct pages.</h2>
-        <p>Use plain content for reading. Use a panel when a boundary helps group a task. Panels and disclosure bodies share 1.5rem desktop padding and 1rem mobile padding. They use one border and corner style, without a shadow.</p>
-        <div class="guide-grid">
-          <article class="ui-flow">
-            <h3 class="ui-subheading">Plain content</h3>
-            <p>Use spacing to group a heading, paragraphs, and a list. A border is optional.</p>
-            <p>This second paragraph uses the same text spacing as a paragraph inside a panel.</p>
-            <h4 class="ui-subheading">Before the next step</h4>
-            <ul>
-              <li>Read the short instructions.</li>
-              <li>Check the example settings.</li>
-            </ul>
-            <p lang="zh-Hans">标题靠近正文。段落之间保留一致的间距。</p>
-            <p><a class="ui-link" href="#review">Review the shared styles</a></p>
-          </article>
-          <div class="ui-panel ui-flow">
-            <h3 class="ui-subheading">A settings panel</h3>
-            <p>Keep related fields and actions within one boundary. This sample performs no action.</p>
-            <div class="ui-stack">
-              <div class="ui-field">
-                <label class="ui-label" for="panel-project">Project name</label>
-                <input class="ui-input" id="panel-project" type="text" value="Room study" aria-describedby="panel-project-help">
-                <p class="ui-help" id="panel-project-help">Keep the label, field, and help text together.</p>
-              </div>
-              <div class="ui-field">
-                <label class="ui-label" for="panel-format">Export format</label>
-                <select class="ui-select" id="panel-format"><option>WAV</option><option>MP3</option></select>
-              </div>
-              <div class="ui-actions">
-                <button class="ui-button ui-button--primary" type="button">Primary action</button>
-                <button class="ui-button" type="button">Secondary action</button>
-              </div>
-            </div>
-          </div>
-          <details class="ui-disclosure">
-            <summary>Closed disclosure · additional instructions for this example</summary>
-            <div class="ui-disclosure__body ui-flow">
-              <p>Native HTML provides keyboard behavior and open state.</p>
-              <p>The body uses the same text spacing and padding as a panel.</p>
-            </div>
-          </details>
-          <details class="ui-disclosure" open>
-            <summary>Open disclosure · additional instructions for this example</summary>
-            <div class="ui-disclosure__body ui-flow">
-              <p>Long summaries can wrap. Closed disclosures keep their natural height beside open ones.</p>
-              <ul>
-                <li>Keep the native marker and keyboard behavior.</li>
-                <li>Align the summary and body with the panel inset.</li>
-              </ul>
-              <p lang="zh-Hans">展开后，正文与其他面板使用相同的内边距。</p>
-              <p><a class="ui-link" href="#review">Review this component</a></p>
-            </div>
-          </details>
-        </div>
-        <hr class="ui-divider">
-        <p class="ui-small ui-muted">The header examples below use the shared components. Chord cards, pitch symbols, and audio timing remain specialized components.</p>
-      </section>
-      <section id="data" class="guide-section ui-flow" aria-labelledby="data-heading">
-        <p class="guide-eyebrow">08 / Tables and values</p>
-        <h2 id="data-heading" class="ui-heading">Clear labels. Comparable values.</h2>
-        <p>Use the same serif text and spacing for tables and summaries. Align numeric table columns to the right. Keep descriptions free to wrap. Use monospace for filenames and source identifiers.</p>
-        <h3 class="ui-subheading">Summary values</h3>
-        <p>Use supporting-size labels and bold body-size values. Keep the unit with the value. Let the grid fit the available width.</p>
-        <dl class="ui-metrics">
-          <div><dt>Duration, minutes and seconds</dt><dd>3:20</dd></div>
-          <div><dt>Sample rate</dt><dd>48&nbsp;kHz</dd></div>
-          <div><dt>Channels</dt><dd>2</dd></div>
-        </dl>
-        <div class="guide-grid">
-          <div class="ui-flow">
-            <h3 class="ui-subheading">Long and missing values</h3>
-            <dl class="ui-metrics">
-              <div><dt>Source file selected for this example</dt><dd><code class="ui-code">room-study-example-with-a-long-source-label.wav</code></dd></div>
-              <div><dt>Exported files</dt><dd>0</dd></div>
-              <div><dt>Output duration</dt><dd>Not available</dd></div>
-            </dl>
-            <p class="ui-small ui-muted">Zero is a known value. Use explicit text when a value is not available.</p>
-          </div>
-          <div class="ui-panel ui-flow" data-domain="music" lang="zh-Hans">
-            <h3 class="ui-subheading">中文示例</h3>
-            <dl class="ui-metrics">
-              <div><dt>时长（分：秒）</dt><dd>3:20</dd></div>
-              <div><dt>采样率</dt><dd>48&nbsp;kHz</dd></div>
-              <div><dt>输出时长</dt><dd>尚无数据</dd></div>
-            </dl>
-            <p class="ui-small ui-muted">工具的主题色不改变摘要样式。</p>
-          </div>
-        </div>
-        <h3 class="ui-subheading">Table headings, rows, and totals</h3>
-        <p>Sizes use mebibytes (MiB). Times use minutes and seconds. All data below is invented. The displayed totals are static examples.</p>
-        <p id="file-table-help" class="ui-small ui-muted">If the columns do not fit, scroll within the table. Focus the table region to check keyboard scrolling. Keep the page itself within its normal width.</p>
-        <div class="ui-table-scroll" tabindex="0" role="region" aria-labelledby="file-table-caption" aria-describedby="file-table-help">
-          <table class="ui-table">
-            <caption id="file-table-caption">Example files · invented data</caption>
-            <thead>
-              <tr>
-                <th scope="col" class="ui-table__number">Item</th>
-                <th scope="col" class="ui-table__text">File</th>
-                <th scope="col">Format</th>
-                <th scope="col" class="ui-table__number">Duration</th>
-                <th scope="col" class="ui-table__number">Size (MiB)</th>
-                <th scope="col">State</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="ui-table__number">1</td>
-                <th scope="row" class="ui-table__text"><code class="ui-code">room-study-recording-with-a-long-file-name.wav</code></th>
-                <td>WAV</td>
-                <td class="ui-table__number">3:20</td>
-                <td class="ui-table__number">124.50</td>
-                <td>Ready</td>
-              </tr>
-              <tr>
-                <td class="ui-table__number">2</td>
-                <th scope="row" class="ui-table__text"><code class="ui-code">empty-example.wav</code></th>
-                <td>WAV</td>
-                <td class="ui-table__number">0:00</td>
-                <td class="ui-table__number">0.00</td>
-                <td>Empty</td>
-              </tr>
-              <tr>
-                <td class="ui-table__number">3</td>
-                <th scope="row" class="ui-table__text"><code class="ui-code">practice-example.mp3</code></th>
-                <td>MP3</td>
-                <td class="ui-table__number">0:42</td>
-                <td class="ui-table__number">12.00</td>
-                <td>Ready</td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <th scope="row" colspan="3">Total · 3 files</th>
-                <td class="ui-table__number">4:02</td>
-                <td class="ui-table__number">136.50</td>
-                <td>2 ready</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-        <h3 class="ui-subheading">Striped rows</h3>
-        <p>Use alternating row surfaces for longer tables. Add <code class="ui-code">ui-table--striped</code> to the shared table class. Stripes help track a row. They do not indicate selection or status.</p>
-        <div class="ui-table-scroll" tabindex="0" role="region" aria-labelledby="striped-table-caption" aria-describedby="file-table-help">
-          <table class="ui-table ui-table--striped">
-            <caption id="striped-table-caption">Striped example files · invented data</caption>
-            <thead>
-              <tr>
-                <th scope="col" class="ui-table__number">Item</th>
-                <th scope="col" class="ui-table__text">File</th>
-                <th scope="col" class="ui-table__number">Duration</th>
-                <th scope="col">State</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="ui-table__number">1</td>
-                <th scope="row" class="ui-table__text"><code class="ui-code">room-take-01.wav</code></th>
-                <td class="ui-table__number">0:12</td>
-                <td>Ready</td>
-              </tr>
-              <tr>
-                <td class="ui-table__number">2</td>
-                <th scope="row" class="ui-table__text"><code class="ui-code">room-take-02.wav</code></th>
-                <td class="ui-table__number">0:28</td>
-                <td>Ready</td>
-              </tr>
-              <tr>
-                <td class="ui-table__number">3</td>
-                <th scope="row" class="ui-table__text"><code class="ui-code">practice-01.wav</code></th>
-                <td class="ui-table__number">1:04</td>
-                <td>Ready</td>
-              </tr>
-              <tr>
-                <td class="ui-table__number">4</td>
-                <th scope="row" class="ui-table__text"><code class="ui-code">practice-02.wav</code></th>
-                <td class="ui-table__number">0:45</td>
-                <td>Ready</td>
-              </tr>
-              <tr>
-                <td class="ui-table__number">5</td>
-                <th scope="row" class="ui-table__text"><code class="ui-code">acoustic-sweep.wav</code></th>
-                <td class="ui-table__number">0:10</td>
-                <td>Review source</td>
-              </tr>
-              <tr>
-                <td class="ui-table__number">6</td>
-                <th scope="row" class="ui-table__text"><code class="ui-code">voice-memo.wav</code></th>
-                <td class="ui-table__number">0:37</td>
-                <td>Ready</td>
-              </tr>
-              <tr>
-                <td class="ui-table__number">7</td>
-                <th scope="row" class="ui-table__text"><code class="ui-code">empty-example.wav</code></th>
-                <td class="ui-table__number">0:00</td>
-                <td>Empty</td>
-              </tr>
-              <tr>
-                <td class="ui-table__number">8</td>
-                <th scope="row" class="ui-table__text"><code class="ui-code">field-recording-with-a-long-example-name.wav</code></th>
-                <td class="ui-table__number">1:16</td>
-                <td>Review source</td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <th scope="row" colspan="2">Total · 8 files</th>
-                <td class="ui-table__number">4:32</td>
-                <td>5 ready</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-        <h3 class="ui-subheading">Empty table</h3>
-        <div class="ui-table-scroll" tabindex="0" role="region" aria-labelledby="empty-table-caption">
-          <table class="ui-table">
-            <caption id="empty-table-caption">Output files · empty state</caption>
-            <thead><tr><th scope="col">File</th><th scope="col">State</th></tr></thead>
-            <tbody><tr><td colspan="2">No output files are available. Select an example to continue.</td></tr></tbody>
-          </table>
-        </div>
-        <p class="ui-small ui-muted">Use <code class="ui-code">ui-table__number</code> on a numeric column's heading and cells. Use <code class="ui-code">ui-table__text</code> for long descriptions that need a 12rem minimum width. Keep native captions, header scopes, and a named <code class="ui-code">ui-table-scroll</code> region. Use <code class="ui-code">ui-metrics</code> on a definition list for summary values. These examples do not sort, calculate, or process files.</p>
-      </section>
-      <section id="headers" class="guide-section ui-flow" aria-labelledby="headers-heading">
-        <p class="guide-eyebrow">09 / Page headers</p>
-        <h2 id="headers-heading" class="ui-heading">One page context. Clear navigation.</h2>
-        <p>Keep breadcrumbs in English. Use the page-title style for reading pages. Keep compact tool headers quiet, with a real page heading available to assistive software.</p>
-        <p>Use <span lang="en">En</span> for English and <span lang="zh-Hans">中</span> for Simplified Chinese. Tools use a compact segmented group with a dark selected segment. Reading pages use a quiet <span lang="en">En</span> / <span lang="zh-Hans">中</span> choice, with plain bold text for the current language and an underlined alternative. Keep both variants to the right of the breadcrumb while space permits.</p>
-        <p class="ui-small ui-muted">The current language is disabled because selecting it again has no effect. Its selected appearance remains visible. Language labels stay on one line and use the supporting text size. Both variants retain the compact desktop height, larger touch height, and common focus outline for the alternative language.</p>
-        <p class="ui-small ui-muted">Language samples do not translate this guide. Sample titles use level-four headings within the guide. A real page uses a level-one heading.</p>
-        <h3 class="ui-subheading">Consistent breadcrumb row height</h3>
-        <p>Use the same context row with or without a language choice. The shared minimum is 1.75rem for wide screens with a fine pointer and hover, and 2.75rem for touch. Center contents vertically. Longer text can expand the row. These three frames follow the current screen and pointer settings.</p>
-        <div class="guide-sample ui-flow">
-          <p class="guide-caption">No language choice</p>
-          <div class="guide-narrow-header">
-            <div class="ui-context-row">
-              <nav class="ui-breadcrumb" aria-label="Row height / no language choice" lang="en-AU">
-                <ol>
-                  <li><a class="ui-link" href="../">volo1st</a></li>
-                  <li><span aria-hidden="true">/</span><span aria-current="page">Tools</span></li>
-                </ol>
-              </nav>
-            </div>
-          </div>
-          <p class="guide-caption">Quiet text choice</p>
-          <div class="guide-narrow-header">
-            <div class="ui-context-row">
-              <nav class="ui-breadcrumb" aria-label="Row height / text language choice" lang="en-AU">
-                <ol>
-                  <li><a class="ui-link" href="../">volo1st</a></li>
-                  <li><span aria-hidden="true">/</span><span aria-current="page">Tools</span></li>
-                </ol>
-              </nav>
-              <div class="ui-language ui-language--text" role="group" aria-label="Row height / text language samples">
-                <button class="ui-button ui-button--quiet" type="button" aria-pressed="true" disabled aria-label="English language sample" lang="en">En</button>
-                <span aria-hidden="true">/</span>
-                <button class="ui-button ui-button--quiet" type="button" aria-pressed="false" aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
-              </div>
-            </div>
-          </div>
-          <p class="guide-caption">Segmented choice</p>
-          <div class="guide-narrow-header">
-            <div class="ui-context-row">
-              <nav class="ui-breadcrumb" aria-label="Row height / segmented language choice" lang="en-AU">
-                <ol>
-                  <li><a class="ui-link" href="../">volo1st</a></li>
-                  <li><span aria-hidden="true">/</span><span aria-current="page">Tools</span></li>
-                </ol>
-              </nav>
-              <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="Row height / segmented language samples">
-                <button class="ui-button" type="button" aria-pressed="true" disabled aria-label="English language sample" lang="en">En</button>
-                <button class="ui-button" type="button" aria-pressed="false" aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
-              </div>
-            </div>
-          </div>
-        </div>
+
+<aside data-snippet="Dismissible notice" class="ui-notice ui-flow" data-tone="success" aria-labelledby="dismiss-title">
+<div class="ui-notice__row"><div class="ui-flow"><h4 id="dismiss-title" class="ui-subheading ui-notice__title">Dismissible notice</h4><p lang="zh-Hans">示例已准备好，可以查看。</p></div>
+<button type="button" class="ui-button ui-button--quiet ui-button--icon" aria-label="Dismiss sample notice">×</button></div>
+</aside>
+<h3 id="patterns" class="ui-subheading">Surfaces and disclosures</h3>
+<div class="guide-grid">
+<div data-snippet="Plain content" class="ui-flow"><h4 class="ui-subheading">Plain content</h4><p>A paragraph with <strong>emphasis</strong> and a <a class="ui-link" href="#foundations">link</a>.</p><ul><li>First item</li><li>Second item</li></ul><hr class="ui-divider"><p class="ui-small ui-muted">Supporting text after a divider.</p></div>
+<div data-snippet="Panel" class="ui-panel ui-flow"><h4 class="ui-subheading">Panel</h4><p>Related content shares one boundary.</p><p lang="zh-Hans">相关内容使用同一个边框。</p></div>
+<details data-snippet="Closed disclosure" class="ui-disclosure"><summary>Closed disclosure</summary><div class="ui-disclosure__body ui-flow"><p>Additional information.</p></div></details>
+<details data-snippet="Open disclosure" class="ui-disclosure" open><summary>Open disclosure with a longer label · 更多说明</summary><div class="ui-disclosure__body ui-flow"><p>Additional information.</p><p lang="zh-Hans">这里显示补充说明。</p></div></details>
+</div>
+<h3 id="data" class="ui-subheading">Values and tables</h3>
+<dl data-snippet="Summary values" class="ui-metrics"><div><dt>Duration</dt><dd>3:20</dd></div><div><dt>Output files</dt><dd>0</dd></div><div><dt>Output duration</dt><dd>Not available</dd></div><div><dt lang="zh-Hans">源文件</dt><dd class="ui-code">recording-with-a-long-source-name.wav</dd></div></dl>
+<div data-snippet="Plain table" class="ui-table-scroll" tabindex="0" role="region" aria-labelledby="plain-caption">
+<table class="ui-table"><caption id="plain-caption">Plain table · Invented data · Duration in minutes and seconds</caption>
+<thead><tr><th scope="col" class="ui-table__text">File</th><th scope="col" class="ui-table__number">Duration</th><th scope="col">State</th></tr></thead>
+<tbody><tr><th scope="row" class="ui-table__text"><code class="ui-code">recording-with-a-long-source-name.wav</code></th><td class="ui-table__number">3:20</td><td>Ready</td></tr>
+<tr><th scope="row" class="ui-table__text" lang="zh-Hans">房间录音.wav</th><td class="ui-table__number">0:00</td><td>Empty</td></tr></tbody>
+<tfoot><tr><th scope="row">Total</th><td class="ui-table__number">3:20</td><td>1 ready</td></tr></tfoot></table></div>
+<div data-snippet="Striped table" class="ui-table-scroll" tabindex="0" role="region" aria-labelledby="striped-caption">
+<table class="ui-table ui-table--striped"><caption id="striped-caption">Striped table · Invented data · Duration in minutes and seconds</caption>
+<thead><tr><th scope="col" class="ui-table__text">File</th><th scope="col" class="ui-table__number">Duration</th><th scope="col">State</th></tr></thead>
+<tbody><tr><th scope="row" class="ui-table__text"><code class="ui-code">recording-with-a-long-source-name.wav</code></th><td class="ui-table__number">3:20</td><td>Ready</td></tr>
+<tr><th scope="row" class="ui-table__text" lang="zh-Hans">房间录音.wav</th><td class="ui-table__number">0:00</td><td>Empty</td></tr></tbody>
+<tfoot><tr><th scope="row">Total</th><td class="ui-table__number">3:20</td><td>1 ready</td></tr></tfoot></table></div>
+<div data-snippet="Empty state" class="ui-panel ui-flow"><h4 class="ui-subheading">No output files</h4><p>Select a source file to continue.</p></div>
+</section>
+<section id="pages" class="guide-section ui-flow" aria-labelledby="pages-heading"><h2 id="pages-heading" class="ui-heading">Page composition</h2>
+<h3 id="headers" class="ui-subheading">Headers</h3>
         <div class="guide-grid">
           <div class="guide-sample ui-flow">
             <h3 class="guide-caption">Reading page / quiet language choice</h3>
@@ -829,13 +398,13 @@ chords: C Am F G</textarea>
               </div>
               <div class="ui-flow">
                 <h4 class="ui-title">Studio rates and session information</h4>
-                <p>A reading page keeps its language choice quiet and introduces its subject below the breadcrumb.</p>
+                <p>Session information and rates.</p>
               </div>
             </div>
           </div>
           <div class="guide-sample ui-flow">
-            <h3 class="guide-caption">Compact tool / English selected</h3>
-            <div class="ui-page-header ui-tool-header">
+            <h3 class="guide-caption">Narrow tool / Chinese selected</h3>
+            <div class="ui-page-header ui-tool-header guide-narrow-header guide-mobile-header">
               <div class="ui-context-row">
                 <nav class="ui-breadcrumb" aria-label="Tool breadcrumb sample" lang="en-AU">
                   <ol>
@@ -844,390 +413,31 @@ chords: C Am F G</textarea>
                   </ol>
                 </nav>
                 <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="Tool language samples">
-                  <button class="ui-button" type="button" aria-pressed="true" disabled aria-label="English language sample" lang="en">En</button>
-                  <button class="ui-button" type="button" aria-pressed="false" aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
+                  <button class="ui-button" type="button" aria-pressed="false" aria-label="English language sample" lang="en">En</button>
+                  <button class="ui-button" type="button" aria-pressed="true" disabled aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
                 </div>
               </div>
               <h4 class="ui-visually-hidden">Guitar strum machine</h4>
-              <p class="ui-small ui-muted">This sample keeps its heading visually hidden. The tool name remains in the breadcrumb.</p>
+
             </div>
           </div>
         </div>
-        <h3 id="mobile-header-options" class="ui-subheading">Mobile tool headers</h3>
-        <p>Use a parent link and the full tool name. Keep the full browser title and accessible heading. Center the breadcrumb and language group vertically. Each frame is at most 20rem wide, including 1rem padding on each side. Language buttons keep the 44-pixel touch height in these samples, including on desktop.</p>
-        <p>Open a working tool: <a class="ui-link" href="../tools/guitar-strumming/">Guitar strum machine</a> · <a class="ui-link" href="../tools/pitch-shifter/">Pitch shifter</a> · <a class="ui-link" href="../tools/csv2aba-v2/">CSV to ABA converter</a>.</p>
-        <div class="guide-grid">
-          <div class="guide-sample ui-flow">
-            <p class="guide-caption">Guitar strum machine</p>
-            <div class="ui-page-header ui-tool-header guide-narrow-header guide-mobile-header">
-              <div class="ui-context-row">
-                <nav class="ui-breadcrumb" aria-label="Guitar breadcrumb sample" lang="en-AU">
-                  <ol>
-                    <li><span aria-hidden="true">←</span><a class="ui-link" href="../tools/">Tools</a></li>
-                    <li><span aria-hidden="true">/</span><span aria-current="page">Guitar strum machine</span></li>
-                  </ol>
-                </nav>
-                <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="Guitar language samples">
-                  <button class="ui-button" type="button" aria-pressed="true" disabled aria-label="English language sample" lang="en">En</button>
-                  <button class="ui-button" type="button" aria-pressed="false" aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
-                </div>
-              </div>
-              <h4 class="ui-visually-hidden">Guitar strum machine</h4>
-            </div>
-          </div>
-          <div class="guide-sample ui-flow">
-            <p class="guide-caption">Pitch shifter</p>
-            <div class="ui-page-header ui-tool-header guide-narrow-header guide-mobile-header">
-              <div class="ui-context-row">
-                <nav class="ui-breadcrumb" aria-label="Pitch breadcrumb sample" lang="en-AU">
-                  <ol>
-                    <li><span aria-hidden="true">←</span><a class="ui-link" href="../tools/">Tools</a></li>
-                    <li><span aria-hidden="true">/</span><span aria-current="page">Pitch shifter</span></li>
-                  </ol>
-                </nav>
-                <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="Pitch language samples">
-                  <button class="ui-button" type="button" aria-pressed="true" disabled aria-label="English language sample" lang="en">En</button>
-                  <button class="ui-button" type="button" aria-pressed="false" aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
-                </div>
-              </div>
-              <h4 class="ui-visually-hidden">Pitch shifter</h4>
-            </div>
-          </div>
-          <div class="guide-sample ui-flow">
-            <p class="guide-caption">CSV to ABA converter</p>
-            <div class="ui-page-header ui-tool-header guide-narrow-header guide-mobile-header">
-              <div class="ui-context-row">
-                <nav class="ui-breadcrumb" aria-label="CSV to ABA breadcrumb sample" lang="en-AU">
-                  <ol>
-                    <li><span aria-hidden="true">←</span><a class="ui-link" href="../tools/">Tools</a></li>
-                    <li><span aria-hidden="true">/</span><span aria-current="page">CSV to ABA converter</span></li>
-                  </ol>
-                </nav>
-                <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="CSV to ABA language samples">
-                  <button class="ui-button" type="button" aria-pressed="true" disabled aria-label="English language sample" lang="en">En</button>
-                  <button class="ui-button" type="button" aria-pressed="false" aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
-                </div>
-              </div>
-              <h4 class="ui-visually-hidden">CSV to ABA converter</h4>
-            </div>
-          </div>
-        </div>
-        <p class="ui-small ui-muted">When the row cannot fit, move the whole language group to the next row. Keep every control available. The frame below is at most 14rem wide to show this fallback. These samples use the same shared header rules as the working tools.</p>
-        <div class="ui-page-header ui-tool-header guide-narrow-header guide-mobile-header guide-narrow-header--tight">
-          <div class="ui-context-row">
-            <nav class="ui-breadcrumb" aria-label="CSV to ABA / narrow fallback breadcrumb sample" lang="en-AU">
-              <ol>
-                <li><span aria-hidden="true">←</span><a class="ui-link" href="../tools/">Tools</a></li>
-                <li><span aria-hidden="true">/</span><span aria-current="page">CSV to ABA converter</span></li>
-              </ol>
-            </nav>
-            <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="CSV to ABA / narrow fallback language samples">
-              <button class="ui-button" type="button" aria-pressed="true" disabled aria-label="English language sample" lang="en">En</button>
-              <button class="ui-button" type="button" aria-pressed="false" aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
-            </div>
-          </div>
-          <h4 class="ui-visually-hidden">CSV to ABA converter</h4>
-        </div>
-        <h3 class="ui-subheading">Names and casing</h3>
-        <p>Use sentence case for generic labels and descriptive tool names. Preserve proper names, including <span lang="en">Bits &amp; Beats Studio</span>, <span lang="en">volo1st</span>, and <span lang="en">YouTube</span>. Preserve acronyms such as CSV and ABA. Write the case in the source text. Do not change case with CSS.</p>
-        <div class="ui-table-scroll" tabindex="0" role="region" aria-labelledby="tool-names-caption">
-          <table class="ui-table">
-            <caption id="tool-names-caption">Canonical tool names</caption>
-            <thead><tr><th scope="col">Tool</th><th scope="col">Full name</th></tr></thead>
-            <tbody>
-              <tr><th scope="row">Guitar</th><td>Guitar strum machine</td></tr>
-              <tr><th scope="row">Pitch</th><td>Pitch shifter</td></tr>
-              <tr><th scope="row">CSV to ABA</th><td>CSV to ABA converter</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="ui-small ui-muted">Breadcrumb levels use <span lang="en">Studio / Rates</span>. A page heading uses <span lang="en">2026 studio rates</span>. A navigation link can omit the year: <span lang="en">Studio rates</span>. Use the full tool names in directory cards, page titles, accessible headings, and sharing metadata.</p>
-        <h3 class="ui-subheading">Narrow layout / Chinese selected</h3>
-        <p>This frame is at most 20rem wide, including its padding. Long breadcrumbs and titles can wrap. At exceptionally narrow widths or zoom, the context row can wrap without clipping the language buttons.</p>
-        <div class="guide-narrow-header">
-          <div class="ui-page-header">
-            <div class="ui-context-row">
-              <nav class="ui-breadcrumb" aria-label="Narrow breadcrumb sample" lang="en-AU">
-                <ol>
-                  <li><a class="ui-link" href="../">volo1st</a></li>
-                  <li><span aria-hidden="true">/</span><a class="ui-link" href="../studio/">Studio</a></li>
-                  <li><span aria-hidden="true">/</span><span aria-current="page">Studio recording and mixing services</span></li>
-                </ol>
-              </nav>
-              <div class="ui-language ui-language--text" role="group" aria-label="Narrow language samples">
-                <button class="ui-button ui-button--quiet" type="button" aria-pressed="false" aria-label="English language sample" lang="en">En</button>
-                <span aria-hidden="true">/</span>
-                <button class="ui-button ui-button--quiet" type="button" aria-pressed="true" disabled aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
-              </div>
-            </div>
-            <div class="ui-flow" lang="zh-Hans">
-              <h4 class="ui-title">录音与混音服务：工作室预约和准备事项</h4>
-              <p>页面标题和正文可以换行。语言按钮保留统一的尺寸和焦点样式。</p>
-            </div>
-          </div>
-        </div>
-        <p class="ui-small ui-muted">Use <code class="ui-code">ui-page-header</code> for header spacing, <code class="ui-code">ui-context-row</code> for breadcrumb and language alignment, and <code class="ui-code">ui-breadcrumb</code> for the navigation list. Tools use <code class="ui-code">ui-button-group ui-language ui-language--tool</code>. Reading pages reuse quiet buttons inside <code class="ui-code">ui-language ui-language--text</code>. Language buttons use <code class="ui-code">data-disable-current="true"</code>. The shared language binder updates <code class="ui-code">disabled</code> with <code class="ui-code">aria-pressed</code> and re-enables the previous language.</p>
-      </section>
-      <section id="app-icons" class="guide-section ui-flow" aria-labelledby="app-icons-heading">
-        <p class="guide-eyebrow">10 / App icons</p>
-        <h2 id="app-icons-heading" class="ui-heading">Tune the apparent size of the icons.</h2>
-        <p>All four source icons are 512 × 512 pixel images with an opaque background. Use cream <code class="ui-code">#f4f1e8</code> for the background and green <code class="ui-code">#173e30</code> for the mark. Edge pixels blend these two colors.</p>
-        <p>Compare the four icons in one row. Adjust the numbers below each icon. Use the up and down controls or the arrow keys to change a value by one.</p>
-        <p class="ui-small ui-muted">On a narrow screen, scroll the icon row horizontally. The original icons remain in use by the tools.</p>
-        <p id="icon-adjustment-help">Scale is a percentage of the original symbol. X and Y set its center on the 512-pixel canvas. Larger X values move right. Larger Y values move down. Use whole numbers. Values outside the allowed range are adjusted when you leave the field. Copy the settings before closing or reloading this page.</p>
-        <noscript><p class="ui-notice">Enable JavaScript to adjust the icons. The static comparison remains available.</p></noscript>
-        <p id="icon-comparison-caption" class="guide-caption">Compare all four icons at 128, 64, and 32 pixels.</p>
-        <div class="guide-icon-row-scroll" tabindex="0" role="region" aria-labelledby="icon-comparison-caption">
-          <div class="guide-icon-tuning-row">
-            <article class="guide-icon-editor ui-flow" data-icon-editor="guitar-strum-machine">
-              <h3 class="ui-subheading">Guitar strum machine</h3>
-              <div class="guide-icon-previews">
-                <span class="guide-icon-preview guide-icon-preview--128" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/guitar-strum-machine-512.png?v=9553c477ff76" class="guide-icon-image guide-icon-image--128" src="../assets/app-icons/comparison/apparent/guitar-strum-machine-512.png?v=a44925fd9d4e" width="128" height="128" alt="Guitar pick with three diagonal strings." loading="lazy"></span>
-                <span class="guide-icon-preview guide-icon-preview--64" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/guitar-strum-machine-512.png?v=9553c477ff76" class="guide-icon-image guide-icon-image--64" src="../assets/app-icons/comparison/apparent/guitar-strum-machine-512.png?v=a44925fd9d4e" width="64" height="64" alt="" loading="lazy"></span>
-                <span class="guide-icon-preview guide-icon-preview--32" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/guitar-strum-machine-512.png?v=9553c477ff76" class="guide-icon-image guide-icon-image--32" src="../assets/app-icons/comparison/apparent/guitar-strum-machine-512.png?v=a44925fd9d4e" width="32" height="32" alt="" loading="lazy"></span>
-              </div>
-              <fieldset class="ui-group guide-icon-controls" disabled>
-                <legend class="ui-visually-hidden">Adjust Guitar strum machine</legend>
-                <div class="ui-field">
-                  <label class="ui-label" for="icon-guitar-strum-machine-scalePercent">Scale %</label>
-                  <input class="ui-input" type="number" inputmode="numeric" id="icon-guitar-strum-machine-scalePercent" data-setting="scalePercent" min="50" max="150" step="1" value="86" aria-describedby="icon-adjustment-help">
-                </div>
-                <div class="ui-field">
-                  <label class="ui-label" for="icon-guitar-strum-machine-centerX">X</label>
-                  <input class="ui-input" type="number" inputmode="numeric" id="icon-guitar-strum-machine-centerX" data-setting="centerX" min="128" max="384" step="1" value="256" aria-describedby="icon-adjustment-help">
-                </div>
-                <div class="ui-field">
-                  <label class="ui-label" for="icon-guitar-strum-machine-centerY">Y</label>
-                  <input class="ui-input" type="number" inputmode="numeric" id="icon-guitar-strum-machine-centerY" data-setting="centerY" min="128" max="384" step="1" value="260" aria-describedby="icon-adjustment-help">
-                </div>
-                <button class="ui-button" type="button" data-icon-reset>Reset</button>
-              </fieldset>
-              <p class="ui-small" data-icon-warning role="status"></p>
-            </article>
-            <article class="guide-icon-editor ui-flow" data-icon-editor="metronome">
-              <h3 class="ui-subheading">Metronome</h3>
-              <div class="guide-icon-previews">
-                <span class="guide-icon-preview guide-icon-preview--128" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/metronome-512.png?v=72dd41b425f9" class="guide-icon-image guide-icon-image--128" src="../assets/app-icons/comparison/apparent/metronome-512.png?v=c49e6c0a7a4d" width="128" height="128" alt="Four vertical bars with one taller bar." loading="lazy"></span>
-                <span class="guide-icon-preview guide-icon-preview--64" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/metronome-512.png?v=72dd41b425f9" class="guide-icon-image guide-icon-image--64" src="../assets/app-icons/comparison/apparent/metronome-512.png?v=c49e6c0a7a4d" width="64" height="64" alt="" loading="lazy"></span>
-                <span class="guide-icon-preview guide-icon-preview--32" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/metronome-512.png?v=72dd41b425f9" class="guide-icon-image guide-icon-image--32" src="../assets/app-icons/comparison/apparent/metronome-512.png?v=c49e6c0a7a4d" width="32" height="32" alt="" loading="lazy"></span>
-              </div>
-              <fieldset class="ui-group guide-icon-controls" disabled>
-                <legend class="ui-visually-hidden">Adjust Metronome</legend>
-                <div class="ui-field">
-                  <label class="ui-label" for="icon-metronome-scalePercent">Scale %</label>
-                  <input class="ui-input" type="number" inputmode="numeric" id="icon-metronome-scalePercent" data-setting="scalePercent" min="50" max="150" step="1" value="114" aria-describedby="icon-adjustment-help">
-                </div>
-                <div class="ui-field">
-                  <label class="ui-label" for="icon-metronome-centerX">X</label>
-                  <input class="ui-input" type="number" inputmode="numeric" id="icon-metronome-centerX" data-setting="centerX" min="128" max="384" step="1" value="256" aria-describedby="icon-adjustment-help">
-                </div>
-                <div class="ui-field">
-                  <label class="ui-label" for="icon-metronome-centerY">Y</label>
-                  <input class="ui-input" type="number" inputmode="numeric" id="icon-metronome-centerY" data-setting="centerY" min="128" max="384" step="1" value="248" aria-describedby="icon-adjustment-help">
-                </div>
-                <button class="ui-button" type="button" data-icon-reset>Reset</button>
-              </fieldset>
-              <p class="ui-small" data-icon-warning role="status"></p>
-            </article>
-            <article class="guide-icon-editor ui-flow" data-icon-editor="tuner">
-              <h3 class="ui-subheading">Tuner</h3>
-              <div class="guide-icon-previews">
-                <span class="guide-icon-preview guide-icon-preview--128" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/tuner-512.png?v=1823c441a2b1" class="guide-icon-image guide-icon-image--128" src="../assets/app-icons/comparison/apparent/tuner-512.png?v=6f8d2a3d2b36" width="128" height="128" alt="Seven rounded vertical bars with a taller center bar." loading="lazy"></span>
-                <span class="guide-icon-preview guide-icon-preview--64" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/tuner-512.png?v=1823c441a2b1" class="guide-icon-image guide-icon-image--64" src="../assets/app-icons/comparison/apparent/tuner-512.png?v=6f8d2a3d2b36" width="64" height="64" alt="" loading="lazy"></span>
-                <span class="guide-icon-preview guide-icon-preview--32" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/tuner-512.png?v=1823c441a2b1" class="guide-icon-image guide-icon-image--32" src="../assets/app-icons/comparison/apparent/tuner-512.png?v=6f8d2a3d2b36" width="32" height="32" alt="" loading="lazy"></span>
-              </div>
-              <fieldset class="ui-group guide-icon-controls" disabled>
-                <legend class="ui-visually-hidden">Adjust Tuner</legend>
-                <div class="ui-field">
-                  <label class="ui-label" for="icon-tuner-scalePercent">Scale %</label>
-                  <input class="ui-input" type="number" inputmode="numeric" id="icon-tuner-scalePercent" data-setting="scalePercent" min="50" max="150" step="1" value="106" aria-describedby="icon-adjustment-help">
-                </div>
-                <div class="ui-field">
-                  <label class="ui-label" for="icon-tuner-centerX">X</label>
-                  <input class="ui-input" type="number" inputmode="numeric" id="icon-tuner-centerX" data-setting="centerX" min="128" max="384" step="1" value="256" aria-describedby="icon-adjustment-help">
-                </div>
-                <div class="ui-field">
-                  <label class="ui-label" for="icon-tuner-centerY">Y</label>
-                  <input class="ui-input" type="number" inputmode="numeric" id="icon-tuner-centerY" data-setting="centerY" min="128" max="384" step="1" value="256" aria-describedby="icon-adjustment-help">
-                </div>
-                <button class="ui-button" type="button" data-icon-reset>Reset</button>
-              </fieldset>
-              <p class="ui-small" data-icon-warning role="status"></p>
-            </article>
-            <article class="guide-icon-editor ui-flow" data-icon-editor="pitch-key">
-              <h3 class="ui-subheading">Pitch shifter</h3>
-              <div class="guide-icon-previews">
-                <span class="guide-icon-preview guide-icon-preview--128" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93" class="guide-icon-image guide-icon-image--128" src="../assets/app-icons/comparison/apparent/pitch-key-512.png?v=54a81e8aea2c" width="128" height="128" alt="A waveform beside a sharp sign." loading="lazy"></span>
-                <span class="guide-icon-preview guide-icon-preview--64" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93" class="guide-icon-image guide-icon-image--64" src="../assets/app-icons/comparison/apparent/pitch-key-512.png?v=54a81e8aea2c" width="64" height="64" alt="" loading="lazy"></span>
-                <span class="guide-icon-preview guide-icon-preview--32" data-preview-frame><img data-preview-image data-original-src="../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93" class="guide-icon-image guide-icon-image--32" src="../assets/app-icons/comparison/apparent/pitch-key-512.png?v=54a81e8aea2c" width="32" height="32" alt="" loading="lazy"></span>
-              </div>
-              <fieldset class="ui-group guide-icon-controls" disabled>
-                <legend class="ui-visually-hidden">Adjust Pitch shifter</legend>
-                <div class="ui-field">
-                  <label class="ui-label" for="icon-pitch-key-scalePercent">Scale %</label>
-                  <input class="ui-input" type="number" inputmode="numeric" id="icon-pitch-key-scalePercent" data-setting="scalePercent" min="50" max="150" step="1" value="98" aria-describedby="icon-adjustment-help">
-                </div>
-                <div class="ui-field">
-                  <label class="ui-label" for="icon-pitch-key-centerX">X</label>
-                  <input class="ui-input" type="number" inputmode="numeric" id="icon-pitch-key-centerX" data-setting="centerX" min="128" max="384" step="1" value="248" aria-describedby="icon-adjustment-help">
-                </div>
-                <div class="ui-field">
-                  <label class="ui-label" for="icon-pitch-key-centerY">Y</label>
-                  <input class="ui-input" type="number" inputmode="numeric" id="icon-pitch-key-centerY" data-setting="centerY" min="128" max="384" step="1" value="256" aria-describedby="icon-adjustment-help">
-                </div>
-                <button class="ui-button" type="button" data-icon-reset>Reset</button>
-              </fieldset>
-              <p class="ui-small" data-icon-warning role="status"></p>
-            </article>
-          </div>
-        </div>
-        <p class="ui-small ui-muted">Each input changes all three previews for its icon. These are review settings. Browser edge rendering can differ slightly from the final resized PNG files. The thin outlines show the canvas edges.</p>
-        <div class="ui-panel ui-flow">
-          <label class="ui-label" for="icon-settings">Icon settings to send back</label>
-          <textarea class="ui-textarea ui-code" id="icon-settings" data-icon-settings rows="12" readonly spellcheck="false" aria-describedby="icon-settings-help"></textarea>
-          <p class="ui-help" id="icon-settings-help">Select Copy settings. Paste the result into the chat. Settings stay in this page only. Each Reset button restores that icon’s starting values.</p>
-          <button class="ui-button" type="button" data-icon-copy disabled>Copy settings</button>
-          <p class="ui-small" data-icon-copy-status role="status"></p>
-        </div>
-        <details class="ui-disclosure">
-          <summary>Original icons and measurements</summary>
-          <div class="ui-disclosure__body ui-flow">
-            <div class="guide-icon-grid">
-              <figure class="guide-icon-card ui-flow">
-                <figcaption class="ui-flow">
-                  <h3 class="ui-subheading"><a class="ui-link" href="../assets/app-icons/guitar-strum-machine-512.png?v=9553c477ff76">Guitar strum machine</a></h3>
-                  <p class="ui-small ui-muted">Used by the current tool.</p>
-                </figcaption>
-                <div class="guide-icon-samples">
-                  <img class="guide-icon-image guide-icon-image--128" src="../assets/app-icons/guitar-strum-machine-512.png?v=9553c477ff76" width="128" height="128" alt="Guitar pick with three diagonal strings." loading="lazy">
-                  <img class="guide-icon-image guide-icon-image--64" src="../assets/app-icons/guitar-strum-machine-512.png?v=9553c477ff76" width="64" height="64" alt="" loading="lazy">
-                  <img class="guide-icon-image guide-icon-image--32" src="../assets/app-icons/guitar-strum-machine-512.png?v=9553c477ff76" width="32" height="32" alt="" loading="lazy">
-                </div>
-                <p class="guide-caption">128 / 64 / 32 pixels</p>
-              </figure>
-              <figure class="guide-icon-card ui-flow">
-                <figcaption class="ui-flow">
-                  <h3 class="ui-subheading"><a class="ui-link" href="../assets/app-icons/metronome-512.png?v=72dd41b425f9">Metronome</a></h3>
-                  <p class="ui-small ui-muted">Concept icon.</p>
-                </figcaption>
-                <div class="guide-icon-samples">
-                  <img class="guide-icon-image guide-icon-image--128" src="../assets/app-icons/metronome-512.png?v=72dd41b425f9" width="128" height="128" alt="Four vertical bars with one taller bar." loading="lazy">
-                  <img class="guide-icon-image guide-icon-image--64" src="../assets/app-icons/metronome-512.png?v=72dd41b425f9" width="64" height="64" alt="" loading="lazy">
-                  <img class="guide-icon-image guide-icon-image--32" src="../assets/app-icons/metronome-512.png?v=72dd41b425f9" width="32" height="32" alt="" loading="lazy">
-                </div>
-                <p class="guide-caption">128 / 64 / 32 pixels</p>
-              </figure>
-              <figure class="guide-icon-card ui-flow">
-                <figcaption class="ui-flow">
-                  <h3 class="ui-subheading"><a class="ui-link" href="../assets/app-icons/tuner-512.png?v=1823c441a2b1">Tuner</a></h3>
-                  <p class="ui-small ui-muted">Concept icon.</p>
-                </figcaption>
-                <div class="guide-icon-samples">
-                  <img class="guide-icon-image guide-icon-image--128" src="../assets/app-icons/tuner-512.png?v=1823c441a2b1" width="128" height="128" alt="Seven rounded vertical bars with a taller center bar." loading="lazy">
-                  <img class="guide-icon-image guide-icon-image--64" src="../assets/app-icons/tuner-512.png?v=1823c441a2b1" width="64" height="64" alt="" loading="lazy">
-                  <img class="guide-icon-image guide-icon-image--32" src="../assets/app-icons/tuner-512.png?v=1823c441a2b1" width="32" height="32" alt="" loading="lazy">
-                </div>
-                <p class="guide-caption">128 / 64 / 32 pixels</p>
-              </figure>
-              <figure class="guide-icon-card ui-flow">
-                <figcaption class="ui-flow">
-                  <h3 class="ui-subheading"><a class="ui-link" href="../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93">Pitch shifter</a></h3>
-                  <p class="ui-small ui-muted">Used by the current tool.</p>
-                </figcaption>
-                <div class="guide-icon-samples">
-                  <img class="guide-icon-image guide-icon-image--128" src="../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93" width="128" height="128" alt="A waveform beside a sharp sign." loading="lazy">
-                  <img class="guide-icon-image guide-icon-image--64" src="../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93" width="64" height="64" alt="" loading="lazy">
-                  <img class="guide-icon-image guide-icon-image--32" src="../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93" width="32" height="32" alt="" loading="lazy">
-                </div>
-                <p class="guide-caption">128 / 64 / 32 pixels</p>
-              </figure>
-            </div>
-            <div class="ui-table-scroll" tabindex="0" role="region" aria-labelledby="icon-measurements-caption">
-              <table class="ui-table">
-                <caption id="icon-measurements-caption">Source measurements · 30 October 2026 · pixels on the 512 × 512 canvas</caption>
-                <thead>
-                  <tr><th scope="col">Icon</th><th scope="col">Symbol width × height</th><th scope="col">Margins: left / top / right / bottom</th><th scope="col" class="ui-table__number">Foreground coverage</th></tr>
-                </thead>
-                <tbody>
-                  <tr><th scope="row">Guitar strum machine</th><td>387 × 430</td><td>62 / 40 / 63 / 42</td><td class="ui-table__number">16.8%</td></tr>
-                  <tr><th scope="row">Metronome</th><td>307 × 290</td><td>103 / 110 / 102 / 112</td><td class="ui-table__number">20.5%</td></tr>
-                  <tr><th scope="row">Tuner</th><td>372 × 243</td><td>70 / 130 / 70 / 139</td><td class="ui-table__number">9.6%</td></tr>
-                  <tr><th scope="row">Pitch shifter</th><td>433 × 220</td><td>37 / 141 / 42 / 151</td><td class="ui-table__number">12.6%</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <p class="ui-small ui-muted">Symbol bounds include every pixel that differs from the background, including antialias pixels. Foreground coverage measures the amount of green after edge blending. It does not measure perceived size. The dense metronome has the most green. The tuner has the least.</p>
-          </div>
-        </details>
-        <p><a class="ui-link" href="../assets/app-icons/README.md">Icon source files, measurement method, and guitar size variants</a></p>
-      </section>
-      <section id="current" class="guide-section ui-flow" aria-labelledby="current-heading">
-        <p class="guide-eyebrow">11 / Current styles</p>
-        <h2 id="current-heading" class="ui-heading">Compare what the site uses today.</h2>
-        <p>Each preview loads the shared stylesheet and the applicable page styles in a separate document. Open a specimen on its own to check the full page width.</p>
-        <details class="ui-disclosure guide-current">
-          <summary>Public pages · introduction, links, and headings</summary>
-          <div class="ui-disclosure__body ui-flow">
-            <p><a class="ui-link" href="./public.html" target="_blank" rel="noopener noreferrer">Open public-page specimen</a></p>
-            <iframe title="Current public-page typography and links" src="./public.html" loading="lazy"></iframe>
-          </div>
-        </details>
-        <details class="ui-disclosure guide-current">
-          <summary>Studio rates · reading text, service rows, and language choice</summary>
-          <div class="ui-disclosure__body ui-flow">
-            <p><a class="ui-link" href="./studio.html" target="_blank" rel="noopener noreferrer">Open studio specimen</a></p>
-            <iframe title="Current studio rate styles" src="./studio.html" loading="lazy"></iframe>
-          </div>
-        </details>
-        <details class="ui-disclosure guide-current">
-          <summary>Converter · primary actions, fields, safety, and errors</summary>
-          <div class="ui-disclosure__body ui-flow">
-            <p><a class="ui-link" href="./converter.html" target="_blank" rel="noopener noreferrer">Open converter specimen</a></p>
-            <iframe title="Current converter controls and notices" src="./converter.html" loading="lazy"></iframe>
-          </div>
-        </details>
-        <details class="ui-disclosure guide-current">
-          <summary>Guitar · controls, validation, and the specialized chord card</summary>
-          <div class="ui-disclosure__body ui-flow">
-            <p><a class="ui-link" href="./guitar.html" target="_blank" rel="noopener noreferrer">Open guitar specimen</a></p>
-            <iframe title="Current Guitar strum machine controls and chord card" src="./guitar.html" loading="lazy"></iframe>
-          </div>
-        </details>
-        <details class="ui-disclosure guide-current">
-          <summary>Pitch shifter · controls, seek slider, and status tones</summary>
-          <div class="ui-disclosure__body ui-flow">
-            <p><a class="ui-link" href="./pitch.html" target="_blank" rel="noopener noreferrer">Open pitch specimen</a></p>
-            <iframe title="Current Pitch shifter controls and status" src="./pitch.html" loading="lazy"></iframe>
-          </div>
-        </details>
-      </section>
-      <footer id="review" class="guide-footer ui-flow">
-        <p class="guide-eyebrow">12 / Review</p>
-        <h2 class="ui-heading">Review the shared system.</h2>
-        <ol>
-          <li>
-            Review fonts and text sizes.
-          </li>
-          <li>
-            Review control borders, heights, spacing, and disabled treatment.
-          </li>
-          <li>
-            Review notice tones and panel density.
-          </li>
-          <li>
-            Review page headers, breadcrumb wrapping, and selected-language states.
-          </li>
-          <li>
-            Review long labels, Chinese text, keyboard focus, narrow layouts, and 200 percent zoom.
-          </li>
-          <li>
-            Use shared classes for common components. Keep specialized app displays in their local stylesheets.
-          </li>
-        </ol>
-        <p class="ui-small ui-muted">Source review and the existing repository checks cover the shared components. Browser review remains for the visual iteration. No browser tooling is installed for this package.</p>
-        <p><a class="ui-link" href="../docs/ui-audit.md">Component inventory and migration boundaries</a></p>
-      </footer>
+
+<h3 id="app-icons" class="ui-subheading">Approved icons</h3>
+<div class="guide-icon-list">
+<figure><img src="../assets/app-icons/guitar-strum-machine-512.png?v=9553c477ff76" width="64" height="64" alt=""><figcaption class="ui-small">Guitar strum machine</figcaption></figure>
+<figure><img src="../assets/app-icons/metronome-512.png?v=72dd41b425f9" width="64" height="64" alt=""><figcaption class="ui-small">Metronome</figcaption></figure>
+<figure><img src="../assets/app-icons/tuner-512.png?v=1823c441a2b1" width="64" height="64" alt=""><figcaption class="ui-small">Tuner</figcaption></figure>
+<figure><img src="../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93" width="64" height="64" alt=""><figcaption class="ui-small">Pitch shifter</figcaption></figure>
+</div><p><a class="ui-link" href="./icons.html#app-icons">Open icon adjustment and candidates</a></p>
+<h3 id="current" class="ui-subheading">Page specimens</h3>
+<ul><li><a class="ui-link" href="./public.html">Public pages · Homepage greeting and section links</a></li>
+<li><a class="ui-link" href="./studio.html">Studio · Service rows and notes</a></li>
+<li><a class="ui-link" href="./converter.html">CSV to ABA converter · Fields and errors</a></li>
+<li><a class="ui-link" href="./guitar.html">Guitar strum machine · Chord display</a></li>
+<li><a class="ui-link" href="./pitch.html">Pitch shifter · Audio controls</a></li></ul>
+</section>
+<footer id="review" class="guide-footer ui-flow"><p class="ui-small"><a class="ui-link" href="../README.md">Implementation notes</a> · <a class="ui-link" href="../docs/ui-audit.md">Initial style audit</a></p></footer>
     </main>
-    <script src="./icon-adjuster.js?v=58f2d1c41087" defer></script>
   </body>
 </html>

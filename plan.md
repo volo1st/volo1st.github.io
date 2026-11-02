@@ -1404,3 +1404,21 @@ Decision before implementation: Use four aligned columns with the same preview s
 Completion evidence for Section 36.3 on 2 November 2026: Removed the equal-bounds presentation. All four adjustable icons now share one aligned row. Kept 128-, 64-, and 32-pixel previews with compact native integer inputs below each icon. The row scrolls inside its named region on narrow screens. Preserved reset, clipping notices, copy/export, static fallbacks, original icon files, and the export format.
 
 `./scripts/check.sh` passed all eight test files. Extended the existing adjustment tests to protect incomplete typed values, valid integer updates, and normalization on field change. Reviewed the complete diff, four-column geometry, aligned headings and previews, compact control layout, native number behavior, labels, and asset hashes. A source review confirmed balanced markup, four editor columns, and twelve number inputs. The local guide returned HTTP 200. Browser rendering, native spin-control appearance, keyboard use, narrow-screen behavior, and 200 percent zoom remain for owner review. No browser tooling was installed. Commit locally without pushing or deployment.
+
+## 37. Compact visual reference
+
+Selection on 2 November 2026: The owner accepted a concise visual guide, shared component sources, and a page scaffolding workflow. Use Python for scaffolding. Complete the guide package first. The configured Todoist initiative has two deferred children and no actionable child. This is owner-selected work. Keep those deferred tasks unchanged.
+
+Purpose and requirements: Make the guide the visual source of truth for approved website styles. Keep distinct states, English and Chinese type, wrapping, common layouts, and links to specialised displays. Remove repeated explanations and comparisons. Keep the shared CSS values unchanged. Move icon experiments to a separate page. Preserve the adjustment controls and their input behavior.
+
+Decision before implementation: Use four main groups: foundations, controls, content, and page composition. Show compact labelled examples. Keep code and implementation notes out of the visual comparison. Preserve existing section anchors where practical. Approved examples use the live shared CSS. Page specimens retain their live local CSS. Keep experiments separate from approved examples. Source review and the existing tests are sufficient for this structural cleanup; unavailable rendered review is an explicit limit. No framework, build step, or dependency is needed.
+
+- [x] Simplify the guide and preserve critical visual coverage.
+- [x] Move icon adjustment without changing its behavior.
+- [x] Run repository checks and review the complete diff.
+
+Failure behavior: Static examples remain visible without JavaScript. Native fields and disclosures still work. Sample buttons do not imply app processing. The icon adjustment page keeps its disabled fallback and manual copy recovery. Keep this work local; do not push or deploy.
+
+Completion evidence on 2 November 2026: `./scripts/check.sh` passed all eight test files and both whitespace checks. Reviewed the complete source diff. Both edited guide documents have balanced markup. Compared the moved icon editor content with the previous guide; controls, previews, settings export, and fallback content are unchanged. The guide has four main navigation groups instead of twelve. Retained critical states, shared styles, approved icon sources, and five linked page specimens. Updated support links. No browser is available through the connected tools. Rendered layout, keyboard use, visible focus, narrow screens, and 200 percent zoom remain for manual review. No browser tooling was installed.
+
+Tracker reconciliation: The configured initiative has no actionable child or matching task to close. Both deferred tasks remain unchanged. This package is complete for local review. The next owner-authorized package is Python scaffolding and component copying.

@@ -1,79 +1,77 @@
-:where([data-page="style-guide"]) .guide-header { padding-block-start: var(--ui-section-padding); }
-:where([data-page="style-guide"]) .guide-main { padding-block: var(--ui-space-8); }
-:where([data-page="style-guide"]) .guide-intro { margin-bottom: var(--ui-section-padding); }
-:where([data-page="style-guide"]) .guide-eyebrow { color: var(--site-muted); font: var(--ui-size-supporting)/var(--ui-leading-body) var(--ui-font-body); }
-:where([data-page="style-guide"]) .guide-lead { color: var(--site-muted); font-size: var(--ui-size-body); line-height: var(--ui-leading-body); }
-:where([data-page="style-guide"]) .guide-nav { display: flex; flex-wrap: wrap; gap: var(--ui-space-2) var(--ui-space-6); padding-block: var(--ui-space-4); border-block: 1px solid var(--site-divider); font-family: var(--ui-font-control); }
-:where([data-page="style-guide"]) .guide-section { padding-block: var(--ui-section-padding); border-bottom: 1px solid var(--site-divider); scroll-margin-top: var(--ui-space-4); }
-:where([data-page="style-guide"]) .guide-eyebrow + :is(.ui-title, .ui-heading) { margin-block-start: var(--ui-space-2); }
-:where([data-page="style-guide"]) .guide-section > :is(.guide-grid, .guide-sample, .guide-swatches, .ui-table-scroll) { margin-block-start: var(--ui-space-6); }
-:where([data-page="style-guide"]) .guide-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: var(--ui-space-8) var(--ui-space-6); }
-:where([data-page="style-guide"]) .guide-control-comparison { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-:where([data-page="style-guide"]) .guide-type-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-:where([data-page="style-guide"]) .guide-grid > * { min-width: 0; }
-:where([data-page="style-guide"]) .guide-sample { min-width: 0; }
-:where([data-page="style-guide"]) .guide-narrow-header { width: 100%; max-width: 20rem; border: 1px dashed var(--site-divider); padding: var(--ui-space-4); }
-:where([data-page="style-guide"]) .guide-mobile-header { --ui-context-min-height: 2.75rem; }
-:where([data-page="style-guide"]) .guide-narrow-header--tight { max-width: 14rem; }
-:where([data-page="style-guide"]) .guide-caption { color: var(--site-muted); font: var(--ui-size-supporting)/var(--ui-leading-body) var(--ui-font-body); }
-:where([data-page="style-guide"]) .guide-type-hierarchy > .guide-caption:not(:first-child) { margin-top: var(--ui-space-6); }
-:where([data-page="style-guide"]) .guide-type-hierarchy > .guide-caption + * { margin-block-start: var(--ui-space-2); }
-:where([data-page="style-guide"]) .guide-font-sample { font-size: var(--ui-size-body); overflow-wrap: anywhere; }
-:where([data-page="style-guide"]) .guide-font-body { font-family: var(--ui-font-body); }
-:where([data-page="style-guide"]) .guide-font-control { font-family: var(--ui-font-control); }
-:where([data-page="style-guide"]) .guide-font-mono { font-family: var(--ui-font-mono); }
-:where([data-page="style-guide"]) .guide-swatches { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); gap: var(--ui-space-3); }
-:where([data-page="style-guide"]) .guide-swatch { padding: var(--ui-space-3); border: 1px solid var(--site-divider); border-radius: var(--ui-radius-control); background: var(--site-panel-background); }
-:where([data-page="style-guide"]) .guide-swatch::before { content: ""; display: block; height: 3rem; margin-bottom: var(--ui-space-3); border: 1px solid var(--site-divider); border-radius: var(--ui-radius-control); background: var(--swatch); }
-:where([data-page="style-guide"]) .guide-swatch span { display: block; font-size: var(--ui-size-supporting); }
-:where([data-page="style-guide"]) .guide-swatch code { font: var(--ui-size-supporting)/var(--ui-leading-body) var(--ui-font-mono); }
-:where([data-page="style-guide"]) .guide-swatch--page { --swatch: var(--site-background); }
-:where([data-page="style-guide"]) .guide-swatch--panel { --swatch: var(--site-panel-background); }
-:where([data-page="style-guide"]) .guide-swatch--text { --swatch: var(--site-text); }
-:where([data-page="style-guide"]) .guide-swatch--muted { --swatch: var(--site-muted); }
-:where([data-page="style-guide"]) .guide-swatch--blue { --swatch: #075a9c; }
-:where([data-page="style-guide"]) .guide-swatch--green { --swatch: #27644e; }
-:where([data-page="style-guide"]) .guide-swatch--focus { --swatch: var(--site-focus); }
-:where([data-page="style-guide"]) .guide-swatch--border { --swatch: var(--site-control-border); }
-:where([data-page="style-guide"]) .guide-space { display: flex; align-items: center; gap: var(--ui-space-4); font: var(--ui-size-supporting)/var(--ui-leading-body) var(--ui-font-mono); }
-:where([data-page="style-guide"]) .guide-space::before { content: ""; flex: 0 0 var(--space); height: var(--ui-space-4); background: var(--tool-accent); }
-:where([data-page="style-guide"]) .guide-space--1 { --space: var(--ui-space-1); }
-:where([data-page="style-guide"]) .guide-space--2 { --space: var(--ui-space-2); }
-:where([data-page="style-guide"]) .guide-space--3 { --space: var(--ui-space-3); }
-:where([data-page="style-guide"]) .guide-space--4 { --space: var(--ui-space-4); }
-:where([data-page="style-guide"]) .guide-space--6 { --space: var(--ui-space-6); }
-:where([data-page="style-guide"]) .guide-space--8 { --space: var(--ui-space-8); }
-:where([data-page="style-guide"]) .guide-current > summary { font-size: var(--ui-size-body); }
-:where([data-page="style-guide"]) .guide-current iframe { display: block; width: 100%; height: 38rem; border: 1px solid var(--site-divider); border-radius: var(--ui-radius-control); background: var(--site-background); }
-:where([data-page="style-guide"]) .guide-footer { padding-top: var(--ui-section-padding); }
-:where([data-page="style-guide"]) .guide-main strong, :where([data-page="style-guide"]) .guide-main b { font-weight: var(--ui-weight-bold); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-header { padding-block-start: var(--ui-section-padding); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-main { padding-block: var(--ui-space-8); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-intro { margin-bottom: var(--ui-section-padding); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-eyebrow { color: var(--site-muted); font: var(--ui-size-supporting)/var(--ui-leading-body) var(--ui-font-body); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-nav { display: flex; flex-wrap: wrap; gap: var(--ui-space-2) var(--ui-space-6); padding-block: var(--ui-space-4); border-block: 1px solid var(--site-divider); font-family: var(--ui-font-control); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-section { padding-block: var(--ui-section-padding); border-bottom: 1px solid var(--site-divider); scroll-margin-top: var(--ui-space-4); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-eyebrow + :is(.ui-title, .ui-heading) { margin-block-start: var(--ui-space-2); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-section > :is(.guide-grid, .guide-sample, .guide-swatches, .ui-table-scroll) { margin-block-start: var(--ui-space-6); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: var(--ui-space-8) var(--ui-space-6); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-control-comparison { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-type-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-grid > * { min-width: 0; }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-sample { min-width: 0; }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-narrow-header { width: 100%; max-width: 20rem; border: 1px dashed var(--site-divider); padding: var(--ui-space-4); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-mobile-header { --ui-context-min-height: 2.75rem; }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-caption { color: var(--site-muted); font: var(--ui-size-supporting)/var(--ui-leading-body) var(--ui-font-body); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-font-sample { font-size: var(--ui-size-body); overflow-wrap: anywhere; }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-font-body { font-family: var(--ui-font-body); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-font-control { font-family: var(--ui-font-control); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-font-mono { font-family: var(--ui-font-mono); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-swatches { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); gap: var(--ui-space-3); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-swatch { padding: var(--ui-space-3); border: 1px solid var(--site-divider); border-radius: var(--ui-radius-control); background: var(--site-panel-background); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-swatch::before { content: ""; display: block; height: 3rem; margin-bottom: var(--ui-space-3); border: 1px solid var(--site-divider); border-radius: var(--ui-radius-control); background: var(--swatch); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-swatch span { display: block; font-size: var(--ui-size-supporting); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-swatch code { font: var(--ui-size-supporting)/var(--ui-leading-body) var(--ui-font-mono); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-swatch--page { --swatch: var(--site-background); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-swatch--panel { --swatch: var(--site-panel-background); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-swatch--text { --swatch: var(--site-text); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-swatch--muted { --swatch: var(--site-muted); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-swatch--blue { --swatch: #075a9c; }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-swatch--green { --swatch: #27644e; }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-swatch--focus { --swatch: var(--site-focus); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-swatch--border { --swatch: var(--site-control-border); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-space { display: flex; align-items: center; gap: var(--ui-space-4); font: var(--ui-size-supporting)/var(--ui-leading-body) var(--ui-font-mono); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-space::before { content: ""; flex: 0 0 var(--space); height: var(--ui-space-4); background: var(--tool-accent); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-space--1 { --space: var(--ui-space-1); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-space--2 { --space: var(--ui-space-2); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-space--3 { --space: var(--ui-space-3); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-space--4 { --space: var(--ui-space-4); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-space--6 { --space: var(--ui-space-6); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-space--8 { --space: var(--ui-space-8); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-footer { padding-top: var(--ui-section-padding); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-main strong, :where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-main b { font-weight: var(--ui-weight-bold); }
 
 @media (max-width: 650px) {
-  :where([data-page="style-guide"]) .guide-grid { grid-template-columns: 1fr; }
+  :where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-grid { grid-template-columns: 1fr; }
 }
 
-:where([data-page="style-guide"]) .guide-icon-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); gap: var(--ui-space-8) var(--ui-space-6); margin-block-start: var(--ui-space-6); }
-:where([data-page="style-guide"]) .guide-icon-card { min-width: 0; margin: 0; }
-:where([data-page="style-guide"]) .guide-icon-samples { display: flex; flex-wrap: wrap; align-items: end; gap: var(--ui-space-4); }
-:where([data-page="style-guide"]) .guide-icon-image { display: block; max-width: 100%; height: auto; aspect-ratio: 1; outline: 1px solid var(--site-divider); }
-:where([data-page="style-guide"]) .guide-icon-image--128 { width: 128px; }
-:where([data-page="style-guide"]) .guide-icon-image--64 { width: 64px; }
-:where([data-page="style-guide"]) .guide-icon-image--32 { width: 32px; }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); gap: var(--ui-space-8) var(--ui-space-6); margin-block-start: var(--ui-space-6); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-card { min-width: 0; margin: 0; }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-samples { display: flex; flex-wrap: wrap; align-items: end; gap: var(--ui-space-4); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-image { display: block; max-width: 100%; height: auto; aspect-ratio: 1; outline: 1px solid var(--site-divider); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-image--128 { width: 128px; }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-image--64 { width: 64px; }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-image--32 { width: 32px; }
 
 
-:where([data-page="style-guide"]) .guide-icon-preview { display: block; flex: none; height: auto; aspect-ratio: 1; overflow: hidden; background: #f4f1e8; outline: 1px solid var(--site-divider); }
-:where([data-page="style-guide"]) .guide-icon-preview--128 { width: 128px; }
-:where([data-page="style-guide"]) .guide-icon-preview--64 { width: 64px; }
-:where([data-page="style-guide"]) .guide-icon-preview--32 { width: 32px; }
-:where([data-page="style-guide"]) .guide-icon-preview .guide-icon-image { width: 100%; height: 100%; outline: none; }
-:where([data-page="style-guide"]) .guide-icon-preview[data-active="true"] .guide-icon-image { transform-origin: 0 0; transform: translate(var(--icon-x), var(--icon-y)) scale(var(--icon-scale)); }
-:where([data-page="style-guide"]) .guide-icon-row-scroll { max-width: 100%; overflow-x: auto; padding: 1px; }
-:where([data-page="style-guide"]) .guide-icon-tuning-row { display: grid; grid-template-columns: repeat(4, minmax(9rem, 1fr)); min-width: 39rem; gap: var(--ui-space-4); }
-:where([data-page="style-guide"]) .guide-icon-editor { min-width: 0; }
-:where([data-page="style-guide"]) .guide-icon-editor > h3 { min-height: 3.2em; }
-:where([data-page="style-guide"]) .guide-icon-previews { display: flex; flex-wrap: wrap; align-items: end; justify-content: center; gap: var(--ui-space-4); width: 128px; margin-inline: auto; }
-:where([data-page="style-guide"]) .guide-icon-controls { display: grid; gap: var(--ui-space-2); margin-block-start: var(--ui-space-4); }
-:where([data-page="style-guide"]) .guide-icon-controls .ui-field { grid-template-columns: minmax(0, 1fr) 4.75rem; align-items: center; }
-:where([data-page="style-guide"]) .guide-icon-controls .ui-label { font-size: var(--ui-size-supporting); }
-:where([data-page="style-guide"]) .guide-icon-controls .ui-input { min-height: 2rem; padding: 0.25rem 0.375rem; font: var(--ui-size-supporting)/var(--ui-leading-body) var(--ui-font-mono); }
-:where([data-page="style-guide"]) .guide-icon-controls .ui-button { justify-self: start; }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-preview { display: block; flex: none; height: auto; aspect-ratio: 1; overflow: hidden; background: #f4f1e8; outline: 1px solid var(--site-divider); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-preview--128 { width: 128px; }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-preview--64 { width: 64px; }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-preview--32 { width: 32px; }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-preview .guide-icon-image { width: 100%; height: 100%; outline: none; }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-preview[data-active="true"] .guide-icon-image { transform-origin: 0 0; transform: translate(var(--icon-x), var(--icon-y)) scale(var(--icon-scale)); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-row-scroll { max-width: 100%; overflow-x: auto; padding: 1px; }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-tuning-row { display: grid; grid-template-columns: repeat(4, minmax(9rem, 1fr)); min-width: 39rem; gap: var(--ui-space-4); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-editor { min-width: 0; }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-editor > h3 { min-height: 3.2em; }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-previews { display: flex; flex-wrap: wrap; align-items: end; justify-content: center; gap: var(--ui-space-4); width: 128px; margin-inline: auto; }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-controls { display: grid; gap: var(--ui-space-2); margin-block-start: var(--ui-space-4); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-controls .ui-field { grid-template-columns: minmax(0, 1fr) 4.75rem; align-items: center; }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-controls .ui-label { font-size: var(--ui-size-supporting); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-controls .ui-input { min-height: 2rem; padding: 0.25rem 0.375rem; font: var(--ui-size-supporting)/var(--ui-leading-body) var(--ui-font-mono); }
+:where([data-page="style-guide"], [data-page="style-guide-icons"]) .guide-icon-controls .ui-button { justify-self: start; }
+
+:where([data-page="style-guide"]) .guide-icon-list { display: flex; flex-wrap: wrap; gap: var(--ui-space-6); }
+:where([data-page="style-guide"]) .guide-icon-list figure { margin: 0; max-width: 8rem; }
+:where([data-page="style-guide"]) .guide-icon-list img { display: block; width: 64px; height: 64px; }

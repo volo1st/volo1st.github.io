@@ -64,16 +64,16 @@ To regenerate both sets from the original files, run this command from the repos
 node scripts/generate-icon-comparison.js
 ```
 
-The script uses only Node.js standard modules. It accepts the current unfiltered, opaque RGB PNG source format. It rejects an unsupported format, a color outside the palette, or a candidate that reaches the canvas edge. It writes only the comparison directories. After regeneration, refresh the image hashes in the guide and run `./scripts/check.sh`.
+The script uses only Node.js standard modules. It accepts the current unfiltered, opaque RGB PNG source format. It rejects an unsupported format, a color outside the palette, or a candidate that reaches the canvas edge. It writes only the comparison directories. After regeneration, refresh the image hashes on the adjustment page and run `./scripts/check.sh`.
 
 This comparison is local for owner review. Do not deploy it or replace the installed-app icons before a set is selected.
 
 
 ### Adjust the previews
 
-Use each icon’s Scale %, X, and Y number inputs in the guide. Use the native up and down controls or the arrow keys to change a value by one. All three preview sizes update together. On a narrow screen, scroll horizontally to keep the four icons in one row. A warning identifies a symbol that extends beyond the canvas. Each reset button restores that icon's starting values.
+Open the [icon adjustment page](../../style-guide/icons.html). Use each icon’s Scale %, X, and Y number inputs. Use the native up and down controls or the arrow keys to change a value by one. All three preview sizes update together. On a narrow screen, scroll horizontally to keep the four icons in one row. A warning identifies a symbol that extends beyond the canvas. Each reset button restores that icon's starting values.
 
-Select Copy settings and send the text back in the chat. If automatic copying fails, the guide selects the export for manual copying. Copy before closing or reloading the page. Settings are not saved in browser storage.
+Select Copy settings and send the text back in the chat. If automatic copying fails, the page selects the export for manual copying. Copy before closing or reloading the page. Settings are not saved in browser storage.
 
 The export uses JavaScript Object Notation (JSON) with format `volo1st-icon-settings-v1`, `canvasSize: 512`, and one entry per icon. Each entry contains `scalePercent`, `centerX`, and `centerY`. Apply `scalePercent / 100` as the generator's uniform scale. The two center values map directly to its center coordinates. Browser preview edges can differ slightly from the final area-resampled PNG files.
 
