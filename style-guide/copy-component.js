@@ -2,22 +2,44 @@
   'use strict';
   const api = factory();
   if (typeof module === 'object' && module.exports) module.exports = api;
-  if (root && root.document) api.initialize(root.document, root.navigator && root.navigator.clipboard);
+  if (root && root.document) {
+    const i18n = root.SiteI18n;
+    const controller = api.initialize(root.document, root.navigator && root.navigator.clipboard, {
+      translate: (key, values) => i18n.translate(`guide.copy.${key}`, values),
+      name: source => i18n.translate(source.getAttribute('data-guide-snippet')),
+      localize: source => root.StyleGuideLanguage.localizeSnapshot(source, i18n),
+    });
+    root.document.addEventListener('DOMContentLoaded', controller.refresh);
+    root.addEventListener('site-language-change', controller.refresh);
+  }
 }(typeof globalThis === 'undefined' ? this : globalThis, function () {
   'use strict';
 
-  function prepare(source, prefix) {
+  const messages = {
+    prefixError: 'Use a prefix that starts with a lowercase letter. Use letters, digits, and hyphens.',
+    outside: 'Update these destinations or references: {targets}.',
+    copied: 'HTML copied. Update text, links, and heading levels before use.',
+    earlier: 'The previous language was copied. Copy again for the current language.',
+    fallback: 'Automatic copying is unavailable. The HTML is selected. Copy it manually.',
+  };
+  const fallback = (key, values = {}) => messages[key].replace(/\{(\w+)\}/g, (_, name) => values[name]);
+
+  function prepare(source, prefix, options = {}) {
     if (!/^[a-z][a-z0-9-]*$/.test(prefix)) {
-      throw new Error('Use a prefix that starts with a lowercase letter. Use letters, digits, and hyphens.');
+      throw new Error((options.translate || fallback)('prefixError'));
     }
     const clone = source.cloneNode(true);
+    if (options.localize) options.localize(clone);
     const elements = [clone, ...clone.querySelectorAll('*')];
     const ids = new Map(elements.filter(element => element.id).map(element => [element.id, `${prefix}-${element.id}`]));
     const outside = new Set();
     const domain = source.closest('[data-domain]');
     if (domain) clone.setAttribute('data-domain', domain.getAttribute('data-domain'));
     for (const element of elements) {
-      element.removeAttribute('data-snippet');
+      for (const attribute of ['data-snippet', 'data-i18n', 'data-i18n-aria-label',
+        'data-guide-snippet', 'data-guide-value', 'data-guide-language']) {
+        element.removeAttribute(attribute);
+      }
       for (const name of [...element.classList]) {
         if (name.startsWith('guide-')) element.classList.remove(name);
       }
@@ -43,7 +65,9 @@
     return { html: clone.outerHTML, outside: [...outside] };
   }
 
-  function initialize(document, clipboard) {
+  function initialize(document, clipboard, options = {}) {
+    const translate = options.translate || fallback;
+    let busy = false;
     const panel = document.querySelector('[data-component-copy]');
     if (!panel) return;
     const select = panel.querySelector('[data-component-choice]');
@@ -59,19 +83,21 @@
       return snapshot;
     });
     if (!sources.length) return;
+    const choices = [];
     sources.forEach((source, index) => {
       const option = document.createElement('option');
       option.value = String(index);
       option.textContent = source.getAttribute('data-snippet');
       select.append(option);
+      choices.push(option);
     });
     function update() {
       try {
-        const result = prepare(sources[Number(select.value)], prefix.value);
+        const result = prepare(sources[Number(select.value)], prefix.value, options);
         output.value = result.html;
-        button.disabled = false;
+        button.disabled = busy;
         status.textContent = result.outside.length
-          ? `Update these destinations or references: ${result.outside.join(', ')}.` : '';
+          ? translate('outside', { targets: result.outside.join(', ') }) : '';
       } catch (error) {
         output.value = '';
         button.disabled = true;
@@ -84,24 +110,34 @@
     select.addEventListener('change', update);
     prefix.addEventListener('input', update);
     button.addEventListener('click', async () => {
+      busy = true;
+      const copied = output.value;
       button.disabled = true;
       select.disabled = true;
       prefix.disabled = true;
       try {
         if (!clipboard || !clipboard.writeText) throw new Error('Clipboard unavailable');
-        await clipboard.writeText(output.value);
-        status.textContent = 'HTML copied. Update text, links, and heading levels before use.';
+        await clipboard.writeText(copied);
+        status.textContent = translate(copied === output.value ? 'copied' : 'earlier');
       } catch (error) {
         output.focus();
         output.select();
-        status.textContent = 'Automatic copying is unavailable. The HTML is selected. Copy it manually.';
+        status.textContent = translate('fallback');
       } finally {
+        busy = false;
         button.disabled = false;
         select.disabled = false;
         prefix.disabled = false;
       }
     });
-    update();
+    function refresh() {
+      choices.forEach((choice, index) => {
+        if (options.name) choice.textContent = options.name(sources[index]);
+      });
+      update();
+    }
+    refresh();
+    return { refresh };
   }
   return { prepare, initialize };
 }));

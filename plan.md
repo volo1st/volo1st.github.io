@@ -1449,3 +1449,26 @@ Reviewed the complete diff, all templates, generator paths and writes, component
 Review limits: No browser tool is available. Rendered layout, keyboard use, visible focus, narrow screens, 200 percent zoom, and real clipboard permission behavior remain for manual review. The automated DOM adapter checks copy behavior; it does not replace a browser review. Keep the work local and do not deploy.
 
 Tracker reconciliation: This is the second owner-authorized package. There is no matching actionable Todoist child to complete. The initiative and two deferred tasks remain unchanged. No further work package was selected.
+
+## 39. Separate English and Chinese guide views
+
+Selection on 2 November 2026: The owner requested a language toggle for the style guide. Mixed-language examples do not match the owner's usual reading context. The configured Todoist initiative still has two deferred children and no actionable child. Keep this owner-selected change local.
+
+Purpose and decision before implementation: Use the existing site language preference, language controls, and translation binder. Translate the main guide's headings, labels, prose, example text, accessible names, default sample values, component choices, and copy feedback. Replace paired English/Chinese samples with one translated sample. The language selector itself retains native language names. Technical syntax, file formats, color values, and units remain literal. Translate the guide's example breadcrumbs as part of the requested single-language context; live-site breadcrumb rules do not change.
+
+Preserve field values after user edits, selected options, files, disclosure state, component selection, and the identifier prefix. Translate untouched sample defaults only. Copy authored examples in the selected language, remove guide translation metadata from the export, and retain labels and accessibility references. A language change during an asynchronous clipboard write must report if the copied code is from the previous view. Keep English usable without JavaScript. The separate icon editor and linked specimens remain outside this package.
+
+Engineering review: Reuse the tested native-control and catalog patterns in the repository. Do not duplicate entire page trees or replace live controls during translation. Use text-only translation bindings around inline elements so formatting and labels survive. Keep guide-specific value translation and copy behavior local; shared application translation behavior stays unchanged.
+
+- [x] Add matching English and Simplified Chinese guide catalogs and a working toggle.
+- [x] Preserve edited inputs and update component copying for the selected language.
+- [x] Test language switching, state preservation, translated exports, and copy recovery.
+- [x] Run repository checks and review the complete diff.
+
+Completion evidence on 2 November 2026: `./scripts/check.sh` passed all nine JavaScript test files, eight Python generator tests, and both whitespace checks. Added five focused behavior tests for translated copy choices and exports, language changes during pending copies, translated manual-copy fallback, untouched defaults and edited-value preservation, stored language preference and return switching, native controls inside translated labels, and translated export values and accessible names. Expanded the existing catalog check to include guide snippet names, default values, and page titles. Both catalog key sets match.
+
+Reviewed the complete diff, both catalogs, script loading and event order, preservation of live controls, authored snapshot translation, stripped export metadata, input tracking, and clipboard state. A source audit confirmed balanced markup and 188 text bindings. No text-only binding contains an element that translation would remove. Remaining unbound text consists of language selectors, the site name, format names, units, filenames, and technical syntax. Updated the README for language storage, input preservation, and the scope boundary. Shared styles and the shared translation module are unchanged.
+
+Manual browser rendering, keyboard use, focus, narrow layouts, 200 percent zoom, and real clipboard permissions remain untested because no browser tool is available. No browser tooling was installed. The separate icon editor and linked specimens remain unchanged. Commit locally without pushing or deployment.
+
+Tracker reconciliation: There is no matching actionable child to complete. The initiative and its two deferred tasks remain unchanged.

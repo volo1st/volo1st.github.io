@@ -12,6 +12,7 @@ const i18n = require('../assets/i18n.js');
 require('../tools/guitar-strumming/i18n.js');
 require('../tools/pitch-shifter/i18n.js');
 require('../studio/rates/i18n.js');
+require('../style-guide/i18n.js');
 
 function findHtmlFiles(directory) {
   const files = [];
@@ -502,7 +503,7 @@ test('English and Simplified Chinese translation keys match', () => {
 });
 
 test('all HTML translation keys exist in both catalogs', () => {
-  const attributePattern = /data-i18n(?:-content|-placeholder|-aria-label)?="([^"]+)"/g;
+  const attributePattern = /(?:data-i18n(?:-content|-placeholder|-aria-label|-title)?|data-guide-(?:snippet|value))="([^"]+)"/g;
   for (const htmlFile of findHtmlFiles(repositoryRoot)) {
     const html = fs.readFileSync(htmlFile, 'utf8');
     for (const match of html.matchAll(attributePattern)) {

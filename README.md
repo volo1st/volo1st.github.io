@@ -8,6 +8,8 @@ See [`plan.md`](plan.md) for current actions, product direction, and delivery ph
 
 The [UI style guide](style-guide/) is the visual reference for approved website styles. It groups foundations, controls, content, and page composition. Examples and live pages use `assets/site-shell.css` and `assets/ui.css`. Change a shared component in its shared source and update its guide example together. Keep page composition and specialised displays in local stylesheets. The guide links to specimens for those displays. Review existing uses when a component's markup changes.
 
+Use the guide's language control to view English or Simplified Chinese separately. It uses the existing site language preference. Headings, labels, examples, and copy feedback follow the selected language. Technical syntax and format names stay literal. Native file-control text can follow the browser language. The separate icon editor and linked specimens keep their own text.
+
 The separate [icon adjustment page](style-guide/icons.html#app-icons) contains candidate previews and compact number inputs. Use Copy settings before reloading. Candidates do not replace the installed-app icons. See the [icon notes](assets/app-icons/README.md#local-size-comparison) for regeneration. The [HTML and CSS audit](docs/ui-audit.md) records the original differences.
 
 Open `style-guide/index.html` directly in a browser. It needs no build step or server. Component buttons show static states. Fields and disclosures retain native behavior. Selecting a file does not read or upload it. The guide is public if deployed; `noindex` is not access control.
@@ -94,9 +96,9 @@ Both templates start in English. For a bilingual page, add complete English and 
 
 Open [Copy component](style-guide/#review) in the guide. Select an example and enter an ID prefix. Use a different prefix for each copy on the same page. Select Copy HTML, then paste the markup into the new page. If clipboard access fails, copy the selected text manually. Without JavaScript, copy the example from the page source.
 
-The copy panel uses the example markup. It removes guide-only decoration and preserves shared classes, domain context, labels, and accessibility references. It copies the authored sample, not edits made in the demo fields. It reports fragment links and references whose targets are outside the copied component.
+The copy panel uses the example markup. It removes guide-only decoration and preserves shared classes, domain context, labels, and accessibility references. It copies the authored sample in the selected language, not edits made in the demo fields. Exported markup does not depend on the guide translation catalog. A language change preserves edited fields, selected files, disclosure state, the selected component, and the ID prefix. Untouched sample values follow the selected language. It reports fragment links and references whose targets are outside the copied component.
 
-Update text, link destinations, and heading levels. Connect actions, language controls, and dynamic status messages to application code. Static examples do not provide application behavior. Keep the shared stylesheet links from the page template. Do not copy shared CSS into the page stylesheet. Shared CSS updates reach existing pages; markup updates require a review of existing uses. Copying sends no data and saves no input.
+Update text, link destinations, and heading levels. Connect actions, language controls, and dynamic status messages to application code. Static examples do not provide application behavior. Keep the shared stylesheet links from the page template. Do not copy shared CSS into the page stylesheet. Shared CSS updates reach existing pages; markup updates require a review of existing uses. Copying sends no data and saves no input. The language control uses the existing site language preference in browser storage.
 
 ## Local checks
 

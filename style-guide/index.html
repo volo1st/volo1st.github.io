@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en-AU">
+<html lang="en-AU" data-i18n-title="guide.title">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex">
     <meta name="theme-color" content="#f4f1e8">
-    <meta name="description" content="Shared UI style guide and component examples for volo1st.">
+    <meta name="description" data-i18n-content="guide.description" content="Shared UI style guide and component examples for volo1st.">
     <title>UI style guide | volo1st</title>
     <link rel="icon" href="../assets/favicon.svg?v=fd8de8ff0d96" type="image/svg+xml">
     <link rel="stylesheet" href="../assets/site-shell.css?v=340aa48fa873">
@@ -15,450 +15,418 @@
   <body data-page="style-guide">
     <header class="ui-page-header ui-container guide-header">
       <div class="ui-context-row">
-        <nav class="ui-breadcrumb" aria-label="Breadcrumb">
+        <nav class="ui-breadcrumb" aria-label="Breadcrumb" data-i18n-aria-label="guide.breadcrumb">
           <ol>
             <li><a class="ui-link" href="../">volo1st</a></li>
-            <li><span aria-hidden="true">/</span><span aria-current="page">UI style guide</span></li>
+            <li><span aria-hidden="true">/</span><span aria-current="page" data-i18n="guide.ui-style-guide">UI style guide</span></li>
           </ol>
         </nav>
+        <div class="ui-language ui-language--text" role="group" aria-label="Language" data-i18n-aria-label="common.language">
+          <button class="ui-button ui-button--quiet" type="button" data-language="en-AU" data-disable-current="true" aria-pressed="true" aria-label="Use English" data-i18n-aria-label="common.useEnglish" lang="en" disabled>En</button>
+          <span aria-hidden="true">/</span>
+          <button class="ui-button ui-button--quiet" type="button" data-language="zh-Hans" data-disable-current="true" aria-pressed="false" aria-label="Use Simplified Chinese" data-i18n-aria-label="common.useChinese" lang="zh-Hans">中</button>
+        </div>
       </div>
     </header>
     <main class="site-main guide-main ui-container">
-<header class="guide-intro ui-flow"><h1 class="ui-title">UI style guide</h1>
-<p class="ui-small ui-muted">Approved styles. Examples use the live shared CSS. Buttons and errors show fixed states. Fields and disclosures are usable.</p></header>
-<nav class="guide-nav" aria-label="Style guide sections"><a class="ui-link" href="#foundations">Foundations</a><a class="ui-link" href="#controls">Controls</a><a class="ui-link" href="#content">Content</a><a class="ui-link" href="#pages">Page composition</a></nav>
+<header class="guide-intro ui-flow"><h1 class="ui-title" data-i18n="guide.ui-style-guide">UI style guide</h1>
+<p class="ui-small ui-muted" data-i18n="guide.intro">Approved styles. Examples use the live shared CSS. Buttons and errors show fixed states. Fields and disclosures are usable.</p></header>
+<nav class="guide-nav" aria-label="Style guide sections" data-i18n-aria-label="guide.style-guide-sections"><a class="ui-link" href="#foundations" data-i18n="guide.foundations">Foundations</a><a class="ui-link" href="#controls" data-i18n="guide.controls">Controls</a><a class="ui-link" href="#content" data-i18n="guide.content">Content</a><a class="ui-link" href="#pages" data-i18n="guide.page-composition">Page composition</a></nav>
 <section id="foundations" class="guide-section ui-flow" aria-labelledby="foundations-heading">
-<h2 id="foundations-heading" class="ui-heading">Foundations</h2>
+<h2 id="foundations-heading" class="ui-heading" data-i18n="guide.foundations">Foundations</h2>
 <div id="type" class="guide-grid">
-<div class="guide-sample ui-flow"><h3 class="guide-caption">Type scale</h3>
-<div data-snippet="Type scale" class="ui-flow">
-<p class="ui-title">Page title · 标题</p>
-<p class="ui-heading">Section · 章节</p>
-<p class="ui-subheading">Subsection · 小节</p>
-<p>Body text · 正文 <strong>Bold · 粗体</strong></p>
-<p class="ui-small">Small text · 辅助文字</p>
-<p class="ui-muted">Muted text · 次要文字</p>
-<p class="ui-small ui-muted">Small and muted · 辅助说明</p>
-<p class="ui-fineprint ui-muted ui-muted--soft">Fine print · 补充说明</p>
+<div class="guide-sample ui-flow"><h3 class="guide-caption" data-i18n="guide.type-scale">Type scale</h3>
+<div data-snippet="Type scale" class="ui-flow" data-guide-snippet="guide.type-scale">
+<p class="ui-title" data-i18n="guide.page-title">Page title</p>
+<p class="ui-heading" data-i18n="guide.section">Section</p>
+<p class="ui-subheading" data-i18n="guide.subsection">Subsection</p>
+<p><span data-i18n="guide.body-text">Body text</span> <strong data-i18n="guide.bold">Bold</strong></p>
+<p class="ui-small" data-i18n="guide.small-text">Small text</p>
+<p class="ui-muted" data-i18n="guide.muted-text">Muted text</p>
+<p class="ui-small ui-muted" data-i18n="guide.small-and-muted">Small and muted</p>
+<p class="ui-fineprint ui-muted ui-muted--soft" data-i18n="guide.fine-print">Fine print</p>
 </div>
-</div><div class="guide-sample ui-flow"><h3 class="guide-caption">Fonts</h3>
+</div><div class="guide-sample ui-flow"><h3 class="guide-caption" data-i18n="guide.fonts">Fonts</h3>
 <div class="ui-flow">
-<p class="guide-font-body">Serif · Recordings and rooms.<br><span lang="zh-Hans">录音与房间声学。</span></p>
-<p class="guide-font-control">Controls · Play · Export<br><span lang="zh-Hans">播放 · 导出 · 选择文件</span></p>
-<p class="ui-code">Monospace · tempo: 100<br><span lang="zh-Hans">速度：100</span></p>
+<p class="guide-font-body" data-i18n="guide.serif-recordings-and-rooms">Serif · Recordings and rooms.</p>
+<p class="guide-font-control" data-i18n="guide.controls-play-export">Controls · Play · Export</p>
+<p class="ui-code" data-i18n="guide.monospace-tempo-100">Monospace · tempo: 100</p>
 </div>
 </div></div>
         <div class="guide-swatches">
           <div class="guide-swatch guide-swatch--page">
-            <span>
-              Page
-            </span>
+            <span data-i18n="guide.page">Page</span>
             <code>#f4f1e8</code>
           </div>
           <div class="guide-swatch guide-swatch--panel">
-            <span>
-              Panel
-            </span>
+            <span data-i18n="guide.panel">Panel</span>
             <code>#fffdf7</code>
           </div>
           <div class="guide-swatch guide-swatch--text">
-            <span>
-              Text
-            </span>
+            <span data-i18n="guide.text">Text</span>
             <code>#17202a</code>
           </div>
           <div class="guide-swatch guide-swatch--muted">
-            <span>
-              Muted text
-            </span>
+            <span data-i18n="guide.muted-text">Muted text</span>
             <code>#4a4a43</code>
           </div>
           <div class="guide-swatch guide-swatch--blue">
-            <span>
-              General tools
-            </span>
+            <span data-i18n="guide.general-tools">General tools</span>
             <code>#075a9c</code>
           </div>
           <div class="guide-swatch guide-swatch--green">
-            <span>
-              Music tools
-            </span>
+            <span data-i18n="guide.music-tools">Music tools</span>
             <code>#27644e</code>
           </div>
           <div class="guide-swatch guide-swatch--focus">
-            <span>
-              Keyboard focus
-            </span>
+            <span data-i18n="guide.keyboard-focus">Keyboard focus</span>
             <code>#9b5c00</code>
           </div>
           <div class="guide-swatch guide-swatch--border">
-            <span>
-              Control border
-            </span>
+            <span data-i18n="guide.control-border">Control border</span>
             <code>#777263</code>
           </div>
         </div>
 <div id="layout" class="guide-grid">
-<div class="ui-flow"><h3 class="guide-caption">Width and spacing</h3>
-<p class="ui-small">Page: 48rem maximum · Side space: 1–2rem</p>
+<div class="ui-flow"><h3 class="guide-caption" data-i18n="guide.width-and-spacing">Width and spacing</h3>
+<p class="ui-small" data-i18n="guide.page-48rem-maximum-side-space-1-2rem">Page: 48rem maximum · Side space: 1–2rem</p>
 <div class="guide-space guide-space--1">0.25rem</div>
 <div class="guide-space guide-space--2">0.5rem</div>
 <div class="guide-space guide-space--3">0.75rem</div>
 <div class="guide-space guide-space--4">1rem</div>
 <div class="guide-space guide-space--6">1.5rem</div>
 <div class="guide-space guide-space--8">2rem</div>
-</div><div class="ui-flow"><h3 class="guide-caption">Shape and focus</h3>
-<p class="ui-small">Control radius: 0.4rem · Panel radius: 0.65rem</p>
-<button type="button" class="ui-button">Keyboard focus sample</button>
-<p class="ui-small ui-muted">Use Tab, hover, and press to inspect control states.</p>
+</div><div class="ui-flow"><h3 class="guide-caption" data-i18n="guide.shape-and-focus">Shape and focus</h3>
+<p class="ui-small" data-i18n="guide.control-radius-0-4rem-panel-radius-0-65rem">Control radius: 0.4rem · Panel radius: 0.65rem</p>
+<button type="button" class="ui-button" data-i18n="guide.keyboard-focus-sample">Keyboard focus sample</button>
+<p class="ui-small ui-muted" data-i18n="guide.use-tab-hover-and-press-to-inspect-control-states">Use Tab, hover, and press to inspect control states.</p>
 </div></div>
 </section>
 <section id="controls" class="guide-section ui-flow" aria-labelledby="controls-heading">
-<h2 id="controls-heading" class="ui-heading">Controls</h2>
-<h3 id="actions" class="ui-subheading">Actions</h3>
+<h2 id="controls-heading" class="ui-heading" data-i18n="guide.controls">Controls</h2>
+<h3 id="actions" class="ui-subheading" data-i18n="guide.actions">Actions</h3>
         <div class="guide-grid">
           <div class="guide-sample ui-flow">
-            <h4 class="guide-caption">General / blue accent</h4>
-            <div data-snippet="General buttons" class="ui-actions">
-              <button type="button" class="ui-button ui-button--primary">
-                Primary action
-              </button>
-              <button type="button" class="ui-button">
-                Secondary
-              </button>
-              <button type="button" class="ui-button ui-button--quiet">
-                Quiet action
-              </button>
+            <h4 class="guide-caption" data-i18n="guide.general-blue-accent">General / blue accent</h4>
+            <div data-snippet="General buttons" class="ui-actions" data-guide-snippet="guide.general-buttons">
+              <button type="button" class="ui-button ui-button--primary" data-i18n="guide.primary-action">Primary action</button>
+              <button type="button" class="ui-button" data-i18n="guide.secondary">Secondary</button>
+              <button type="button" class="ui-button ui-button--quiet" data-i18n="guide.quiet-action">Quiet action</button>
             </div>
           </div>
           <div class="guide-sample ui-flow" data-domain="music">
-            <h4 class="guide-caption">Music / green accent</h4>
-            <div data-snippet="Music buttons" class="ui-actions">
-              <button type="button" class="ui-button ui-button--primary">
-                Primary action
-              </button>
-              <button type="button" class="ui-button">
-                Secondary
-              </button>
-              <button type="button" class="ui-button ui-button--quiet">
-                Quiet action
-              </button>
+            <h4 class="guide-caption" data-i18n="guide.music-green-accent">Music / green accent</h4>
+            <div data-snippet="Music buttons" class="ui-actions" data-guide-snippet="guide.music-buttons">
+              <button type="button" class="ui-button ui-button--primary" data-i18n="guide.primary-action">Primary action</button>
+              <button type="button" class="ui-button" data-i18n="guide.secondary">Secondary</button>
+              <button type="button" class="ui-button ui-button--quiet" data-i18n="guide.quiet-action">Quiet action</button>
             </div>
           </div>
           <div class="guide-sample ui-flow">
-            <h4 class="guide-caption">Unavailable and busy</h4>
-            <div data-snippet="Disabled and busy buttons" class="ui-actions">
-              <button type="button" class="ui-button ui-button--primary" disabled>
-                Primary unavailable
-              </button>
-              <button type="button" class="ui-button" disabled>
-                Secondary unavailable
-              </button>
-              <button type="button" class="ui-button" disabled aria-busy="true">
-                Processing…
-              </button>
+            <h4 class="guide-caption" data-i18n="guide.unavailable-and-busy">Unavailable and busy</h4>
+            <div data-snippet="Disabled and busy buttons" class="ui-actions" data-guide-snippet="guide.disabled-and-busy-buttons">
+              <button type="button" class="ui-button ui-button--primary" disabled data-i18n="guide.primary-unavailable">Primary unavailable</button>
+              <button type="button" class="ui-button" disabled data-i18n="guide.secondary-unavailable">Secondary unavailable</button>
+              <button type="button" class="ui-button" disabled aria-busy="true" data-i18n="guide.processing">Processing…</button>
             </div>
           </div>
           <div class="guide-sample ui-flow">
-            <h4 class="guide-caption">Selected, icon, and caution</h4>
-            <div data-snippet="Selected, icon, and danger buttons" class="ui-actions">
-              <button type="button" class="ui-button" aria-pressed="true">
-                Loop
-              </button>
-              <button type="button" class="ui-button" aria-pressed="false">
-                Loop
-              </button>
-              <button type="button" class="ui-button ui-button--icon" aria-label="Play sample">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
+            <h4 class="guide-caption" data-i18n="guide.selected-icon-and-caution">Selected, icon, and caution</h4>
+            <div data-snippet="Selected, icon, and danger buttons" class="ui-actions" data-guide-snippet="guide.selected-icon-and-danger-buttons">
+              <button type="button" class="ui-button" aria-pressed="true" data-i18n="guide.loop">Loop</button>
+              <button type="button" class="ui-button" aria-pressed="false" data-i18n="guide.loop">Loop</button>
+              <button type="button" class="ui-button ui-button--icon" aria-label="Play sample" data-i18n-aria-label="guide.play-sample">
+                <svg viewbox="0 0 24 24" aria-hidden="true">
                   <path d="M7 4v16l14-8z"></path>
                 </svg>
               </button>
-              <button type="button" class="ui-button ui-button--danger">
-                Remove item
-              </button>
+              <button type="button" class="ui-button ui-button--danger" data-i18n="guide.remove-item">Remove item</button>
             </div>
           </div>
           <div class="guide-sample ui-flow" data-domain="music">
-            <h4 class="guide-caption">Long labels and Chinese text</h4>
-            <div data-snippet="Long button labels" class="ui-actions">
-              <button type="button" class="ui-button ui-button--primary">Return to the original arrangement</button>
-              <button type="button" class="ui-button" lang="zh-Hans">选择音频文件</button>
+            <h4 class="guide-caption" data-i18n="guide.long-labels">Long labels</h4>
+            <div data-snippet="Long button labels" class="ui-actions" data-guide-snippet="guide.long-button-labels">
+              <button type="button" class="ui-button ui-button--primary" data-i18n="guide.return-to-the-original-arrangement">Return to the original arrangement</button>
+              <button type="button" class="ui-button" data-i18n="guide.select-an-audio-file">Select an audio file</button>
             </div>
           </div>
         </div>
-<div class="ui-actions" data-snippet="Links">
-<a class="ui-link" href="#foundations">Neutral link</a>
-<a class="ui-link ui-link--accent" href="#foundations">Accent link</a>
-<a class="ui-button ui-button--primary" href="#foundations">Navigation button</a>
+<div class="ui-actions" data-snippet="Links" data-guide-snippet="guide.links">
+<a class="ui-link" href="#foundations" data-i18n="guide.neutral-link">Neutral link</a>
+<a class="ui-link ui-link--accent" href="#foundations" data-i18n="guide.accent-link">Accent link</a>
+<a class="ui-button ui-button--primary" href="#foundations" data-i18n="guide.navigation-button">Navigation button</a>
 </div>
-<h3 id="fields" class="ui-subheading">Fields</h3>
+<h3 id="fields" class="ui-subheading" data-i18n="guide.fields">Fields</h3>
         <div class="guide-sample ui-flow">
-          <h4 class="guide-caption">Alignment comparison</h4>
+          <h4 class="guide-caption" data-i18n="guide.alignment-comparison">Alignment comparison</h4>
           <div class="guide-grid guide-control-comparison">
             <div class="ui-field">
-              <span class="ui-label">Action</span>
-              <button type="button" class="ui-button">Button sample</button>
+              <span class="ui-label" data-i18n="guide.action">Action</span>
+              <button type="button" class="ui-button" data-i18n="guide.button-sample">Button sample</button>
             </div>
-            <div class="ui-field" data-snippet="Field: Choice">
-              <label class="ui-label" for="aligned-select">Choice</label>
-              <select class="ui-select" id="aligned-select"><option>Dropdown sample</option><option>Another option</option></select>
+            <div class="ui-field" data-snippet="Field: Choice" data-guide-snippet="guide.field-choice">
+              <label class="ui-label" for="aligned-select" data-i18n="guide.choice">Choice</label>
+              <select class="ui-select" id="aligned-select"><option data-i18n="guide.dropdown-sample">Dropdown sample</option><option data-i18n="guide.another-option">Another option</option></select>
             </div>
-            <div class="ui-field" data-snippet="Field: Text">
-              <label class="ui-label" for="aligned-text">Text</label>
-              <input class="ui-input" id="aligned-text" type="text" value="Field sample">
+            <div class="ui-field" data-snippet="Field: Text" data-guide-snippet="guide.field-text">
+              <label class="ui-label" for="aligned-text" data-i18n="guide.text">Text</label>
+              <input class="ui-input" id="aligned-text" type="text" value="Field sample" data-guide-value="guide.field-sample">
             </div>
           </div>
         </div>
         <div class="guide-grid">
           <div class="guide-sample ui-stack">
-            <div class="ui-field" data-snippet="Field: Project name">
-              <label class="ui-label" for="example-text">Project name</label>
-              <input class="ui-input" id="example-text" type="text" value="Room study" aria-describedby="example-text-help">
-              <p class="ui-help" id="example-text-help">A short label for this example.</p>
+            <div class="ui-field" data-snippet="Field: Project name" data-guide-snippet="guide.field-project-name">
+              <label class="ui-label" for="example-text" data-i18n="guide.project-name">Project name</label>
+              <input class="ui-input" id="example-text" type="text" value="Room study" aria-describedby="example-text-help" data-guide-value="guide.room-study">
+              <p class="ui-help" id="example-text-help" data-i18n="guide.a-short-label-for-this-example">A short label for this example.</p>
             </div>
-            <div class="ui-field" data-snippet="Field: Tempo, in beats per minute">
-              <label class="ui-label" for="example-number">Tempo, in beats per minute</label>
+            <div class="ui-field" data-snippet="Field: Tempo, in beats per minute" data-guide-snippet="guide.field-tempo-in-beats-per-minute">
+              <label class="ui-label" for="example-number" data-i18n="guide.tempo-in-beats-per-minute">Tempo, in beats per minute</label>
               <input class="ui-input" id="example-number" type="number" min="30" max="300" step="1" value="100">
             </div>
-            <div class="ui-field" data-snippet="Field: Export format">
-              <label class="ui-label" for="example-select">Export format</label>
+            <div class="ui-field" data-snippet="Field: Export format" data-guide-snippet="guide.field-export-format">
+              <label class="ui-label" for="example-select" data-i18n="guide.export-format">Export format</label>
               <select class="ui-select" id="example-select">
                 <option>WAV</option>
                 <option>MP3 · 320 kbit/s</option>
-                <option>A longer option to check available space</option>
+                <option data-i18n="guide.a-longer-option-to-check-available-space">A longer option to check available space</option>
               </select>
             </div>
-            <div class="ui-field" data-snippet="Field: Level">
-              <label class="ui-label" for="example-range">Level</label>
+            <div class="ui-field" data-snippet="Field: Level" data-guide-snippet="guide.field-level">
+              <label class="ui-label" for="example-range" data-i18n="guide.level">Level</label>
               <input class="ui-range" id="example-range" type="range" min="0" max="100" value="42">
-              <p class="ui-help">Use arrow keys to change the value.</p>
+              <p class="ui-help" data-i18n="guide.use-arrow-keys-to-change-the-value">Use arrow keys to change the value.</p>
             </div>
           </div>
           <div class="guide-sample ui-stack" data-domain="music">
-            <div class="ui-field" data-snippet="Field: Project name · invalid state">
-              <label class="ui-label" for="example-invalid">Project name · invalid state</label>
+            <div class="ui-field" data-snippet="Field: Project name · invalid state" data-guide-snippet="guide.field-project-name-invalid-state">
+              <label class="ui-label" for="example-invalid" data-i18n="guide.project-name-invalid-state">Project name · invalid state</label>
               <input class="ui-input" id="example-invalid" type="text" value="" aria-invalid="true" aria-describedby="example-invalid-help">
-              <p id="example-invalid-help" class="ui-help ui-help--error">Enter a project name.</p>
+              <p id="example-invalid-help" class="ui-help ui-help--error" data-i18n="guide.enter-a-project-name">Enter a project name.</p>
             </div>
-            <div class="ui-field" data-snippet="Field: Read-only result">
-              <label class="ui-label" for="example-readonly">Read-only result</label>
-              <input class="ui-input ui-code" id="example-readonly" type="text" value="Example result" readonly>
+            <div class="ui-field" data-snippet="Field: Read-only result" data-guide-snippet="guide.field-read-only-result">
+              <label class="ui-label" for="example-readonly" data-i18n="guide.read-only-result">Read-only result</label>
+              <input class="ui-input ui-code" id="example-readonly" type="text" value="Example result" readonly data-guide-value="guide.example-result">
             </div>
-            <div class="ui-field" data-snippet="Field: Unavailable format">
-              <label class="ui-label" for="example-disabled">Unavailable format</label>
+            <div class="ui-field" data-snippet="Field: Unavailable format" data-guide-snippet="guide.field-unavailable-format">
+              <label class="ui-label" for="example-disabled" data-i18n="guide.unavailable-format">Unavailable format</label>
               <select class="ui-select" id="example-disabled" disabled>
-                <option>Select a file first</option>
+                <option data-i18n="guide.select-a-file-first">Select a file first</option>
               </select>
             </div>
-            <div class="ui-field" data-snippet="Field: Music accent">
-              <label class="ui-label" for="example-music-range">Music accent</label>
+            <div class="ui-field" data-snippet="Field: Music accent" data-guide-snippet="guide.field-music-accent">
+              <label class="ui-label" for="example-music-range" data-i18n="guide.music-accent">Music accent</label>
               <input class="ui-range" id="example-music-range" type="range" min="30" max="300" value="100">
             </div>
-            <div class="ui-field" data-snippet="Field: Unavailable slider">
-              <label class="ui-label" for="example-disabled-range">Unavailable slider</label>
+            <div class="ui-field" data-snippet="Field: Unavailable slider" data-guide-snippet="guide.field-unavailable-slider">
+              <label class="ui-label" for="example-disabled-range" data-i18n="guide.unavailable-slider">Unavailable slider</label>
               <input class="ui-range" id="example-disabled-range" type="range" min="0" max="100" value="0" disabled>
             </div>
           </div>
           <div class="guide-sample ui-stack">
-            <div class="ui-field" data-snippet="Field: Source text">
-              <label class="ui-label" for="example-source">Source text</label>
+            <div class="ui-field" data-snippet="Field: Source text" data-guide-snippet="guide.field-source-text">
+              <label class="ui-label" for="example-source" data-i18n="guide.source-text">Source text</label>
               <textarea class="ui-textarea ui-code" id="example-source" rows="4" spellcheck="false" aria-describedby="example-source-help">tempo: 100
 chords: C Am F G</textarea>
-              <p id="example-source-help" class="ui-help">This field does not change an arrangement.</p>
+              <p id="example-source-help" class="ui-help" data-i18n="guide.this-field-does-not-change-an-arrangement">This field does not change an arrangement.</p>
             </div>
-            <div class="ui-field" data-snippet="Field: File control">
-              <label class="ui-label" for="example-file">File control</label>
+            <div class="ui-field" data-snippet="Field: File control" data-guide-snippet="guide.field-file-control">
+              <label class="ui-label" for="example-file" data-i18n="guide.file-control">File control</label>
               <input class="ui-file" id="example-file" type="file" aria-describedby="example-file-help">
-              <p class="ui-help" id="example-file-help">No file is read, uploaded, or converted by this guide.</p>
+              <p class="ui-help" id="example-file-help" data-i18n="guide.no-file-is-read-uploaded-or-converted-by-this-guide">No file is read, uploaded, or converted by this guide.</p>
             </div>
           </div>
           <div class="guide-sample ui-stack">
-            <div class="ui-field" data-snippet="Field: 项目名称">
-              <label class="ui-label" for="example-chinese" lang="zh-Hans">项目名称</label>
-              <input class="ui-input" id="example-chinese" type="text" value="房间声学示例" lang="zh-Hans">
-              <p class="ui-help" lang="zh-Hans">输入简短的项目名称。</p>
+            <div class="ui-field" data-snippet="Field: Long project name" data-guide-snippet="guide.field-long-project-name">
+              <label class="ui-label" for="example-chinese" data-i18n="guide.long-project-name">Long project name</label>
+              <input class="ui-input" id="example-chinese" type="text" value="A project name that can fill the available width" data-guide-value="guide.a-project-name-that-can-fill-the-available-width">
+              <p class="ui-help" data-i18n="guide.enter-a-short-project-name">Enter a short project name.</p>
             </div>
-            <fieldset class="ui-group" data-snippet="Checkboxes and radio buttons">
-              <legend class="ui-label">Related options</legend>
-              <label class="ui-choice"><input type="checkbox" checked> Include a count-in</label>
-              <label class="ui-choice"><input type="radio" name="sample-mode" value="original" checked> Original</label>
-              <label class="ui-choice"><input type="radio" name="sample-mode" value="preview"> Preview</label>
-              <label class="ui-choice"><input type="checkbox" checked disabled> Unavailable option</label>
+            <fieldset class="ui-group" data-snippet="Checkboxes and radio buttons" data-guide-snippet="guide.checkboxes-and-radio-buttons">
+              <legend class="ui-label" data-i18n="guide.related-options">Related options</legend>
+              <label class="ui-choice"><input type="checkbox" checked> <span data-i18n="guide.include-a-count-in">Include a count-in</span></label>
+              <label class="ui-choice"><input type="radio" name="sample-mode" value="original" checked> <span data-i18n="guide.original">Original</span></label>
+              <label class="ui-choice"><input type="radio" name="sample-mode" value="preview"> <span data-i18n="guide.preview">Preview</span></label>
+              <label class="ui-choice"><input type="checkbox" checked disabled> <span data-i18n="guide.unavailable-option">Unavailable option</span></label>
             </fieldset>
           </div>
           <div class="guide-sample ui-stack">
-            <h4 class="guide-caption">Select and textarea states</h4>
-            <div class="ui-field" data-snippet="Field: Format · invalid state">
-              <label class="ui-label" for="example-invalid-select">Format · invalid state</label>
+            <h4 class="guide-caption" data-i18n="guide.select-and-textarea-states">Select and textarea states</h4>
+            <div class="ui-field" data-snippet="Field: Format · invalid state" data-guide-snippet="guide.field-format-invalid-state">
+              <label class="ui-label" for="example-invalid-select" data-i18n="guide.format-invalid-state">Format · invalid state</label>
               <select class="ui-select" id="example-invalid-select" aria-invalid="true" aria-describedby="example-invalid-select-help">
-                <option value="">Choose a format</option><option>WAV</option><option>MP3</option>
+                <option value="" data-i18n="guide.choose-a-format">Choose a format</option><option>WAV</option><option>MP3</option>
               </select>
-              <p id="example-invalid-select-help" class="ui-help ui-help--error">Select an output format.</p>
+              <p id="example-invalid-select-help" class="ui-help ui-help--error" data-i18n="guide.select-an-output-format">Select an output format.</p>
             </div>
-            <div class="ui-field" data-snippet="Field: Source · invalid state">
-              <label class="ui-label" for="example-invalid-source">Source · invalid state</label>
+            <div class="ui-field" data-snippet="Field: Source · invalid state" data-guide-snippet="guide.field-source-invalid-state">
+              <label class="ui-label" for="example-invalid-source" data-i18n="guide.source-invalid-state">Source · invalid state</label>
               <textarea class="ui-textarea ui-code" id="example-invalid-source" rows="3" aria-invalid="true" aria-describedby="example-invalid-source-help">tempo:</textarea>
-              <p id="example-invalid-source-help" class="ui-help ui-help--error">Enter a tempo value.</p>
+              <p id="example-invalid-source-help" class="ui-help ui-help--error" data-i18n="guide.enter-a-tempo-value">Enter a tempo value.</p>
             </div>
-            <div class="ui-field" data-snippet="Field: Read-only source">
-              <label class="ui-label" for="example-readonly-source">Read-only source</label>
+            <div class="ui-field" data-snippet="Field: Read-only source" data-guide-snippet="guide.field-read-only-source">
+              <label class="ui-label" for="example-readonly-source" data-i18n="guide.read-only-source">Read-only source</label>
               <textarea class="ui-textarea ui-code" id="example-readonly-source" rows="3" readonly>tempo: 100
 chords: C Am F G</textarea>
             </div>
           </div>
           <div class="guide-sample ui-stack">
-            <h4 class="guide-caption">Unavailable fields</h4>
-            <div class="ui-field" data-snippet="Field: Unavailable text field">
-              <label class="ui-label" for="example-disabled-text">Unavailable text field</label>
-              <input class="ui-input" id="example-disabled-text" type="text" value="Select an example first" disabled>
+            <h4 class="guide-caption" data-i18n="guide.unavailable-fields">Unavailable fields</h4>
+            <div class="ui-field" data-snippet="Field: Unavailable text field" data-guide-snippet="guide.field-unavailable-text-field">
+              <label class="ui-label" for="example-disabled-text" data-i18n="guide.unavailable-text-field">Unavailable text field</label>
+              <input class="ui-input" id="example-disabled-text" type="text" value="Select an example first" disabled data-guide-value="guide.select-an-example-first">
             </div>
-            <div class="ui-field" data-snippet="Field: Unavailable source">
-              <label class="ui-label" for="example-disabled-source">Unavailable source</label>
-              <textarea class="ui-textarea ui-code" id="example-disabled-source" rows="3" disabled>Source is unavailable.</textarea>
+            <div class="ui-field" data-snippet="Field: Unavailable source" data-guide-snippet="guide.field-unavailable-source">
+              <label class="ui-label" for="example-disabled-source" data-i18n="guide.unavailable-source">Unavailable source</label>
+              <textarea class="ui-textarea ui-code" id="example-disabled-source" rows="3" disabled data-guide-value="guide.source-is-unavailable">Source is unavailable.</textarea>
             </div>
-            <div class="ui-field" data-snippet="Field: Unavailable file control">
-              <label class="ui-label" for="example-disabled-file">Unavailable file control</label>
+            <div class="ui-field" data-snippet="Field: Unavailable file control" data-guide-snippet="guide.field-unavailable-file-control">
+              <label class="ui-label" for="example-disabled-file" data-i18n="guide.unavailable-file-control">Unavailable file control</label>
               <input class="ui-file" id="example-disabled-file" type="file" disabled>
             </div>
           </div>
         </div>
 </section>
 <section id="content" class="guide-section ui-flow" aria-labelledby="content-heading">
-<h2 id="content-heading" class="ui-heading">Content</h2>
-<h3 id="notices" class="ui-subheading">Notices</h3>
+<h2 id="content-heading" class="ui-heading" data-i18n="guide.content">Content</h2>
+<h3 id="notices" class="ui-subheading" data-i18n="guide.notices">Notices</h3>
         <div class="guide-grid">
-          <aside data-snippet="Notice: info" class="ui-notice ui-flow" aria-labelledby="notice-info">
-            <h4 id="notice-info" class="ui-subheading ui-notice__title">Information</h4>
-            <p>Select an example to continue.</p>
+          <aside data-snippet="Notice: info" class="ui-notice ui-flow" aria-labelledby="notice-info" data-guide-snippet="guide.notice-info">
+            <h4 id="notice-info" class="ui-subheading ui-notice__title" data-i18n="guide.information">Information</h4>
+            <p data-i18n="guide.select-an-example-to-continue">Select an example to continue.</p>
           </aside>
-          <aside data-snippet="Notice: success" class="ui-notice ui-flow" data-tone="success" aria-labelledby="notice-success">
-            <h4 id="notice-success" class="ui-subheading ui-notice__title">Success</h4>
-            <p>The example is ready to review.</p>
+          <aside data-snippet="Notice: success" class="ui-notice ui-flow" data-tone="success" aria-labelledby="notice-success" data-guide-snippet="guide.notice-success">
+            <h4 id="notice-success" class="ui-subheading ui-notice__title" data-i18n="guide.success">Success</h4>
+            <p data-i18n="guide.the-example-is-ready-to-review">The example is ready to review.</p>
           </aside>
-          <aside data-snippet="Notice: warning" class="ui-notice ui-flow" data-tone="warning" aria-labelledby="notice-warning">
-            <h4 id="notice-warning" class="ui-subheading ui-notice__title">Warning</h4>
-            <p>Review the source before you continue.</p>
+          <aside data-snippet="Notice: warning" class="ui-notice ui-flow" data-tone="warning" aria-labelledby="notice-warning" data-guide-snippet="guide.notice-warning">
+            <h4 id="notice-warning" class="ui-subheading ui-notice__title" data-i18n="guide.warning">Warning</h4>
+            <p data-i18n="guide.review-the-source-before-you-continue">Review the source before you continue.</p>
           </aside>
-          <aside data-snippet="Notice: error" class="ui-notice ui-flow" data-tone="error" aria-labelledby="notice-error">
-            <h4 id="notice-error" class="ui-subheading ui-notice__title">Error</h4>
-            <p>Correct these two sample fields.</p>
+          <aside data-snippet="Notice: error" class="ui-notice ui-flow" data-tone="error" aria-labelledby="notice-error" data-guide-snippet="guide.notice-error">
+            <h4 id="notice-error" class="ui-subheading ui-notice__title" data-i18n="guide.error">Error</h4>
+            <p data-i18n="guide.correct-these-two-sample-fields">Correct these two sample fields.</p>
             <ul>
-              <li><a class="ui-link" href="#example-invalid">Enter a project name.</a></li>
-              <li><a class="ui-link" href="#example-invalid-select">Select an output format.</a></li>
+              <li><a class="ui-link" href="#example-invalid" data-i18n="guide.enter-a-project-name">Enter a project name.</a></li>
+              <li><a class="ui-link" href="#example-invalid-select" data-i18n="guide.select-an-output-format">Select an output format.</a></li>
             </ul>
           </aside>
         </div>
 
-<aside data-snippet="Dismissible notice" class="ui-notice ui-flow" data-tone="success" aria-labelledby="dismiss-title">
-<div class="ui-notice__row"><div class="ui-flow"><h4 id="dismiss-title" class="ui-subheading ui-notice__title">Dismissible notice</h4><p lang="zh-Hans">示例已准备好，可以查看。</p></div>
-<button type="button" class="ui-button ui-button--quiet ui-button--icon" aria-label="Dismiss sample notice">×</button></div>
+<aside data-snippet="Dismissible notice" class="ui-notice ui-flow" data-tone="success" aria-labelledby="dismiss-title" data-guide-snippet="guide.dismissible-notice">
+<div class="ui-notice__row"><div class="ui-flow"><h4 id="dismiss-title" class="ui-subheading ui-notice__title" data-i18n="guide.dismissible-notice">Dismissible notice</h4><p data-i18n="guide.the-example-is-ready-to-review">The example is ready to review.</p></div>
+<button type="button" class="ui-button ui-button--quiet ui-button--icon" aria-label="Dismiss sample notice" data-i18n-aria-label="guide.dismiss-sample-notice">×</button></div>
 </aside>
-<h3 id="patterns" class="ui-subheading">Surfaces and disclosures</h3>
+<h3 id="patterns" class="ui-subheading" data-i18n="guide.surfaces-and-disclosures">Surfaces and disclosures</h3>
 <div class="guide-grid">
-<div data-snippet="Plain content" class="ui-flow"><h4 class="ui-subheading">Plain content</h4><p>A paragraph with <strong>emphasis</strong> and a <a class="ui-link" href="#foundations">link</a>.</p><ul><li>First item</li><li>Second item</li></ul><hr class="ui-divider"><p class="ui-small ui-muted">Supporting text after a divider.</p></div>
-<div data-snippet="Panel" class="ui-panel ui-flow"><h4 class="ui-subheading">Panel</h4><p>Related content shares one boundary.</p><p lang="zh-Hans">相关内容使用同一个边框。</p></div>
-<details data-snippet="Closed disclosure" class="ui-disclosure"><summary>Closed disclosure</summary><div class="ui-disclosure__body ui-flow"><p>Additional information.</p></div></details>
-<details data-snippet="Open disclosure" class="ui-disclosure" open><summary>Open disclosure with a longer label · 更多说明</summary><div class="ui-disclosure__body ui-flow"><p>Additional information.</p><p lang="zh-Hans">这里显示补充说明。</p></div></details>
+<div data-snippet="Plain content" class="ui-flow" data-guide-snippet="guide.plain-content"><h4 class="ui-subheading" data-i18n="guide.plain-content">Plain content</h4><p><span data-i18n="guide.a-paragraph-with">A paragraph with</span> <strong data-i18n="guide.emphasis">emphasis</strong> <span data-i18n="guide.and-a">and a</span> <a class="ui-link" href="#foundations" data-i18n="guide.link">link</a>.</p><ul><li data-i18n="guide.first-item">First item</li><li data-i18n="guide.second-item">Second item</li></ul><hr class="ui-divider"><p class="ui-small ui-muted" data-i18n="guide.supporting-text-after-a-divider">Supporting text after a divider.</p></div>
+<div data-snippet="Panel" class="ui-panel ui-flow" data-guide-snippet="guide.panel"><h4 class="ui-subheading" data-i18n="guide.panel">Panel</h4><p data-i18n="guide.related-content-shares-one-boundary">Related content shares one boundary.</p></div>
+<details data-snippet="Closed disclosure" class="ui-disclosure" data-guide-snippet="guide.closed-disclosure"><summary data-i18n="guide.closed-disclosure">Closed disclosure</summary><div class="ui-disclosure__body ui-flow"><p data-i18n="guide.additional-information">Additional information.</p></div></details>
+<details data-snippet="Open disclosure" class="ui-disclosure" open data-guide-snippet="guide.open-disclosure"><summary data-i18n="guide.open-disclosure-with-a-longer-label">Open disclosure with a longer label</summary><div class="ui-disclosure__body ui-flow"><p data-i18n="guide.additional-information">Additional information.</p></div></details>
 </div>
-<h3 id="data" class="ui-subheading">Values and tables</h3>
-<dl data-snippet="Summary values" class="ui-metrics"><div><dt>Duration</dt><dd>3:20</dd></div><div><dt>Output files</dt><dd>0</dd></div><div><dt>Output duration</dt><dd>Not available</dd></div><div><dt lang="zh-Hans">源文件</dt><dd class="ui-code">recording-with-a-long-source-name.wav</dd></div></dl>
-<div data-snippet="Plain table" class="ui-table-scroll" tabindex="0" role="region" aria-labelledby="plain-caption">
-<table class="ui-table"><caption id="plain-caption">Plain table · Invented data · Duration in minutes and seconds</caption>
-<thead><tr><th scope="col" class="ui-table__text">File</th><th scope="col" class="ui-table__number">Duration</th><th scope="col">State</th></tr></thead>
-<tbody><tr><th scope="row" class="ui-table__text"><code class="ui-code">recording-with-a-long-source-name.wav</code></th><td class="ui-table__number">3:20</td><td>Ready</td></tr>
-<tr><th scope="row" class="ui-table__text" lang="zh-Hans">房间录音.wav</th><td class="ui-table__number">0:00</td><td>Empty</td></tr></tbody>
-<tfoot><tr><th scope="row">Total</th><td class="ui-table__number">3:20</td><td>1 ready</td></tr></tfoot></table></div>
-<div data-snippet="Striped table" class="ui-table-scroll" tabindex="0" role="region" aria-labelledby="striped-caption">
-<table class="ui-table ui-table--striped"><caption id="striped-caption">Striped table · Invented data · Duration in minutes and seconds</caption>
-<thead><tr><th scope="col" class="ui-table__text">File</th><th scope="col" class="ui-table__number">Duration</th><th scope="col">State</th></tr></thead>
-<tbody><tr><th scope="row" class="ui-table__text"><code class="ui-code">recording-with-a-long-source-name.wav</code></th><td class="ui-table__number">3:20</td><td>Ready</td></tr>
-<tr><th scope="row" class="ui-table__text" lang="zh-Hans">房间录音.wav</th><td class="ui-table__number">0:00</td><td>Empty</td></tr></tbody>
-<tfoot><tr><th scope="row">Total</th><td class="ui-table__number">3:20</td><td>1 ready</td></tr></tfoot></table></div>
-<div data-snippet="Empty state" class="ui-panel ui-flow"><h4 class="ui-subheading">No output files</h4><p>Select a source file to continue.</p></div>
+<h3 id="data" class="ui-subheading" data-i18n="guide.values-and-tables">Values and tables</h3>
+<dl data-snippet="Summary values" class="ui-metrics" data-guide-snippet="guide.summary-values"><div><dt data-i18n="guide.duration">Duration</dt><dd>3:20</dd></div><div><dt data-i18n="guide.output-files">Output files</dt><dd>0</dd></div><div><dt data-i18n="guide.output-duration">Output duration</dt><dd data-i18n="guide.not-available">Not available</dd></div><div><dt data-i18n="guide.source-file">Source file</dt><dd class="ui-code">recording-with-a-long-source-name.wav</dd></div></dl>
+<div data-snippet="Plain table" class="ui-table-scroll" tabindex="0" role="region" aria-labelledby="plain-caption" data-guide-snippet="guide.plain-table">
+<table class="ui-table"><caption id="plain-caption" data-i18n="guide.tableCaption">Plain table · Invented data · Duration in minutes and seconds</caption>
+<thead><tr><th scope="col" class="ui-table__text" data-i18n="guide.file">File</th><th scope="col" class="ui-table__number" data-i18n="guide.duration">Duration</th><th scope="col" data-i18n="guide.state">State</th></tr></thead>
+<tbody><tr><th scope="row" class="ui-table__text"><code class="ui-code">recording-with-a-long-source-name.wav</code></th><td class="ui-table__number">3:20</td><td data-i18n="guide.ready">Ready</td></tr>
+<tr><th scope="row" class="ui-table__text">room-recording.wav</th><td class="ui-table__number">0:00</td><td data-i18n="guide.empty">Empty</td></tr></tbody>
+<tfoot><tr><th scope="row" data-i18n="guide.total">Total</th><td class="ui-table__number">3:20</td><td data-i18n="guide.1-ready">1 ready</td></tr></tfoot></table></div>
+<div data-snippet="Striped table" class="ui-table-scroll" tabindex="0" role="region" aria-labelledby="striped-caption" data-guide-snippet="guide.striped-table">
+<table class="ui-table ui-table--striped"><caption id="striped-caption" data-i18n="guide.stripedTableCaption">Striped table · Invented data · Duration in minutes and seconds</caption>
+<thead><tr><th scope="col" class="ui-table__text" data-i18n="guide.file">File</th><th scope="col" class="ui-table__number" data-i18n="guide.duration">Duration</th><th scope="col" data-i18n="guide.state">State</th></tr></thead>
+<tbody><tr><th scope="row" class="ui-table__text"><code class="ui-code">recording-with-a-long-source-name.wav</code></th><td class="ui-table__number">3:20</td><td data-i18n="guide.ready">Ready</td></tr>
+<tr><th scope="row" class="ui-table__text">room-recording.wav</th><td class="ui-table__number">0:00</td><td data-i18n="guide.empty">Empty</td></tr></tbody>
+<tfoot><tr><th scope="row" data-i18n="guide.total">Total</th><td class="ui-table__number">3:20</td><td data-i18n="guide.1-ready">1 ready</td></tr></tfoot></table></div>
+<div data-snippet="Empty state" class="ui-panel ui-flow" data-guide-snippet="guide.empty-state"><h4 class="ui-subheading" data-i18n="guide.no-output-files">No output files</h4><p data-i18n="guide.select-a-source-file-to-continue">Select a source file to continue.</p></div>
 </section>
-<section id="pages" class="guide-section ui-flow" aria-labelledby="pages-heading"><h2 id="pages-heading" class="ui-heading">Page composition</h2>
-<h3 id="headers" class="ui-subheading">Headers</h3>
+<section id="pages" class="guide-section ui-flow" aria-labelledby="pages-heading"><h2 id="pages-heading" class="ui-heading" data-i18n="guide.page-composition">Page composition</h2>
+<h3 id="headers" class="ui-subheading" data-i18n="guide.headers">Headers</h3>
         <div class="guide-grid">
           <div class="guide-sample ui-flow">
-            <h3 class="guide-caption">Reading page / quiet language choice</h3>
-            <div class="ui-page-header" data-snippet="Reading header">
+            <h3 class="guide-caption" data-i18n="guide.reading-page-quiet-language-choice">Reading page / quiet language choice</h3>
+            <div class="ui-page-header" data-snippet="Reading header" data-guide-snippet="guide.reading-header">
               <div class="ui-context-row">
-                <nav class="ui-breadcrumb" aria-label="Reading page breadcrumb sample" lang="en-AU">
+                <nav class="ui-breadcrumb" aria-label="Reading page breadcrumb sample" data-i18n-aria-label="guide.reading-page-breadcrumb-sample">
                   <ol>
                     <li><a class="ui-link" href="../">volo1st</a></li>
-                    <li><span aria-hidden="true">/</span><a class="ui-link" href="../studio/">Studio</a></li>
-                    <li><span aria-hidden="true">/</span><span aria-current="page">Rates</span></li>
+                    <li><span aria-hidden="true">/</span><a class="ui-link" href="../studio/" data-i18n="guide.studio">Studio</a></li>
+                    <li><span aria-hidden="true">/</span><span aria-current="page" data-i18n="guide.rates">Rates</span></li>
                   </ol>
                 </nav>
-                <div class="ui-language ui-language--text" role="group" aria-label="Reading page language samples">
-                  <button class="ui-button ui-button--quiet" type="button" aria-pressed="true" disabled aria-label="English language sample" lang="en">En</button>
+                <div class="ui-language ui-language--text" role="group" aria-label="Reading page language samples" data-i18n-aria-label="guide.reading-page-language-samples">
+                  <button class="ui-button ui-button--quiet" type="button" aria-pressed="true" disabled data-guide-language="en-AU" aria-label="English language sample" lang="en" data-i18n-aria-label="guide.english-language-sample">En</button>
                   <span aria-hidden="true">/</span>
-                  <button class="ui-button ui-button--quiet" type="button" aria-pressed="false" aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
+                  <button class="ui-button ui-button--quiet" type="button" aria-pressed="false" data-guide-language="zh-Hans" aria-label="Simplified Chinese language sample" lang="zh-Hans" data-i18n-aria-label="guide.simplified-chinese-language-sample">中</button>
                 </div>
               </div>
               <div class="ui-flow">
-                <h4 class="ui-title">Studio rates and session information</h4>
-                <p>Session information and rates.</p>
+                <h4 class="ui-title" data-i18n="guide.studio-rates-and-session-information">Studio rates and session information</h4>
+                <p data-i18n="guide.session-information-and-rates">Session information and rates.</p>
               </div>
             </div>
           </div>
           <div class="guide-sample ui-flow">
-            <h3 class="guide-caption">Narrow tool / Chinese selected</h3>
-            <div class="ui-page-header ui-tool-header guide-narrow-header guide-mobile-header" data-snippet="Tool header">
+            <h3 class="guide-caption" data-i18n="guide.narrow-tool-language-choice">Narrow tool / language choice</h3>
+            <div class="ui-page-header ui-tool-header guide-narrow-header guide-mobile-header" data-snippet="Tool header" data-guide-snippet="guide.tool-header">
               <div class="ui-context-row">
-                <nav class="ui-breadcrumb" aria-label="Tool breadcrumb sample" lang="en-AU">
+                <nav class="ui-breadcrumb" aria-label="Tool breadcrumb sample" data-i18n-aria-label="guide.tool-breadcrumb-sample">
                   <ol>
-                    <li><span aria-hidden="true">←</span><a class="ui-link" href="../tools/">Tools</a></li>
-                    <li><span aria-hidden="true">/</span><span aria-current="page">Guitar strum machine</span></li>
+                    <li><span aria-hidden="true">←</span><a class="ui-link" href="../tools/" data-i18n="guide.tools">Tools</a></li>
+                    <li><span aria-hidden="true">/</span><span aria-current="page" data-i18n="guide.guitar-strum-machine">Guitar strum machine</span></li>
                   </ol>
                 </nav>
-                <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="Tool language samples">
-                  <button class="ui-button" type="button" aria-pressed="false" aria-label="English language sample" lang="en">En</button>
-                  <button class="ui-button" type="button" aria-pressed="true" disabled aria-label="Simplified Chinese language sample" lang="zh-Hans">中</button>
+                <div class="ui-button-group ui-language ui-language--tool" role="group" aria-label="Tool language samples" data-i18n-aria-label="guide.tool-language-samples">
+                  <button class="ui-button" type="button" aria-pressed="true" disabled data-guide-language="en-AU" aria-label="English language sample" lang="en" data-i18n-aria-label="guide.english-language-sample">En</button>
+                  <button class="ui-button" type="button" aria-pressed="false" data-guide-language="zh-Hans" aria-label="Simplified Chinese language sample" lang="zh-Hans" data-i18n-aria-label="guide.simplified-chinese-language-sample">中</button>
                 </div>
               </div>
-              <h4 class="ui-visually-hidden">Guitar strum machine</h4>
+              <h4 class="ui-visually-hidden" data-i18n="guide.guitar-strum-machine">Guitar strum machine</h4>
 
             </div>
           </div>
         </div>
 
-<h3 id="app-icons" class="ui-subheading">Approved icons</h3>
+<h3 id="app-icons" class="ui-subheading" data-i18n="guide.approved-icons">Approved icons</h3>
 <div class="guide-icon-list">
-<figure><img src="../assets/app-icons/guitar-strum-machine-512.png?v=9553c477ff76" width="64" height="64" alt=""><figcaption class="ui-small">Guitar strum machine</figcaption></figure>
-<figure><img src="../assets/app-icons/metronome-512.png?v=72dd41b425f9" width="64" height="64" alt=""><figcaption class="ui-small">Metronome</figcaption></figure>
-<figure><img src="../assets/app-icons/tuner-512.png?v=1823c441a2b1" width="64" height="64" alt=""><figcaption class="ui-small">Tuner</figcaption></figure>
-<figure><img src="../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93" width="64" height="64" alt=""><figcaption class="ui-small">Pitch shifter</figcaption></figure>
-</div><p><a class="ui-link" href="./icons.html#app-icons">Open icon adjustment and candidates</a></p>
-<h3 id="current" class="ui-subheading">Page specimens</h3>
-<ul><li><a class="ui-link" href="./public.html">Public pages · Homepage greeting and section links</a></li>
-<li><a class="ui-link" href="./studio.html">Studio · Service rows and notes</a></li>
-<li><a class="ui-link" href="./converter.html">CSV to ABA converter · Fields and errors</a></li>
-<li><a class="ui-link" href="./guitar.html">Guitar strum machine · Chord display</a></li>
-<li><a class="ui-link" href="./pitch.html">Pitch shifter · Audio controls</a></li></ul>
+<figure><img src="../assets/app-icons/guitar-strum-machine-512.png?v=9553c477ff76" width="64" height="64" alt=""><figcaption class="ui-small" data-i18n="guide.guitar-strum-machine">Guitar strum machine</figcaption></figure>
+<figure><img src="../assets/app-icons/metronome-512.png?v=72dd41b425f9" width="64" height="64" alt=""><figcaption class="ui-small" data-i18n="guide.metronome">Metronome</figcaption></figure>
+<figure><img src="../assets/app-icons/tuner-512.png?v=1823c441a2b1" width="64" height="64" alt=""><figcaption class="ui-small" data-i18n="guide.tuner">Tuner</figcaption></figure>
+<figure><img src="../assets/app-icons/pitch-key-512.png?v=ad9eaa614b93" width="64" height="64" alt=""><figcaption class="ui-small" data-i18n="guide.pitch-shifter">Pitch shifter</figcaption></figure>
+</div><p><a class="ui-link" href="./icons.html#app-icons" data-i18n="guide.open-icon-adjustment-and-candidates">Open icon adjustment and candidates</a></p>
+<h3 id="current" class="ui-subheading" data-i18n="guide.page-specimens">Page specimens</h3>
+<ul><li><a class="ui-link" href="./public.html" data-i18n="guide.public-pages-homepage-greeting-and-section-links">Public pages · Homepage greeting and section links</a></li>
+<li><a class="ui-link" href="./studio.html" data-i18n="guide.studio-service-rows-and-notes">Studio · Service rows and notes</a></li>
+<li><a class="ui-link" href="./converter.html" data-i18n="guide.csv-to-aba-converter-fields-and-errors">CSV to ABA converter · Fields and errors</a></li>
+<li><a class="ui-link" href="./guitar.html" data-i18n="guide.guitar-strum-machine-chord-display">Guitar strum machine · Chord display</a></li>
+<li><a class="ui-link" href="./pitch.html" data-i18n="guide.pitch-shifter-audio-controls">Pitch shifter · Audio controls</a></li></ul>
 </section>
 <footer id="review" class="guide-footer ui-flow"><details class="ui-disclosure" data-component-copy>
-  <summary>Copy component</summary>
+  <summary data-i18n="guide.copy-component">Copy component</summary>
   <div class="ui-disclosure__body ui-stack">
-    <p class="ui-small">Copy markup from an example. Use a different ID prefix for each copy. Update text, links, and heading levels. Add application behavior where needed.</p>
+    <p class="ui-small" data-i18n="guide.copyHelp">Copy markup from an example. Use a different ID prefix for each copy. Update text, links, and heading levels. Add application behavior where needed.</p>
     <div class="ui-field">
-      <label class="ui-label" for="component-choice">Component</label>
+      <label class="ui-label" for="component-choice" data-i18n="guide.component">Component</label>
       <select class="ui-select" id="component-choice" data-component-choice disabled></select>
     </div>
     <div class="ui-field">
-      <label class="ui-label" for="component-prefix">ID prefix</label>
+      <label class="ui-label" for="component-prefix" data-i18n="guide.id-prefix">ID prefix</label>
       <input class="ui-input" id="component-prefix" data-component-prefix value="example-1" disabled aria-describedby="component-copy-status">
     </div>
     <div class="ui-field">
       <label class="ui-label" for="component-code">HTML</label>
       <textarea class="ui-textarea ui-code" id="component-code" data-component-code rows="10" readonly spellcheck="false"></textarea>
     </div>
-    <div class="ui-actions"><button class="ui-button" type="button" data-component-button disabled>Copy HTML</button></div>
-    <p class="ui-help" id="component-copy-status" data-component-status role="status">Enable JavaScript to select a component here. You can also copy examples from the page source.</p>
+    <div class="ui-actions"><button class="ui-button" type="button" data-component-button disabled data-i18n="guide.copy-html">Copy HTML</button></div>
+    <p class="ui-help" id="component-copy-status" data-component-status role="status" data-i18n="guide.copyFallbackHelp">Enable JavaScript to select a component here. You can also copy examples from the page source.</p>
   </div>
 </details>
-<p class="ui-small"><a class="ui-link" href="../README.md">Implementation notes</a> · <a class="ui-link" href="../docs/ui-audit.md">Initial style audit</a></p></footer>
+<p class="ui-small"><a class="ui-link" href="../README.md" data-i18n="guide.implementation-notes">Implementation notes</a> · <a class="ui-link" href="../docs/ui-audit.md" data-i18n="guide.initial-style-audit">Initial style audit</a></p></footer>
     </main>
-    <script src="./copy-component.js?v=b1a0f4206c63" defer></script>
+    <script src="../assets/i18n.js?v=cb7c15f81f79" defer></script>
+    <script src="./i18n.js?v=e244f04dccee" defer></script>
+    <script src="./guide-language.js?v=bbcf891d3a18" defer></script>
+    <script src="./copy-component.js?v=c9ba676bf611" defer></script>
   </body>
 </html>
