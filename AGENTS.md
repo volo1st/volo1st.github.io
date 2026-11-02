@@ -6,9 +6,9 @@ These instructions apply to all files in this repository.
 
 ## Project purpose
 
-This repository contains Vincent's public website and static browser tools. GitHub Pages hosts the site.
+This repository contains Vincent's personal website and a few tools for specific work and music tasks. GitHub Pages hosts the site. Keep its scope personal and focused. Do not frame it as a general public service.
 
-- `index.html` is the current tools home page. The plan will replace it with a personal home page.
+- `index.html` is the personal home page. `tools/index.html` lists the tools.
 - `tools/csv2aba/` redirects to the current CSV-to-ABA converter.
 - `tools/csv2aba-legacy/` redirects to the current converter after version 1 retirement.
 - `plan.md` is the source of truth for audit work and long-term website development.
@@ -17,7 +17,13 @@ Keep the site usable without a build step unless the task requires a build syste
 
 ## Writing standard
 
-Use ASD-STE100-style controlled English for user text and project documents.
+Use plain, simple, concise English for user text and project documents. These should help you maintain a small personal website.
+
+Apply this test to repository text: “Does this help you make a current change, use a specific tool, or avoid a concrete mistake? If not, remove it.” Remove obsolete or repeated detail instead of moving it to another document without a current need.
+
+Use ASD-STE100-style controlled English for technical instructions: short sentences, direct actions, consistent terms, and necessary details only. The personal introduction can sound natural.
+
+For technical text:
 
 - Use short, direct sentences.
 - Give one main instruction in each sentence.
@@ -131,7 +137,7 @@ Keep verification proportionate to the change and its failure consequences.
 - Update a checkbox only after its completion test passes.
 - Add evidence below the applicable checkbox when this is useful.
 - Record a rejected or changed action in the decision log.
-- Update the README when a change affects setup, support, privacy, limits, tests, or deployment.
+- Keep the README as a short maintenance entry point. Update it when the site workflow changes. Keep tool-specific setup, privacy, limits, and checks with the tool. Link to those notes instead of repeating them.
 - Add English and Simplified Chinese translations for new home-page and version 2 interface text.
 - Keep the English and Simplified Chinese translation key sets identical.
 - Use stable error codes for translated validation messages.

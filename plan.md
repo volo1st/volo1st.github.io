@@ -1472,3 +1472,19 @@ Reviewed the complete diff, both catalogs, script loading and event order, prese
 Manual browser rendering, keyboard use, focus, narrow layouts, 200 percent zoom, and real clipboard permissions remain untested because no browser tool is available. No browser tooling was installed. The separate icon editor and linked specimens remain unchanged. Commit locally without pushing or deployment.
 
 Tracker reconciliation: There is no matching actionable child to complete. The initiative and its two deferred tasks remain unchanged.
+
+## 40. Concise repository documentation
+
+Owner decision on 2 November 2026: Documentation must help maintain a small personal website. Keep text only when it helps make a current change, use a specific tool, or avoid a concrete mistake. Use plain English and ASD-STE100-style technical instructions. Let the personal introduction sound natural. Apply these rules through AGENTS.md.
+
+Scope: Shorten README.md to purpose, local use, page creation, checks, publishing, and useful references. Replace docs/ui-audit.md with a dated historical pointer. Remove its style-guide link and unused translation keys. Correct the outdated home-page description in AGENTS.md. Do not change tool behavior or copy removed detail into new documents.
+
+Review decision: Tool instructions, payment safety, audio behavior, dependency notices, and prior decisions already have local sources. Retain links to those sources. The old audit mixes pre-migration findings with superseded experiments. Preserve its exact Git version so existing plan references remain usable. Existing checks and diff review are sufficient for this text and link change.
+
+- [x] Rewrite the README and retire the audit from current guidance.
+- [x] Add the repository-wide purpose and writing rules.
+- [x] Run repository checks and review the complete diff.
+
+Completion: README.md is 386 words; docs/ui-audit.md is 61 words. The audit link identifies an exact copy of the previous document in Git history. AGENTS.md now applies the owner's purpose, relevance test, and writing rules across the repository. Removed the guide's audit link and both unused translation entries. Refreshed the catalog hash. Reviewed the diff and ran `./scripts/check.sh`: all nine JavaScript test files, eight Python tests, links, translation keys, hashes, and whitespace checks passed. Browser review was unavailable; no browser tooling or new tests were needed for this text and link change.
+
+The configured Todoist initiative has no actionable child or matching task to close. Its two deferred tasks remain unchanged. Commit locally; do not deploy.
