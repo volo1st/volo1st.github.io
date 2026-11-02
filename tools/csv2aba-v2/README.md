@@ -4,7 +4,7 @@
 
 This directory contains the current converter. On 29 October 2026, the owner confirmed successful use in the established Commonwealth Bank of Australia (CBA) workflow several times over the past two months. The owner accepted validation and authorized version 1 retirement. Exact run dates and bank receipts were not supplied. This evidence applies only to that workflow.
 
-Both `/tools/csv2aba/` and `/tools/csv2aba-legacy/` redirect here. Version 1 is retired. Git history retains its interface. The unchanged legacy script remains in `tests/fixtures/csv2aba-v2/legacy-reference.js` for compatibility tests.
+`/tools/csv2aba/` redirects here. Version 1 is retired. Git history retains its interface. The unchanged legacy script remains in `tests/fixtures/csv2aba-v2/legacy-reference.js` for compatibility tests.
 
 Version 2 has independent conversion and interface files. Characterization tests compare its valid output with version 1.
 

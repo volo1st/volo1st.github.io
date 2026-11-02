@@ -263,19 +263,17 @@ test('the tools directory links to each available tool', () => {
   assert.match(html, /href="\.\.\/assets\/site\.css\?v=[a-f0-9]{12}"/);
 });
 
-test('retired converter addresses redirect to version 2 without a legacy fallback', () => {
-  for (const directory of ['csv2aba', 'csv2aba-legacy']) {
-    const html = fs.readFileSync(
-      path.join(repositoryRoot, 'tools', directory, 'index.html'), 'utf8',
-    );
-    assert.match(html, /http-equiv="refresh" content="0; url=\.\.\/csv2aba-v2\/"/);
-    assert.match(html, /href="\.\.\/csv2aba-v2\/"/);
-    assert.doesNotMatch(html, /<script|<textarea|<button/);
-  }
+test('the stable converter address redirects to version 2 without a legacy fallback', () => {
+  const html = fs.readFileSync(
+    path.join(repositoryRoot, 'tools', 'csv2aba', 'index.html'), 'utf8',
+  );
+  assert.match(html, /http-equiv="refresh" content="0; url=\.\.\/csv2aba-v2\/"/);
+  assert.match(html, /href="\.\.\/csv2aba-v2\/"/);
+  assert.doesNotMatch(html, /<script|<textarea|<button/);
   const currentHtml = fs.readFileSync(
     path.join(repositoryRoot, 'tools', 'csv2aba-v2', 'index.html'), 'utf8',
   );
-  assert.doesNotMatch(currentHtml, /csv2aba-legacy|[Tt]rial|v2\.version/);
+  assert.doesNotMatch(currentHtml, /[Tt]rial|v2\.version/);
   assert.match(currentHtml, /data-i18n="v2\.safetyHeading"/);
   const reference = fs.readFileSync(
     path.join(repositoryRoot, 'tests/fixtures/csv2aba-v2/legacy-reference.js'),

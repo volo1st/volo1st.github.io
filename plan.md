@@ -20,12 +20,12 @@ Tool specifications and operating checklists remain with their tools. They do no
 
 ## 3. Current status
 
-Status updated on 29 October 2026.
+Status updated on 3 November 2026.
 
 - The root page is volo1st's public introduction.
 - CSV to ABA Converter version 2 is the current converter.
 - The former converter address redirects to version 2.
-- Version 1 is retired. Its address redirects to version 2.
+- Version 1 is retired. Only its compatibility-test fixture remains.
 - The tools directory is available at `/tools/`.
 - Guitar Strum Machine is available from the tools directory.
 - The Chinese-English text sorter was removed.
@@ -1488,3 +1488,16 @@ Review decision: Tool instructions, payment safety, audio behavior, dependency n
 Completion: README.md is 386 words; docs/ui-audit.md is 61 words. The audit link identifies an exact copy of the previous document in Git history. AGENTS.md now applies the owner's purpose, relevance test, and writing rules across the repository. Removed the guide's audit link and both unused translation entries. Refreshed the catalog hash. Reviewed the diff and ran `./scripts/check.sh`: all nine JavaScript test files, eight Python tests, links, translation keys, hashes, and whitespace checks passed. Browser review was unavailable; no browser tooling or new tests were needed for this text and link change.
 
 The configured Todoist initiative has no actionable child or matching task to close. Its two deferred tasks remain unchanged. Commit locally; do not deploy.
+
+## 41. Remove the unused converter redirect
+
+Owner decision on 3 November 2026: Remove the unused retirement redirect and all references to its path. No current site link uses it. This supersedes the earlier requirement to retain both former addresses. Keep `/tools/csv2aba/` as the stable redirect to version 2. Keep the unchanged compatibility fixture.
+
+Scope: Delete the unused page. Update the instructions, converter notes, current status, and redirect test. Point dated audit citations to the archived source without retaining the removed path. Preserve the audit findings and financial behavior. Existing link, redirect, fixture-integrity, and converter tests cover this change.
+
+- [x] Remove the page and all path references from the working repository.
+- [x] Run repository checks and review the complete diff.
+
+Completion: Deleted the unused page and removed all occurrences of its path from working files, including historical citation labels and links. The dated findings still point to the sanitized archive. The stable redirect and compatibility fixture are unchanged. `./scripts/check.sh` passed all nine JavaScript test files, eight Python tests, link checks, fixture integrity, and whitespace checks. Reviewed the complete diff. Browser review was unavailable. No deployment was performed.
+
+The Todoist initiative has no matching actionable child. Its two deferred tasks remain unchanged. Commit locally.

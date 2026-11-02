@@ -10,7 +10,6 @@ This repository contains Vincent's personal website and a few tools for specific
 
 - `index.html` is the personal home page. `tools/index.html` lists the tools.
 - `tools/csv2aba/` redirects to the current CSV-to-ABA converter.
-- `tools/csv2aba-legacy/` redirects to the current converter after version 1 retirement.
 - `plan.md` is the source of truth for audit work and long-term website development.
 
 Keep the site usable without a build step unless the task requires a build system.
@@ -51,7 +50,6 @@ Treat the CSV-to-ABA converter as financial-file software.
 - Use integer arithmetic for money. Do not use binary floating-point arithmetic.
 - Do not enable download until validation and conversion are successful.
 - Keep old output unavailable after an input change or an error.
-- Keep the retired converter address at `tools/csv2aba-legacy/` as a redirect to version 2.
 - Keep the legacy test fixture unchanged. Use it only for compatibility tests.
 - Develop the safer converter at `tools/csv2aba-v2/`.
 - For known valid input, version 2 must make the same payment data as version 1.
