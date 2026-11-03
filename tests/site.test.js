@@ -263,7 +263,7 @@ test('the tools directory links to each available tool', () => {
   assert.match(html, /href="\.\.\/assets\/site\.css\?v=[a-f0-9]{12}"/);
 });
 
-test('the stable converter address redirects to version 2 without a legacy fallback', () => {
+test('the stable converter address redirects to the current tool', () => {
   const html = fs.readFileSync(
     path.join(repositoryRoot, 'tools', 'csv2aba', 'index.html'), 'utf8',
   );
@@ -275,11 +275,6 @@ test('the stable converter address redirects to version 2 without a legacy fallb
   );
   assert.doesNotMatch(currentHtml, /[Tt]rial|v2\.version/);
   assert.match(currentHtml, /data-i18n="v2\.safetyHeading"/);
-  const reference = fs.readFileSync(
-    path.join(repositoryRoot, 'tests/fixtures/csv2aba-v2/legacy-reference.js'),
-  );
-  assert.equal(crypto.createHash('sha256').update(reference).digest('hex'),
-    '867cc50dfaca36e8d5e61d894e63ce1045901e04e698decc3daa0b48c903cc32');
 });
 
 test('converter examples use explicit invented identities', () => {

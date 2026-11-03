@@ -20,12 +20,12 @@ Tool specifications and operating checklists remain with their tools. They do no
 
 ## 3. Current status
 
-Status updated on 3 November 2026.
+Status updated on 4 November 2026.
 
 - The root page is volo1st's public introduction.
 - CSV to ABA Converter version 2 is the current converter.
 - The former converter address redirects to version 2.
-- Version 1 is retired. Only its compatibility-test fixture remains.
+- Fixed expected-output tests protect the supported converter workflow.
 - The tools directory is available at `/tools/`.
 - Guitar Strum Machine is available from the tools directory.
 - The Chinese-English text sorter was removed.
@@ -85,14 +85,12 @@ Do not move an existing tool only to match this structure. Preserve its address 
   - Evidence: The tools directory links to the current converter and Guitar Strum Machine.
 - [x] Keep the former converter address working.
   - Evidence: `/tools/csv2aba/` redirects to `/tools/csv2aba-v2/`.
-- [x] Keep the legacy converter available as a rollback path.
-  - Historical evidence: The former converter remained available during validation. Retired by owner decision on 29 October 2026. See Section 34.
-- [x] Replace the legacy page's person and account-like examples with clearly invented values.
-  - Evidence: The correction changed only the example table. Tests pin the approved HTML, JavaScript, and CSS hashes.
+- [x] Use clearly invented example payment values.
+  - Evidence: Examples use invented payment data. Tests check the current example and fixed output.
 - [x] Remove the text sorter when its maintenance cost exceeded its current value.
   - Evidence: The source was removed on 30 September 2026. Git history keeps it recoverable.
 - [x] Review all tracked examples and fixtures for personal, payment, employer, and client data.
-  - Evidence: The review found no email address. It found realistic legacy-derived BSB and account-like values in the converter tests and fixture. The approved correction replaces them with explicit structural placeholders and regenerates the golden ABA bytes.
+  - Evidence: The review found no email address. It found realistic payment identifiers in tests. These were replaced with structural placeholders.
 - [x] Confirm that the fixed ABA source-identity values are approved for publication.
   - Evidence: On 1 October 2026, the owner confirmed that the current user and remitter name can remain public. Keep the values unchanged because they affect generated ABA output.
 
@@ -114,18 +112,18 @@ Completion gate: Current users can continue their work without exposing confiden
 - [x] Show the payment count and total before download.
 - [x] Add English and Simplified Chinese to the current workflow.
 - [x] Add automated parser, amount, field, record, total, file, and interface-state tests.
-- [x] Keep valid version 2 output compatible with the legacy converter.
-  - Evidence: Characterization and golden-fixture tests pass with invented data.
+- [x] Protect valid output with fixed expected-output tests.
+  - Evidence: Exact output bytes and the supported-workflow digest pass with invented payment input.
 
 ### 6.2 Supported scope
 
 - [x] Limit the converter to the established CBA payment workflow and its current fixed settings.
-  - Evidence: CBA accepted files from the legacy converter for this workflow for nearly one year. Version 2 makes compatible payment data for known valid input.
+  - Evidence: The owner confirmed successful runs in this workflow. See Section 34.
 - [x] Use invented data for automated converter tests and fixtures.
 
 ### 6.3 Normal workflow validation
 
-The owner accepted retrospective operational evidence on 29 October 2026. See Section 34 for the report, decision, and evidence limits. The earlier prospective trial checklist is superseded. Do not infer separate payment-comparison records from this report.
+The owner accepted retrospective operational evidence on 29 October 2026. See Section 34 for the report, decision, and evidence limits. Routine payment review remains required.
 
 - [x] Obtain owner confirmation of successful use in the normal payment workflow.
 - [x] Record the accepted result without confidential data.
@@ -421,7 +419,7 @@ Scope decision on 13 October 2026: Keep this package small. Use the README for s
 - [x] Add one local command for syntax, tests, references, and whitespace.
 - [x] Add a validation checklist for the current converter workflow.
 - [x] Apply browser-asset versioning to each maintained page asset.
-  - Evidence: The home page, current converter, and Guitar Strum Machine register their local interface assets in the SHA-256 stale-hash test. The frozen legacy fallback remains unversioned.
+  - Evidence: The home page, current converter, and Guitar Strum Machine register their local interface assets in the SHA-256 stale-hash test.
 - [x] Select a license, or state that the repository has no license.
   - Evidence: On 13 October 2026, the README records that no repository-wide license has been selected and retains the distinction for third-party licenses.
 - [x] Document the GitHub Pages deployment process.
@@ -590,10 +588,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 | 30 September 2026 | Use one semantic site shell with domain accent tokens. | Shared structure identifies one site. Accent tokens preserve each tool's subject identity. |
 | 30 September 2026 | Use an original pixel-art `V` block as the site icon. | The icon gives the site a distinct identity without copying existing artwork. |
 | 1 October 2026 | Add a generic Open Graph preview to Guitar Strum Machine. | Static metadata improves link presentation. A central square-safe area supports WeChat cropping. |
-| 1 October 2026 | Make version 2 the default as a controlled forced trial. | Default use provides operator evidence. Required reviews and the legacy rollback path limit, but do not remove, payment risk. |
-| 1 October 2026 | Correct only the legacy example payment values. | The old examples were not clearly invented. The conversion logic and styles remain unchanged. |
 | 1 October 2026 | Replace the audit action plan and website roadmap with this plan. | One active plan prevents duplicate actions and conflicting status. The initial audit report remains the dated baseline. |
-| 1 October 2026 | Replace realistic legacy-derived identifiers in converter tests and fixtures. | Test data must be clearly invented. Use structural placeholders and regenerate the golden fixture without changing converter logic. |
 | 1 October 2026 | Keep the current ABA user and remitter name public and unchanged. | The owner confirmed that the value is safe to publish. A replacement would change generated payment files. |
 | 1 October 2026 | Validate the current converter through the normal CBA payment procedure. | The converter supports one established workflow. CBA upload acceptance plus the operator's entry, count, and total review is the applicable completion evidence. |
 | 1 October 2026 | Remove general CBA rule research and configurable ABA source settings from the plan. | The converter supports only the current fixed workflow. The owner does not plan to make it a general ABA product. |
@@ -654,7 +649,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 | 5 October 2026 | Use explicit dot elements for the Pitch Shifter export indicator. | The deployed pseudo-element clipping animation did not visibly cycle during owner testing. Explicit dots use discrete visibility states and keep the accessible button label stable. |
 | 5 October 2026 | Keep unscheduled website-tool ideas in this plan instead of separate Todoist tasks. | The repository preserves product context and references. Todoist stays limited to selected work packages. Pitch Shifter and Guitar Strum Machine are complete. Tuner remains unscheduled. MeTube stays with the Home Lab video-streaming package because it has a different execution and support model. |
 
-Decision on 29 October 2026: Accept the owner’s retrospective version 2 workflow confirmation and retire the live version 1 fallback. Preserve former addresses as redirects and the unchanged script as a compatibility-test fixture. See Section 34 for evidence limits.
+Decision on 29 October 2026: Accept the owner’s reported workflow results. See Section 34 for evidence limits.
 
 ## 16. Verified completion evidence
 
@@ -672,7 +667,6 @@ Decision on 29 October 2026: Accept the owner’s retrospective version 2 workfl
 - On 29 September 2026, Guitar Strum Machine playback, sharing, presets, practice controls, responsive layout, and language behavior passed owner testing on the supported clients.
 - On 1 October 2026, the owner approved the shared warm theme, site shell, icon, and domain accents.
 - On 1 October 2026, WeChat and WhatsApp displayed the deployed Guitar Strum Machine preview. Sharing from the WeChat browser produced an accepted plain-link fallback.
-- On 1 October 2026, the owner verified the deployed current converter, redirect, and legacy fallback routes.
 - The repository check covers JavaScript syntax, shell syntax, automated tests, internal references, translation keys, accessibility references, asset hashes, and whitespace.
 
 ## 17. External task-system mapping
@@ -681,7 +675,6 @@ Use `.codex/project-workflow.toml` for the external task-system mapping. Use the
 
 - Keep only the next public-website package actionable.
 - Keep later phases ordered and without dates.
-- Track the CSV-to-ABA workflow validation as a separate waiting task.
 - Inspect comments and attachments before moving or closing an existing task.
 - Get confirmation before deleting or substantially restructuring an external task.
 - Do not access the private Todoist project named `.`.
@@ -807,7 +800,7 @@ Purpose: Identify current component semantics and style differences. Give the ow
 
 Requirements and decisions:
 
-- Inspect every maintained HTML page and stylesheet. Record the frozen legacy page separately.
+- Inspect every maintained HTML page and stylesheet.
 - Record page structure, fonts, colors, spacing, components, states, semantic risks, and app-specific exceptions in `docs/ui-audit.md`.
 - Add `/style-guide/` as a static component showcase. Keep it out of the homepage navigation during review.
 - Show a clearly marked draft for shared components and isolated examples from the current stylesheets. Do not copy current CSS into the examples.
@@ -1009,7 +1002,7 @@ Verification evidence: `./scripts/check.sh` passed for all seven test files. Rev
 
 Selection on 19 October 2026: The owner approved the guide and authorized application across maintained pages. Todoist task `6hpGXvmQfxcmH6M6` records this package. The older project-model and content-system tasks remain deferred.
 
-Purpose and requirements: Promote the approved component source to `assets/ui.css`. The guide and maintained pages must load that same file. Keep page CSS for composition and specialized app displays only. Preserve addresses, content, translation keys, element IDs, event bindings, user input, download gates, financial validation, and audio behavior. Keep legacy converter files unchanged. Preserve the homepage greeting as the agreed display exception. Use real document headings, including hidden headings on compact pages. Apply quiet language choices to reading pages and segmented choices to tools. Keep language selection, disabled state, storage, and return switching consistent.
+Purpose and requirements: Promote the approved component source to `assets/ui.css`. The guide and maintained pages must load that same file. Keep page CSS for composition and specialized app displays only. Preserve addresses, content, translation keys, element IDs, event bindings, user input, download gates, financial validation, and audio behavior. Preserve the homepage greeting as the agreed display exception. Use real document headings, including hidden headings on compact pages. Apply quiet language choices to reading pages and segmented choices to tools. Keep language selection, disabled state, storage, and return switching consistent.
 
 Engineering review and failure behavior: Use explicit component classes rather than copying component declarations into each page stylesheet. Remove broad local control rules that compete with shared classes. Preserve native controls, focus outlines, local table overflow, and hidden application state. Use the existing functional checks for each tool and add meaningful assertions for changed language-switch behavior. No browser downloads or system-library installation. Record unavailable manual keyboard, narrow-screen, zoom, and device audio review without treating a source check as a rendered review.
 
@@ -1018,7 +1011,7 @@ Implementation sequence and completion gates:
 - [x] Promote the stylesheet and migrate public pages, studio rates, and their examples.
 - [x] Migrate Guitar Strum Machine controls and wrappers while preserving chord and playback displays.
 - [x] Migrate Pitch Shifter controls and wrappers while preserving pitch symbols, seek progress, processing, and audio state.
-- [x] Migrate converter version 2 common visuals while preserving all financial-file behavior and legacy fallback.
+- [x] Migrate converter version 2 common visuals while preserving all financial-file behavior.
 - [x] Reconcile the guide, page examples, documentation, asset hashes, and remaining local style rules.
 - [x] Pass the repository check and review the complete diff.
 - [x] Commit the verified package and reconcile Todoist.
@@ -1027,9 +1020,9 @@ Authorization: Apply the local repository changes and commit verified stages. Do
 
 Implementation evidence: The 12 maintained live documents, the guide, and all five specimens load `assets/ui.css`. The shared component source retains the approved design. Added page padding and explicit hidden-state guards support live app layouts. Removed competing local control, panel, type, width, notice, table, and metrics declarations. Removed the unused Sound detail stylesheet. Public pages and the tools directory use quiet language links. Current tools use segmented controls. Native disabled state is opt-in through `data-disable-current="true"` so unrelated controls retain their own behavior.
 
-Verification evidence: `./scripts/check.sh` passed for all seven test files. Existing tests cover payment validation, exact record lengths, error recovery, download gates, guitar parsing and scheduling, sharing, presets, pitch processing, local references, asset hashes, translations, and frozen legacy hashes. Extended the existing language test to verify selection, disabled state, return switching, and stored choice. The converter status test also checks the success tone. Updated source assertions for shared markup and removed assertions for superseded local appearance. The asset check reads actual local references instead of maintaining a second asset list.
+Verification evidence: `./scripts/check.sh` passed for all seven test files. Existing tests cover payment validation, exact record lengths, error recovery, download gates, guitar parsing and scheduling, sharing, presets, pitch processing, local references, asset hashes, and translations. Extended the existing language test to verify selection, disabled state, return switching, and stored choice. The converter status test also checks the success tone. Updated source assertions for shared markup and removed assertions for superseded local appearance. The asset check reads actual local references instead of maintaining a second asset list.
 
-Additional source review: All 18 shared-style documents have balanced markup, unique IDs, and valid label and accessibility references. Maintained live pages preserve prior IDs, field constraints, hidden and disabled application state, and link destinations. Guitar chord presentation rules match the prior source. Changes to JavaScript are limited to language disabled state and notice classes or tones. Audio engines, pitch processing, financial conversion, and legacy files did not change. Reviewed the complete diff and stylesheet precedence. No dependencies, browser automation, or network calls were added.
+Additional source review: All 18 shared-style documents have balanced markup, unique IDs, and valid label and accessibility references. Maintained live pages preserve prior IDs, field constraints, hidden and disabled application state, and link destinations. Guitar chord presentation rules match the prior source. Changes to JavaScript are limited to language disabled state and notice classes or tones. Audio engines, pitch processing, and financial conversion did not change. Reviewed the complete diff and stylesheet precedence. No dependencies, browser automation, or network calls were added.
 
 Manual review remains pending: keyboard use, visible focus, narrow screens, 200 percent zoom, and representative iPhone or iPad audio behavior. A browser and representative device were unavailable for this package. These optional checks do not block the local source migration. No rendered or device result is claimed. The package does not push or deploy the website.
 
@@ -1075,7 +1068,7 @@ Verification evidence: `./scripts/check.sh` passed all seven test files. Reviewe
 
 Selection on 20 October 2026: The owner approved page-root isolation for local styles. Todoist task `6hpHr8cGjJvP8Jj6` records this package. Deferred product packages remain unchanged.
 
-Purpose and requirements: Add stable `data-page` attributes to maintained page bodies. Prefix local selectors with `:where([data-page="…"])`. Keep shared foundation and component styles global in `site-shell.css` and `ui.css`. Preserve existing selector specificity, declarations, media conditions, native state, IDs, links, translations, audio, payment validation, and the frozen legacy converter. Keep the redirect unchanged.
+Purpose and requirements: Add stable `data-page` attributes to maintained page bodies. Prefix local selectors with `:where([data-page="…"])`. Keep shared foundation and component styles global in `site-shell.css` and `ui.css`. Preserve existing selector specificity, declarations, media conditions, native state, IDs, links, translations, audio, and payment validation. Keep the redirect unchanged.
 
 Engineering review and decisions: Scope all selectors in comma-separated lists and media rules. Do not prefix keyframe steps. Give Pitch Shifter keyframes distinct page names and keep their bindings inside the page root. Move homepage-only variables from the document root to the home scope. Keep the studio print rule on the document root with a zero-specificity relationship guard for its page body. The existing shared stylesheet already uses this selector feature. Use explicit allowed page roots for the section-layout stylesheet that serves several pages.
 
@@ -1087,7 +1080,7 @@ Failure behavior and checks: A local rule must not match outside its allowed pag
 - [x] Document the convention, refresh asset hashes, and pass relevant checks.
 - [x] Review and commit the package, then reconcile Todoist.
 
-Verification evidence: `./scripts/check.sh` passed all seven test files. A separate source comparison checked 222 scoped selectors in 204 rule blocks across all 10 local stylesheets. Declarations, media conditions, and keyframe steps match the prior source, apart from the two matching animation-name prefixes. All 18 maintained documents have matching roots, balanced markup, unchanged text, unchanged original elements and control attributes, unchanged IDs and destinations, and valid label and accessibility references. Every loaded local stylesheet has a corresponding root in its document. Shared CSS, application JavaScript, the redirect, financial conversion, audio engines, and frozen legacy files did not change.
+Verification evidence: `./scripts/check.sh` passed all seven test files. A separate source comparison checked 222 scoped selectors in 204 rule blocks across all 10 local stylesheets. Declarations, media conditions, and keyframe steps match the prior source, apart from the two matching animation-name prefixes. All 18 maintained documents have matching roots, balanced markup, unchanged text, unchanged original elements and control attributes, unchanged IDs and destinations, and valid label and accessibility references. Every loaded local stylesheet has a corresponding root in its document. Shared CSS, application JavaScript, the redirect, financial conversion, and audio engines did not change.
 
 Review evidence: Reviewed the complete diff, including selector lists, pseudo-elements, media rules, hidden states, inherited home variables, the guarded studio print rule, and the mixed public specimen wrappers. Documented the convention in `AGENTS.md`, the README, and the UI audit. Refreshed local stylesheet hashes. Updated the existing pitch source checks for the renamed keyframes. Added no permanent tests that mirror static selectors, dependencies, build steps, or browser tooling. Manual browser, keyboard, narrow-screen, print, and 200 percent zoom review did not run.
 
@@ -1118,7 +1111,7 @@ Selection on 20 October 2026: The owner approved two guide comparisons and a sen
 
 Purpose and requirements: Compare a compact parent link and short tool label with a parent breadcrumb and separate full tool heading. Show Guitar, Pitch, and CSV to ABA examples at a narrow content width. Center language controls vertically and preserve touch target height. Keep each language group together when a row must wrap. Keep the live header layout unchanged until the owner chooses an option.
 
-Naming decisions: Use sentence case for generic navigation, headings, links, and descriptive tool names. Use the canonical names `Guitar strum machine`, `Pitch shifter`, and `CSV to ABA converter`. The proposed short navigation labels are `Guitar`, `Pitch`, and `CSV to ABA`. Short labels do not replace the full page title or accessible heading. Preserve official names such as `Bits & Beats Studio`, `volo1st`, and `YouTube`, and preserve acronyms. Write the intended case in source text. Do not apply CSS capitalization. Keep dated audit records and the frozen legacy converter unchanged.
+Naming decisions: Use sentence case for generic navigation, headings, links, and descriptive tool names. Use the canonical names `Guitar strum machine`, `Pitch shifter`, and `CSV to ABA converter`. The proposed short navigation labels are `Guitar`, `Pitch`, and `CSV to ABA`. Short labels do not replace the full page title or accessible heading. Preserve official names such as `Bits & Beats Studio`, `volo1st`, and `YouTube`, and preserve acronyms. Write the intended case in source text. Do not apply CSS capitalization.
 
 Engineering review and failure behavior: The current shared context row aligns baselines and allows both breadcrumb levels and long labels to wrap. Compare alternatives with existing semantic navigation, shared controls, and scoped guide-only flex layout. Allow a whole language group to move onto another row when space is insufficient. Do not hide overflow, reduce touch targets, truncate names, or add a dependency. Keep application logic, IDs, URLs, language keys, and Chinese text unchanged. Refresh affected asset hashes. Run the existing repository check and review the complete diff. Record unavailable rendered, keyboard, focus, and 200 percent zoom checks. Add no browser automation or permanent tests that repeat static text.
 
@@ -1128,7 +1121,7 @@ Engineering review and failure behavior: The current shared context row aligns b
 
 Verification evidence: `./scripts/check.sh` passed all seven test files. Reviewed the complete diff, the six guide-only layout rules, both three-tool comparisons, the narrower fallback, accessible full names, and the naming table. A separate source comparison confirmed balanced markup in all 12 changed HTML documents. Existing documents differ only in casing and asset hashes. Translation catalogs and app manifests differ only in case. Existing tests were updated for the approved names; no new tests were added for static text or styles. Local links, unique IDs, accessibility references, translation key parity, and asset hashes pass the existing repository checks.
 
-Scope and review limits: Updated the maintained directory cards, breadcrumbs, titles, headings, metadata, manifests, current documentation, and specimens. Added the naming rule to `AGENTS.md` and the guide. Kept dated audit and specification text as history. The live header layout, shared styles, application logic, URLs, Chinese text, and frozen legacy converter are unchanged. No dependencies, browser tools, build step, or network behavior were added. A browser was unavailable. Manual rendered, keyboard, focus, narrow-screen, and 200 percent zoom checks did not run. The owner must compare the guide proposals before a live layout is selected.
+Scope and review limits: Updated the maintained directory cards, breadcrumbs, titles, headings, metadata, manifests, current documentation, and specimens. Added the naming rule to `AGENTS.md` and the guide. Kept dated audit and specification text as history. The live header layout, shared styles, application logic, URLs, and Chinese text are unchanged. No dependencies, browser tools, build step, or network behavior were added. A browser was unavailable. Manual rendered, keyboard, focus, narrow-screen, and 200 percent zoom checks did not run. The owner must compare the guide proposals before a live layout is selected.
 
 Completion on 20 October 2026: Commit `09f8e42` contains the verified comparison and casing changes. Added the outcome comment to Todoist task `6hpRJ23H932WvG4c`, verified the comment, completed the task, and confirmed its completed state through a fresh read. Deferred tasks and the initiative remain unchanged. No next package was selected.
 
@@ -1147,7 +1140,7 @@ Checks: Add a small Node test for the preview's functional behavior. Check that 
 - [x] Pass relevant checks and review the complete diff.
 - [x] Commit the package and reconcile Todoist.
 
-Verification evidence: `./scripts/check.sh` passed all eight test files. The new small Node test covers absent and invalid preview parameters, both initial options, repeated switching, the single reused heading, selected button state, retained focus targets, unchanged input objects and values, unchanged query data, and no history or storage access. Existing financial, audio-processing, scheduling, sharing, translation, markup-reference, asset-hash, and frozen-legacy checks pass. Adjusted an existing source assertion to allow attributes after the header class.
+Verification evidence: `./scripts/check.sh` passed all eight test files. The new small Node test covers absent and invalid preview parameters, both initial options, repeated switching, the single reused heading, selected button state, retained focus targets, unchanged input objects and values, unchanged query data, and no history or storage access. Existing financial, audio-processing, scheduling, sharing, translation, markup-reference, asset-hash, and output checks pass. Adjusted an existing source assertion to allow attributes after the header class.
 
 Source review: Reviewed the complete diff, the shared script, default hidden state, scoped component selectors, language updates, and deferred initialization. All 19 maintained and redirect documents have balanced markup. The three app main sections are unchanged apart from the heading marker. Each app has one complete set of preview hooks. Existing app scripts, input controls, audio engines, converter validation, download gates, and share preparation are unchanged. The guide now reuses the same shared header rules; only frame sizing and touch-size simulation stay local. Refreshed every affected asset hash. No dependency, build step, browser automation, or network service was added.
 
@@ -1185,7 +1178,7 @@ Failure behavior and verification: Old preview URL parameters have no header beh
 - [x] Refresh asset hashes, pass relevant checks, and review the complete diff.
 - [x] Commit the package and reconcile Todoist.
 
-Verification evidence: `./scripts/check.sh` passed all seven remaining test files. Removed the dedicated preview test with its retired feature. Updated the existing shared-shell source assertion to check the tools parent link instead of the removed hidden home link. The existing checks cover translations, asset hashes, links, IDs, accessibility references, financial validation, playback scheduling, pitch processing, sharing, and frozen legacy hashes. No preview attributes, script references, translation keys, or comparison links remain in maintained site code.
+Verification evidence: `./scripts/check.sh` passed all seven remaining test files. Removed the dedicated preview test with its retired feature. Updated the existing shared-shell source assertion to check the tools parent link instead of the removed hidden home link. The existing checks cover translations, asset hashes, links, IDs, accessibility references, financial validation, playback scheduling, pitch processing, and sharing. No preview attributes, script references, translation keys, or comparison links remain in maintained site code.
 
 Source and review evidence: Reviewed the complete diff and shared selector precedence. The three accepted header declarations keep their prior values on `.ui-tool-header`. All 19 maintained and redirect documents have balanced markup. A source comparison confirmed that all three app main sections and accepted headers match the prior source after removal of preview attributes and the hidden alternative home link. The guide uses the same shared class, retains narrow and touch-size examples, and documents the accepted header. App engines, payment rules, input controls, language selection, titles, and shared dimensions are unchanged. Refreshed affected asset hashes. Added no dependencies, browser tools, or new tests. The owner previously confirmed that the full names fit. Independent manual browser, keyboard, focus, narrow-screen, and 200 percent zoom checks did not run because a browser was unavailable. This package does not push or deploy.
 
@@ -1223,7 +1216,7 @@ Marker decision: The owner permits plain markers. Remove note links, return link
 
 Checks: Use the existing repository check and review the complete diff. Do not add tests or browser tools for this static correction. Record unavailable manual mobile, keyboard, focus, and zoom review.
 
-Verification evidence: `./scripts/check.sh` passed all seven test files. Reviewed the complete diff, explicit grid placement, desktop and narrow gaps, exceptional-width stacking, plain markers, retained IDs, and `aria-describedby` targets. All 19 maintained and redirect documents have balanced markup. The existing checks pass for translations, English fallbacks, accessibility references, asset hashes, app behavior, and frozen legacy files. Updated the live page and specimen, removed unused note-link translations, and refreshed stylesheet and catalog hashes. Recorded the requirement correction in the ignored experience file. Added no tests, dependencies, or browser tooling. Manual rendered, keyboard, focus, mobile, and 200 percent zoom review did not run because a browser was unavailable.
+Verification evidence: `./scripts/check.sh` passed all seven test files. Reviewed the complete diff, explicit grid placement, desktop and narrow gaps, exceptional-width stacking, plain markers, retained IDs, and `aria-describedby` targets. All 19 maintained and redirect documents have balanced markup. The existing checks pass for translations, English fallbacks, accessibility references, asset hashes, and app behavior. Updated the live page and specimen, removed unused note-link translations, and refreshed stylesheet and catalog hashes. Recorded the requirement correction in the ignored experience file. Added no tests, dependencies, or browser tooling. Manual rendered, keyboard, focus, mobile, and 200 percent zoom review did not run because a browser was unavailable.
 
 
 ### 31.2 Improve service information hierarchy
@@ -1258,7 +1251,7 @@ Purpose and source findings: Breadcrumbs move between pages with no language con
 
 Decisions: Add `--ui-context-min-height`, using 2.75rem for touch and 1.75rem for wide screens with a fine pointer and hover. Give `.ui-context-row` that minimum height and center its contents. Derive both language variants' control height from the same token. Add the same row wrapper to breadcrumb-only headers. Remove the redundant tool-specific alignment rule. Update the guide's simulated mobile frames to override the context token, not a separate button height. Add matching no-control, text-control, and segmented-control examples.
 
-Failure behavior and scope: Use a minimum height rather than a fixed height. Allow long breadcrumbs, language groups, and zoomed text to expand or wrap. Retain page width, header padding, language appearance, focus outlines, disabled state, and existing navigation destinations. Do not add empty language controls or JavaScript measurements. Keep the homepage introduction, redirect, and frozen legacy converter outside this header change. Keep app content, inputs, playback, sharing, and payment validation unchanged.
+Failure behavior and scope: Use a minimum height rather than a fixed height. Allow long breadcrumbs, language groups, and zoomed text to expand or wrap. Retain page width, header padding, language appearance, focus outlines, disabled state, and existing navigation destinations. Do not add empty language controls or JavaScript measurements. Keep the homepage introduction and redirect outside this header change. Keep app content, inputs, playback, sharing, and payment validation unchanged.
 
 Checks: Use the existing repository check and a complete diff review. Verify normalized header structure and preserved content, IDs, and controls through source comparison. Refresh affected asset hashes. Add no dependencies, browser tools, or permanent tests that repeat static layout declarations. Record unavailable manual keyboard, focus, narrow-screen, page-switching, and 200 percent zoom review.
 
@@ -1288,27 +1281,13 @@ Deployment evidence on 20 October 2026: Pushed release `607f48c430a859cc738867cf
 
 Completion: Added and verified the release outcome comment on Todoist task `6hpRxwgvGxhHXRGc`. Completed the task and confirmed its completed state through a fresh read. Kept both deferred website packages deferred. The follow-up completion commit changes this record only.
 
-## 34. Confirm converter validation and retire version 1
+## 34. Accepted converter workflow
 
-Selection and authorization on 29 October 2026: The owner confirmed that the operator used version 2 successfully several times over the past two months. The owner accepted the workflow validation and authorized retirement of version 1. This report replaces the pending prospective trial. Exact run dates, deployed revisions for those runs, separate comparison records, and bank receipts were not supplied. Do not infer them or request confidential payment data. This evidence applies only to the established CBA workflow. It does not establish general bank approval.
+On 29 October 2026, the owner confirmed several successful converter payment runs over the past two months. The owner accepted this evidence for the established CBA workflow. Exact run dates, deployed revisions, comparison records, and bank receipts were not supplied. This is not general bank approval.
 
-Decision: Accept the owner's retrospective operational confirmation as the completion evidence for the normal-workflow gate. Retire the legacy interface and its fallback link. Preserve both former addresses with static redirects and visible links to version 2. Preserve the unchanged legacy script as a test fixture for valid-output compatibility. Git history retains the retired interface. This decision supersedes the earlier requirement to keep a live legacy fallback. Keep financial conversion, supported settings, and validation unchanged. If a result is unexpected, instruct the operator to stop the payment process.
+Published `e678d12f6c8375aad115f015172f3447d0f41727`. [Pages run 40786692680](https://github.com/volo1st/volo1st.github.io/actions/runs/40786692680) succeeded. Repository checks and HTTP file comparisons passed. Browser interaction was not tested. The waiting validation task was completed and verified.
 
-- [x] Record the accepted workflow result and update current documentation.
-- [x] Retire the legacy interface and retain redirects and compatibility tests.
-- [x] Pass repository checks and review the complete diff.
-- [x] Publish the retirement and verify public delivery.
-- [x] Reconcile the waiting operator-trial task after the repository checks pass.
-
-Release scope: Commit and publish the retirement through the existing GitHub Pages source, `master` at the repository root. Verify the public redirects and updated converter notice. Keep hosting settings unchanged.
-
-Historical-reference maintenance: Updated only legacy source-link destinations in the dated audit documents to revision `91ca4989294dbe791f3944ad8d2f3ac70ff25afd`. The audit findings and dated observations are unchanged.
-
-Verification evidence: `./scripts/check.sh` passed all seven test files. Checks cover financial validation, quoted CSV, line endings, byte order marks, invalid and boundary amounts, field and total limits, exact record lengths, error recovery, download state, legacy-output compatibility, redirects, local references, translation parity, and asset hashes. The legacy script fixture retains its approved SHA-256 hash. Reviewed the complete diff, including the unchanged script move, removed legacy interface and stylesheet, bilingual stop instruction, and shared-catalog reference hashes. Financial conversion and interface logic are unchanged. Manual browser, keyboard, focus, narrow-screen, and 200 percent zoom checks did not run.
-
-Deployment evidence on 29 October 2026: Published `e678d12f6c8375aad115f015172f3447d0f41727` to `origin/master`. GitHub Pages [run 40786692680](https://github.com/volo1st/volo1st.github.io/actions/runs/40786692680) completed successfully. Both former converter pages, the current converter page, and the shared language catalog returned HTTP 200 and matched the release bytes at `https://volo1st.com/`. The retired script and stylesheet URLs returned HTTP 404. HTTP checks confirm delivery; they do not verify rendered or interactive browser behavior.
-
-Completion: Added and verified the outcome comment on Todoist task `6hXWVC6pRvrWgMj4`. Completed the task and confirmed its completed state through a fresh read. No next package was selected. The follow-up completion commit changes this record only.
+Current requirements: Preserve payment behavior and fixed settings. Review entries, count, and total before approval. Stop the payment process if a result is unexpected. See the [payment checklist](tools/csv2aba-v2/PAYMENT-CHECKLIST.md).
 
 ## 35. Audit the music app icons and add guide examples
 
@@ -1491,15 +1470,24 @@ The configured Todoist initiative has no actionable child or matching task to cl
 
 ## 41. Remove the unused converter redirect
 
-Owner decision on 3 November 2026: Remove the unused retirement redirect and all references to its path. No current site link uses it. This supersedes the earlier requirement to retain both former addresses. Keep `/tools/csv2aba/` as the stable redirect to version 2. Keep the unchanged compatibility fixture.
+Owner decision on 3 November 2026: Remove the unused redirect. Keep `/tools/csv2aba/` as the stable redirect to the current converter.
 
-Scope: Delete the unused page. Update the instructions, converter notes, current status, and redirect test. Point dated audit citations to the archived source without retaining the removed path. Preserve the audit findings and financial behavior. Existing link, redirect, fixture-integrity, and converter tests cover this change.
+Completed in `186c96e`. Repository checks passed. The owner then authorized publishing the queued local changes. [Pages run 41452219516](https://github.com/volo1st/volo1st.github.io/actions/runs/41452219516) succeeded. Live page and asset files matched the release. The removed address returned HTTP 404. Browser interaction was not tested.
 
-- [x] Remove the page and all path references from the working repository.
+## 42. Remove obsolete converter code and notes
+
+Owner decision on 4 November 2026: Remove the old comparison script and obsolete migration notes. This supersedes its retention rules. Keep the current converter address and payment behavior.
+
+Before implementation: Verify that both implementations produce the same output for the existing invented input and fixed date. Pin that output's SHA-256 digest before deleting the comparison script. Keep the existing exact expected-output fixture with invented settings. Preserve all financial validation and interface tests. Shorten the dated audit to its findings and a source-history link. Remove obsolete converter retention clauses from the plan without changing other tools' version references.
+
+Failure behavior: Invalid input must still stop conversion and disable download. A changed output digest or failed financial test blocks completion. No browser behavior changes are planned.
+
+Tracking: The owner selected this cleanup directly. Todoist has two other children with the actionable label; neither concerns this cleanup. Leave their priority and labels unchanged.
+
+- [x] Replace script comparison with fixed expected-output checks and remove the script.
+- [x] Remove obsolete converter instructions and historical detail.
 - [x] Run repository checks and review the complete diff.
 
-Completion: Deleted the unused page and removed all occurrences of its path from working files, including historical citation labels and links. The dated findings still point to the sanitized archive. The stable redirect and compatibility fixture are unchanged. `./scripts/check.sh` passed all nine JavaScript test files, eight Python tests, link checks, fixture integrity, and whitespace checks. Reviewed the complete diff. Browser review was unavailable. No deployment was performed.
+Completion on 4 November 2026: Both implementations produced the same 484 bytes for the fixed-date fixture before removal. The replacement digest is `b6d64c63a4364e9e3125cc8afe5cbb60f5d1a8b685f53b45ba2e61c11a7eb56d`. The existing invented-settings fixture is unchanged. Removed the comparison script and its integrity assertion. Renamed the payment checklist to match its current use. Removed obsolete converter version references and retention rules. The initial audit now keeps its dated findings and a link to the full report. Remaining version and older-format references concern other tools or the shared shell.
 
-The Todoist initiative has no matching actionable child. Its two deferred tasks remain unchanged. Commit locally.
-
-Deployment on 3 November 2026: The owner authorized publishing the queued local changes. This supersedes the earlier local-only instructions. Repository checks passed. Pushed eight commits through `186c96e` to `master`. [GitHub Pages deployment](https://github.com/volo1st/volo1st.github.io/actions/runs/41452219516) succeeded. Live home, guide, icon editor, guide scripts and CSS, stable converter redirect, and current converter files match the local release. The removed address returns HTTP 404. Browser interaction and visual review remain untested because no browser tool is available.
+Verification: `./scripts/check.sh` passed all nine JavaScript test files and eight Python tests. Reviewed the complete diff. Financial validation, exact output, record lengths, error recovery, download state, links, translations, and asset hashes pass. Converter application files are unchanged. Browser review was unavailable and was not required for this test and documentation cleanup. No matching Todoist task was changed. Commit locally; do not deploy.

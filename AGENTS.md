@@ -50,16 +50,13 @@ Treat the CSV-to-ABA converter as financial-file software.
 - Use integer arithmetic for money. Do not use binary floating-point arithmetic.
 - Do not enable download until validation and conversion are successful.
 - Keep old output unavailable after an input change or an error.
-- Keep the legacy test fixture unchanged. Use it only for compatibility tests.
-- Develop the safer converter at `tools/csv2aba-v2/`.
-- For known valid input, version 2 must make the same payment data as version 1.
-- Version 2 must reject invalid or ambiguous input with a clear error.
+- Maintain the converter at `tools/csv2aba-v2/`.
+- Preserve the fixed expected-output checks. Do not regenerate expected results to make a failing test pass.
+- Reject invalid or ambiguous input with a clear error.
 - Confirm bank-specific behavior with an authoritative source before implementation.
 - Do not state that a generated file is bank-approved without recorded validation evidence.
 
-On 29 October 2026, the owner confirmed several successful version 2 payment runs over the past two months and authorized version 1 retirement. This evidence applies only to the established workflow.
-
-Version 1 has historical operational evidence. CBA has accepted files from the current monthly payment process for nearly one year. This evidence applies only to that process. It does not prove that all input or settings are valid.
+On 29 October 2026, the owner confirmed several successful converter payment runs over the past two months. This evidence applies only to the established Commonwealth Bank of Australia (CBA) workflow. It does not prove that all input or settings are valid.
 
 Preserve the required ABA record width. Test byte length as well as character length when the permitted character set can affect encoding.
 
@@ -69,7 +66,7 @@ Preserve the required ABA record width. Test byte length as well as character le
 - Use `style-guide/` as the visual reference for approved components and page patterns. Update its example when a shared component changes. Keep experiments on separate pages.
 - Use `python3 scripts/new-page.py` for new reading or tool page shells. Copy component markup from the guide and keep shared CSS in its shared source. See the README for the workflow.
 - Put a stable `data-page` attribute on each maintained page body. Scope local CSS selectors with `:where([data-page="page-name"])`. Use matching roots in page specimens. Keep shared rules in `assets/site-shell.css` and `assets/ui.css` global.
-- Scope every selector in a local selector list and media rule. Give local animation names a page prefix. Keep the legacy test fixture unchanged.
+- Scope every selector in a local selector list and media rule. Give local animation names a page prefix.
 - Keep JavaScript free of implicit global variables.
 - Use event listeners instead of inline event handlers.
 - Use semantic HTML controls and explicit labels.

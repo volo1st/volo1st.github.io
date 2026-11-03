@@ -1,18 +1,8 @@
-# CSV-to-ABA Version 2
+# CSV to ABA converter
 
-## Status
+This converter supports the established Commonwealth Bank of Australia (CBA) payment workflow with fixed settings. `/tools/csv2aba/` redirects here.
 
-This directory contains the current converter. On 29 October 2026, the owner confirmed successful use in the established Commonwealth Bank of Australia (CBA) workflow several times over the past two months. The owner accepted validation and authorized version 1 retirement. Exact run dates and bank receipts were not supplied. This evidence applies only to that workflow.
-
-`/tools/csv2aba/` redirects here. Version 1 is retired. Git history retains its interface. The unchanged legacy script remains in `tests/fixtures/csv2aba-v2/legacy-reference.js` for compatibility tests.
-
-Version 2 has independent conversion and interface files. Characterization tests compare its valid output with version 1.
-
-## Compatibility rule
-
-For known valid input, version 2 must make the same payment data as version 1.
-
-Version 2 can change the result for invalid or ambiguous input. It must stop conversion and show a clear error for that input.
+The owner confirmed several successful runs on 29 October 2026. This evidence applies only to that workflow. It does not establish general bank approval.
 
 ## Normal workflow validation
 
@@ -26,17 +16,15 @@ Before a CBA upload, compare these items with the source payment report:
 
 If a result is unexpected, stop the payment process. Resolve the difference before approval.
 
-The current workflow creates monthly teacher payments for a Sydney music school. CBA has accepted version 1 files from this workflow for nearly one year. This history applies only to this workflow.
+Use [the payment review checklist](PAYMENT-CHECKLIST.md) for each run.
 
-The accepted validation result is recorded in `plan.md`, Section 34. Use [`TRIAL-CHECKLIST.md`](TRIAL-CHECKLIST.md) for payment review.
-
-After a successful conversion, version 2 shows the payment count and total amount. Review this summary before download. The summary and download become unavailable after an input change or an error.
+After a successful conversion, the converter shows the payment count and total amount. Review this summary before download. The summary and download become unavailable after an input change or an error.
 
 CSV and payment data stay in the browser. The converter source does not send this data to a server.
 
 ## Languages
 
-The home page and version 2 support English and Simplified Chinese.
+The home page and the converter support English and Simplified Chinese.
 
 The site uses the saved language when one is available. Otherwise, it uses Simplified Chinese for a Chinese browser preference. It uses English for other browser preferences.
 
@@ -48,7 +36,7 @@ The page uses one vertical workflow on large and small screens. Add payment data
 
 ## CSV rules
 
-Version 2 uses a strict local CSV reader. Its record and quotation rules follow [RFC 4180](https://www.rfc-editor.org/rfc/rfc4180). The reader also supports a byte order mark (BOM) because spreadsheet exports can include one.
+The converter uses a strict local CSV reader. Its record and quotation rules follow [RFC 4180](https://www.rfc-editor.org/rfc/rfc4180). The reader also supports a byte order mark (BOM) because spreadsheet exports can include one.
 
 Header names are case-sensitive. The file must contain these five headers:
 
@@ -87,9 +75,9 @@ Each payment row must contain all five values. A fully blank CSV line is not a p
 - Reference must not exceed 18 characters.
 - A payment field must not contain a line break or control character.
 
-The converter rejects an overlong field. It does not truncate payment data. Version 2 does not independently enforce CBA institution-number rules or a complete ABA character set. This is an accepted limit for the supported workflow. Confirm the generated result in CBA before approval.
+The converter rejects an overlong field. It does not truncate payment data. The converter does not independently enforce CBA institution-number rules or a complete ABA character set. This is an accepted limit for the supported workflow. Confirm the generated result in CBA before approval.
 
-Version 2 checks all payment rows before it constructs an ABA file. It shows all applicable payment-field errors in one list. Each error identifies the source line and field. A structural CSV error can stop parsing before payment-field checks start.
+The converter checks all payment rows before it constructs an ABA file. It shows all applicable payment-field errors in one list. Each error identifies the source line and field. A structural CSV error can stop parsing before payment-field checks start.
 
 ## Tests
 
@@ -99,4 +87,4 @@ Run this command from the repository root:
 node --test tests/csv2aba-v2.test.js
 ```
 
-The test suite includes an exact golden ABA fixture. The fixture uses invented source and payment data. It also uses a fixed processing date. The ABA content is stored as Base64 to preserve fixed-width spaces and line ends. A separate characterization test checks legacy compatibility. The fixture is not evidence of CBA approval.
+The test suite includes an exact golden ABA fixture. The fixture uses invented source and payment data. It also uses a fixed processing date. The ABA content is stored as Base64 to preserve fixed-width spaces and line ends. A fixed SHA-256 digest also checks the exact output for the supported workflow settings. Both expected results predate this cleanup. Do not regenerate them to accept a changed result. The fixture is not evidence of CBA approval.

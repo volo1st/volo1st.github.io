@@ -2,9 +2,7 @@
 
 ## Purpose
 
-Use this checklist during each normal payment run. Version 1 is retired.
-
-Validation was accepted on 29 October 2026 after the owner reported several successful version 2 runs over the past two months. See `plan.md`, Section 34. The unchecked items below are a reusable review list. They do not indicate a pending trial.
+Use this checklist during each normal payment run.
 
 Do not record teacher names, account details, or other payment data in this file.
 

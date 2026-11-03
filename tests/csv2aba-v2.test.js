@@ -1,6 +1,7 @@
 'use strict';
 
 const assert = require('node:assert/strict');
+const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const test = require('node:test');
@@ -9,37 +10,21 @@ const vm = require('node:vm');
 const v2 = require('../tools/csv2aba-v2/core.js');
 const i18n = require('../assets/i18n.js');
 
-const FIXED_DATE = new Date(2026, 8, 12);
 const VALID_CSV = [
   'BSB,Account,Name,Amount,Reference',
   '000-000,000000001,Example Teacher,$63.00,teacher fee',
   '000-001,000000002,Second Teacher,$25.00,teacher fee',
 ].join('\n');
 
-function loadV1WithFixedDate() {
-  const scriptPath = path.join(__dirname, 'fixtures/csv2aba-v2/legacy-reference.js');
-  const browserMarker = '// --- Browser specific code';
-  const source = fs.readFileSync(scriptPath, 'utf8').split(browserMarker)[0];
-  const NativeDate = Date;
+test('the supported workflow preserves its expected output bytes', () => {
+  const csv = fs.readFileSync(
+    path.join(__dirname, 'fixtures/csv2aba-v2/basic.csv'), 'utf8',
+  );
+  const output = v2.convert(csv, { processDate: '120926' });
 
-  class FixedDate extends NativeDate {
-    constructor(...argumentsList) {
-      super(...(argumentsList.length === 0 ? [FIXED_DATE.getTime()] : argumentsList));
-    }
-  }
-
-  const context = { Date: FixedDate };
-  vm.createContext(context);
-  vm.runInContext(source, context);
-  return context;
-}
-
-test('v2 makes the same ABA output as v1 for representative valid input', () => {
-  const v1 = loadV1WithFixedDate();
-  const v1Output = v1.processCsvToAba(v1.parseCsv(VALID_CSV));
-  const v2Output = v2.convert(VALID_CSV, { processDate: '120926' });
-
-  assert.equal(v2Output, v1Output);
+  assert.equal(Buffer.byteLength(output, 'utf8'), 484);
+  assert.equal(crypto.createHash('sha256').update(output).digest('hex'),
+    'b6d64c63a4364e9e3125cc8afe5cbb60f5d1a8b685f53b45ba2e61c11a7eb56d');
 });
 
 test('each generated ABA record has 120 characters', () => {
