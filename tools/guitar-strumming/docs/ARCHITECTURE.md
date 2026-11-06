@@ -1,48 +1,25 @@
-# Tool Architecture
+# Source layout
 
-## Purpose
+The tool loads plain scripts at `/tools/guitar-strumming/`. Keep it usable without a build step.
 
-Keep the Guitar strum machine source easy to find and change.
+| Source | Responsibility |
+| --- | --- |
+| `index.html`, `styles.css`, `i18n.js` | Controls, local layout, and English/Chinese text |
+| `app.js` | Connect controls, source validation, playback state, and rendering |
+| `domain/parser.js` | Source grammar, directive replacement, and structured errors |
+| `domain/harmony.js` | Keys, number chords, and capo configurations |
+| `domain/chord-catalog.js` | Reviewed guitar shapes and voicings |
+| `domain/core.js` | Musical timeline and audio-clock calculations |
+| `presets/data.js`, `presets/catalog.js` | Exercise templates and validated catalog |
+| `browser/audio-engine.js` | Web Audio synthesis and audio-session recovery |
+| `browser/share.js` | Source encoding, decoding, and link limits |
+| `browser/screen-wake-lock.js` | Optional screen wake lock |
+| `ui/presentation.js`, `ui/notifications.js` | Read-only chord timeline and warnings |
 
-Preserve direct browser loading without a build step.
+Keep domain modules independent of browser controls and audio objects. Browser scripts load in dependency order. Domain modules also expose CommonJS exports for the Node.js tests.
 
-## Directory Structure
+The arrangement text is the persistent musical state. Parsing produces the model used by playback. Presentation derives from that model; it must not parse the source again or change timing, source text, exercise identity, or share data.
 
-Use these directories:
+Keep catalog input declarative. Only `presets/catalog.js` validates and queries it. `app.js` uses the validated catalog rather than raw data. See [exercise rules](PRESETS.md).
 
-- `domain/` contains music rules, parsing, and playback calculations.
-- `presets/` contains preset data and preset catalog behavior.
-- `browser/` contains browser application programming interface adapters.
-- `ui/` contains presentation and notification behavior.
-- `docs/` contains design decisions and feature specifications.
-
-Keep `index.html`, `styles.css`, `i18n.js`, and `app.js` at the tool root.
-
-`app.js` is the composition root. It connects the other modules to the page.
-
-## Dependency Rules
-
-Load browser scripts in dependency order.
-
-Keep domain modules independent from browser and user interface modules.
-
-Keep preset data declarative. Put preset validation and lookup behavior in the preset catalog.
-
-Use the existing browser globals and CommonJS test exports. Do not add a build step for this structure.
-
-## Change Scope
-
-The directory reorganization does not change user-visible behavior.
-
-Keep the public tool route at `/tools/guitar-strumming/`.
-
-Review a later split of `app.js` as a separate work package.
-
-## Completion Status
-
-Status: The directory reorganization is implemented and verified.
-
-- The public tool route is unchanged.
-- The browser and test dependency paths use the new directories.
-- The asset references use current content hashes.
-- The full repository check passed on 2026-09-30.
+Read [the format](FORMAT.md) before changing the parser. Read [playback notes](AUDIO.md) before changing timing or audio lifecycle. Keep visual examples in the shared style guide.

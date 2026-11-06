@@ -49,7 +49,7 @@ Pushing reviewed commits to `origin master` publishes the repository root throug
 - [Repository instructions](AGENTS.md): writing, source, safety, and test rules.
 - [Plan](plan.md): current work, decisions, and completion evidence.
 - [CSV to ABA converter](tools/csv2aba-v2/README.md): payment checks and input rules.
-- [Guitar strum machine](tools/guitar-strumming/docs/ARCHITECTURE.md): source layout. [Sharing notes](tools/guitar-strumming/docs/SHARING.md) explain what a shared link exposes.
+- [Guitar strum machine](tools/guitar-strumming/README.md): use, source format, and maintenance. [Sharing notes](tools/guitar-strumming/docs/SHARING.md) explain what a shared link exposes.
 - [Pitch shifter](tools/pitch-shifter/): use and limits. [Dependency notes](tools/pitch-shifter/docs/DEPENDENCIES.md) cover bundled code and licenses.
 
 No repository-wide license is selected. Keep third-party license files and notices with their code.

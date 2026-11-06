@@ -87,7 +87,7 @@ Preserve the required ABA record width. Test byte length as well as character le
 - Treat the Audio Session API as an optional recovery. Continue normal playback if the API is unavailable or the type change fails.
 - Apply this recovery to Web Audio playback and media-element playback.
 - Test the built-in speaker, an external audio device, playback resume, and return from a background state on a representative iPhone or iPad.
-- See `tools/guitar-strumming/docs/PROTOTYPE.md` for the original failure evidence and accepted recovery sequence.
+- See `tools/guitar-strumming/docs/AUDIO.md` for the original failure evidence and accepted recovery sequence.
 
 ## Tests and checks
 

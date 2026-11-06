@@ -16,14 +16,14 @@ Hosting recovery record, confirmed by the owner on 13 October 2026: GitHub Pages
 
 ## 3. Current work
 
-Cleanup completed on 6 November 2026. Retained current requirements and useful references. Removed completed package logs, superseded design trials, and the unused historical UI audit pointer.
+Clean up Guitar strum machine documentation. Keep current syntax, playback and failure behavior, preset identity, sharing limits, and audio recovery evidence. Replace completed work packages and repeated specifications with focused tool references. Git history preserves the old notes. Application behavior must stay unchanged.
 
-- [x] Check retained requirements, local links, and external task references.
-- [x] Run `./scripts/check.sh` and review the complete diff.
+- [x] Check retained rules and examples against the source and tests.
+- [x] Update links, run `./scripts/check.sh`, and review the diff.
 
-All nine JavaScript test files and eight Python tests passed. No application file changed. Browser review was unavailable and was not needed for this documentation cleanup. No Todoist task was changed.
+Completed on 6 November 2026: Replaced repeated Guitar specifications and work packages with six focused references. Documented shape and number examples parse successfully. All nine JavaScript test files and eight Python tests passed. Reviewed the documentation diff and updated links. Application files are unchanged. Browser review was unavailable and was not needed for this documentation change. No Todoist task was changed.
 
-Next documentation candidates: the Guitar strum machine specification and feature notes, then the Pitch shifter specification. Keep current input syntax, failure behavior, audio recovery evidence, and dependency records when pruning them.
+Next: Clean up the Pitch shifter specification. Keep current behavior, limits, and dependency records.
 
 ## 4. Public content
 
@@ -54,7 +54,7 @@ Use Python scaffolding and copy components as described in the README. Update th
 | Tool | Current reference |
 | --- | --- |
 | CSV to ABA converter | [Input rules and limits](tools/csv2aba-v2/README.md), [payment review](tools/csv2aba-v2/PAYMENT-CHECKLIST.md), and financial safety rules in AGENTS.md |
-| Guitar strum machine | [Architecture](tools/guitar-strumming/docs/ARCHITECTURE.md), [specification](ideas/guitar-strumming-backing-track-tool.md), and [audio recovery evidence](tools/guitar-strumming/docs/PROTOTYPE.md) |
+| Guitar strum machine | [Use and maintenance](tools/guitar-strumming/README.md), [source format](tools/guitar-strumming/docs/FORMAT.md), and [audio recovery evidence](tools/guitar-strumming/docs/AUDIO.md) |
 | Pitch shifter | [Specification](ideas/song-pitch-shifter.md) and [dependencies and licenses](tools/pitch-shifter/docs/DEPENDENCIES.md) |
 
 On 29 October 2026, the owner confirmed several successful converter runs over the previous two months. This supports only the established Commonwealth Bank of Australia (CBA) workflow. Exact run dates, revisions, comparison records, and bank receipts were not supplied. This is not general bank approval.

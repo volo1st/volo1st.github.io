@@ -1,198 +1,33 @@
-# Curated Preset Catalog
+# Exercises and presets
 
-## Purpose
+## Catalog
 
-Provide short, human-readable links for approved exercises.
+Keep data in `presets/data.js`. Keep validation, materialization, identity matching, and URL handling in `presets/catalog.js`. Load data before the catalog. The catalog validates, copies, and freezes its input before exposing it. Missing or malformed data must fail clearly; do not expose a partial catalog.
 
-Keep each preset source in the same plain-text format as manually entered source.
+A shared arrangement contains its versioned identifier, title, grid, notation, original key, chord bars, strum bars, and rights metadata. An exercise profile references an arrangement and supplies its versioned slug, teaching title, level, goal, tags, and default practice settings.
 
-Keep the textarea as the single source of truth after a preset loads.
+Standalone presets can also provide a complete source string. Use shared arrangements when profiles reuse one transcription.
 
-## Catalog Design
+The materializer combines an arrangement and profile into complete arrangement text with stable directive order, spacing, and line-feed endings. Do not store a separate full transcription in every profile. After loading, the editor text governs playback and sharing. Controls must not modify catalog objects.
 
-Store declarative catalog input in `presets/data.js`.
+Use unique lowercase URL-safe slugs with a positive version suffix such as `-v1`. Published arrangement content and profile defaults use new versions when changed. Historical pre-release replacements are recorded in Git; they are not instructions to migrate current sources.
 
-Keep parsing, validation, materialisation, indexing, identity matching, and URL behavior in `presets/catalog.js`.
+## Selection and identity
 
-Load `presets/data.js` before `presets/catalog.js`.
+The interface calls presets Exercises. Use the catalog's teaching title, level, and goal. The default comes from `defaultPresetSlug`; do not maintain another catalog list in documentation.
 
-Use this dependency direction:
+Ask before replacing source edited during the current session. Cancellation preserves the source and selection. Loading a preset copies its complete source and validates it. Never start playback automatically.
 
-```text
-presets/data.js
-       ↓
-presets/catalog.js ← domain/parser.js, domain/chord-catalog.js, domain/core.js
-       ↓
-     app.js
-```
+Exercise identity ignores `bpm:`, `count-in:`, and `tempo-ramp:`. Changes to these settings keep the exercise selected. All other parsed musical data belongs to identity, including key, capo, swing, chords, and strums. Invalid or unmatched text selects Custom arrangement. Reject ambiguous catalog identities rather than selecting an arbitrary exercise.
 
-`presets/data.js` must not parse songs, validate entries, create URLs, use browser state, or expose catalog query functions.
+Sharing uses exact text equality. A source that exactly matches a catalog preset uses `?preset=<slug>`. Any text change, including a practice setting, requires a complete source link. Stable exercise selection does not imply an exact preset share link. See [sharing](SHARING.md).
 
-`presets/catalog.js` must copy, validate, and freeze the data before it exposes the catalog.
+Reject duplicate or unknown preset parameters and a link containing both `preset` and `song`. Keep the default source cleared after transport errors. Remove source and preset parameters from the current address after edits.
 
-`app.js` must use only the catalog API. It must not access the raw preset data.
+## Rights and musical review
 
-Keep all current catalog input in one data file. Do not add one browser script per song.
+Original technical exercises use common progressions and generic rhythms. The current Get Lucky and Viva La Vida exercises are short user transcriptions for teaching. They contain chord and rhythm data, with no lyrics, melody notation, recordings, artwork, or approval claim. Keep the unofficial-transcription notice at the bottom of the page.
 
-Do not use a database, WebAssembly, a network request, or a build step.
+Complete a new rights review before adding identifiable commercial-song material. An exact rhythm can remain identifiable. Remove or revise an entry if a rights holder objects.
 
-Each preset contains:
-
-- a stable versioned slug;
-- a title;
-- a preset type;
-- a teaching level;
-- a teaching goal;
-- grouping tags;
-- a rights basis; and
-- the complete source.
-
-Require lowercase URL-safe slugs that end in a positive version number such as `-v1`.
-
-Require unique slugs and unique source strings.
-
-Before the owner declares `v1.0.0`, a preset slug and its source can change without a compatibility version.
-
-After that declaration, do not change the source of a published slug. Add a new versioned slug when source changes.
-
-## Initial Catalog
-
-The initial catalog contains four original entries and three exercises from two short user transcriptions:
-
-- an expressive strumming feature demo;
-- an intermediate C, G, Am, and full-F-barre chord-change exercise;
-- a beginner G, C, D, and Em chord-change exercise;
-- a seventh-chord turnaround exercise;
-- a Get Lucky palm-muted strumming exercise;
-- a Viva La Vida melody-backing exercise; and
-- a Viva La Vida syncopated strumming exercise.
-
-The expressive feature demo is the former page example and the default preset.
-
-Current pre-release preset sources include an explicit `capo:` setting and `swing: off`. The Get Lucky exercise runs at 116 beats per minute and uses capo 2 with Am7, C, Em7, and D shapes. The sounding chords are Bm7, D, F#m7, and E. Its original and playing keys are F# minor. Number notation uses `4:m7`, `6`, `1:m7`, and `7` so the arrangement key controls remain available.
-
-Show each teaching goal below the Preset dropdown.
-
-Show the catalog-wide song exercise notice at the bottom of the page.
-
-## Rights Review
-
-Four initial entries are original technical exercises.
-
-They use common chord progressions and generic strumming patterns.
-
-They do not use a commercial song title, lyrics, melody, or song-specific arrangement.
-
-The Get Lucky and Viva La Vida exercises use short user transcriptions for teaching.
-
-They contain chord and rhythm data. They do not contain lyrics, melody notation, audio, artwork, or a claim of approval.
-
-Label these exercises as unofficial user transcriptions in the bottom-page notice.
-
-Accepted risk: An exact rhythm can be identifiable even when it uses common musical elements. Remove or revise an entry if a rights holder objects.
-
-Complete a new rights review before adding identifiable commercial-song material.
-
-## URL Behavior
-
-Use this form:
-
-```text
-?preset=<versioned-slug>
-```
-
-Reject duplicate preset parameters.
-
-Reject an unknown slug.
-
-Reject a URL that contains both `preset` and `song` parameters.
-
-Do not load the default preset after a transport error.
-
-Remove the URL fragment from a created preset link.
-
-Preserve unrelated query parameters.
-
-If source exactly matches a preset, create the preset link.
-
-If source does not exactly match a preset, create the shorter raw or gzip source link.
-
-## Interface Behavior
-
-Populate the Preset dropdown from the local catalog.
-
-Ask for confirmation before preset loading replaces source that the user edited in the current session.
-
-If the user cancels, preserve the current source and selection state.
-
-If a preset loads, copy its exact source to the textarea and run normal validation.
-
-If the source changes, remove `preset` and `song` from the current URL.
-
-Do not start playback automatically.
-
-## Failure Behavior
-
-If preset transport fails, clear the default source and show the transport error.
-
-If a catalog source fails parser or timeline validation, keep playback and sharing unavailable.
-
-If the preset data script is missing or malformed, do not create a partial catalog. Keep playback and sharing unavailable and show the existing script-load failure.
-
-Do not guess an unknown slug.
-
-Do not silently replace edited source.
-
-## Checks
-
-Automated checks must verify:
-
-- catalog metadata and rights basis;
-- slug and source uniqueness;
-- slug format;
-- parser and timeline validity for every source;
-- default-preset identity;
-- exact source lookup;
-- successful preset URL resolution;
-- duplicate, unknown, and conflicting parameter rejection; and
-- preset link creation;
-- data-script loading order;
-- raw-data and catalog-module separation; and
-- failure for malformed raw preset data.
-
-Manually test:
-
-- all dropdown entries;
-- confirmation acceptance and cancellation;
-- an exact preset share link;
-- a modified-source share link;
-- an unknown preset URL;
-- a conflicting preset and song URL;
-- keyboard use and visible focus;
-- narrow width and 200 percent zoom;
-- desktop Chrome; and
-- Safari on iPhone.
-
-## Completion Status
-
-Status: Data separation is implemented and verified.
-
-- [x] Raw preset data is separate from catalog logic.
-  Evidence: `presets/data.js` contains immutable declarative input. `presets/catalog.js` copies, validates, materialises, freezes, and indexes that input. The full repository check passed on 2026-09-30.
-- [x] Preset browser behavior is unchanged after data separation.
-  Evidence: The NAS preview loaded the separated data and catalog scripts, created the catalog, and started playback on 2026-09-30. Automated tests covered all preset sources, exercise identity after practice-setting changes, and short and complete share-link selection. Detailed multi-preset and manual link-parameter checks were not separately recorded.
-
-- [x] Automated checks pass.
-  Evidence: `./scripts/check.sh` passed on 2026-09-28. Every preset passed the normal parser and timeline checks.
-- [x] Catalog controls and replacement confirmation work.
-  Evidence: The user confirmed all dropdown entries, confirmation acceptance, confirmation cancellation, and source preservation on 2026-09-28.
-- [x] Preset and modified-source links work.
-  Evidence: The user confirmed preset links, raw or gzip fallback after edits, and exact source loading on 2026-09-28.
-- [x] Invalid preset transport fails safely.
-  Evidence: The user confirmed unknown and conflicting URL checks on 2026-09-28.
-- [x] The two user song exercises work.
-  Evidence: The user confirmed source loading, playback, labels, notices, and short links for Get Lucky and Viva La Vida on 2026-09-28.
-- [x] Interface checks pass.
-  Evidence: The user confirmed keyboard use, visible focus, narrow iPhone Safari layout, and desktop layout at 200 percent zoom on 2026-09-28.
-- [x] The GitHub Pages deployment matches the completed package.
-  Evidence: The deployed page and preset catalog matched commit `db04328` byte for byte on 2026-09-28.
+The corrected Get Lucky exercise uses Am7, C, Em7, and D shapes at capo 2 and 116 BPM. Its sounding chords are Bm7, D, F#m7, and E. The original and playing keys are F# minor. Preserve the regression test for this correction.
