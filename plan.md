@@ -10,20 +10,20 @@ Maintain Vincent's small personal website and focused browser tools. Use this fi
 
 The personal homepage, Code, Sound, Music, studio, and tools pages are published. The current tools are Guitar strum machine, Pitch shifter, and CSV to ABA converter. The shared visual system, bilingual style guide, Python page scaffolding, and component copying are implemented.
 
-The converter test cleanup and initial audit removal are committed locally. These changes and the current documentation cleanup await deployment. Publish only when requested.
+Recent cleanup commits are local and await deployment. Publish only when requested.
 
 Hosting recovery record, confirmed by the owner on 13 October 2026: GitHub Pages publishes `master` at the repository root. The domain is `volo1st.com`, with domain records at Squarespace. Recheck external settings before recovery.
 
 ## 3. Current work
 
-Clean up Guitar strum machine documentation. Keep current syntax, playback and failure behavior, preset identity, sharing limits, and audio recovery evidence. Replace completed work packages and repeated specifications with focused tool references. Git history preserves the old notes. Application behavior must stay unchanged.
+Clean up the Pitch shifter specification. Retain current use, decoded-file limits, output behavior, processing boundaries, failure recovery, and test conditions. Remove completed comparisons and speculative key-analysis instructions. Keep dependency hashes, licenses, reproduction steps, and listening evidence in their existing record. Application files must stay unchanged.
 
-- [x] Check retained rules and examples against the source and tests.
+- [x] Check retained rules against the source and tests.
 - [x] Update links, run `./scripts/check.sh`, and review the diff.
 
-Completed on 6 November 2026: Replaced repeated Guitar specifications and work packages with six focused references. Documented shape and number examples parse successfully. All nine JavaScript test files and eight Python tests passed. Reviewed the documentation diff and updated links. Application files are unchanged. Browser review was unavailable and was not needed for this documentation change. No Todoist task was changed.
+Completed on 6 November 2026: Replaced the Pitch shifter specification with a current tool README. Removed completed trials and speculative implementation instructions. All nine JavaScript test files and eight Python tests passed. Reviewed retained limits and failure rules against the code. Dependency records and application files are unchanged. Browser review was unavailable and was not needed for this documentation change. No Todoist task was changed.
 
-Next: Clean up the Pitch shifter specification. Keep current behavior, limits, and dependency records.
+The Guitar cleanup is complete in `a5033a9`. The agreed documentation cleanup is complete; no next implementation package is selected.
 
 ## 4. Public content
 
@@ -55,7 +55,7 @@ Use Python scaffolding and copy components as described in the README. Update th
 | --- | --- |
 | CSV to ABA converter | [Input rules and limits](tools/csv2aba-v2/README.md), [payment review](tools/csv2aba-v2/PAYMENT-CHECKLIST.md), and financial safety rules in AGENTS.md |
 | Guitar strum machine | [Use and maintenance](tools/guitar-strumming/README.md), [source format](tools/guitar-strumming/docs/FORMAT.md), and [audio recovery evidence](tools/guitar-strumming/docs/AUDIO.md) |
-| Pitch shifter | [Specification](ideas/song-pitch-shifter.md) and [dependencies and licenses](tools/pitch-shifter/docs/DEPENDENCIES.md) |
+| Pitch shifter | [Use, limits, and maintenance](tools/pitch-shifter/README.md) and [dependencies and licenses](tools/pitch-shifter/docs/DEPENDENCIES.md) |
 
 On 29 October 2026, the owner confirmed several successful converter runs over the previous two months. This supports only the established Commonwealth Bank of Australia (CBA) workflow. Exact run dates, revisions, comparison records, and bank receipts were not supplied. This is not general bank approval.
 
