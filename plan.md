@@ -10,20 +10,20 @@ Maintain Vincent's small personal website and focused browser tools. Use this fi
 
 The personal homepage, Code, Sound, Music, studio, and tools pages are published. The current tools are Guitar strum machine, Pitch shifter, and CSV to ABA converter. The shared visual system, bilingual style guide, Python page scaffolding, and component copying are implemented.
 
-Recent cleanup commits are local and await deployment. Publish only when requested.
+The owner authorized publishing the cleanup on 6 November 2026. Release `3c61103` is deployed. [GitHub Pages run 42148625531](https://github.com/volo1st/volo1st.github.io/actions/runs/42148625531) succeeded.
 
 Hosting recovery record, confirmed by the owner on 13 October 2026: GitHub Pages publishes `master` at the repository root. The domain is `volo1st.com`, with domain records at Squarespace. Recheck external settings before recovery.
 
 ## 3. Current work
 
-Clean up the Pitch shifter specification. Retain current use, decoded-file limits, output behavior, processing boundaries, failure recovery, and test conditions. Remove completed comparisons and speculative key-analysis instructions. Keep dependency hashes, licenses, reproduction steps, and listening evidence in their existing record. Application files must stay unchanged.
+The agreed documentation cleanup is complete. Current tool references retain syntax, behavior, limits, failure recovery, and test conditions. Dependency records and application files are unchanged.
 
-- [x] Check retained rules against the source and tests.
-- [x] Update links, run `./scripts/check.sh`, and review the diff.
+- [x] Check retained rules and links, pass repository checks, and review the diff.
+- [x] Publish the cleanup and verify live delivery.
 
-Completed on 6 November 2026: Replaced the Pitch shifter specification with a current tool README. Removed completed trials and speculative implementation instructions. All nine JavaScript test files and eight Python tests passed. Reviewed retained limits and failure rules against the code. Dependency records and application files are unchanged. Browser review was unavailable and was not needed for this documentation change. No Todoist task was changed.
+Verification on 6 November 2026: All nine JavaScript test files and eight Python tests passed. Eighteen live documents and tool routes matched the release. All 15 removed file paths returned HTTP 404. Browser review was unavailable; HTTP checks verify delivery only. No Todoist task was changed.
 
-The Guitar cleanup is complete in `a5033a9`. The agreed documentation cleanup is complete; no next implementation package is selected.
+No next implementation package is selected.
 
 ## 4. Public content
 
