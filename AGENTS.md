@@ -126,8 +126,6 @@ Keep verification proportionate to the change and its failure consequences.
 
 ## Documentation and work tracking
 
-- Use `initial-audit-report.md` as the record of the initial repository condition.
-- Use `initial-audit-report.md` only as the dated record of the initial repository condition.
 - Use `plan.md` as the single source of truth for audit work and long-term website development.
 - Update a checkbox only after its completion test passes.
 - Add evidence below the applicable checkbox when this is useful.

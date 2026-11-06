@@ -4,7 +4,7 @@
 
 This file is the single source of truth for active audit work and long-term website development.
 
-[`initial-audit-report.md`](initial-audit-report.md) records the repository condition on 12 September 2026. Keep that report as a dated baseline. Use this plan for current status, actions, decisions, and completion evidence.
+Use this plan for current status, actions, decisions, and completion evidence.
 
 Tool specifications and operating checklists remain with their tools. They do not replace this plan.
 
@@ -130,10 +130,9 @@ The owner accepted retrospective operational evidence on 29 October 2026. See Se
 
 Completion gate: The owner accepts the reported normal-workflow result for continued version 2 use. This gate was revised on 29 October 2026 to accept the retrospective report. Routine payment review remains required.
 
-### 6.4 Audit closure
+### 6.4 Workflow checks
 
-- [x] Run the automated invalid-input and boundary tests from the initial audit.
-- [x] Link each initial finding to completed work, removed scope, or an accepted product limit.
+- [x] Run automated invalid-input and boundary tests.
 - [x] Record that support is limited to the current CBA workflow.
 - [x] Record the accepted workflow result and its evidence limits.
   - Evidence: Owner report on 29 October 2026; see Section 34. Exact run dates, deployed revisions, and separate bank records were not supplied.
@@ -524,23 +523,6 @@ Completion gate: A supported browser can export either WAV or 320 kbit/s MP3. An
 
 The approved icon family uses abstract monoline and bar symbols. Each icon uses the site background `#f4f1e8` and the guitar accent `#173e30`. The Guitar Strum Machine uses its icon for home-screen installation. The other three icons record a visual direction only. They do not change the status of the app ideas.
 
-## 14. Initial audit closure matrix
-
-| Finding | Current state | Remaining action |
-| --- | --- | --- |
-| Fixed bank data | Accepted product limit | The current fixed settings define the supported workflow. |
-| Invalid amounts | Implemented in version 2 | Confirm the normal workflow result. |
-| Quoted CSV data | Implemented in version 2 | Confirm the normal workflow result. |
-| Incomplete ABA field checks | Accepted product limit | Use CBA upload validation for the supported workflow. |
-| Unsafe interface error state | Implemented in version 2 | Confirm the normal workflow result. |
-| Missing bank-specific rules | Accepted product limit | Use CBA upload validation for the supported workflow. |
-| No automated tests | Implemented locally | Reassess continuous integration only when its value justifies maintenance. |
-| Difficult converter layout | Implemented in version 2 | No remaining audit action for the supported workflow. |
-| Text sorter data loss | Removed from scope | Restore only for a new requirement. |
-| Text sorter external dependency | Removed from scope | Restore only for a new requirement. |
-| Repeated sorter calculations | Removed from scope | Restore only for a new requirement. |
-| Incomplete documents and page data | Partly implemented | Complete licensing, deployment, operations, and public-site work. |
-
 ## 15. Decision log
 
 Homepage removal evidence on 17 October 2026: Removed the particle canvas, its script, and its overlay styles. Updated the homepage stylesheet hash, README, design requirements, and existing tests. The complete diff was reviewed. `./scripts/check.sh` passed for all seven test files. Manual browser review did not run. It is optional for this small static change under the approved verification rule.
@@ -588,7 +570,7 @@ Decision on 12 October 2026: Keep the current Code page. The owner confirmed tha
 | 30 September 2026 | Use one semantic site shell with domain accent tokens. | Shared structure identifies one site. Accent tokens preserve each tool's subject identity. |
 | 30 September 2026 | Use an original pixel-art `V` block as the site icon. | The icon gives the site a distinct identity without copying existing artwork. |
 | 1 October 2026 | Add a generic Open Graph preview to Guitar Strum Machine. | Static metadata improves link presentation. A central square-safe area supports WeChat cropping. |
-| 1 October 2026 | Replace the audit action plan and website roadmap with this plan. | One active plan prevents duplicate actions and conflicting status. The initial audit report remains the dated baseline. |
+| 1 October 2026 | Replace the audit action plan and website roadmap with this plan. | One active plan prevents duplicate actions and conflicting status. |
 | 1 October 2026 | Keep the current ABA user and remitter name public and unchanged. | The owner confirmed that the value is safe to publish. A replacement would change generated payment files. |
 | 1 October 2026 | Validate the current converter through the normal CBA payment procedure. | The converter supports one established workflow. CBA upload acceptance plus the operator's entry, count, and total review is the applicable completion evidence. |
 | 1 October 2026 | Remove general CBA rule research and configurable ABA source settings from the plan. | The converter supports only the current fixed workflow. The owner does not plan to make it a general ABA product. |
@@ -1488,6 +1470,16 @@ Tracking: The owner selected this cleanup directly. Todoist has two other childr
 - [x] Remove obsolete converter instructions and historical detail.
 - [x] Run repository checks and review the complete diff.
 
-Completion on 4 November 2026: Both implementations produced the same 484 bytes for the fixed-date fixture before removal. The replacement digest is `b6d64c63a4364e9e3125cc8afe5cbb60f5d1a8b685f53b45ba2e61c11a7eb56d`. The existing invented-settings fixture is unchanged. Removed the comparison script and its integrity assertion. Renamed the payment checklist to match its current use. Removed obsolete converter version references and retention rules. The initial audit now keeps its dated findings and a link to the full report. Remaining version and older-format references concern other tools or the shared shell.
+Completion on 4 November 2026: Both implementations produced the same 484 bytes for the fixed-date fixture before removal. The replacement digest is `b6d64c63a4364e9e3125cc8afe5cbb60f5d1a8b685f53b45ba2e61c11a7eb56d`. The existing invented-settings fixture is unchanged. Removed the comparison script and its integrity assertion. Renamed the payment checklist to match its current use. Removed obsolete converter version references and retention rules. Remaining version and older-format references concern other tools or the shared shell.
 
 Verification: `./scripts/check.sh` passed all nine JavaScript test files and eight Python tests. Reviewed the complete diff. Financial validation, exact output, record lengths, error recovery, download state, links, translations, and asset hashes pass. Converter application files are unchanged. Browser review was unavailable and was not required for this test and documentation cleanup. No matching Todoist task was changed. Commit locally; do not deploy.
+
+## 43. Remove the stale audit report
+
+Decision on 6 November 2026: Remove the initial report and its stale closure matrix. Current tool notes and repository rules already cover the remaining limits. Git history preserves the dated findings. This supersedes the requirement to retain a separate baseline document.
+
+Scope and checks: Remove the report, its retention rules, and obsolete references. Preserve current payment limits and safety rules. Run the repository check and review the diff. No site behavior changes are required.
+
+- [x] Remove obsolete audit material and pass repository checks.
+
+Completion: Deleted the report, removed its retention rules and stale matrix, and checked for broken references. `./scripts/check.sh` passed all nine JavaScript test files and eight Python tests. Reviewed the complete diff. Current tool limits remain in their README and checklist. No browser review was needed for this documentation removal. Todoist has no matching package; no task was changed. Commit locally; do not deploy.
